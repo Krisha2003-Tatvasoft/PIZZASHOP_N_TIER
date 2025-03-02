@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - pizzashop</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/sidebar-header.css" />
+</head>
+@* @await Html.PartialAsync("_Toast") *@
+
+<body>
+    <div class="d-flex">
+
+
+        <div class="offcanvas-lg offcanvas-start" id="sidebarMenu">
+            <div class="slider">
+
+
+                <div class="appname">
+                    <a><img src="../images/pizzashop_logo.png" alt="" class="appLogo me-2"><b>PIZZASHOP</b></a>
+                </div>
+
+                <ul class="list-unstyled slider-content">
+
+                    <li><a class="active" asp-controller="Home" asp-action="Index"><img
+                                src="../images/dashboard-active.png" alt="" class="svgs">
+                            Dashboard</a></li>
+                    <li><a class="" asp-controller="User" asp-action="UserList"><img src="../images/users-default.png"
+                                alt="" class="svgs">Users</a>
+                    </li>
+                    <li><a class="" asp-controller="RolePermission" asp-action="Role"><img
+                                src="../images/roles-default.png" alt="" class="svgs">Role and
+                            Permission</a>
+                    </li>
+                    <li><a class="" asp-controller="Menu" asp-action="Menu"><img src="../images//menu-default.png"
+                                asp-controller="Home" asp-action="Index" alt="" class="svgs">Menu</a>
+                    </li>
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="../images/table-default.png"
+                                class="svgs"> Table And
+                            Section </a>
+                    </li>
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="../images/taxes-default.png"
+                                alt="" class="svgs">Taxes And
+                            Fees</a>
+                    </li>
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="../images/orders-default.png"
+                                alt="" class="svgs">Orders</a>
+                    </li>
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="../images/customers-default.png"
+                                alt="" class="svgs">Customers</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+
+        <div class="w-100 nav-main-content parent">
+
+
+            <nav class="navbar navbar-expand-lg  my-header d-flex justify-content-between">
+
+
+
+                <div>
+                    <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
+                        aria-controls="sidebarMenu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+
+                <div class="dropdown me-2 profile-dropdown">
+                    <img class="profile-img dropdown-toggle" data-bs-toggle="dropdown" id="dropdownMenuButton1"
+                        src="../images/Default_pfp.svg.png" aria-expanded="false" />
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item border-bottom"> <img src="../images/Default_pfp.svg.png"
+                                    class="me-2" width="40px" height="40px">Username</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="UserProfile"> <i
+                                    class="bi bi-person-circle me-3"></i>My profile</a></li>
+                        <li><a class="dropdown-item" asp-controller="Home" asp-action="ChagePassword"><i
+                                    class="bi bi-arrow-clockwise me-3"></i>Change
+                                Password</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal"><i
+                                    class="bi bi-box-arrow-right me-3"></i>Logout</a></li>
+                    </ul>
+                </div>
+
+
+            </nav>
+
+
+            <div>
+                @RenderBody()
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <!-- modal -->
+    <div class="modal fade modal-delete" id="logoutModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img src="../images/warning-icon.svg" alt="" width="40px" height="40px"><br>
+                    <span>Are you sure you want to Logout?</span>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <form method="post">
+                        <button type="submit" asp-controller="Auth" asp-action="Logout" class="btn btn-primary"
+                            data-bs-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-danger">NO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- jQuery Validation Plugin -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <!-- jQuery Unobtrusive Validation -->
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

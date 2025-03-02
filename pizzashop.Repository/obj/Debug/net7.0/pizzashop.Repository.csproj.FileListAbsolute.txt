@@ -1,0 +1,14 @@
+D:\pizzashop_nTier\pizzashop.Repository\bin\Debug\net7.0\pizzashop.Repository.deps.json
+D:\pizzashop_nTier\pizzashop.Repository\bin\Debug\net7.0\pizzashop.Repository.runtimeconfig.json
+D:\pizzashop_nTier\pizzashop.Repository\bin\Debug\net7.0\pizzashop.Repository.dll
+D:\pizzashop_nTier\pizzashop.Repository\bin\Debug\net7.0\pizzashop.Repository.pdb
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.csproj.AssemblyReference.cache
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.AssemblyInfoInputs.cache
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.AssemblyInfo.cs
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.csproj.CoreCompileInputs.cache
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.dll
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\refint\pizzashop.Repository.dll
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.pdb
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\pizzashop.Repository.genruntimeconfig.cache
+D:\pizzashop_nTier\pizzashop.Repository\obj\Debug\net7.0\ref\pizzashop.Repository.dll

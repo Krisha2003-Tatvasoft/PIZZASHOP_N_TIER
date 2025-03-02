@@ -1,0 +1,133 @@
+.parent {
+    display: flex;
+}
+
+
+/* pizza img   */
+.login-pizzaImg {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+}
+
+/* right side of login page  */
+.login-rightSide {
+    width: 50%;
+}
+
+.login-rightSide-content {
+    width: 100%;
+    background-color: #b6e1fc;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+
+/* left side of login page  */
+.login-leftSide {
+    width: 50%;
+    height: 100vh;
+}
+
+
+.form {
+    width: 70%;
+}
+
+
+/* logo  */
+.logo {
+    width: 70px;
+    height: 70px;
+}
+
+
+/* Pizzashop name  */
+.app-name {
+    font-size: 30px;
+    color: #087cc4;
+}
+
+
+/* input field   */
+.login-rightSide .form .form-control {
+    line-height: 2.5rem !important;
+}
+
+
+/* login button  */
+.login-rightSide .form button {
+    border: none;
+    width: 100%;
+    border-radius: 5px;
+    color: white;
+    background-color: #087cc4;
+    height: 35px;
+}
+
+/* check box and forgot link */
+.login-rightSide .form .button-forgotlink {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* forgot password  */
+.login-rightSide .form .button-forgotlink a {
+    text-decoration: none;
+}
+
+
+
+@media screen and (max-width:768px) {
+    .login-leftSide {
+        display: none;
+    }
+
+    .form {
+        width: 100%;
+    }
+
+    .login-rightSide-content {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .login-rightSide {
+        width: 80%;
+        padding-top: 200px;
+        padding-bottom: 200px;
+    }
+
+
+    .parent {
+        justify-content: center;
+    }
+
+    body {
+        background-image: url('../images/dominos_background.jpg');
+        background-size: 100% 100%;
+    }
+
+}
+
+@media screen and (max-width:419px)
+{
+
+    .parent  .login-rightSide .login-rightSide-content .form .button-forgotlink {
+        display: flex;
+        gap: 5px;
+        flex-direction: column;
+    }
+
+    
+
+}

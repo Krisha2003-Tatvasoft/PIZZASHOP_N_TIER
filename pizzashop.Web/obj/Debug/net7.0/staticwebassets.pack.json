@@ -1,0 +1,441 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\pizzashop.Web.bundle.scp.css",
+      "PackagePath": "staticwebassets\\pizzashop.Web.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\AddNewUser.css",
+      "PackagePath": "staticwebassets\\css\\AddNewUser.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\ChangePassword.css",
+      "PackagePath": "staticwebassets\\css\\ChangePassword.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\EditUser.css",
+      "PackagePath": "staticwebassets\\css\\EditUser.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\Menu.css",
+      "PackagePath": "staticwebassets\\css\\Menu.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\UserProfile.css",
+      "PackagePath": "staticwebassets\\css\\UserProfile.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\Users.css",
+      "PackagePath": "staticwebassets\\css\\Users.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\forgotPassword.css",
+      "PackagePath": "staticwebassets\\css\\forgotPassword.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\loginPage.css",
+      "PackagePath": "staticwebassets\\css\\loginPage.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\permission.css",
+      "PackagePath": "staticwebassets\\css\\permission.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\resetPassword.css",
+      "PackagePath": "staticwebassets\\css\\resetPassword.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\role.css",
+      "PackagePath": "staticwebassets\\css\\role.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\sidebar-header.css",
+      "PackagePath": "staticwebassets\\css\\sidebar-header.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\css\\superAdminDashboard.css",
+      "PackagePath": "staticwebassets\\css\\superAdminDashboard.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\Default_pfp.svg.png",
+      "PackagePath": "staticwebassets\\images\\Default_pfp.svg.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\cloud-arrow-up.svg",
+      "PackagePath": "staticwebassets\\images\\cloud-arrow-up.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\customers-active.png",
+      "PackagePath": "staticwebassets\\images\\customers-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\customers-default.png",
+      "PackagePath": "staticwebassets\\images\\customers-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\dashboard-active.png",
+      "PackagePath": "staticwebassets\\images\\dashboard-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\dashboard-default.png",
+      "PackagePath": "staticwebassets\\images\\dashboard-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\dining-menu.png",
+      "PackagePath": "staticwebassets\\images\\dining-menu.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\dominos_background.jpg",
+      "PackagePath": "staticwebassets\\images\\dominos_background.jpg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\list (1).svg",
+      "PackagePath": "staticwebassets\\images\\list (1).svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\list-check.svg",
+      "PackagePath": "staticwebassets\\images\\list-check.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\menu-active.png",
+      "PackagePath": "staticwebassets\\images\\menu-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\menu-default.png",
+      "PackagePath": "staticwebassets\\images\\menu-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\menu_11809294.png",
+      "PackagePath": "staticwebassets\\images\\menu_11809294.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\non-veg-icon.svg",
+      "PackagePath": "staticwebassets\\images\\non-veg-icon.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\orders-active.png",
+      "PackagePath": "staticwebassets\\images\\orders-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\orders-default.png",
+      "PackagePath": "staticwebassets\\images\\orders-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\pencil.svg",
+      "PackagePath": "staticwebassets\\images\\pencil.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\pizzashop_logo.png",
+      "PackagePath": "staticwebassets\\images\\pizzashop_logo.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\plus-lg.svg",
+      "PackagePath": "staticwebassets\\images\\plus-lg.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\profile_div_bg.jpg",
+      "PackagePath": "staticwebassets\\images\\profile_div_bg.jpg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\roles-active.png",
+      "PackagePath": "staticwebassets\\images\\roles-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\roles-default.png",
+      "PackagePath": "staticwebassets\\images\\roles-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\table-active.png",
+      "PackagePath": "staticwebassets\\images\\table-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\table-default.png",
+      "PackagePath": "staticwebassets\\images\\table-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\taxes-active.png",
+      "PackagePath": "staticwebassets\\images\\taxes-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\taxes-default.png",
+      "PackagePath": "staticwebassets\\images\\taxes-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\trash.svg",
+      "PackagePath": "staticwebassets\\images\\trash.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\ui-checks-grid.svg",
+      "PackagePath": "staticwebassets\\images\\ui-checks-grid.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\users-active.png",
+      "PackagePath": "staticwebassets\\images\\users-active.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\users-default.png",
+      "PackagePath": "staticwebassets\\images\\users-default.png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\veg-icon.svg",
+      "PackagePath": "staticwebassets\\images\\veg-icon.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\images\\warning-icon.svg",
+      "PackagePath": "staticwebassets\\images\\warning-icon.svg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.Web\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.pizzashop.Web.props",
+      "PackagePath": "build\\pizzashop.Web.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.pizzashop.Web.props",
+      "PackagePath": "buildMultiTargeting\\pizzashop.Web.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.pizzashop.Web.props",
+      "PackagePath": "buildTransitive\\pizzashop.Web.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.pizzashop.Web.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

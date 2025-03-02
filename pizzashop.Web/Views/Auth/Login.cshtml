@@ -1,0 +1,64 @@
+@model pizzashop.Repository.ViewModels.Login;
+
+
+@{
+
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color: red;">@ViewBag.ErrorMessage</div>
+
+}
+@* @await Html.PartialAsync("_Toast") *@
+<div class="login-rightSide-content">
+    <div class="d-flex justify-content-center align-items-center gap-2">
+        <img class="logo" src="../images/pizzashop_logo.png">
+        <span class="app-name"><b>PIZZASHOP</b></span>
+    </div>
+
+    <form asp-controller="Auth" asp-action="Login" class="form d-flex flex-column gap-3 ">
+
+        <h1 class="heading-text">
+            Welcome,
+        </h1>
+
+        <div>
+            <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control"
+                >
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div>
+
+            <input placeholder="Password*" asp-for="Password" type="password" class="form-control"
+                >
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        @* if you want to take as boolean give value=true *@
+
+        <div class="button-forgotlink">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="RememberMe" id="invalidCheck2">
+                <label class="form-check-label" for="invalidCheck2">
+                    Remember me
+                </label>
+            </div>
+
+
+            <div>
+                @* <a asp-controller="Auth" asp-action="Forget">Forget Password?</a> *@
+            </div>
+        </div>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+
+</div>

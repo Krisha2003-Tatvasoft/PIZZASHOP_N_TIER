@@ -1,0 +1,53 @@
+
+.heading-text{
+    color:#087cc4;
+}
+
+
+.heading-back-button{
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+}
+
+.heading-back-button .back-to-button button{
+    color: #087cc4;
+    border-radius: 5px;
+    border: 1px solid #087cc4 ;
+    height: 40px;
+}
+
+.form{
+    padding: 20px;
+    background-color: white;
+}
+
+
+.upload-icon{
+    width: 30px;
+    height: 30px;
+}
+
+.file-upload{
+    height: 100px;
+    border: 1px dashed grey;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 20px;
+}
+
+.create-button{
+    border: none;
+    background-color: #087cc4;
+    color: white;
+    border-radius: 5px;
+    height: 30px;
+    width: 120px;
+}
+
+.cancel-button{
+    border: 1px solid #087cc4;
+    border-radius: 5px;
+    width: 80px;
+}

@@ -1,0 +1,44 @@
+@* @{
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+ }
+
+ @model pizzashop.models.ForgotPasswordViewModel;
+
+     <link rel="stylesheet" href="~/css/forgotPassword.css" />
+
+
+            <div class="login-rightSide-content">
+
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                    <img class="logo" src="../images/pizzashop_logo.png">
+                    <span class="app-name"><b>PIZZASHOP</b></span>
+                </div>
+
+
+                <form asp-controller="LoginForgetReset" asp-action="Forget" class="form d-flex flex-column gap-3 ">
+    
+                    <h1 class="heading-text">
+                        Forgot Password
+                    </h1>
+
+                    <p class="instruction">Enter your email and we'll send you a link to reset your password.</p>
+
+                    <div>
+                        <input placeholder="E-mail*" type="text"  asp-for="Email" class="form-control" id="validationServer03"
+                            aria-describedby="validationServer03Feedback">
+                        <div id="validationServer03Feedback" class="invalid-feedback">
+                            Email is Required.
+                        </div>
+                    </div>
+
+                    <button type="submit">
+                        Send
+                    </button>
+
+                    <div class="back-toLogin">
+                        <a asp-controller="LoginForgetReset" asp-action="Login">Back to login</a>
+                    </div>
+
+            </form>
+
+            </div> *@

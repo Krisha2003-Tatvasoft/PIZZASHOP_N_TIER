@@ -1,0 +1,71 @@
+
+.heading-text{
+    color:#087cc4;
+}
+
+
+.heading-back-button{
+display: flex;
+align-items: center;
+justify-content: space-between;
+/* padding: 5px; */
+}
+
+
+.heading-back-button .back-to-button button{
+    color:white;
+    border-radius: 5px;
+    border: 1px solid #087cc4 ;
+    height: 40px;
+    background-color: #087cc4 ;
+}
+
+.user-profile{
+    width: 30px;
+    height: 30px;
+}
+
+.main-content .bg-success {
+    --bs-bg-opacity: 1;
+    background-color:	#77ab59 !important;
+}
+
+.main-content .edit-delet button{
+    border: none;
+    background: none;
+}
+
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem;
+    color: grey!important;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: var(--bs-border-width);
+    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)))
+}
+.pagging input{
+    width: 50px;
+    border: 1px solid grey;
+    border-radius: 5px;
+  }
+  
+  .pagging button{
+      border: 1px solid black;
+      border-radius: 5px;
+      color: grey;
+      width: 30px;
+      background-color: white;
+  }
+
+@media screen and (max-width:540px)  {
+
+    .heading-back-button .back-to-button button{
+        font-size: 10px;
+        height: 30px;
+     }
+
+     .heading-back-button .back-to-button input{
+        width: 90px;
+     }
+     
+    
+}

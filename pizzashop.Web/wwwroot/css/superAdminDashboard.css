@@ -1,0 +1,72 @@
+
+.slider{
+    width: 220px;
+    background-color: white;
+    height: 100vh;
+}
+
+.row>* {
+    padding-right: 0px!important;
+    padding-left:0px!important;
+}
+
+.appLogo{
+    width: 75px;
+    height: 65px;
+}
+
+.slider .appname a{
+    text-decoration: none;
+    color: #087cc4;
+    font-size: 20px;
+}
+
+.slider .appname{
+    display: flex;
+    gap: 2px;
+    margin-top: 10px;
+}
+
+.slider li{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-top:30px;
+    padding-left: 10px;
+}
+
+.slider .svgs{
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+}
+
+.slider .slider-content a{
+  text-decoration: none;
+  color: grey;
+  width: 100%;
+}
+
+ .main-content{
+    background-color:#AFAFAF;
+    height: 100vh;
+}
+
+
+.my-header{
+    height: 50px;
+    background-color:#087cc4;
+    width: 100%!important;
+}
+
+.my-header .profile-img{
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+}
+
+/* .my-header .header-content{
+    display: flex!important;
+    gap: 2px;
+    justify-content: flex-end!important;
+} */
