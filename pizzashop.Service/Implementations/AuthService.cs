@@ -2,8 +2,9 @@ using pizzashop.Repository.Interfaces;
 using pizzashop.Entity.Models;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
-using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
+using Org.BouncyCastle.Asn1.Mozilla;
+
 
 namespace pizzashop.Service.Implementations;
 
@@ -32,12 +33,21 @@ public class AuthService : IAuthService
         return await _roleRepository.GetRoleByNameAsync(role);
     }
 
-    public async Task Foreget(Forget viewmodel)
+    public async Task<bool>  UserExistsAsync(Forget viewmodel)
     {
-        
-    } 
-    
+      return await _userRepository.UserExistsAsync(viewmodel.Email);    
+    }
 
+
+   public async Task ResetPassword(ResetPassword model)
+   {
+        var user = await _userRepository.GetUserLoginByEmailAsync(model.Email);
+        if(user!=null)
+        {
+            user.Passwordhash = PasswordUtills.HashPassword(model.Password);
+            await _userRepository.UpdateUserLoginAsync(user);
+        }
+    }
 
 
 }
