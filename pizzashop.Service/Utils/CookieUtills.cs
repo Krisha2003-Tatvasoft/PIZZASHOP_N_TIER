@@ -1,6 +1,7 @@
-﻿using pizzashop.Repository.Models;
+﻿using pizzashop.Entity.Models;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
+using pizzashop.Entity.ViewModels;
 
 namespace pizzashop.Service.Utils
 {
@@ -40,7 +41,15 @@ namespace pizzashop.Service.Utils
         /// <param name="user"></param>
         public static void SaveUserData(HttpResponse response, Userslogin user)
         {
-            string userData = JsonSerializer.Serialize(user);
+       
+               CookieData userdata= new CookieData{
+                Email=user.Email,
+                Userid=user.Userid,
+                Rolename=user.Role.Rolename,
+                Username=user.Username
+               };
+
+            string userData = JsonSerializer.Serialize(userdata);
 
             // Store user details in a cookie for 3 days
             var cookieOptions = new CookieOptions

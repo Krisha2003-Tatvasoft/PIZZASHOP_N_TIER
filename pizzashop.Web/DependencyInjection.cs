@@ -1,6 +1,6 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
 
 namespace pizzashop.Web
 {

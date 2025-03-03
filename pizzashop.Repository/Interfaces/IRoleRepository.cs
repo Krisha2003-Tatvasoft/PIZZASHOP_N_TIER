@@ -1,4 +1,4 @@
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
 
 namespace pizzashop.Repository.Interfaces;
 

@@ -1700,7 +1700,7 @@
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
       },
-      "pizzashop.Repository/1.0.0": {
+      "pizzashop.Entity/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
@@ -1708,6 +1708,23 @@
           "Microsoft.EntityFrameworkCore.Relational": "7.0.20",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.11",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+        },
+        "compile": {
+          "bin/placeholder/pizzashop.Entity.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/pizzashop.Entity.dll": {}
+        }
+      },
+      "pizzashop.Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.20",
+          "Microsoft.EntityFrameworkCore.Relational": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.11",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+          "pizzashop.Entity": "1.0.0"
         },
         "compile": {
           "bin/placeholder/pizzashop.Repository.dll": {}
@@ -5641,6 +5658,11 @@
         "system.xml.xdocument.nuspec"
       ]
     },
+    "pizzashop.Entity/1.0.0": {
+      "type": "project",
+      "path": "../pizzashop.Entity/pizzashop.Entity.csproj",
+      "msbuildProject": "../pizzashop.Entity/pizzashop.Entity.csproj"
+    },
     "pizzashop.Repository/1.0.0": {
       "type": "project",
       "path": "../pizzashop.Repository/pizzashop.Repository.csproj",
@@ -5654,19 +5676,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\admin\\.nuget\\packages\\": {}
+    "C:\\Users\\pci44\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\pizzashop_nTier\\pizzashop.Service\\pizzashop.Service.csproj",
+      "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
       "projectName": "pizzashop.Service",
-      "projectPath": "D:\\pizzashop_nTier\\pizzashop.Service\\pizzashop.Service.csproj",
-      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\pizzashop_nTier\\pizzashop.Service\\obj\\",
+      "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
+      "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
+      "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -5678,8 +5700,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\pizzashop_nTier\\pizzashop.Repository\\pizzashop.Repository.csproj": {
-              "projectPath": "D:\\pizzashop_nTier\\pizzashop.Repository\\pizzashop.Repository.csproj"
+            "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
+              "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
             }
           }
         }

@@ -1,8 +1,8 @@
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
 
 namespace pizzashop.Service.Interfaces;
 
-public interface IAuthService
+public interface IAuthService 
 {
     Task<Userslogin?> AuthenticateUser(string email, string password);
     Task<Role?> CheckRole(string role);

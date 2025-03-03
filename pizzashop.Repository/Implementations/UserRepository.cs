@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Repository.Interfaces;
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
 
 namespace pizzashop.Repository.Implementations;
 
@@ -22,5 +22,16 @@ public class UserRepository : IUserRepository
     public async Task<bool> UserExistsAsync(string email)
     {
         return await _context.Userslogins.AnyAsync(u => u.Email == email);
+    }
+
+    public async Task<Userslogin?> GetUserLoginByEmailAsync(string email)
+    {
+        return await _context.Userslogins.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
+    public async Task UpdateUserLoginAsync(Userslogin userslogin)
+    {
+        _context.Userslogins.Update(userslogin);
+        await _context.SaveChangesAsync();
     }
 }

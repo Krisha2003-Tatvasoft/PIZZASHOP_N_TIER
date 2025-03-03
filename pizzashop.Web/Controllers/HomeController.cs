@@ -2,24 +2,31 @@
 using AuthenticationDemo.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Web.Models;
+using pizzashop.Entity.ViewModels;
+using pizzashop.Service.Interfaces;
 
 namespace pizzashop.Web.Controllers;
 
 [CustomAuthorize]
 public class HomeController : Controller
 {
+     private readonly IAuthService _authService;
+    private readonly IJwtService _jwtService;
     private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
+     
     }
 
-[CustomAuthorize("ADMIN")]
+    [CustomAuthorize("Chef")]
     public IActionResult Index()
     {
         return View();
     }
+
+
 
     public IActionResult Privacy()
     {

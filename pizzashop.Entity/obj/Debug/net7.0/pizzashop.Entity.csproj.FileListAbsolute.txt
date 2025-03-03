@@ -1,0 +1,14 @@
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Debug\net7.0\pizzashop.Entity.deps.json
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Debug\net7.0\pizzashop.Entity.runtimeconfig.json
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Debug\net7.0\pizzashop.Entity.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Debug\net7.0\pizzashop.Entity.pdb
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.csproj.AssemblyReference.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.GeneratedMSBuildEditorConfig.editorconfig
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.AssemblyInfoInputs.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.AssemblyInfo.cs
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.csproj.CoreCompileInputs.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\refint\pizzashop.Entity.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.pdb
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\pizzashop.Entity.genruntimeconfig.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Debug\net7.0\ref\pizzashop.Entity.dll

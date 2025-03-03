@@ -878,12 +878,24 @@
           "System.Xml.ReaderWriter": "4.3.0"
         }
       },
-      "pizzashop.Repository/1.0.0": {
+      "pizzashop.Entity/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "7.0.20",
           "Microsoft.EntityFrameworkCore.Relational": "7.0.20",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.11",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+        },
+        "runtime": {
+          "pizzashop.Entity.dll": {}
+        }
+      },
+      "pizzashop.Repository/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.20",
+          "Microsoft.EntityFrameworkCore.Relational": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.11",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+          "pizzashop.Entity": "1.0.0"
         },
         "runtime": {
           "pizzashop.Repository.dll": {}
@@ -1591,6 +1603,11 @@
       "sha512": "sha512-5zJ0XDxAIg8iy+t4aMnQAu0MqVbqyvfoUVl1yDV61xdo3Vth45oA2FoY4pPkxYAH5f8ixpmTqXeEIya95x0aCQ==",
       "path": "system.xml.xdocument/4.3.0",
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
+    },
+    "pizzashop.Entity/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     },
     "pizzashop.Repository/1.0.0": {
       "type": "project",

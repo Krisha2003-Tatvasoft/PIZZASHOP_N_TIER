@@ -1,0 +1,169 @@
+@{
+    ViewData["Title"] = "User Profile page";
+}
+@model pizzashop.Entity.ViewModels.UserProfile;
+
+
+<link rel="stylesheet" href="~/css/UserProfile.css" />
+
+<div class="w-100 main-content px-lg-4 px-sm-4 px-4">
+
+    <!-- heading text -->
+
+    <div class="heading-back-button py-2">
+        <div class="heading-text">
+            <h1><b>My Profile</b></h1>
+        </div>
+    </div>
+
+    <div style="position: relative;">
+        <img src="../images/profile_div_bg.jpg" class="profile-bg" width="100%" height="50px">
+        <img src="../images/Default_pfp.svg.png" class="user-profile" width="100px" height="100px">
+    </div>
+
+    <div class="d-flex justify-content-between user-details pt-3 pe-5">
+        <div>
+            <div>
+                <div>
+                    <h5><b>@Model.Username</b></h5>
+                </div>
+                <div>
+                    <h6>@Model.Rolename</h6>
+                </div>
+            </div>
+
+        </div>
+        <div>
+
+            <h6>@Model.Email</h6>
+        </div>
+    </div>
+
+
+
+
+    <form class="form w-100" asp-controller="Profile" asp-action="UserProfile" method="post">
+        <input type="hidden" asp-for="Email">
+        <input type="hidden" asp-for="Userid">
+        <!-- first row -->
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="First Name"
+                                asp-for="Firstname">
+                            <label for="floatingInput">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Last Name"
+                                asp-for="Lastname">
+                            <label for="floatingInput">Last Name</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                                asp-for="Username">
+                            <label for="floatingInput">User Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                                asp-for="Phone">
+                            <label for="floatingInput">Phone</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                            asp-for="Countryid">
+                            <option selected>Select Country</option>
+                            <option value="1">India</option>
+                            <option value="2">America</option>
+                            <option value="3">Germany</option>
+                        </select>
+                        <label for="floatingSelect">Country</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                            asp-for="Stateid">
+                            <option selected>Select State</option>
+                            <option value="1">Gujarat</option>
+                            <option value="2">Rajasthan</option>
+                            <option value="3">Tamil Nadu</option>
+                        </select>
+                        <label for="floatingSelect">State</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
+                            asp-for="Cityid">
+                            <option selected>Select City</option>
+                            <option value="1">Surat</option>
+                            <option value="2">Ahemadabad</option>
+                            <option value="3">Vadodara</option>
+                        </select>
+                        <label for="floatingSelect">City</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-9 col-md-9 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Address"
+                            asp-for="Address">
+                        <label for="floatingInput">Address</label>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Zipcode"
+                            asp-for="Zipcode">
+                        <label for="floatingInput">Zipcode</label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container-fluid d-flex justify-content-end  gap-2  mt-sm-2">
+            <button class="create-button" type="submit">
+                Update
+            </button>
+            <button class="cancel-button">
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+
+</div>

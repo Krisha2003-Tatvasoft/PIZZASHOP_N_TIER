@@ -1,7 +1,9 @@
 using pizzashop.Repository.Interfaces;
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using Microsoft.AspNetCore.Mvc;
+using pizzashop.Entity.ViewModels;
 
 namespace pizzashop.Service.Implementations;
 
@@ -29,5 +31,13 @@ public class AuthService : IAuthService
     {
         return await _roleRepository.GetRoleByNameAsync(role);
     }
+
+    public async Task Foreget(Forget viewmodel)
+    {
+        
+    } 
+    
+
+
 
 }

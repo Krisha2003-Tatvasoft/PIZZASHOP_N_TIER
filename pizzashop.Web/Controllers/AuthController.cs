@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 
@@ -22,9 +23,9 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult Login()
     {
-        var user = SessionUtils.GetUser(HttpContext);
+        var userdata = SessionUtils.GetUser(HttpContext);
 
-        if (user == null)
+        if (userdata == null)
             return View();
         else
         {
@@ -71,5 +72,21 @@ public class AuthController : Controller
 
         return RedirectToAction("Login");
     }
+
+    
+    [HttpGet]
+    public IActionResult Forget()
+    {
+        return View();
+    }
+ 
+
+    [HttpPost]
+    public async Task<IActionResult> Forget(Forget viewmodal)
+    {
+        
+        return Ok("Reset password email sent.");
+    }
+
 
 }

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop.Service", "pizzas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop.Repository", "pizzashop.Repository\pizzashop.Repository.csproj", "{49523D63-5650-42E5-BEBE-74F8BE7B8D9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pizzashop.Entity", "pizzashop.Entity\pizzashop.Entity.csproj", "{F2167E2F-CFFD-4B3D-A864-76056496E866}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{49523D63-5650-42E5-BEBE-74F8BE7B8D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49523D63-5650-42E5-BEBE-74F8BE7B8D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49523D63-5650-42E5-BEBE-74F8BE7B8D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2167E2F-CFFD-4B3D-A864-76056496E866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2167E2F-CFFD-4B3D-A864-76056496E866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2167E2F-CFFD-4B3D-A864-76056496E866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2167E2F-CFFD-4B3D-A864-76056496E866}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

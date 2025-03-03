@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using pizzashop.Repository.Models;
+using pizzashop.Entity.Models;
+using pizzashop.Entity.ViewModels;
 using System.Text.Json;
 
 namespace pizzashop.Service.Utils
@@ -13,13 +14,17 @@ namespace pizzashop.Service.Utils
         /// <param name="user"></param>
         public static void SetUser(HttpContext httpContext, Userslogin user)
         {
+            CookieData userdata= new CookieData{
+                Email=user.Email,
+                Userid=user.Userid,
+                Rolename=user.Role.Rolename,
+                Username=user.Username
+               };
             if (user != null)
             {
-                string userData = JsonSerializer.Serialize(user);
+                string userData = JsonSerializer.Serialize(userdata);
                 httpContext.Session.SetString("UserData", userData);
 
-                // Store simple string in Session
-                //httpContext.Session.SetString("UserId", user.Id.ToString());
             }
         }
 
@@ -28,7 +33,7 @@ namespace pizzashop.Service.Utils
         /// </summary>
         /// <param name="httpContext"></param>
         /// <returns></returns>
-        public static User? GetUser(HttpContext httpContext)
+        public static CookieData? GetUser(HttpContext httpContext)
         {
             // Check session first
             string? userData = httpContext.Session.GetString("UserData");
@@ -39,7 +44,7 @@ namespace pizzashop.Service.Utils
                 httpContext.Request.Cookies.TryGetValue("UserData", out userData);
             }
 
-            return string.IsNullOrEmpty(userData) ? null : JsonSerializer.Deserialize<User>(userData);
+            return string.IsNullOrEmpty(userData) ? null : JsonSerializer.Deserialize<CookieData>(userData);
         }
 
         /// <summary>
