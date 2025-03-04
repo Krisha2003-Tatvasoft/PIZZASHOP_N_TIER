@@ -34,4 +34,31 @@ public class UserRepository : IUserRepository
         _context.Userslogins.Update(userslogin);
         await _context.SaveChangesAsync();
     }
+    public async Task<IQueryable<Userslogin>> GetFilteredAsync(string search)
+    {
+        return _context.Userslogins
+        .Include(u => u.User)
+        .Include(u => u.Role)
+        .Where(u => u.User.Isdeleted == false)
+         .Where(u => string.IsNullOrEmpty(search) ||
+                            u.User.Firstname.Contains(search) ||
+                            u.User.Lastname.Contains(search) ||
+                            u.Email.Contains(search) ||
+                            u.User.Phone.Contains(search) ||
+                            u.Role.Rolename.Contains(search));
+    }
+
+    public async Task AddNewUser(Userslogin newUserLogin)
+    {
+        _context.Userslogins.Add(newUserLogin);
+        await _context.SaveChangesAsync();
+    }
+
+     public async Task<Userslogin?> GetUserByIdAsync(int id)
+    {
+        return await _context.Userslogins.Include(u => u.Role).Include(u => u.User)
+                                   .FirstOrDefaultAsync(u => u.Userid==id);
+    }
+
+
 }

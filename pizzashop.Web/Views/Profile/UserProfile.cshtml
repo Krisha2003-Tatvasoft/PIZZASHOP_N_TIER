@@ -89,45 +89,31 @@
             </div>
         </div>
 
-
-
-
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
-                            asp-for="Countryid">
-                            <option selected>Select Country</option>
-                            <option value="1">India</option>
-                            <option value="2">America</option>
-                            <option value="3">Germany</option>
+                        <select class="form-select" id="Countryid" asp-for="Countryid" asp-items="Model.Countries">
+                            <option value="">Select Country</option>
                         </select>
-                        <label for="floatingSelect">Country</label>
+                        <label for="Countryid">Country</label>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
-                            asp-for="Stateid">
-                            <option selected>Select State</option>
-                            <option value="1">Gujarat</option>
-                            <option value="2">Rajasthan</option>
-                            <option value="3">Tamil Nadu</option>
+                        <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
+                            <option value="">Select State</option>
                         </select>
-                        <label for="floatingSelect">State</label>
+                        <label for="Stateid">State</label>
                     </div>
                 </div>
+
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
-                        <select class="form-select" id="floatingSelect" aria-label="Floating label select example"
-                            asp-for="Cityid">
-                            <option selected>Select City</option>
-                            <option value="1">Surat</option>
-                            <option value="2">Ahemadabad</option>
-                            <option value="3">Vadodara</option>
+                        <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
+                            <option value="">Select City</option>
                         </select>
-                        <label for="floatingSelect">City</label>
+                        <label for="Cityid">City</label>
                     </div>
                 </div>
             </div>
@@ -164,6 +150,40 @@
         </div>
 
     </form>
-
-
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // When country is changed
+        $("#Countryid").change(function () {
+            console.log("helllooo");
+            var countryId = $(this).val();
+            if (countryId) {
+                $.get("/Location/GetStates?countryId=" + countryId, function (data) {
+                    $("#Stateid").empty().append('<option value="">Select State</option>');
+                    $("#Cityid").empty().append('<option value="">Select City</option>');
+
+                    $.each(data, function (index, state) {
+                        $("#Stateid").append('<option value="' + state.value + '">' + state.text + '</option>');
+                    });
+                });
+            }
+        });
+
+        // When state is changed
+        $("#Stateid").change(function () {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.get("/Location/GetCities?stateId=" + stateId, function (data) {
+                    $("#Cityid").empty().append('<option value="">Select City</option>');
+                    $.each(data, function (index, city) {
+                        $("#Cityid").append('<option value="' + city.value + '">' + city.text + '</option>');
+                    });
+                });
+            }
+        });
+
+    });
+</script>

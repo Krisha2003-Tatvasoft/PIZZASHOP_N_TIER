@@ -1,0 +1,85 @@
+@{
+    ViewData["Title"] = "User page";
+}
+
+
+<link rel="stylesheet" href="~/css/Users.css" />
+
+<div class="w-100 main-content px-lg-5 px-sm-4 px-4">
+
+    <!-- heading text -->
+
+    <div class="w-100 heading-back-button p-2">
+        <div class="heading-text">
+            <h1><b>User</b></h1>
+        </div>
+        <div class="back-to-button d-flex gap-3 align-items-center">
+            <div>
+                <input class="search form-control me-2 border-0" id="searchInput" type="search" placeholder="Search" aria-label="Search">
+            </div>
+            <a clas="" asp-controller="User" asp-action="AddNewUser">
+                <button class="back-button">
+                    <span>+ Add User</span>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <div id="table-container"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script>
+    $(document).ready(function () {
+        let currentPage = @ViewBag.CurrentPage;
+        let searchQuery = "@ViewBag.SearchQuery" || "";
+        let sortColumn = "@ViewBag.SortColumn" || "";
+        let sortOrder = "@ViewBag.SortOrder" || "";
+        loadUserTable(1);
+
+        function loadUserTable(page) {
+            let pageSize = $("#pageSizeSelect").val();
+            let search = $("#searchInput").val(); // Get search input value
+
+            $.ajax({
+                url: "/User/UserList",
+                type: "GET",
+                data: { page: page, pageSize: pageSize, search: search, sortColumn: sortColumn, sortOrder: sortOrder },
+                success: function (data) {
+                    $("#table-container").html(data);
+                    currentPage = page;
+                },
+                error: function () {
+                    alert("Failed to load data.");
+                }
+            });
+        }
+
+        $(document).on("click", ".pagination-link", function (e) {
+            e.preventDefault();
+            let page = $(this).data("page");
+
+            if (page > 0) {
+                loadUserTable(page);
+            }
+        });
+
+        $(document).on("change", "#pageSizeSelect", function () {
+            loadUserTable(1);
+        });
+
+        // Trigger search on input change (with delay to prevent excessive calls)
+        let searchTimer;
+        $("#searchInput").on("input", function () {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(function () {
+                loadUserTable(1); // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+    });
+</script>
+
+
+</div>
+
+

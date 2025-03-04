@@ -24,4 +24,29 @@ public class UserDetailsRepository : IUserDetailsRepository
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
+
+    public async Task AddUser(User user)
+    {
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> Delete(int id)
+    {
+        var userById = await _context.Users.FirstOrDefaultAsync(s => s.Userid == id);
+        if (userById != null)
+        {
+            userById.Isdeleted = true;
+            _context.Users.Update(userById);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
 }

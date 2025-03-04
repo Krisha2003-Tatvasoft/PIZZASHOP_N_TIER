@@ -135,7 +135,7 @@ public class AuthController : Controller
 </html>";
 
        await _emailService.SendResetPasswordEmail(viewmodal.Email,bodyBuilder);
-      return Ok("Reset password email sent.");
+        return Ok("Reset password email sent.");
         }
         else
         {

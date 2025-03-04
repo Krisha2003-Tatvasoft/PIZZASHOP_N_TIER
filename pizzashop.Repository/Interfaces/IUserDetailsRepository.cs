@@ -7,4 +7,8 @@ public interface IUserDetailsRepository
      Task<User?> GetUserByIdAsync(int id);
 
      Task UpdateAsync(User user);
+
+      Task AddUser(User user);
+
+      Task<bool> Delete(int id);
 }

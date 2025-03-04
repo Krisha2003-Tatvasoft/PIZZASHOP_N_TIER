@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "User page";
+}
+<link rel="stylesheet" href="~/css/role.css" />
+
+  
+<div class="w-100 main-content px-lg-5 px-sm-4 px-4">
+     <div id="roletable">
+
+        @model List<pizzashop.Entity.Models.Role>
+
+                <div class="w-100 py-2">
+                    <div class="heading-text">
+                        <h1><b>Role</b></h1>
+                    </div>
+                </div>
+         
+                    <div class="table-responsive w-75 w-sm-100 shadow-sm">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var role in Model)
+                                {
+                                   <tr>
+                                    <td>@role.Rolename</td>
+                                    <td><div class="edit-button"><button>
+                                        <a  class="edit-btn"  data-id="@role.Roleid" ><img src="../images/pencil.svg"></a></button></td>
+                                   </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+        <div id="permissionpartial"></div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+       $(document).on("click", ".edit-btn", function () {
+            var Roleid= $(this).data("id");
+            loadPermissionPage(Roleid)
+        });
+
+ function loadPermissionPage(Roleid)
+ {
+            $.ajax({
+                url: '@Url.Action("Role", "RolePermission")',
+                type: "GET",
+                data: { id: Roleid },
+                success: function (data) {
+                    $('#roletable').hide();
+                    $('#permissionpartial').html(data).show();
+                },
+                error: function () {
+                   
+                }
+            });
+ }
+});
+</script>

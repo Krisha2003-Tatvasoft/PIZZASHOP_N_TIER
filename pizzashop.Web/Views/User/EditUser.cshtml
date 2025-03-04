@@ -1,0 +1,231 @@
+@{
+    ViewData["Title"] = "Edit User Page";
+}
+
+@model pizzashop.Entity.ViewModels.AddNewUser;
+
+
+<link rel="stylesheet" href="~/css/EditUser.css" />
+
+<div class="w-100 main-content px-lg-4 px-sm-4 px-4">
+
+    <!-- heading text -->
+
+    <div class="w-100 heading-back-button py-2">
+        <div class="heading-text">
+            <h1><b>Edit User</b></h1>
+        </div>
+        <div class="back-to-button">
+            <a class="" asp-controller="User" asp-action="UserList">
+                <button class="back-button"><span>
+                        < Back</span></button>
+            </a>
+
+        </div>
+    </div>
+
+    <form class="form w-100" asp-action="EditUser" asp-controller="User">
+        <input type="hidden" asp-for="Userid">
+        <!-- first row -->
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="First Name"
+                                asp-for="Firstname">
+                            <label for="floatingInput">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Last Name"
+                                asp-for="Lastname">
+                            <label for="floatingInput">Last Name</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                                asp-for="Username">
+                            <label for="floatingInput">User Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <select class="form-select" asp-for="Roleid" asp-items="Model.Roles">
+                                <option value="">Select Role</option>
+                            </select>
+                            <label>Role</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="floatingInput" placeholder="Email"
+                                asp-for="Email" disabled>
+                            <label for="floatingInput">Email</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingInput" placeholder="Password"
+                                asp-for="Password">
+                            <label for="floatingInput">Password</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="container-fluid">
+                <div class="row  file-upload ms-1 me-1">
+                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+
+                        <div class="input-group  d-flex justify-content-center align-items-center">
+                            <!-- Button to trigger the file input -->
+                            <button type="button" class="btn" id="inputGroupFileAddon04"
+                                onclick="document.getElementById('inputGroupFile01').click();">
+                                <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
+                                <div class="d-flex justify-content-center align-items-center">
+                                    Browes file
+                                </div>
+                            </button>
+
+                            <!-- Hidden file input -->
+                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                                aria-describedby="fileNameDisplay"
+                                onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+
+                    <div class="form-floating">
+                        <select class="form-select" id="Countryid" asp-for="Countryid" asp-items="Model.Countries">
+                            <option value="">Select Country</option>
+                        </select>
+                        <label for="Countryid">Country</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+
+                    <div class="form-floating">
+                        <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
+                            <option value="">Select State</option>
+                        </select>
+                        <label for="Stateid">State</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+
+                    <div class="form-floating">
+                        <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
+                            <option value="">Select City</option>
+                        </select>
+                        <label for="Cityid">City</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Zipcode"
+                            asp-for="Zipcode">
+                        <label for="floatingInput">Zipcode</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Address"
+                            asp-for="Address">
+                        <label for="floatingInput">Address</label>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                    <div class="form-floating">
+                        <input type="tel" class="form-control" id="floatingInput" placeholder="Phone" asp-for="Phone">
+                        <label for="floatingInput">Phone</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid d-flex gap-2 mt-sm-2">
+            <button class="create-button" type="submit">
+                Update User
+            </button>
+            <button class="cancel-button">
+                Cancel
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // When country is changed
+        $("#Countryid").change(function () {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.get("/Location/GetStates?countryId=" + countryId, function (data) {
+                    $("#Stateid").empty().append('<option value="">Select State</option>');
+                    $("#Cityid").empty().append('<option value="">Select City</option>');
+
+                    $.each(data, function (index, state) {
+                        $("#Stateid").append('<option value="' + state.value + '">' + state.text + '</option>');
+                    });
+                });
+            }
+        });
+
+        // When state is changed
+        $("#Stateid").change(function () {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.get("/Location/GetCities?stateId=" + stateId, function (data) {
+                    $("#Cityid").empty().append('<option value="">Select City</option>');
+                    $.each(data, function (index, city) {
+                        $("#Cityid").append('<option value="' + city.value + '">' + city.text + '</option>');
+                    });
+                });
+            }
+        });
+
+    });
+</script>

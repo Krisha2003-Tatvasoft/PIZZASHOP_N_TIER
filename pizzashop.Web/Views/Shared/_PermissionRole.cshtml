@@ -1,0 +1,153 @@
+@model List<pizzashop.models.PermissionViewModel>;
+
+<link rel="stylesheet" href="~/css/permission.css" />
+
+<!-- heading text -->
+
+<div class="w-100">
+    <div class="heading-text py-2">
+        <h1><b>Permission</b></h1>
+    </div>
+</div>
+
+
+
+<div class="w-100table-responsive pemission-content shadow">
+
+    <div class="w-25">
+        <div class="form-floating">
+            <div class="form-floating mb-3 red-border">
+                <input type="text" class="form-control" id="floatingInput" placeholder="Focus"
+                    value="@Model[0].Rolename" disabled>
+                <label for="floatingInput">Role</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Permission</th>
+                    <th>Can View</th>
+                    <th>Can Add/Edit</th>
+                    <th>Can Delete</th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" class="permission-id" value="@item.Permissionid">
+                            <div class="form-check">
+                                <input class="form-check-input permission-checkbox" type="checkbox"  @(item.CanPermission ? "checked" : "")>
+                                <label class="form-check-label">
+                                    @item.Permissionname
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input can-view" type="checkbox" @(item.Canview ? "checked" : "")>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input can-add-edit" type="checkbox" @(item.Canaddedit ? "checked" :
+                                "")>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input can-delete" type="checkbox" @(item.Candelete ? "checked" :
+                                "")>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="save-cancle-button">
+
+        <a class="save-btn">
+            <button class="save-button" type="submit">Save</button>
+        </a>
+
+        <a class="cancle-btn ">
+            <button class="cancel-button">
+                Cancel
+            </button> </a>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $(document).on("click", ".cancle-btn", function () {
+            console.log("helooo");
+            $.ajax({
+                url: '@Url.Action("Role", "RolePermission")',
+                type: 'GET',
+                success: function (response) {
+
+                    $('#roletable').show();
+                    $('#permissionpartial').hide();
+                },
+                error: function () {
+                    console.error("Error occurred while loading permissionpartial view!");
+                }
+            });
+        });
+
+
+        $(document).on("click", ".save-btn", function () {
+            console.log("helolo");
+            let updatedPermissions = [];
+
+            $("tbody tr").each(function () {
+                let row = $(this);
+                let permissionId = row.find(".permission-id").val();
+
+                let canView = row.find(".can-view").prop("checked");
+                let canAddEdit = row.find(".can-add-edit").prop("checked");
+                let canDelete = row.find(".can-delete").prop("checked");
+
+                if (row.find(".permission-checkbox").prop("checked")) {
+                    updatedPermissions.push({
+                        Permissionid: permissionId,
+                        Canview: canView,
+                        Canaddedit: canAddEdit,
+                        Candelete: canDelete
+                    });
+                }
+            });
+
+
+            $.ajax({
+                url: "/RolePermission/UpdatePermissions",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(updatedPermissions),
+                success: function (response) {
+                    alert("Permissions updated successfully!");
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            });
+        });
+
+    });
+
+</script>

@@ -5,6 +5,7 @@ using pizzashop.Web.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using Microsoft.AspNetCore.Authorization;
 
 namespace pizzashop.Web.Controllers;
 
@@ -49,7 +50,6 @@ public class ProfileController : Controller
                 HttpContext.Session.Clear();
                 return RedirectToAction("Login", "Auth");
             }
-
         }
         return RedirectToAction("Login", "Auth");
     }
@@ -64,9 +64,10 @@ public class ProfileController : Controller
     [HttpPost]
     public async Task<IActionResult> UserProfile(UserProfile viewmodel)
     {
-            CookieData user = SessionUtils.GetUser(HttpContext);
-            await _ProfileService.UpdateProfile(user.Userid, viewmodel);
-            return RedirectToAction("UserProfile", "Profile");
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        await _ProfileService.UpdateProfile(user.Userid, viewmodel);
+        return RedirectToAction("UserProfile", "Profile");
     }
+  
 
 }
