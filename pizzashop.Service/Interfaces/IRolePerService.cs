@@ -1,0 +1,12 @@
+using pizzashop.Entity.Models;
+using pizzashop.Entity.ViewModels;
+
+namespace pizzashop.Service.Interfaces;
+
+public interface IRolePerService
+{
+    Task<List<Role>> GetAllRoleAsync();
+    Task<List<RolePermission>> GetPerTablesAsync(int id);
+
+    Task<bool> UpdatePerAsync(List<RolePermission> updatedPermissions);
+}

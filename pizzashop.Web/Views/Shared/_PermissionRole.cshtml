@@ -1,4 +1,4 @@
-@model List<pizzashop.models.PermissionViewModel>;
+@model List<pizzashop.Entity.ViewModels.RolePermission>
 
 <link rel="stylesheet" href="~/css/permission.css" />
 
@@ -44,7 +44,8 @@
                         <td>
                             <input type="hidden" class="permission-id" value="@item.Permissionid">
                             <div class="form-check">
-                                <input class="form-check-input permission-checkbox" type="checkbox"  @(item.CanPermission ? "checked" : "")>
+                                <input class="form-check-input permission-checkbox" type="checkbox" @(item.CanPermission ?
+                                    "checked" : "")>
                                 <label class="form-check-label">
                                     @item.Permissionname
                                 </label>
@@ -58,17 +59,17 @@
                         <td>
                             <div class="form-check form-switch">
                                 <input class="form-check-input can-add-edit" type="checkbox" @(item.Canaddedit ? "checked" :
-                                "")>
+                                    "")>
                             </div>
                         </td>
                         <td>
                             <div class="form-check form-switch">
                                 <input class="form-check-input can-delete" type="checkbox" @(item.Candelete ? "checked" :
-                                "")>
-                            </div>
-                        </td>
-                    </tr>
-                }
+                                    "")>
+                        </div>
+                    </td>
+                </tr>
+                                }
 
             </tbody>
         </table>

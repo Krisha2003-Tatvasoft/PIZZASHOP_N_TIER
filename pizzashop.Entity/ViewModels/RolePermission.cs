@@ -1,13 +1,13 @@
 namespace pizzashop.Entity.ViewModels;
 
-public partial class Permission
+public partial class RolePermission
 {
 
     public int Permissionid { get; set; }
 
     public string Rolename { get; set; } = null!;
 
-     public string Permissionname { get; set; } = null!;
+    public string Permissionname { get; set; } = null!;
 
     public bool Canview { get; set; }
 
@@ -15,6 +15,7 @@ public partial class Permission
 
     public bool Candelete { get; set; }
 
-    public bool CanPermission {get; set;}
+    public bool CanPermission { get; set; }
+
 
 }

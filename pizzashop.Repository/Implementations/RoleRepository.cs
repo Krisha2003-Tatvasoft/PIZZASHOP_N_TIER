@@ -25,4 +25,9 @@ public class RoleRepository : IRoleRepository
         { Value = c.Roleid.ToString(), Text = c.Rolename})
         .ToListAsync();
 
+        public async Task<List<Role>> GetRoleListAsync()
+        {
+            return await _context.Roles.ToListAsync();
+        }
+        
 }

@@ -10,8 +10,6 @@ namespace pizzashop.Web.Controllers;
 [CustomAuthorize]
 public class HomeController : Controller
 {
-     private readonly IAuthService _authService;
-    private readonly IJwtService _jwtService;
     private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger)

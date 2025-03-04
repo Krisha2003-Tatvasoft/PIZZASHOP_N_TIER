@@ -11,11 +11,11 @@ public partial class Permission
 
     public int Moduleid { get; set; }
 
-    public bool? Canview { get; set; }
+    public bool Canview { get; set; }
 
-    public bool? Canaddedit { get; set; }
+    public bool Canaddedit { get; set; }
 
-    public bool? Candelete { get; set; }
+    public bool Candelete { get; set; }
 
     public virtual Permissionmodule Module { get; set; } = null!;
 
