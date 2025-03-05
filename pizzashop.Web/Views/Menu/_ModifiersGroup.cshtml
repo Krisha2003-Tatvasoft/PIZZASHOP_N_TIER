@@ -1,0 +1,20 @@
+@model List<pizzashop.Entity.ViewModels.ModifiersGroup>;
+
+<ul class="list-unstyled">
+@foreach(var item in Model)
+{
+ <li class="d-flex justify-content-between p-2">
+        <a href="" class="active d-flex align-items-center gap-2">
+            <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
+            <div>
+               @item.Modifiergroupname
+            </div>
+        </a>
+        <div class="d-flex gap-1 edit-delet"><button class="button" data-bs-toggle="modal"
+                data-bs-target="#updateModifiersGroup"><img src="../images/pencil.svg"></button><button class="button"
+                data-bs-toggle="modal" data-bs-target="#deleteModifiersGrop"><img class="delete-icon"
+                    src="../images/trash.svg"></button>
+        </div>
+    </li>
+}
+</ul>

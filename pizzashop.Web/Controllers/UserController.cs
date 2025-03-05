@@ -91,12 +91,12 @@ public class UserController : Controller
      </html>";
 
             await _emailService.SendResetPasswordEmail(model.Email, bodyBuilder);
-            ViewBag.successMessage = "Email already exists.";
+             TempData["SuccessMessage"] = "User Added Sucessfully";
             return RedirectToAction("UserList", "user");
         }
         else
         {
-            ViewBag.ErrorMessage = "Email already exists.";
+            TempData["ErrorMessage"] = "Email Already Exists";
             return View();
         }
     }
@@ -112,10 +112,12 @@ public class UserController : Controller
     {
         if (await _userService.PostUpdate(viewmodel))
         {
+            TempData["SuccessMessage"] = "User Updated Sucessfully";
             return RedirectToAction("UserList", "User");
         }
         else
         {
+            TempData["ErrorMessage"] = "Invalid User";
             return View();
         }
 

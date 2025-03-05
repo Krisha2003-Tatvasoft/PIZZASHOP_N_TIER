@@ -1,0 +1,290 @@
+@{
+    ViewData["Title"] = "Add User Page";
+}
+
+@model pizzashop.Entity.ViewModels.Category;
+
+<link rel="stylesheet" href="~/css/Menu.css" />
+
+<div class="w-100 main-content px-4">
+
+
+
+    <div class="heading-text py-2">
+        <h1><b>Menu</b></h1>
+    </div>
+
+    <div class="items-modifiers">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-tab1" data-bs-toggle="tab" data-bs-target="#tab1" type="button"
+                    role="tab" aria-controls="tab1" aria-selected="true">
+                    <div class="tab">
+                        <img class=tab-svg src="../images/list-check.svg" /><span class="tab-name">
+                            Items</span>
+                    </div>
+                </button>
+                <button class="nav-link" id="nav-tab2" data-bs-toggle="tab" data-bs-target="#tab2" type="button"
+                    role="tab" aria-controls="tab2" aria-selected="false">
+                    <div class="tab">
+                        <img class=tab-svg src="../images/ui-checks-grid.svg" /><span class="tab-name">
+                            Modifiers</span>
+                    </div>
+                </button>
+            </div>
+        </nav>
+
+        <div class="tab-content w-100" id="nav-tabContent">
+
+            <div class="tab-pane fade show active " id="tab1" role="tabpanel" aria-labelledby="nav-tab1">
+
+                <div class="d-flex items">
+
+                    <div class="menu-slider collapse d-xl-block" id="categorySlider">
+
+
+                        <div class="mb-4 d-flex justify-content-between">
+                            <div class="slider-heading-text">
+                                <b>Category</b>
+                            </div>
+                            <button class="plus-button button" data-bs-toggle="modal" data-bs-target="#addNewCategory"
+                                class="delet-btn">
+                                <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
+                            </button>
+                        </div>
+
+                        <div id="category-list"></div>
+
+                    </div>
+
+                    <div id="overlay1" class="overlay1"></div>
+
+                    <div class="menu-table w-100">
+
+
+                        <div class="menu-table-heading-text mb-2 mt-2 ms-3 d-flex gap-2 justify-content-start">
+
+
+                            <button class="navbar-toggler d-block d-xl-none" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#categorySlider" aria-controls="categorySlider" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <img src="../images/list (1).svg" width="25px" height="25px" alt="Menu Icon"
+                                    class="menu-icon">
+                            </button>
+
+                            <h3><b>Items</b></h3>
+                        </div>
+
+                        <div id="item-table"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="nav-tab2">
+
+                <div class="d-flex items">
+
+                    <div class="menu-slider collapse d-xl-block" id="modifierSlider">
+
+
+                        <div class="mb-4 d-flex justify-content-between">
+                            <div class="slider-heading-text">
+                                <b>Modifiers Group</b>
+                            </div>
+                            <button class="plus-button button" data-bs-toggle="modal"
+                                data-bs-target="#addModifiersGroup" class="delet-btn">
+                                <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
+                            </button>
+                        </div>
+
+                        <div id="Modifiers-group"></div>
+
+                    </div>
+
+
+
+                    <div id="overlay2" class="overlay1"></div>
+
+                    <div class="menu-table w-100">
+
+
+                        <div class="menu-table-heading-text mb-2 mt-2 ms-3 d-flex gap-2 justify-content-start">
+
+
+                            <button class="navbar-toggler d-block d-xl-none" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#modifierSlider" aria-controls="modifierSlider" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                                <img src="../images/list (1).svg" width="25px" height="25px" alt="Menu Icon"
+                                    class="menu-icon">
+                            </button>
+
+                            <h3><b>Modifiers</b></h3>
+                        </div>
+                        
+                        <div id="modifier-table"></div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+<!-- Add Category -->
+<div class="modal fade modal-addNewCategory" id="addNewCategory" tabindex="-1" aria-labelledby="AddNewCategory"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Add Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addCat">
+                <div class="modal-body ">
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Category name"
+                            asp-for="Categoryname" required>
+                        <label for="floatingInput">Name*</label>
+                    </div>
+
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Add a Description of Xategory" id="floatingTextarea"
+                            asp-for="Description"></textarea>
+                        <label for="floatingTextarea">Description</label>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a id="save-cat">
+                        <button type="button" class="save-button btn btn-primary sav-btn"
+                            data-bs-dismiss="modal">Save</button>
+                    </a>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="../js/bootstarp.bundle.min.js"></script>
+<script src="../js/bootstarp.bundle.min.js"></script>
+<script>
+    // Get elements
+    const sidebar = document.getElementById('categorySlider');
+    const sidebar2 = document.getElementById('modifierSlider');
+    const overlay1 = document.getElementById('overlay1');
+    const overlay2 = document.getElementById('overlay2');
+
+    // Add event listener to overlay
+    overlay1.addEventListener('click', function () {
+        // Close the sidebar by removing the 'show' class
+        sidebar.classList.remove('show');
+
+    });
+    overlay2.addEventListener('click', function () {
+        // Close the sidebar by removing the 'show' class
+        sidebar2.classList.remove('show');
+    });
+
+
+    $(document).ready(function () {
+
+        function catList() {
+            $.ajax({
+                url: "/Menu/CategoryList",
+                type: "GET",
+                success: function (response) {
+                    $("#category-list").html(response);
+                },
+                error: function (error) {
+                }
+            });
+        }
+
+        catList();
+        loadPermissionPage(1);
+
+        $("#save-cat").click(function (e) {
+            e.preventDefault();
+            var formData = $("#addCat").serialize();
+
+            $.ajax({
+                url: "/Menu/addCategory",
+                type: "POST",
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    $("#addCat")[0].reset();
+                    catList();
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            });
+        });
+
+
+        $(document).on("click", ".cat-link", function (e) {
+            var categoryId = $(this).data("id");
+            loadPermissionPage(categoryId);
+        });
+
+        function loadPermissionPage(categoryId) {
+            $.ajax({
+                url: '@Url.Action("itemTable", "Menu")',
+                type: "GET",
+                data: { id: categoryId },
+                success: function (data) {
+                    $('#item-table').html(data);
+                },
+                error: function () {
+                }
+            });
+        }
+        
+
+        @* modifier *@
+
+
+        function MGList() {
+            $.ajax({
+                url: "/Menu/ModiGroupList",
+                type: "GET",
+                success: function (response) {
+                    $("#Modifiers-group").html(response);
+                },
+                error: function (error) {
+                }
+            });
+        }
+
+     MGList();
+
+    });
+
+
+</script>

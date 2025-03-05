@@ -40,7 +40,7 @@ public class UserRepository : IUserRepository
         .Include(u => u.User)
         .Include(u => u.Role)
         .Where(u => u.User.Isdeleted == false)
-         .Where(u => string.IsNullOrEmpty(search) ||
+        .Where(u => string.IsNullOrEmpty(search) ||
                             u.User.Firstname.Contains(search) ||
                             u.User.Lastname.Contains(search) ||
                             u.Email.Contains(search) ||

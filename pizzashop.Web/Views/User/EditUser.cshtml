@@ -95,7 +95,7 @@
 
 
         <div>
-            <div class="container-fluid">
+            <div class="container-fluid mb-3">
                 <div class="row  file-upload ms-1 me-1">
                     <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
 
@@ -103,7 +103,7 @@
                             <!-- Button to trigger the file input -->
                             <button type="button" class="btn" id="inputGroupFileAddon04"
                                 onclick="document.getElementById('inputGroupFile01').click();">
-                                <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
+                                <img class="upload-icon" src="~/images/cloud-arrow-up.svg" alt="Upload" />
                                 <div class="d-flex justify-content-center align-items-center">
                                     Browes file
                                 </div>
@@ -113,7 +113,6 @@
                             <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
                                 aria-describedby="fileNameDisplay"
                                 onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
-
                         </div>
 
 
@@ -127,7 +126,6 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
-
                     <div class="form-floating">
                         <select class="form-select" id="Countryid" asp-for="Countryid" asp-items="Model.Countries">
                             <option value="">Select Country</option>
@@ -136,7 +134,6 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
-
                     <div class="form-floating">
                         <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
                             <option value="">Select State</option>
@@ -145,7 +142,6 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
-
                     <div class="form-floating">
                         <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
                             <option value="">Select City</option>
@@ -188,7 +184,6 @@
             <button class="cancel-button">
                 Cancel
             </button>
-
         </div>
 
     </form>
