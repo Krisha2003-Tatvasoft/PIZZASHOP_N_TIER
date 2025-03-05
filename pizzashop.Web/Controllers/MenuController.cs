@@ -14,14 +14,17 @@ public class MenuController : Controller
 
     private readonly IModifiersGroupService _modifierGroupService;
 
-    public MenuController(ICategoryService categoryService,IItemService itemService
-    ,IModifiersGroupService modifiersGroupService)
+    private readonly IModifierService _modifierService;
+
+    public MenuController(ICategoryService categoryService, IItemService itemService
+    , IModifiersGroupService modifiersGroupService,IModifierService modifierService)
     {
-       _categoryService = categoryService;    
-       _itemService = itemService;
-       _modifierGroupService = modifiersGroupService;
+        _categoryService = categoryService;
+        _itemService = itemService;
+        _modifierGroupService = modifiersGroupService;
+        _modifierService = modifierService;
     }
-   
+
     public IActionResult Menu()
     {
         return View();
@@ -30,35 +33,39 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> addCategory(Category model)
     {
-         CookieData user = SessionUtils.GetUser(HttpContext);
+        CookieData user = SessionUtils.GetUser(HttpContext);
 
-        await  _categoryService.AddCategoryAsync(model,user.Userid);
-         return Json( new {sucess= true,message="wdcf"});
+        await _categoryService.AddCategoryAsync(model, user.Userid);
+        return Json(new { sucess = true, message = "wdcf" });
     }
 
     [HttpGet]
     public IActionResult CategoryList()
     {
-        List<Category>  categories = _categoryService.GetCategoryList();
+        List<Category> categories = _categoryService.GetCategoryList();
         return PartialView("_CategoryTable", categories);
     }
 
-     [HttpGet]
-     public IActionResult itemTable(int id)
-     {
+    [HttpGet]
+    public IActionResult itemTable(int id)
+    {
         List<ItemTable> items = _itemService.GetItemTable(id);
-        return PartialView("_ItemTable",items);
-     }
+        return PartialView("_ItemTable", items);
+    }
 
 
     [HttpGet]
     public IActionResult ModiGroupList()
     {
-        List<ModifiersGroup>  modifiersGrops = _modifierGroupService.GetMGList();
-        return PartialView("_ModifiersGroup", modifiersGrops );
+        List<ModifiersGroup> modifiersGrops = _modifierGroupService.GetMGList();
+        return PartialView("_ModifiersGroup", modifiersGrops);
     }
 
+    [HttpGet]
+    public IActionResult modifierTable(int id)
+    {
+        List<ModifierTable> modifiers = _modifierService.GetModifiersTable(id);
+        return PartialView("_Modifier", modifiers);
+    }
 
-     
-    
 }

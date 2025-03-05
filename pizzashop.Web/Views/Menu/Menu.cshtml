@@ -125,7 +125,7 @@
 
                             <h3><b>Modifiers</b></h3>
                         </div>
-                        
+
                         <div id="modifier-table"></div>
 
 
@@ -186,6 +186,42 @@
 </div>
 
 
+<!-- add Modifiers group -->
+<div class="modal fade modal-addModifiersGroup" id="addModifiersGroup" tabindex="-1" aria-labelledby="AddNewCategory"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModifiersGroup">Add Modifier Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <form>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="Category name" required>
+                        <label for="floatingInput">Name*</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Add a Description of Xategory"
+                            id="floatingTextarea"></textarea>
+                        <label for="floatingTextarea">Description</label>
+                    </div>
+
+                    <a href="" data-bs-toggle="modal" data-bs-target="#selectExistingModifiers">+ Add Existing
+                        Modifiers</a>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button submit" class="btn btn-primary sav-btn" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -213,12 +249,13 @@
 
     $(document).ready(function () {
 
+
         function catList() {
             $.ajax({
                 url: "/Menu/CategoryList",
                 type: "GET",
                 success: function (response) {
-                    $("#category-list").html(response);
+                     $("#category-list").html(response); 
                 },
                 error: function (error) {
                 }
@@ -226,7 +263,7 @@
         }
 
         catList();
-        loadPermissionPage(1);
+        loadItemTable(1);
 
         $("#save-cat").click(function (e) {
             e.preventDefault();
@@ -250,10 +287,10 @@
 
         $(document).on("click", ".cat-link", function (e) {
             var categoryId = $(this).data("id");
-            loadPermissionPage(categoryId);
+            loadItemTable(categoryId);
         });
 
-        function loadPermissionPage(categoryId) {
+        function loadItemTable(categoryId) {
             $.ajax({
                 url: '@Url.Action("itemTable", "Menu")',
                 type: "GET",
@@ -265,24 +302,63 @@
                 }
             });
         }
-        
+
 
         @* modifier *@
 
 
-        function MGList() {
+            function MGList() {
+                $.ajax({
+                    url: "/Menu/ModiGroupList",
+                    type: "GET",
+                    success: function (response) {
+                        $("#Modifiers-group").html(response);
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
+        MGList();
+
+        $(document).on("click", ".MG-link", function (e) {
+            var MGId = $(this).data("id");
+            loadModifierTable(MGId);
+        });
+
+        function loadModifierTable(MGId) {
             $.ajax({
-                url: "/Menu/ModiGroupList",
+                url: '@Url.Action("modifierTable", "Menu")',
                 type: "GET",
-                success: function (response) {
-                    $("#Modifiers-group").html(response);
+                data: { id: MGId },
+                success: function (data) {
+                    $('#modifier-table').html(data);
                 },
-                error: function (error) {
+                error: function () {
                 }
             });
         }
 
-     MGList();
+        @* add mofier group *@
+            $("#save-cat").click(function (e) {
+                e.preventDefault();
+                var formData = $("#addCat").serialize();
+
+                $.ajax({
+                    url: "/Menu/addCategory",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#addCat")[0].reset();
+                        catList();
+                    },
+                    error: function (error) {
+                        console.error("Error updating permissions:", error);
+                    }
+                });
+            });
+
+
 
     });
 
