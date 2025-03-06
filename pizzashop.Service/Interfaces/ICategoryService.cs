@@ -8,4 +8,10 @@ public interface ICategoryService
      
      List<VMCategory> GetCategoryList();
 
+     Task<VMCategory> GetCategoryById(int id);
+
+     Task<bool> UpdateCat(VMCategory model);
+
+     Task<bool> DeleteCat(int id);
+
 }

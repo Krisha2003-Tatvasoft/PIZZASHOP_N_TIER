@@ -12,9 +12,12 @@ public class CategoryService : ICategoryService
 
   private readonly ICategoryRepository _categoryRepository;
 
-  public CategoryService(ICategoryRepository categoryRepository)
+  private readonly IItemRepository _itemRepository;
+
+  public CategoryService(ICategoryRepository categoryRepository,IItemRepository itemRepository)
   {
     _categoryRepository = categoryRepository;
+    _itemRepository = itemRepository;
   }
   public async Task<bool> AddCategoryAsync(VMCategory model, int loginid)
   {
@@ -33,17 +36,64 @@ public class CategoryService : ICategoryService
   {
     var category = _categoryRepository.AllCategory();
 
-     var catList = category.Select(c=> new VMCategory
-     {
-        Categoryid = c.Categoryid,
-        Categoryname= c.Categoryname,
-        Description = c.Description,
-        Createdby = c.Createdby,
-        Modifiedby= c.Modifiedby
-     }).ToList();
+    var catList = category.Select(c => new VMCategory
+    {
+      Categoryid = c.Categoryid,
+      Categoryname = c.Categoryname,
+      Description = c.Description,
+      Createdby = c.Createdby,
+      Modifiedby = c.Modifiedby
+    }).ToList();
 
     return catList;
   }
 
+  public async Task<VMCategory> GetCategoryById(int id)
+  {
+    var GetCatById = await _categoryRepository.GetCatById(id);
+
+    VMCategory category = new VMCategory
+    {
+      Categoryid = GetCatById.Categoryid,
+      Categoryname = GetCatById.Categoryname,
+      Description = GetCatById.Description,
+      Createdby = GetCatById.Createdby,
+      Modifiedby = GetCatById.Modifiedby
+    };
+
+    return category;
+  }
+
+  public async Task<bool> UpdateCat(VMCategory model)
+  {
+    var GetCatById = await _categoryRepository.GetCatById(model.Categoryid);
+
+    if (GetCatById == null)
+    {
+      return false;
+    }
+    else
+    {
+      GetCatById.Categoryname = model.Categoryname;
+      GetCatById.Description = model.Description;
+
+      await _categoryRepository.UpdateCat(GetCatById);
+      return true;
+    }
+
+  }
+
+  public async Task<bool> DeleteCat(int id)
+  {
+    if(await _categoryRepository.DeleteCat(id))
+    {
+      await _itemRepository.DeleteByCat(id);
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
 }

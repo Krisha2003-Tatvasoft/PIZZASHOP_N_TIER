@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using VMCategory = pizzashop.Entity.ViewModels.Category;
+
 
 namespace pizzashop.Controllers;
 
@@ -17,7 +19,7 @@ public class MenuController : Controller
     private readonly IModifierService _modifierService;
 
     public MenuController(ICategoryService categoryService, IItemService itemService
-    , IModifiersGroupService modifiersGroupService,IModifierService modifierService)
+    , IModifiersGroupService modifiersGroupService, IModifierService modifierService)
     {
         _categoryService = categoryService;
         _itemService = itemService;
@@ -31,11 +33,13 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> addCategory(Category model)
+    public async Task<IActionResult> addCategory(MenuViewModels MenuVM)
     {
+        VMCategory model = MenuVM.category;
         CookieData user = SessionUtils.GetUser(HttpContext);
 
         await _categoryService.AddCategoryAsync(model, user.Userid);
+
         return Json(new { sucess = true, message = "wdcf" });
     }
 
@@ -66,6 +70,40 @@ public class MenuController : Controller
     {
         List<ModifierTable> modifiers = _modifierService.GetModifiersTable(id);
         return PartialView("_Modifier", modifiers);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditCat(int id)
+    {
+        VMCategory category = await _categoryService.GetCategoryById(id);
+        return Json(category);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditCat([FromBody] Category model)
+    {
+        if (await _categoryService.UpdateCat(model))
+        {
+            return Json(new { sucess = true, message = "wdcf" });
+        }
+        else
+        {
+            return Json(new { error = true, message = "wdcf" });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteCat(int id)
+    {
+        if (await _categoryService.DeleteCat(id))
+        {
+            return Json(new { sucess = true, message = "wdcf" });
+        }
+        else
+        {
+            return Json(new { error = true, message = "wdcf" });
+        }
+
     }
 
 }

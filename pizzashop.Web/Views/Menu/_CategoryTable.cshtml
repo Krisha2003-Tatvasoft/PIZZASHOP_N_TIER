@@ -10,10 +10,16 @@
                     @item.Categoryname
                 </div>
             </a>
-            <div class="d-flex gap-1 edit-delet"><button class="button" data-bs-toggle="modal"
-                    data-bs-target="#editNewCategory"><img src="../images/pencil.svg"></button><button class="button"
-                    data-bs-toggle="modal" data-bs-target="#deleteModal"><img class="delete-icon"
-                    src="../images/trash.svg"></button>
+            <div class="d-flex gap-1 edit-delet">
+                <a class="edit-link" data-catid="@item.Categoryid">
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory"><img
+                            src="../images/pencil.svg"></button>
+                </a>
+
+                <a class="delete-link" data-catid="@item.Categoryid">
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal"><img class="delete-icon"
+                            src="../images/trash.svg"></button>
+                </a>
             </div>
         </li>
 

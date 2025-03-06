@@ -21,7 +21,35 @@ public class CategoryRepository : ICategoryRepository
 
     public List<Category> AllCategory()
     {
-          return  _context.Categories.ToList();
+        return _context.Categories.Where(c=>c.Isdeleted == false).ToList();
     }
-    
+
+    public async Task<Category> GetCatById(int id)
+    {
+        return await _context.Categories.FirstOrDefaultAsync(c => c.Categoryid == id);
+    }
+
+    public async Task UpdateCat(Category category)
+    {
+        _context.Categories.Update(category);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteCat(int id)
+    {
+        Category category = await _context.Categories.FirstOrDefaultAsync(c => c.Categoryid == id);
+        if (category != null)
+        {
+            category.Isdeleted = true;
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+
 }
