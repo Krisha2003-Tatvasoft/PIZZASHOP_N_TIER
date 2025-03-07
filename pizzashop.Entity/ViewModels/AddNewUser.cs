@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static pizzashop.Entity.Models.Userslogin;
 
 namespace pizzashop.Entity.ViewModels;
 
@@ -38,5 +39,6 @@ public class AddNewUser
 
       public List<SelectListItem>? Roles { get; set; }
 
+       public statustype status { get; set; }
 
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static pizzashop.Entity.Models.Userslogin;
 namespace pizzashop.Entity.ViewModels;
 
 public partial class UserTable
@@ -12,4 +13,6 @@ public partial class UserTable
     public string Phone { get; set; } = null!;
 
     public string Rolename { get; set; } = null!;
+
+     public statustype status { get; set; }
 }

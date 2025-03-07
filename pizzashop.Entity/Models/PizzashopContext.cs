@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using static pizzashop.Entity.Models.Userslogin;
 
 namespace pizzashop.Entity.Models;
 
@@ -830,6 +831,13 @@ public partial class PizzashopContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Userslogins)
                 .HasForeignKey(d => d.Userid)
                 .HasConstraintName("userslogin_userid_fkey");
+
+            entity.Property(e => e.status)
+            .HasColumnName("status")
+            .HasConversion(
+                v => (int)v,
+                v => (statustype)v
+            );
         });
 
         modelBuilder.Entity<Waitingtablemapping>(entity =>

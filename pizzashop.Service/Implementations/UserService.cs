@@ -51,7 +51,8 @@ public class UserService : IUserService
       Lastname = u.User.Lastname,
       Phone = u.User.Phone,
       Rolename = u.Role.Rolename,
-      userId = (int)u.Userid
+      userId = (int)u.Userid,
+      status = u.status
     })
     .ToListAsync();
 
@@ -122,7 +123,6 @@ public class UserService : IUserService
       Firstname = user.User.Firstname,
       Lastname = user.User.Lastname,
       Phone = user.User.Phone,
-      Password = user.Passwordhash,
       Countryid = user.User.Countryid,
       Stateid = user.User.Stateid,
       Cityid = user.User.Cityid,
@@ -132,7 +132,8 @@ public class UserService : IUserService
       Countries = await _countryRepository.GetAllCountryAsync(),
       States = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
       Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid),
-      Roles = await _roleRepository.GetAllRolesAsync()
+      Roles = await _roleRepository.GetAllRolesAsync(),
+      status = user.status
     };
     return modal;
   }
@@ -151,14 +152,13 @@ public class UserService : IUserService
       user.User.Firstname = model.Firstname;
       user.User.Lastname = model.Lastname;
       user.User.Phone = model.Phone;
-      user.Passwordhash = model.Password;
       user.User.Countryid = model.Countryid;
       user.User.Stateid = model.Stateid;
       user.User.Cityid = model.Cityid;
       user.User.Address = model.Address;
       user.User.Zipcode = model.Zipcode;
       user.Roleid = model.Roleid;
-
+      user.status = model.status;
       await _userRepository.UpdateUserLoginAsync(user);
       return true;
     }

@@ -5,9 +5,16 @@ namespace pizzashop.Entity.Models;
 
 public partial class Userslogin
 {
+    public enum statustype
+    {
+        Active = 0,
+        Inactive = 1
+    }
     public object select;
 
     public int Userloginid { get; set; }
+
+    public statustype status { get; set; }
 
     public string Email { get; set; } = null!;
 
