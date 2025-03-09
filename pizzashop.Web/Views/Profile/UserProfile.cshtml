@@ -54,6 +54,7 @@
                             <input type="text" class="form-control" id="floatingInput" placeholder="First Name"
                                 asp-for="Firstname">
                             <label for="floatingInput">First Name</label>
+                            <span asp-validation-for="Firstname" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -61,6 +62,7 @@
                             <input type="text" class="form-control" id="floatingInput" placeholder="Last Name"
                                 asp-for="Lastname">
                             <label for="floatingInput">Last Name</label>
+                            <span asp-validation-for="Lastname" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -76,6 +78,7 @@
                             <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
                                 asp-for="Username">
                             <label for="floatingInput">User Name</label>
+                            <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -83,6 +86,7 @@
                             <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
                                 asp-for="Phone">
                             <label for="floatingInput">Phone</label>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -97,6 +101,7 @@
                             <option value="">Select Country</option>
                         </select>
                         <label for="Countryid">Country</label>
+                        <span asp-validation-for="Countryid" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
@@ -105,6 +110,7 @@
                             <option value="">Select State</option>
                         </select>
                         <label for="Stateid">State</label>
+                        <span asp-validation-for="Stateid" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -114,6 +120,7 @@
                             <option value="">Select City</option>
                         </select>
                         <label for="Cityid">City</label>
+                        <span asp-validation-for="Cityid" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -126,6 +133,7 @@
                         <input type="text" class="form-control" id="floatingInput" placeholder="Address"
                             asp-for="Address">
                         <label for="floatingInput">Address</label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12 mb-3">
@@ -133,6 +141,7 @@
                         <input type="text" class="form-control" id="floatingInput" placeholder="Zipcode"
                             asp-for="Zipcode">
                         <label for="floatingInput">Zipcode</label>
+                        <span asp-validation-for="Zipcode" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -155,6 +164,37 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+
+        function showToast(message) {
+            toastr.options = {
+                "progressBar": true,
+                "timeOut": "2000"
+            };
+            toastr.warning(message);
+        }
+
+
+        $(document).on("click", "#Stateid", function () {
+            let Countryid = $("#Countryid").val();
+            if (Countryid === "") {
+                showToast("Please select a country first!")
+            }
+        });
+
+
+        $(document).on("click", "#Cityid", function () {
+            let Countryid = $("#Countryid").val();
+            let Stateid = $("#Stateid").val();
+
+            if (Countryid === "") {
+                showToast("Please select a Country first!")
+            }
+            else if (Stateid === "") {
+                showToast("Please select a State first!")
+            }
+
+        });
+
 
         // When country is changed
         $("#Countryid").change(function () {

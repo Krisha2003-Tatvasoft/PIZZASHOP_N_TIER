@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="~/css/sidebar-header.css" />
 </head>
 
-@await Html.PartialAsync("_Toast") 
+@await Html.PartialAsync("_Toast")
 
 <body>
     <div class="d-flex">
@@ -27,32 +27,48 @@
 
                 <ul class="list-unstyled slider-content">
 
-                    <li><a class="active" asp-controller="Home" asp-action="Index"><img
-                                src="~/images/dashboard-active.png" alt="" class="svgs">
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img
+                                src="@Url.Content("~/images/dashboard-default.png")" alt="Dashboard" class="svgs"
+                                data-default-img="@Url.Content("~/images/dashboard-default.png")"
+                                data-active-img="@Url.Content("~/images/dashboard-active.png")">
                             Dashboard</a></li>
-                    <li><a class="" asp-controller="User" asp-action="UserList"><img src="~/images/users-default.png"
-                                alt="" class="svgs">Users</a>
+                    <li><a class="" asp-controller="User" asp-action="UserList"><img
+                                src="@Url.Content("~/images/users-default.png")" alt="Users" class="svgs"
+                                data-default-img="@Url.Content("~/images/users-default.png")"
+                                data-active-img="@Url.Content("~/images/users-active.png")">Users</a>
                     </li>
-                    <li><a class="" asp-controller="RolePermission" asp-action="Role"><img
-                                src="~/images/roles-default.png" alt="" class="svgs">Role and
+                    <li><a class="" asp-controller="RolePermission" asp-action="Role"> <img
+                                src="@Url.Content("~/images/roles-default.png")" alt="Role and Permission" class="svgs"
+                                data-default-img="@Url.Content("~/images/roles-default.png")"
+                                data-active-img="@Url.Content("~/images/roles-active.png")">Role and
                             Permission</a>
                     </li>
-                    <li><a class="" asp-controller="Menu" asp-action="Menu"><img src="~/images//menu-default.png"
-                                asp-controller="Home" asp-action="Index" alt="" class="svgs">Menu</a>
+                    <li><a class="" asp-controller="Menu" asp-action="Menu"> <img
+                                src="@Url.Content("~/images/menu-default.png")" alt="Menu" class="svgs"
+                                data-default-img="@Url.Content("~/images/menu-default.png")"
+                                data-active-img="@Url.Content("~/images/menu-active.png")">Menu</a>
                     </li>
-                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="~/images/table-default.png"
-                                class="svgs"> Table And
+                    <li><a class="" asp-controller="Home" asp-action="Index"> <img
+                                src="@Url.Content("~/images/menu-default.png")" alt="Menu" class="svgs"
+                                data-default-img="@Url.Content("~/images/menu-default.png")"
+                                data-active-img="@Url.Content("~/images/menu-active.png")"> Table And
                             Section </a>
                     </li>
-                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="~/images/taxes-default.png"
-                                alt="" class="svgs">Taxes And
+                    <li><a class="" asp-controller="Home" asp-action="Index"> <img
+                                src="@Url.Content("~/images/taxes-default.png")" alt="Taxes And Fees" class="svgs"
+                                data-default-img="@Url.Content("~/images/taxes-default.png")"
+                                data-active-img="@Url.Content("~/images/taxes-active.png")">Taxes And
                             Fees</a>
                     </li>
-                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="~/images/orders-default.png"
-                                alt="" class="svgs">Orders</a>
+                    <li><a class="" asp-controller="Home" asp-action="Index"><img
+                                src="@Url.Content("~/images/orders-default.png")" alt="Orders" class="svgs"
+                                data-default-img="@Url.Content("~/images/orders-default.png")"
+                                data-active-img="@Url.Content("~/images/orders-active.png")">Orders</a>
                     </li>
-                    <li><a class="" asp-controller="Home" asp-action="Index"><img src="~/images/customers-default.png"
-                                alt="" class="svgs">Customers</a>
+                    <li><a class="" asp-controller="Home" asp-action="Index"> <img
+                                src="@Url.Content("~/images/customers-default.png")" alt="Customers" class="svgs"
+                                data-default-img="@Url.Content("~/images/customers-default.png")"
+                                data-active-img="@Url.Content("~/images/customers-active.png")">Customers</a>
                     </li>
                 </ul>
 
@@ -62,10 +78,7 @@
 
         <div class="w-100 nav-main-content parent">
 
-
             <nav class="navbar navbar-expand-lg  my-header d-flex justify-content-between">
-
-
 
                 <div>
                     <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
@@ -79,8 +92,8 @@
                         src="~/images/Default_pfp.svg.png" aria-expanded="false" />
 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item border-bottom"> <img src="~/images/Default_pfp.svg.png"
-                                    class="me-2" width="40px" height="40px">Username</a></li>
+                        <li><a class="dropdown-item border-bottom"> <img src="~/images/Default_pfp.svg.png" class="me-2"
+                                    width="40px" height="40px">Username</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="UserProfile"> <i
                                     class="bi bi-person-circle me-3"></i>My profile</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="ChagePassword"><i
@@ -140,7 +153,36 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    
+
+
 </body>
 
 </html>
+
+<script>
+    $(document).ready(function () {
+
+        function activeClass() {
+            let path = window.location.pathname.split("/");
+            let currentController = path[1];
+
+            $(".slider-content a").each(function () {
+                console.log(this);
+                let menu = $(this).attr("href"); 
+                let path = menu.split("/");
+                let menuController = path[1];
+
+                if (menuController === currentController) {
+                    $(this).addClass("active"); // Apply active class
+                    let activeImg = $(this).find("img").attr("data-active-img");
+                    console.log(activeImg);
+                    $(this).find("img").attr("src", activeImg); // Change image to active
+                }
+            });
+        }
+
+        activeClass();
+
+    });
+
+</script>

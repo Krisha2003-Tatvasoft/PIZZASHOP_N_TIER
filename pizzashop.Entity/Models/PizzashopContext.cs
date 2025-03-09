@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using static pizzashop.Entity.Models.Userslogin;
+using static pizzashop.Entity.Models.Enums;
 
 namespace pizzashop.Entity.Models;
 

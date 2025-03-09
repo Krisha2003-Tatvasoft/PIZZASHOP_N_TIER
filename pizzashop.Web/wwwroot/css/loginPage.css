@@ -46,6 +46,16 @@
 }
 
 
+ .login-rightSide-content .custom-icon {
+     position: absolute;
+     right: 15px;
+     top: 50%;
+     transform: translateY(-50%);
+     font-size: 1.3rem;
+     color: var(--bs-secondary-color);
+    padding-right: 3px;
+ }
+
 /* Pizzashop name  */
 .app-name {
     font-size: 30px;

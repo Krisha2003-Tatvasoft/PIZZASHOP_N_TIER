@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using static pizzashop.Entity.Models.Enums;
 
 namespace pizzashop.Entity.Models;
 
 public partial class Userslogin
 {
-    public enum statustype
-    {
-        Active = 0,
-        Inactive = 1
-    }
+   
     public object select;
 
     public int Userloginid { get; set; }

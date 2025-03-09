@@ -25,7 +25,11 @@
         <p class="instruction">Enter your email and we'll send you a link to reset your password.</p>
 
         <div>
-            <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control">
+            <div class="position-relative">
+                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control" id="password">
+                <i class="bi bi-person-fill custom-icon"></i>
+            </div>
+            
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 

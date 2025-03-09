@@ -7,6 +7,11 @@
         var successMessage = '@TempData["SuccessMessage"]';
         var errorMessage = '@TempData["ErrorMessage"]';
 
+        toastr.options = {
+            "progressBar": true,
+            "timeOut": "2000"
+        };
+
         if (successMessage) {
             toastr.success(successMessage);
         }

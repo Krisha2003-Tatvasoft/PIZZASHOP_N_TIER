@@ -83,8 +83,8 @@
     padding: 2px;
 }
 
-.slider .slider-content .active {
-    color: #087cc4;
+ .active {
+    color: #087cc4 !important;
     background-color: lightgray;
 }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using static pizzashop.Entity.Models.Userslogin;
 namespace pizzashop.Entity.ViewModels;
+using static pizzashop.Entity.Models.Enums;
 
 public partial class UserTable
 {

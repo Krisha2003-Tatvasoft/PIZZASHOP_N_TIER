@@ -1,35 +1,50 @@
-
-.heading-text{
-    color:#087cc4;
+.heading-text {
+    color: #087cc4;
 }
 
 
-.heading-back-button{
-display: flex;
-align-items: center;
-justify-content: space-between;
+.heading-back-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
 }
 
-.heading-back-button .back-to-button button{
+.heading-back-button .back-to-button button {
     color: #087cc4;
     border-radius: 5px;
-    border: 1px solid #087cc4 ;
+    border: 1px solid #087cc4;
     height: 40px;
 }
 
-.form{
+.form {
     padding: 20px;
     background-color: white;
 }
 
+.form .custom-icon {
+    position: absolute;
+    right: 15px;
+    /* Adjust for better alignment */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 18px;
+    color: #6c757d;
+}
 
-.upload-icon{
+.form .password .form-floating {
+    position: relative;
+    width: 100%;
+}
+
+
+.upload-icon {
     width: 30px;
     height: 30px;
 }
 
-.file-upload{
+.file-upload {
     height: 100px;
     border: 1px dashed grey;
     border-radius: 5px;
@@ -37,7 +52,7 @@ justify-content: space-between;
     margin: 20px;
 }
 
-.create-button{
+.create-button {
     border: none;
     background-color: #087cc4;
     color: white;
@@ -46,7 +61,7 @@ justify-content: space-between;
     width: 120px;
 }
 
-.cancel-button{
+.cancel-button {
     border: 1px solid #087cc4;
     border-radius: 5px;
     width: 80px;

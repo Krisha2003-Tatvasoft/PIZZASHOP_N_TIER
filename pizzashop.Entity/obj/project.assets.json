@@ -8802,19 +8802,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pci44\\.nuget\\packages\\": {}
+    "C:\\Users\\admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
+      "projectUniqueName": "D:\\pizzashop_nTier\\pizzashop.Entity\\pizzashop.Entity.csproj",
       "projectName": "pizzashop.Entity",
-      "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
-      "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-      "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\obj\\",
+      "projectPath": "D:\\pizzashop_nTier\\pizzashop.Entity\\pizzashop.Entity.csproj",
+      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+      "outputPath": "D:\\pizzashop_nTier\\pizzashop.Entity\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"

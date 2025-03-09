@@ -20,10 +20,13 @@ public class UserService : IUserService
 
   private readonly IUserDetailsRepository _userDetailsRepository;
 
+  private readonly IFileService _fileService;
+
 
 
   public UserService(IUserRepository userRepository, ICountryRepository countryRepository,
-  IStateRepository stateRepository, ICityRepository cityRepository, IRoleRepository roleRepository, IUserDetailsRepository userDetailsRepository)
+  IStateRepository stateRepository, ICityRepository cityRepository, IRoleRepository roleRepository,
+   IUserDetailsRepository userDetailsRepository, IFileService fileService)
   {
     _userRepository = userRepository;
     _countryRepository = countryRepository;
@@ -75,10 +78,15 @@ public class UserService : IUserService
   {
     if (await _userRepository.UserExistsAsync(model.Email))
     {
-      return true;
+      return false;
     }
     else
     {
+      // string uniqueFileName = null;
+      // if (model.ProfilePicture != null)
+      // {
+      //   uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
+      // }
       var newUser = new User
       {
         Firstname = model.Firstname,
@@ -90,7 +98,8 @@ public class UserService : IUserService
         Address = model.Address,
         Zipcode = model.Zipcode,
         Createdby = loginId,
-        Modifiedby = loginId
+        Modifiedby = loginId,
+        // Profileimg = uniqueFileName
       };
 
       var hashedPassword = PasswordUtills.HashPassword(model.Password);

@@ -1,5 +1,6 @@
 using AuthenticationDemo.Attributes;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MimeKit;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
@@ -50,15 +51,17 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> AddNewUser(AddNewUser model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-
-        if (await _userService.PostAddNewUser(model, user.Userid))
+        if (ModelState.IsValid)
         {
-            string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "C:/Users/pci44/Desktop/PIZZASHOP_DOTNET/pizzashop/wwwroot/images/pizzashop_logo.png");
-            var bodyBuilder = new BodyBuilder();
-            var image = bodyBuilder.LinkedResources.Add(imagePath);
-            image.ContentId = "pizzashoplogo";
-            bodyBuilder.HtmlBody = $@"
+            CookieData user = SessionUtils.GetUser(HttpContext);
+
+            if (await _userService.PostAddNewUser(model, user.Userid))
+            {
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                var bodyBuilder = new BodyBuilder();
+                var image = bodyBuilder.LinkedResources.Add(imagePath);
+                image.ContentId = "pizzashoplogo";
+                bodyBuilder.HtmlBody = $@"
             <!DOCTYPE html>
            <html lang='en'>
 
@@ -90,15 +93,25 @@ public class UserController : Controller
         </body>
      </html>";
 
-            await _emailService.SendResetPasswordEmail(model.Email, bodyBuilder);
-             TempData["SuccessMessage"] = "User Added Sucessfully";
-            return RedirectToAction("UserList", "user");
+                await _emailService.SendResetPasswordEmail(model.Email, bodyBuilder);
+                TempData["SuccessMessage"] = "User Added Sucessfully";
+                return RedirectToAction("UserList", "user");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Email Already Exists";
+                ModelState.Remove("Countryid");
+
+                return View(await _userService.GetAddNewUser());
+            }
         }
         else
         {
-            TempData["ErrorMessage"] = "Email Already Exists";
-            return View();
+            Console.WriteLine("Krisha...");
+            ModelState.Remove("Countryid");
+            return View(await _userService.GetAddNewUser());
         }
+
     }
 
     [HttpGet]
@@ -107,18 +120,26 @@ public class UserController : Controller
         return View(await _userService.GetUpdate(id));
     }
 
+
     [HttpPost]
     public async Task<IActionResult> EditUserAsync(AddNewUser viewmodel)
     {
-        if (await _userService.PostUpdate(viewmodel))
+        if(ModelState.IsValid)
         {
-            TempData["SuccessMessage"] = "User Updated Sucessfully";
-            return RedirectToAction("UserList", "User");
+            if (await _userService.PostUpdate(viewmodel))
+            {
+                TempData["SuccessMessage"] = "User Updated Sucessfully";
+                return RedirectToAction("UserList", "User");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Invalid User";
+                return View();
+            }
         }
         else
         {
-            TempData["ErrorMessage"] = "Invalid User";
-            return View();
+            return View(await _userService.GetUpdate(viewmodel.Userid));
         }
 
     }

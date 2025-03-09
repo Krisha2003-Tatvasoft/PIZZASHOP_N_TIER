@@ -1,18 +1,11 @@
 @model pizzashop.Repository.ViewModels.Login;
 
-
 @{
 
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
 
-@if (ViewBag.ErrorMessage != null)
-{
-    <div style="color: red;">@ViewBag.ErrorMessage</div>
-
-}
-@* @await Html.PartialAsync("_Toast") *@
 <div class="login-rightSide-content">
     <div class="d-flex justify-content-center align-items-center gap-2">
         <img class="logo" src="../images/pizzashop_logo.png">
@@ -26,15 +19,22 @@
         </h1>
 
         <div>
-            <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control"
-                >
+
+            <div class="position-relative">
+
+                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control">
+                <i class="bi bi-person-fill custom-icon"></i>
+            </div>
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div>
 
-            <input placeholder="Password*" asp-for="Password" type="password" class="form-control"
-                >
+            <div class="position-relative">
+                <input placeholder="Password*" asp-for="Password" type="password" class="form-control" id="password">
+                <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
+            </div>
+
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
@@ -50,7 +50,7 @@
 
 
             <div>
-                <a asp-controller="Auth" asp-action="Forget">Forget Password?</a> 
+                <a asp-controller="Auth" asp-action="Forget">Forget Password?</a>
             </div>
         </div>
 
@@ -60,5 +60,25 @@
 
     </form>
 
-
+   
 </div>
+
+<script>
+    $(document).ready(function()
+    {
+       
+       $(document).on("click",".eye-icon",function()
+       {
+           let passwordInput = $("#password");
+           if(passwordInput.attr("type") === "password")        
+           {
+              passwordInput.attr("type","text");
+                $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
+           }
+           else{
+                passwordInput.attr("type", "password");
+                $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill");
+           }
+       });
+    });
+</script>

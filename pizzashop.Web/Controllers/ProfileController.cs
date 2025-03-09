@@ -36,6 +36,11 @@ public class ProfileController : Controller
     [HttpPost]
     public async Task<IActionResult> ChagePasswordAsync(ChangePassword viewmodel)
     {
+        if(!ModelState.IsValid)
+        {
+            return View(viewmodel);
+        }
+
         CookieData user = SessionUtils.GetUser(HttpContext);
         if (viewmodel.Newpassword != viewmodel.ConfirmPassword)
         {
@@ -64,10 +69,18 @@ public class ProfileController : Controller
     [HttpPost]
     public async Task<IActionResult> UserProfile(UserProfile viewmodel)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        await _ProfileService.UpdateProfile(user.Userid, viewmodel);
-        return RedirectToAction("UserProfile", "Profile");
+        if (ModelState.IsValid)
+        {
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            await _ProfileService.UpdateProfile(user.Userid, viewmodel);
+            return RedirectToAction("UserProfile", "Profile");
+        }
+        else
+        {
+            return View(await _ProfileService.UserProfile(viewmodel.Email));
+        }
+
     }
-  
+
 
 }

@@ -43,25 +43,30 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(VMLogin model)
     {
-        var user = await _authService.AuthenticateUser(model.Email, model.Password);
-        if (user == null)
+        if(ModelState.IsValid)
         {
-            ViewBag.ErrorMessage = "Invalid email or password.";
-            return View();
+            var user = await _authService.AuthenticateUser(model.Email, model.Password);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "Invalis Email or Password";
+                return View();
+            }
+
+            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename);
+
+            CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
+
+            if (model.RememberMe)
+            {
+                CookieUtils.SaveUserData(Response, user);
+            }
+
+            SessionUtils.SetUser(HttpContext, user);
+
+            return RedirectToAction("Index", "Home");
         }
-
-        var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename);
-
-        CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
-
-        if (model.RememberMe)
-        {
-            CookieUtils.SaveUserData(Response, user);
-        }
-
-        SessionUtils.SetUser(HttpContext, user);
-
-        return RedirectToAction("Index", "Home");
+        return View();
+      
     }
 
     public IActionResult AccessDenied()
@@ -91,19 +96,22 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> Forget(Forget viewmodal)
     {
-        if (await _authService.UserExistsAsync(viewmodal))
+
+        if(ModelState.IsValid)
         {
-            var expirationTime = DateTime.UtcNow.AddHours(24).ToString("yyyy-MM-ddTHH:mm:ss"); // ISO 8601 format
+            if (await _authService.UserExistsAsync(viewmodal))
+            {
+                var expirationTime = DateTime.UtcNow.AddHours(24).ToString("yyyy-MM-ddTHH:mm:ss"); // ISO 8601 format
 
-            // Create reset password link
-            var resetLink = Url.Action("ResetPassword", "Auth",
-                new { email = viewmodal.Email, expiration = expirationTime }, Request.Scheme);
+                // Create reset password link
+                var resetLink = Url.Action("ResetPassword", "Auth",
+                    new { email = viewmodal.Email, expiration = expirationTime }, Request.Scheme);
 
-            string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "d:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
-            var bodyBuilder = new BodyBuilder();
-            var image = bodyBuilder.LinkedResources.Add(imagePath);
-            image.ContentId = "pizzashoplogo";
-            bodyBuilder.HtmlBody = $@"
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "d:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                var bodyBuilder = new BodyBuilder();
+                var image = bodyBuilder.LinkedResources.Add(imagePath);
+                image.ContentId = "pizzashoplogo";
+                bodyBuilder.HtmlBody = $@"
     <!DOCTYPE html>
     <html lang='en'>
 
@@ -134,13 +142,18 @@ public class AuthController : Controller
    </body>
 </html>";
 
-       await _emailService.SendResetPasswordEmail(viewmodal.Email,bodyBuilder);
-        return Ok("Reset password email sent.");
+                await _emailService.SendResetPasswordEmail(viewmodal.Email, bodyBuilder);
+                return Ok("Reset password email sent.");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "User Not Found";
+                return View();
+            }
         }
-        else
-        {
-            return View();
-        }
+       else{
+        return View();
+       }
     }
 
 
@@ -187,7 +200,6 @@ public class AuthController : Controller
             return View(model);
         }
         
-
         await _authService.ResetPassword(model);
 
         // Redirect user to login page or show success message
