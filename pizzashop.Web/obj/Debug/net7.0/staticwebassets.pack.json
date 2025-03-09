@@ -421,6 +421,22 @@
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
     },
     {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.web\\wwwroot\\uploads\\86e3a138-4f92-4f0c-afaa-f9d857ec80f7_download.jpg",
+      "PackagePath": "staticwebassets\\uploads\\86e3a138-4f92-4f0c-afaa-f9d857ec80f7_download.jpg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.web\\wwwroot\\uploads\\dbaeac0e-5749-4b91-97d8-406a0155ae4b_download.jpg",
+      "PackagePath": "staticwebassets\\uploads\\dbaeac0e-5749-4b91-97d8-406a0155ae4b_download.jpg"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.web\\wwwroot\\uploads\\dd05d62a-c1c1-4dd4-a485-2954cabaa5c9_Screenshot (189).png",
+      "PackagePath": "staticwebassets\\uploads\\dd05d62a-c1c1-4dd4-a485-2954cabaa5c9_Screenshot (189).png"
+    },
+    {
+      "Id": "D:\\pizzashop_nTier\\pizzashop.web\\wwwroot\\uploads\\e3c8d03e-01f3-4ef8-8317-bcc04c41ee8c_download.jpg",
+      "PackagePath": "staticwebassets\\uploads\\e3c8d03e-01f3-4ef8-8317-bcc04c41ee8c_download.jpg"
+    },
+    {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.pizzashop.Web.props",
       "PackagePath": "build\\pizzashop.Web.props"
     },

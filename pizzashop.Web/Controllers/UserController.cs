@@ -53,6 +53,7 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
+
             CookieData user = SessionUtils.GetUser(HttpContext);
 
             if (await _userService.PostAddNewUser(model, user.Userid))
@@ -124,7 +125,7 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> EditUserAsync(AddNewUser viewmodel)
     {
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             if (await _userService.PostUpdate(viewmodel))
             {

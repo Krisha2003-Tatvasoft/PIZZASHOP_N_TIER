@@ -48,6 +48,9 @@ namespace pizzashop.Entity.ViewModels
     [Required(ErrorMessage = "Role name is required.")]
     public string Rolename { get; set; } = null!;
 
+    public string? Profileimg { get; set; }
+
+
     public List<SelectListItem>? Countries { get; set; }
     public List<SelectListItem>? States { get; set; }
     public List<SelectListItem>? Cities { get; set; }

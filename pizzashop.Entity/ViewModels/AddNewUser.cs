@@ -56,10 +56,10 @@ public class AddNewUser
   [Required(ErrorMessage = "Status is required")]
   public statustype status { get; set; }
 
-  // [Display(Name = "Profile Picture")]
-  // public IFormFile ProfilePicture { get; set; }
+  [Display(Name = "Profile Picture")]
+  public IFormFile ProfilePicture { get; set; }
 
-  // public string? Profileimg { get; set; }
+  public string? Profileimg { get; set; }
   public List<SelectListItem>? Countries { get; set; }
   public List<SelectListItem>? States { get; set; }
   public List<SelectListItem>? Cities { get; set; }

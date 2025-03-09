@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
@@ -22,11 +23,12 @@ public class UserService : IUserService
 
   private readonly IFileService _fileService;
 
+  private readonly IHttpContextAccessor _httpContextAccessor;
 
 
   public UserService(IUserRepository userRepository, ICountryRepository countryRepository,
   IStateRepository stateRepository, ICityRepository cityRepository, IRoleRepository roleRepository,
-   IUserDetailsRepository userDetailsRepository, IFileService fileService)
+   IUserDetailsRepository userDetailsRepository, IFileService fileService, IHttpContextAccessor httpContextAccessor)
   {
     _userRepository = userRepository;
     _countryRepository = countryRepository;
@@ -34,6 +36,8 @@ public class UserService : IUserService
     _cityRepository = cityRepository;
     _roleRepository = roleRepository;
     _userDetailsRepository = userDetailsRepository;
+    _fileService = fileService;
+    _httpContextAccessor = httpContextAccessor;
 
   }
 
@@ -55,7 +59,10 @@ public class UserService : IUserService
       Phone = u.User.Phone,
       Rolename = u.Role.Rolename,
       userId = (int)u.Userid,
-      status = u.status
+      status = u.status,
+      Profileimg = u.User.Profileimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{u.User.Profileimg}"
+            : null
     })
     .ToListAsync();
 
@@ -76,17 +83,19 @@ public class UserService : IUserService
 
   public async Task<bool> PostAddNewUser(AddNewUser model, int loginId)
   {
+   
     if (await _userRepository.UserExistsAsync(model.Email))
     {
       return false;
     }
     else
     {
-      // string uniqueFileName = null;
-      // if (model.ProfilePicture != null)
-      // {
-      //   uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
-      // }
+     
+      string uniqueFileName = null;
+      if (model.ProfilePicture != null)
+      {
+        uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
+      }
       var newUser = new User
       {
         Firstname = model.Firstname,
@@ -99,7 +108,7 @@ public class UserService : IUserService
         Zipcode = model.Zipcode,
         Createdby = loginId,
         Modifiedby = loginId,
-        // Profileimg = uniqueFileName
+        Profileimg = uniqueFileName
       };
 
       var hashedPassword = PasswordUtills.HashPassword(model.Password);

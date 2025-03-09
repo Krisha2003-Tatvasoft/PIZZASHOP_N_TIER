@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using pizzashop.Entity.Models;
@@ -19,14 +20,17 @@ public class ProfileService : IProfileService
      private readonly IStateRepository _stateRepository;
       private readonly ICityRepository _cityRepository;
 
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
     public ProfileService(IUserRepository userRepository, IUserDetailsRepository userDetailsRepository, 
-    ICountryRepository countryRepository,IStateRepository stateRepository,ICityRepository cityRepository)
+    ICountryRepository countryRepository,IStateRepository stateRepository,ICityRepository cityRepository, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _userDetailsRepository = userDetailsRepository;
         _countryRepository = countryRepository;
         _stateRepository = stateRepository;
         _cityRepository = cityRepository;
+        _httpContextAccessor = httpContextAccessor;
     }
     public async Task ChangePassword(string email, ChangePassword model)
     {
@@ -63,7 +67,10 @@ public class ProfileService : IProfileService
             Rolename = user.Role.Rolename,
             Countries=await _countryRepository.GetAllCountryAsync(),
             States  = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
-            Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid)
+            Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid),
+            Profileimg = user.User.Profileimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{user.User.Profileimg}"
+            : null
         };
         return viewmodel;
     }

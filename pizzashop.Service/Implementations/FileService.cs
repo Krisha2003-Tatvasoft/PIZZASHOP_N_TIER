@@ -15,12 +15,7 @@ public class FileService :IFileService
 
     public async Task<string> UploadFileAsync(IFormFile file, string folderName)
     {
-        if (file == null || file.Length == 0)
-        {
-            Console.WriteLine("File is empty");
-            return null;
-        }
-            
+
 
         string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderName);
         Directory.CreateDirectory(uploadsFolder);

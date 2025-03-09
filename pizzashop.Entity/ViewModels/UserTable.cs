@@ -15,4 +15,9 @@ public partial class UserTable
     public string Rolename { get; set; } = null!;
 
      public statustype status { get; set; }
+
+
+    public string? Profileimg { get; set; }
+
+
 }

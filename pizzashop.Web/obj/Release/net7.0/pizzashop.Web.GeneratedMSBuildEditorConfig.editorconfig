@@ -9,11 +9,11 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = pizzashop.Web
 build_property.RootNamespace = pizzashop.Web
-build_property.ProjectDir = D:\pizzashop_nTier\pizzashop.Web\
+build_property.ProjectDir = D:\pizzashop_nTier\pizzashop.web\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\pizzashop_nTier\pizzashop.Web
+build_property.MSBuildProjectDirectory = D:\pizzashop_nTier\pizzashop.web
 build_property._RazorSourceGeneratorDebug = 
 
 [D:/pizzashop_nTier/pizzashop.Web/Views/Auth/AccessDenied.cshtml]

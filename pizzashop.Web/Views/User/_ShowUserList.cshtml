@@ -58,7 +58,8 @@
                 <tr>
                     <td>
                         <div class="d-flex gap-2"><img class="user-profile"
-                                src="../images/Default_pfp.svg.png" />@user.Firstname
+                                src="@(string.IsNullOrEmpty(user.Profileimg) ? "../images/Default_pfp.svg.png" : user.Profileimg)"
+                                style="border-radius: 50%;" />@user.Firstname
                         </div>
                     </td>
                     <td>@user.Email</td>

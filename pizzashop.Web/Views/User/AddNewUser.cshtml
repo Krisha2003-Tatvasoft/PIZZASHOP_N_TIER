@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <form class="form w-100" asp-action="AddNewUser" asp-controller="User" method="post">
+    <form class="form w-100" asp-action="AddNewUser" asp-controller="User" method="post" enctype="multipart/form-data">
 
         <!-- first row -->
         <div>
@@ -117,7 +117,7 @@
 
                             <!-- Hidden file input -->
                             <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                                aria-describedby="fileNameDisplay" 
+                                aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
                                 onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
                             <span id="fileNameDisplay">No file selected</span>
                         </div>
