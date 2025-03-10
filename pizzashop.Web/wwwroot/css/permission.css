@@ -23,6 +23,20 @@
     min-height: calc(2.5rem + calc(var(--bs-border-width)* 2))!important;
 }
 
+#permissions-checkbox:checked+label {
+    background: #3c6b9e;
+    color: #fff;
+  
+  } 
+
+  #permissionLbl{
+    display:none;
+  }
+
+  .form-check-input[type=checkbox]:indeterminate {
+    background-color: #3c6b9e;
+    border-color: #3c6b9e;
+}
 
 
 .table>:not(caption)>*>* {

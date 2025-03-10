@@ -26,13 +26,15 @@ public class UserController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> UserList(int page = 1, int pageSize = 5, string search = "")
+    public async Task<IActionResult> UserList(int page = 1, int pageSize = 5, string search = "", string SortColumn = "", string SortOrder = "")
     {
-        var (userlist, totalUsers) = await _userService.GetUserTable(page, pageSize, search);
+        var (userlist, totalUsers) = await _userService.GetUserTable(page, pageSize, search, SortColumn, SortOrder);
 
         ViewBag.CurrentPage = page;
         ViewBag.PageSize = pageSize;
         ViewBag.TotalUsers = totalUsers;
+        ViewBag.SortColumn = SortColumn;
+        ViewBag.SortOrder = SortOrder;
 
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
 
@@ -58,7 +60,7 @@ public class UserController : Controller
 
             if (await _userService.PostAddNewUser(model, user.Userid))
             {
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -108,7 +110,6 @@ public class UserController : Controller
         }
         else
         {
-            Console.WriteLine("Krisha...");
             ModelState.Remove("Countryid");
             return View(await _userService.GetAddNewUser());
         }
@@ -140,6 +141,7 @@ public class UserController : Controller
         }
         else
         {
+           
             return View(await _userService.GetUpdate(viewmodel.Userid));
         }
 

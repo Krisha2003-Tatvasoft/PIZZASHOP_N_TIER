@@ -1,3 +1,4 @@
+@using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.UserTable>
 
 <div class="table-responsive">
@@ -44,10 +45,24 @@
 
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Name
+                    <a href="#" class="sort" data-column="Firstname" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="Firstname" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Role</th>
+                <th>Role
+                    <a href="#" class="sort" data-column="Rolename" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="Rolename" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
@@ -65,7 +80,9 @@
                     <td>@user.Email</td>
                     <td>@user.Phone</td>
                     <td>@user.Rolename</td>
-                    <td><span class="badge rounded-pill bg-success">@user.status</span></td>
+                    <td>
+                        <span class="@(@user.status == statustype.Active ? "activestatus" : "inactivestatus") badge rounded-pill">@user.status</span>
+                    </td>
                     <td>
                         <div class="d-flex gap-3 edit-delet"><button><a class="" asp-controller="User" asp-action="EditUser"
                                     asp-route-id="@user.userId"><img src="../images/pencil.svg"></a></button><button

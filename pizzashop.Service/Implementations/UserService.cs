@@ -41,14 +41,14 @@ public class UserService : IUserService
 
   }
 
-  public async Task<(List<UserTable>, int totalUsers)> GetUserTable(int page, int pageSize, string search)
+  public async Task<(List<UserTable>, int totalUsers)> GetUserTable(int page, int pageSize, string search, string SortColumn, string SortOrder)
   {
-    var userList = await _userRepository.GetFilteredAsync(search);
+    var userList = await _userRepository.GetFilteredAsync(search,SortColumn,SortOrder);
+  
 
     int totalUsers = await userList.CountAsync();
 
     var users = await userList
-    .OrderBy(u => u.Userloginid)
     .Skip((page - 1) * pageSize)
     .Take(pageSize)
     .Select(u => new UserTable
@@ -83,14 +83,14 @@ public class UserService : IUserService
 
   public async Task<bool> PostAddNewUser(AddNewUser model, int loginId)
   {
-   
+
     if (await _userRepository.UserExistsAsync(model.Email))
     {
       return false;
     }
     else
     {
-     
+
       string uniqueFileName = null;
       if (model.ProfilePicture != null)
       {
@@ -147,17 +147,28 @@ public class UserService : IUserService
       Address = user.User.Address,
       Zipcode = user.User.Zipcode,
       Roleid = user.Role.Roleid,
+      Password = user.Passwordhash,
+       Profileimg = user.User.Profileimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{ user.User.Profileimg }"
+            : null,
       Countries = await _countryRepository.GetAllCountryAsync(),
       States = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
       Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid),
       Roles = await _roleRepository.GetAllRolesAsync(),
-      status = user.status
+      status = user.status,
+      
     };
     return modal;
   }
 
   public async Task<bool> PostUpdate(AddNewUser model)
   {
+    
+      string uniqueFileName = null;
+      if (model.ProfilePicture != null)
+      {
+        uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
+      }
     Userslogin user = await _userRepository.GetUserByIdAsync(model.Userid);
     if (user == null)
     {
@@ -177,6 +188,10 @@ public class UserService : IUserService
       user.User.Zipcode = model.Zipcode;
       user.Roleid = model.Roleid;
       user.status = model.status;
+      user.Passwordhash = model.Password;
+      user.Email= model.Email;
+      user.User.Profileimg = uniqueFileName;
+
       await _userRepository.UpdateUserLoginAsync(user);
       return true;
     }

@@ -57,7 +57,7 @@ public class AddNewUser
   public statustype status { get; set; }
 
   [Display(Name = "Profile Picture")]
-  public IFormFile ProfilePicture { get; set; }
+  public IFormFile? ProfilePicture { get; set; }
 
   public string? Profileimg { get; set; }
   public List<SelectListItem>? Countries { get; set; }

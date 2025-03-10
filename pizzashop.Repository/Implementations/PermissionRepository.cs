@@ -28,7 +28,7 @@ public class PermissionRepository : IPermissionRepository
                Permissionname = u.Module.Modulename,
                Canview = u.Canview,
                Canaddedit = u.Canaddedit,
-               Candelete = u.Candelete
+               Candelete = u.Candelete,
            }
            ).ToListAsync();
            

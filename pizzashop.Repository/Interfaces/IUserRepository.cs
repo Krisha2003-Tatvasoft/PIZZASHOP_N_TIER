@@ -9,7 +9,7 @@ public interface IUserRepository
     Task<Userslogin?> GetUserLoginByEmailAsync(string email);
     Task UpdateUserLoginAsync(Userslogin userslogin);
 
-    Task<IQueryable<Userslogin>> GetFilteredAsync(string search);
+    Task<IQueryable<Userslogin>> GetFilteredAsync(string search,string SortColumn, string SortOrder);
 
     Task AddNewUser(Userslogin newUserLogin);
 

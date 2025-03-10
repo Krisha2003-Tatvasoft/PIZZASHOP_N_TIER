@@ -9,11 +9,13 @@ public class ChangePassword
     public string OldPassword { get; set; }
 
     [Required(ErrorMessage = "New password is required.")]
-    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters long.")]
+   [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
     public string Newpassword { get; set; }
 
     [Required(ErrorMessage = "Confirm password is required.")]
-    [Compare("Newpassword", ErrorMessage = "Passwords do not match.")]
+   [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+        ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
     public string ConfirmPassword { get; set; }
 
 }

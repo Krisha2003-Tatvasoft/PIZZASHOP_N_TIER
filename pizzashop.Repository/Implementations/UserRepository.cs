@@ -34,9 +34,9 @@ public class UserRepository : IUserRepository
         _context.Userslogins.Update(userslogin);
         await _context.SaveChangesAsync();
     }
-    public async Task<IQueryable<Userslogin>> GetFilteredAsync(string search)
+    public async Task<IQueryable<Userslogin>> GetFilteredAsync(string search, string SortColumn, string SortOrder)
     {
-        return _context.Userslogins
+        var userList = _context.Userslogins
         .Include(u => u.User)
         .Include(u => u.Role)
         .Where(u => u.User.Isdeleted == false)
@@ -46,6 +46,15 @@ public class UserRepository : IUserRepository
                             u.Email.Contains(search) ||
                             u.User.Phone.Contains(search) ||
                             u.Role.Rolename.Contains(search));
+
+        userList = SortColumn switch
+        {
+            "Firstname" => SortOrder == "desc" ? userList.OrderByDescending(u => u.User.Firstname) : userList.OrderBy(u => u.User.Firstname),
+            "Rolename" => SortOrder == "desc" ? userList.OrderByDescending(u => u.Role.Rolename) : userList.OrderBy(u => u.Role.Rolename),
+            // Add additional cases for other columns as needed
+            _ => userList.OrderBy(u => u.User.Firstname),// Default sort (if none provided)
+        };
+        return userList;
     }
 
     public async Task AddNewUser(Userslogin newUserLogin)
@@ -54,10 +63,10 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-     public async Task<Userslogin?> GetUserByIdAsync(int id)
+    public async Task<Userslogin?> GetUserByIdAsync(int id)
     {
         return await _context.Userslogins.Include(u => u.Role).Include(u => u.User)
-                                   .FirstOrDefaultAsync(u => u.Userid==id);
+                                   .FirstOrDefaultAsync(u => u.Userid == id);
     }
 
 

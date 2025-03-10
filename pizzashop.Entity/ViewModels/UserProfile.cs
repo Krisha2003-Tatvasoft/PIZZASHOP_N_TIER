@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace pizzashop.Entity.ViewModels
@@ -49,6 +50,10 @@ namespace pizzashop.Entity.ViewModels
     public string Rolename { get; set; } = null!;
 
     public string? Profileimg { get; set; }
+
+    
+  [Display(Name = "Profile Picture")]
+  public IFormFile ProfilePicture { get; set; }
 
 
     public List<SelectListItem>? Countries { get; set; }

@@ -22,8 +22,11 @@ public class ProfileService : IProfileService
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
+      private readonly IFileService _fileService;
+
     public ProfileService(IUserRepository userRepository, IUserDetailsRepository userDetailsRepository, 
-    ICountryRepository countryRepository,IStateRepository stateRepository,ICityRepository cityRepository, IHttpContextAccessor httpContextAccessor)
+    ICountryRepository countryRepository,IStateRepository stateRepository, IFileService fileService
+    ,ICityRepository cityRepository, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _userDetailsRepository = userDetailsRepository;
@@ -31,6 +34,7 @@ public class ProfileService : IProfileService
         _stateRepository = stateRepository;
         _cityRepository = cityRepository;
         _httpContextAccessor = httpContextAccessor;
+        _fileService = fileService;
     }
     public async Task ChangePassword(string email, ChangePassword model)
     {
@@ -51,6 +55,7 @@ public class ProfileService : IProfileService
     {
 
         var user = await _userRepository.GetUserByEmailAsync(email);
+        
         UserProfile viewmodel = new UserProfile
         {
             Email = user.Email,
@@ -77,7 +82,12 @@ public class ProfileService : IProfileService
 
     public async Task UpdateProfile(int id, UserProfile viewmodel)
     {
-
+         string uniqueFileName = null;
+      if (viewmodel.ProfilePicture != null)
+      {
+        uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ProfilePicture, "uploads");
+      }
+     
         User user = await _userDetailsRepository.GetUserByIdAsync(id);
         user.Firstname = viewmodel.Firstname;
         user.Lastname = viewmodel.Lastname;
@@ -86,6 +96,7 @@ public class ProfileService : IProfileService
         user.Countryid = viewmodel.Countryid;
         user.Stateid = viewmodel.Stateid;
         user.Cityid=viewmodel.Cityid;
+        user.Profileimg = uniqueFileName;
 
         await _userDetailsRepository.UpdateAsync(user);
     }

@@ -29,7 +29,16 @@
 
             <thead>
                 <tr>
-                    <th>Permission</th>
+                    <th>
+                        <div class="form-check ps-4">
+
+                            <input class="form-check-input css-checkbox" type="checkbox" value=""
+                                id="permissions-checkbox">
+                            <label class="form-check-label" for="permissions-checkbox">
+                                Permission
+                            </label>
+                        </div>
+                    </th>
                     <th>Can View</th>
                     <th>Can Add/Edit</th>
                     <th>Can Delete</th>
@@ -43,33 +52,39 @@
                     <tr>
                         <td>
                             <input type="hidden" class="permission-id" value="@item.Permissionid">
+
                             <div class="form-check">
-                                <input class="form-check-input permission-checkbox" type="checkbox" @(item.CanPermission ?
-                                    "checked" : "")>
-                                <label class="form-check-label">
+                                @{
+                                  bool isRowChecked = (item.Canview  || item.Canaddedit || item.Candelete );
+                                }
+                                
+                                <input class="form-check-input row-checkbox" type="checkbox" @(isRowChecked ?
+                                "checked" : "") id="category-@item.Permissionid" >
+                                <label class="form-check-label" for="category-@item.Permissionid">
                                     @item.Permissionname
                                 </label>
                             </div>
                         </td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input can-view" type="checkbox" @(item.Canview ? "checked" : "")>
+                                <input class="form-check-input can-view" type="checkbox" role="switch"
+                                    id="view-@item.Permissionid" @(item.Canview ? "checked" : "")>
                             </div>
                         </td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input can-add-edit" type="checkbox" @(item.Canaddedit ? "checked" :
-                                    "")>
+                                <input class="form-check-input can-add-edit" type="checkbox" role="switch"
+                                    id="edit-@item.Permissionid" @(item.Canaddedit ? "checked" : "")>
                             </div>
                         </td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input can-delete" type="checkbox" @(item.Candelete ? "checked" :
-                                    "")>
-                        </div>
-                    </td>
-                </tr>
-                                }
+                                <input class="form-check-input can-delete" type="checkbox" role="switch"
+                                    id="delete-@item.Permissionid" @(item.Candelete ? "checked" : "")>
+                            </div>
+                        </td>
+                    </tr>
+                }
 
             </tbody>
         </table>
@@ -96,7 +111,6 @@
     $(document).ready(function () {
 
         $(document).on("click", ".cancle-btn", function () {
-            console.log("helooo");
             $.ajax({
                 url: '@Url.Action("Role", "RolePermission")',
                 type: 'GET',
@@ -111,27 +125,29 @@
             });
         });
 
-
+      
         $(document).on("click", ".save-btn", function () {
-            console.log("helolo");
             let updatedPermissions = [];
 
             $("tbody tr").each(function () {
                 let row = $(this);
                 let permissionId = row.find(".permission-id").val();
+                let IsCheck = $("#category-" + permissionId).prop("checked");
 
                 let canView = row.find(".can-view").prop("checked");
                 let canAddEdit = row.find(".can-add-edit").prop("checked");
                 let canDelete = row.find(".can-delete").prop("checked");
 
-                if (row.find(".permission-checkbox").prop("checked")) {
-                    updatedPermissions.push({
-                        Permissionid: permissionId,
-                        Canview: canView,
-                        Canaddedit: canAddEdit,
-                        Candelete: canDelete
-                    });
-                }
+
+
+                updatedPermissions.push({
+                    Permissionid: permissionId,
+                    Canview: canView,
+                    Canaddedit: canAddEdit,
+                    Candelete: canDelete,
+                    CanPermission: IsCheck
+                });
+
             });
 
 
@@ -142,12 +158,91 @@
                 data: JSON.stringify(updatedPermissions),
                 success: function (response) {
                     alert("Permissions updated successfully!");
+                   updateMasterCheckbox();
+                    $(".row-checkbox").trigger("change");
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);
                 }
             });
         });
+
+        updateMasterCheckbox();
+
+
+        // Trigger change event on row checkboxes to set initial state of permission toggles
+        $(".row-checkbox").trigger("change");
+
+        // Master checkbox (Select All) behavior
+        $("#permissions-checkbox").on("change", function () {
+            let isChecked = $(this).prop("checked");
+            $(".row-checkbox").prop("checked", isChecked).trigger("change");
+            updateMasterCheckbox();
+        });
+
+
+        // Row checkbox behavior
+        $(document).on("change", ".row-checkbox", function () {
+            let row = $(this).closest("tr");
+            let isChecked = $(this).prop("checked");
+
+            // Enable/disable permission toggles based on checkbox state
+            row.find(".form-check-input[role='switch']").prop("disabled", !isChecked);
+
+            // If row is unchecked, uncheck all permission toggles
+            if (!isChecked) {
+                row.find(".form-check-input[role='switch']").prop("checked", false);
+            }
+
+            // Update master checkbox state
+            updateMasterCheckbox();
+        });
+
+        // Permission toggle dependency handling
+        $(document).on("change", ".form-check-input[role='switch']", function () {
+            let row = $(this).closest("tr");
+            let permissionId = row.find(".permission-id").val();
+            let viewToggle = row.find("#view-" + permissionId);
+            let editToggle = row.find("#edit-" + permissionId);
+            let deleteToggle = row.find("#delete-" + permissionId);
+
+            // Logic: If edit or delete is checked, view must be checked
+            if ((editToggle.prop("checked") || deleteToggle.prop("checked")) && !viewToggle.prop("checked")) {
+                viewToggle.prop("checked", true);
+            }
+
+            // Logic: If view is unchecked, edit and delete must be unchecked
+            if (!viewToggle.prop("checked")) {
+                editToggle.prop("checked", false);
+                deleteToggle.prop("checked", false);
+            }
+        });
+    // Function to update the master checkbox state (indeterminate/checked/unchecked)
+
+
+    function updateMasterCheckbox() {
+        let totalCheckboxes = $(".row-checkbox").length;
+        let checkedCheckboxes = $(".row-checkbox:checked").length;
+
+        let $masterCheckbox = $("#permissions-checkbox");
+
+        if (checkedCheckboxes === 0) {
+            // None checked - show unchecked (plus)
+            $masterCheckbox.prop("checked", false);
+            $masterCheckbox.prop("indeterminate", false);
+            $("#permissionLbl").text("+");
+        } else if (checkedCheckboxes === totalCheckboxes) {
+            // All checked - show checked
+            $masterCheckbox.prop("checked", true);
+            $masterCheckbox.prop("indeterminate", false);
+            $("#permissionLbl").text("✓");
+        } else {
+            // Some checked - show indeterminate (minus)
+            $masterCheckbox.prop("indeterminate", true);
+            $("#permissionLbl").text("-");
+        }
+    }
+
 
     });
 

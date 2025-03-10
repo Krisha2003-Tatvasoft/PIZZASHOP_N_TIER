@@ -3,6 +3,11 @@
     color:#087cc4;
 }
 
+a.sort
+{
+    text-decoration: none;
+    color: grey;
+}
 
 .heading-back-button{
 display: flex;
@@ -43,6 +48,15 @@ justify-content: space-between;
      font-size: 1rem;
      color: var(--bs-secondary-color);
      padding-right: 3px;
+ }
+
+ .activestatus{
+    background-color :#77ab59;
+ }
+
+ .inactivestatus
+ {
+    background-color: red;
  }
 
 

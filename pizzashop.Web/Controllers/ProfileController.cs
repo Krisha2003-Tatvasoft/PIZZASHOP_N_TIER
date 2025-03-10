@@ -36,7 +36,7 @@ public class ProfileController : Controller
     [HttpPost]
     public async Task<IActionResult> ChagePasswordAsync(ChangePassword viewmodel)
     {
-        if(!ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
             return View(viewmodel);
         }
@@ -63,7 +63,14 @@ public class ProfileController : Controller
     public async Task<IActionResult> UserProfile()
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
-        return View(await _ProfileService.UserProfile(user.Email));
+        if (user != null)
+        {
+            return View(await _ProfileService.UserProfile(user.Email));
+        }
+        else{
+            user = SessionUtils.GetUser(HttpContext);
+            return RedirectToAction("Index","Home");
+        }
     }
 
     [HttpPost]
@@ -77,7 +84,13 @@ public class ProfileController : Controller
         }
         else
         {
-            return View(await _ProfileService.UserProfile(viewmodel.Email));
+            ModelState.Remove(nameof(viewmodel.Email));
+            ModelState.Remove(nameof(viewmodel.Countries));
+            ModelState.Remove(nameof(viewmodel.States));
+            ModelState.Remove(nameof(viewmodel.Cities));
+            ModelState.Remove(nameof(viewmodel.Rolename));
+            ModelState.Remove(nameof(viewmodel.Username));
+            return View(viewmodel);
         }
 
     }

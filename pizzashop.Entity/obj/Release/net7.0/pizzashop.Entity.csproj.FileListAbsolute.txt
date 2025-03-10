@@ -12,3 +12,17 @@ d:\pizzashop_nTier\pizzashop.Entity\obj\Release\net7.0\refint\pizzashop.Entity.d
 d:\pizzashop_nTier\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.pdb
 D:\pizzashop_nTier\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.genruntimeconfig.cache
 D:\pizzashop_nTier\pizzashop.Entity\obj\Release\net7.0\ref\pizzashop.Entity.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Release\net7.0\pizzashop.Entity.deps.json
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Release\net7.0\pizzashop.Entity.runtimeconfig.json
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Release\net7.0\pizzashop.Entity.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\bin\Release\net7.0\pizzashop.Entity.pdb
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.csproj.AssemblyReference.cache
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.GeneratedMSBuildEditorConfig.editorconfig
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.AssemblyInfoInputs.cache
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.AssemblyInfo.cs
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.csproj.CoreCompileInputs.cache
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\refint\pizzashop.Entity.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.pdb
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\pizzashop.Entity.genruntimeconfig.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Entity\obj\Release\net7.0\ref\pizzashop.Entity.dll
