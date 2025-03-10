@@ -60,11 +60,28 @@
                 success: function (data) {
                     $('#roletable').hide();
                     $('#permissionpartial').html(data).show();
+                    updateSwitchStates();
                 },
                 error: function () {
                    
                 }
             });
  }
+
+  function updateSwitchStates() {
+           $("table tbody tr").each(function () {
+            console.log("hiii");
+            let row = $(this);
+            let rowCheckbox = row.find(".row-checkbox");
+
+            // If row checkbox is unchecked, disable all switches in that row
+            if (!rowCheckbox.prop("checked")) {
+                 row.find(".form-check-input[role='switch']").prop("disabled", true);
+            } else {
+                row.find(".form-check-input[role='switch']").prop("disabled", false);
+             }
+          });
+       }
+       
 });
 </script>

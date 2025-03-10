@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 
 
@@ -12,6 +15,13 @@
 </head>
 
 @await Html.PartialAsync("_Toast")
+
+ @{
+    var username= User.FindFirst(ClaimTypes.Name)?.Value;
+    var Profileimg = HttpContextAccessor.HttpContext?.User?.FindFirst("Profileimg")?.Value;
+    var defaultImg = Url.Content("../images/Default_pfp.svg.png");
+    var profileImageUrl = !string.IsNullOrEmpty(Profileimg) ? Url.Content("~/uploads/" + Profileimg) : defaultImg;
+} 
 
 <body>
     <div class="d-flex">
@@ -89,11 +99,11 @@
 
                 <div class="dropdown me-2 profile-dropdown">
                     <img class="profile-img dropdown-toggle" data-bs-toggle="dropdown" id="dropdownMenuButton1"
-                        src="~/images/Default_pfp.svg.png" aria-expanded="false" />
+                        src="@profileImageUrl" aria-expanded="false" style="border-radius:50%" />
 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item border-bottom"> <img src="~/images/Default_pfp.svg.png" class="me-2"
-                                    width="40px" height="40px">Username</a></li>
+                        <li><a class="dropdown-item border-bottom"> <img src="@profileImageUrl" class="me-2"
+                                    width="40px" height="40px" style="border-radius:50%">@username</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="UserProfile"> <i
                                     class="bi bi-person-circle me-3"></i>My profile</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="ChagePassword"><i
@@ -167,7 +177,6 @@
             let currentController = path[1];
 
             $(".slider-content a").each(function () {
-                console.log(this);
                 let menu = $(this).attr("href"); 
                 let path = menu.split("/");
                 let menuController = path[1];
@@ -175,7 +184,6 @@
                 if (menuController === currentController) {
                     $(this).addClass("active"); // Apply active class
                     let activeImg = $(this).find("img").attr("data-active-img");
-                    console.log(activeImg);
                     $(this).find("img").attr("src", activeImg); // Change image to active
                 }
             });

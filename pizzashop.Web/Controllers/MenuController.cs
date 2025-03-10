@@ -1,3 +1,4 @@
+using AuthenticationDemo.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
@@ -7,6 +8,7 @@ using VMCategory = pizzashop.Entity.ViewModels.Category;
 
 namespace pizzashop.Controllers;
 
+[CustomAuthorize]
 public class MenuController : Controller
 {
 

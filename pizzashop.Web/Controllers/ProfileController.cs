@@ -67,9 +67,10 @@ public class ProfileController : Controller
         {
             return View(await _ProfileService.UserProfile(user.Email));
         }
-        else{
+        else
+        {
             user = SessionUtils.GetUser(HttpContext);
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
     }
 
@@ -95,5 +96,7 @@ public class ProfileController : Controller
 
     }
 
+
+   
 
 }

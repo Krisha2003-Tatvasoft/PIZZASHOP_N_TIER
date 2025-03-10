@@ -18,7 +18,7 @@ public class HomeController : Controller
      
     }
 
-    [CustomAuthorize("Chef")]
+    [CustomAuthorize("CHEF" , "ADMIN","MANAGER")]
     public IActionResult Index()
     {
         return View();

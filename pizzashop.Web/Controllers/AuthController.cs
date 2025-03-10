@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
@@ -52,7 +53,7 @@ public class AuthController : Controller
                 return View();
             }
 
-            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename);
+            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename,user.Username,user.User.Profileimg);
 
             CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
 
@@ -101,13 +102,13 @@ public class AuthController : Controller
         {
             if (await _authService.UserExistsAsync(viewmodal))
             {
-                var expirationTime = DateTime.UtcNow.AddHours(24).ToString("yyyy-MM-ddTHH:mm:ss"); // ISO 8601 format
 
+                 var token =  _jwtService.GenerateForgetToken(viewmodal.Email);
                 // Create reset password link
                 var resetLink = Url.Action("ResetPassword", "Auth",
-                    new { email = viewmodal.Email, expiration = expirationTime }, Request.Scheme);
+                    new { token = token }, Request.Scheme);
 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -143,7 +144,9 @@ public class AuthController : Controller
 </html>";
 
                 await _emailService.SendResetPasswordEmail(viewmodal.Email, bodyBuilder);
-                return Ok("Reset password email sent.");
+
+                TempData["SuccessMessage"] = "Email Send Sucessfully";
+                return View();
             }
             else
             {
@@ -160,28 +163,17 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult ResetPassword()
     {
-        string email = Request.Query["email"];
-        string expirationString = Request.Query["expiration"];
+        var token = Request.Query["token"];
+        var principal = _jwtService?.ValidateToken(token);
+
+        string email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         // Checking if the email is present in the query string
-        if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(expirationString))
+        if (string.IsNullOrEmpty(email))
         {
             // If no email is passed in the query string, return an error
-            return BadRequest("Email parameter is missing");
-        }
-
-
-
-        // Parse the expiration date and check if it's expired
-        if (!DateTime.TryParse(expirationString, out DateTime expiration))
-        {
-            return BadRequest("Invalid expiration date.");
-        }
-
-        // Check if the link has expired (1 minute validity)
-        if (expiration < DateTime.UtcNow)
-        {
-            return BadRequest("The reset link has expired.");
+            TempData["ErrorMessage"] = "User Not Found";
+            return View();
         }
 
         // You can now use the email, e.g., check if it exists in the database

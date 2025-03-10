@@ -20,20 +20,31 @@ public class JwtService : IJwtService
         _audience = configuration["Jwt:Audience"];
     }
 
-    public string GenerateJwtToken(string email, int userId, string role)
+    public string GenerateJwtToken(string email, int userId, string role, string Username, string? Profileimg)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_key); // Secret Code (Salt)
 
+        var claims = new List<Claim>
+         {
+            
+        new Claim(ClaimTypes.Email, email),
+        new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+        new Claim(ClaimTypes.Role, role),
+        new Claim(ClaimTypes.Name, Username)
+         
+          };
+
+        // Add Profileimg claim only if it's not null or empty
+        if (!string.IsNullOrEmpty(Profileimg))
+        {
+            claims.Add(new Claim("Profileimg", Profileimg));
+        }
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                    new Claim(ClaimTypes.Role, role),
-                    //new Claim("ClaimName", "Dynamic Value for Claim") Custom Claim
-                }),
+
+            Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddHours(1),
             Issuer = _issuer,
             Audience = _audience,
@@ -43,6 +54,28 @@ public class JwtService : IJwtService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+
+    public string GenerateForgetToken(string email)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_key);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(new[]
+            {
+                    new Claim(ClaimTypes.Email, email)
+                }),
+            Expires = DateTime.UtcNow.AddHours(24),
+            Issuer = _issuer,
+            Audience = _audience,
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+        };
+
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
+    }
+
 
     public ClaimsPrincipal? ValidateToken(string token)
     {

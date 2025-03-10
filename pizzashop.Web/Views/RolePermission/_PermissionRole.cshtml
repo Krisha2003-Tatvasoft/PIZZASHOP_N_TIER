@@ -58,7 +58,7 @@
                                   bool isRowChecked = (item.Canview  || item.Canaddedit || item.Candelete );
                                 }
                                 
-                                <input class="form-check-input row-checkbox" type="checkbox" @(isRowChecked ?
+                                <input class="form-check-input row-checkbox" type="checkbox"  @(isRowChecked ?
                                 "checked" : "") id="category-@item.Permissionid" >
                                 <label class="form-check-label" for="category-@item.Permissionid">
                                     @item.Permissionname
@@ -157,9 +157,7 @@
                 contentType: "application/json",
                 data: JSON.stringify(updatedPermissions),
                 success: function (response) {
-                    alert("Permissions updated successfully!");
-                   updateMasterCheckbox();
-                    $(".row-checkbox").trigger("change");
+                    console.sucess("Permission updated sucessfully", sucess);
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);

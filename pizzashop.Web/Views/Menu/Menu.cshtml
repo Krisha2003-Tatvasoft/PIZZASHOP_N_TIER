@@ -509,7 +509,6 @@
         $("#save-cat").click(function (e) {
             e.preventDefault();
             var formData = $("#addCat").serialize();
-            console.log(formData);
 
             $.ajax({
                 url: "/Menu/addCategory",
@@ -599,7 +598,6 @@
                     $("#categoryname").val(data.categoryname);
                     $("#description").val(data.description);
                     $("#categoryid").val(categoryId)
-                    console.log(data);
                 },
                 error: function () {
                     alert("error in responce");
@@ -628,8 +626,6 @@
                         console.error("Error updating permissions:", error);
                     }
                 });
-
-                console.log(formData);
             });
 
     @* delete Category *@

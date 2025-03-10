@@ -1,8 +1,10 @@
+using AuthenticationDemo.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Service.Interfaces;
 
 namespace pizzashop.Web.Controllers;
 
+[CustomAuthorize]
 public class LocationController : Controller
 {
     private readonly IProfileService _ProfileService;

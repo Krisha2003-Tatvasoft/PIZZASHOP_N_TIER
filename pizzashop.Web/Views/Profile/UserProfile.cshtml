@@ -213,7 +213,6 @@
 
         // When country is changed
         $("#Countryid").change(function () {
-            console.log("helllooo");
             var countryId = $(this).val();
             if (countryId) {
                 $.get("/Location/GetStates?countryId=" + countryId, function (data) {
