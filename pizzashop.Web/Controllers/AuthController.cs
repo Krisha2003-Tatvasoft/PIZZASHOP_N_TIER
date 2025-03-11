@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,9 @@ public class AuthController : Controller
     private readonly IEMailService _emailService;
 
     private readonly IWebHostEnvironment _webHostEnvironment;
+
+    private static readonly ConcurrentDictionary<string, DateTime> _blacklistedTokens = new ConcurrentDictionary<string, DateTime>();
+
 
     public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService, IWebHostEnvironment webHostEnvironment)
     {
@@ -44,7 +48,7 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> Login(VMLogin model)
     {
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             var user = await _authService.AuthenticateUser(model.Email, model.Password);
             if (user == null)
@@ -53,7 +57,7 @@ public class AuthController : Controller
                 return View();
             }
 
-            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename,user.Username,user.User.Profileimg);
+            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename, user.Username, user.User.Profileimg);
 
             CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
 
@@ -67,7 +71,7 @@ public class AuthController : Controller
             return RedirectToAction("Index", "Home");
         }
         return View();
-      
+
     }
 
     public IActionResult AccessDenied()
@@ -98,17 +102,17 @@ public class AuthController : Controller
     public async Task<IActionResult> Forget(Forget viewmodal)
     {
 
-        if(ModelState.IsValid)
+        if (ModelState.IsValid)
         {
             if (await _authService.UserExistsAsync(viewmodal))
             {
 
-                 var token =  _jwtService.GenerateForgetToken(viewmodal.Email);
+                var token = _jwtService.GenerateForgetToken(viewmodal.Email);
                 // Create reset password link
                 var resetLink = Url.Action("ResetPassword", "Auth",
                     new { token = token }, Request.Scheme);
 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -154,17 +158,51 @@ public class AuthController : Controller
                 return View();
             }
         }
-       else{
-        return View();
-       }
+        else
+        {
+            return View();
+        }
     }
 
+    private void BlacklistToken(string tokenId, DateTime expiration)
+    {
+        _blacklistedTokens.TryAdd(tokenId, expiration);
+    }
+
+    private bool IsTokenBlacklisted(string tokenId)
+    {
+        if (_blacklistedTokens.TryGetValue(tokenId, out DateTime blacklistExpiration))
+        {
+            if (blacklistExpiration > DateTime.UtcNow)
+                return true;
+            else
+            {
+                DateTime removed;
+                // Remove expired blacklist entry (should rarely happen when using a far-future date)
+                _blacklistedTokens.TryRemove(tokenId, out removed);
+                return false;
+            }
+        }
+        return false;
+    }
 
     [HttpGet]
     public IActionResult ResetPassword()
     {
         var token = Request.Query["token"];
         var principal = _jwtService?.ValidateToken(token);
+        if (principal == null)
+        {
+            TempData["ErrorMessage"] = "Invalid or expired token.";
+            return View();
+        }
+
+        var tokenId = principal.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
+        if (string.IsNullOrEmpty(tokenId) || IsTokenBlacklisted(tokenId))
+        {
+            TempData["ErrorMessage"] = "This password reset link has already been used or is invalid.";
+            return View();
+        }
 
         string email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -179,6 +217,7 @@ public class AuthController : Controller
         // You can now use the email, e.g., check if it exists in the database
         // If everything is fine, you can pass the email to the view
         ViewBag.Email = email;
+        ViewBag.Token = token;
 
         // Return the ResetPassword view
         return View();
@@ -187,12 +226,37 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPassword model)
     {
+         var token = model.token;
+            var principal = _jwtService?.ValidateToken(token);
+            if (principal == null)
+            {
+                TempData["ErrorMessage"] = "Invalid or expired token.";
+                return View(model);
+            }
+
+            // Extract TokenId claim.
+            var tokenId = principal.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
+            if (string.IsNullOrEmpty(tokenId))
+            {
+                TempData["ErrorMessage"] = "Invalid token payload.";
+                return View(model);
+            }
+
+            // Check if the token is already blacklisted.
+            if (IsTokenBlacklisted(tokenId))
+            {
+                TempData["ErrorMessage"] = "This token has already been used.";
+                return View(model);
+            }
+
         if (!ModelState.IsValid)
         {
             return View(model);
         }
-        
+
         await _authService.ResetPassword(model);
+        
+        BlacklistToken(tokenId, DateTime.UtcNow.AddYears(100));
 
         // Redirect user to login page or show success message
         CookieUtils.ClearCookies(HttpContext);

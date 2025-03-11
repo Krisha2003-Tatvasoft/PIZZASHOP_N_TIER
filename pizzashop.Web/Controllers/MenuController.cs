@@ -86,11 +86,11 @@ public class MenuController : Controller
     {
         if (await _categoryService.UpdateCat(model))
         {
-            return Json(new { sucess = true, message = "wdcf" });
+            return Json(new { sucess = true, message = "category edited succesfully" });
         }
         else
         {
-            return Json(new { error = true, message = "wdcf" });
+            return Json(new { error = true, message = "error in edit category" });
         }
     }
 
@@ -105,7 +105,12 @@ public class MenuController : Controller
         {
             return Json(new { error = true, message = "wdcf" });
         }
+    }
 
+    [HttpGet]
+    public async Task<IActionResult> AddItem()
+    {
+        return PartialView("_Additem" ,await _itemService.Additem());
     }
 
 }

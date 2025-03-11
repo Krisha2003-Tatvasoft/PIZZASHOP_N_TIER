@@ -108,7 +108,7 @@ public class UserService : IUserService
         Zipcode = model.Zipcode,
         Createdby = loginId,
         Modifiedby = loginId,
-        Profileimg = uniqueFileName
+        Profileimg = uniqueFileName 
       };
 
       var hashedPassword = PasswordUtills.HashPassword(model.Password);

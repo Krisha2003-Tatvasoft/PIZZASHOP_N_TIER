@@ -87,6 +87,7 @@ public class ProfileService : IProfileService
       {
         uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ProfilePicture, "uploads");
       }
+
      
         User user = await _userDetailsRepository.GetUserByIdAsync(id);
         user.Firstname = viewmodel.Firstname;
@@ -96,7 +97,11 @@ public class ProfileService : IProfileService
         user.Countryid = viewmodel.Countryid;
         user.Stateid = viewmodel.Stateid;
         user.Cityid=viewmodel.Cityid;
-        user.Profileimg = uniqueFileName;
+        if(uniqueFileName !=null)
+        {
+         user.Profileimg = uniqueFileName;
+        }
+     
 
         await _userDetailsRepository.UpdateAsync(user);
     }

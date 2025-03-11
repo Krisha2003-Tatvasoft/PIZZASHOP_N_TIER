@@ -36,16 +36,17 @@ public class UserRepository : IUserRepository
     }
     public async Task<IQueryable<Userslogin>> GetFilteredAsync(string search, string SortColumn, string SortOrder)
     {
+        string lowerSearch = search.ToLower();
         var userList = _context.Userslogins
         .Include(u => u.User)
         .Include(u => u.Role)
         .Where(u => u.User.Isdeleted == false)
-        .Where(u => string.IsNullOrEmpty(search) ||
-                            u.User.Firstname.Contains(search) ||
-                            u.User.Lastname.Contains(search) ||
-                            u.Email.Contains(search) ||
-                            u.User.Phone.Contains(search) ||
-                            u.Role.Rolename.Contains(search));
+        .Where(u => string.IsNullOrEmpty(lowerSearch) ||
+                            u.User.Firstname.ToLower().Contains(lowerSearch) ||
+                            u.User.Lastname.ToLower().Contains(lowerSearch) ||
+                            u.Email.ToLower().Contains(lowerSearch) ||
+                            u.User.Phone.ToLower().Contains(lowerSearch) ||
+                            u.Role.Rolename.ToLower().Contains(lowerSearch));
 
         userList = SortColumn switch
         {

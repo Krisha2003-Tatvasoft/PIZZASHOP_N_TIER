@@ -11,17 +11,19 @@ namespace pizzashop.Entity.ViewModels
     public int Userid { get; set; }
 
     [Required(ErrorMessage = "First name is required.")]
-    [StringLength(50, ErrorMessage = "First name cannot exceed 50 characters.")]
+    [RegularExpression(@"^[A-Za-z]{2,50}$",
+            ErrorMessage = "First name must contain only alphabets and be between 2 to 50 characters long.")]
     public string Firstname { get; set; } = null!;
 
     [Required(ErrorMessage = "Last name is required.")]
-    [StringLength(50, ErrorMessage = "Last name cannot exceed 50 characters.")]
+     [RegularExpression(@"^[A-Za-z]{2,50}$",
+            ErrorMessage = "Last name must contain only alphabets and be between 2 to 50 characters long.")]
     public string Lastname { get; set; } = null!;
 
     [Required(ErrorMessage = "Phone number is required.")]
     [Phone(ErrorMessage = "Invalid phone number format.")]
-    [StringLength(15, ErrorMessage = "Phone number cannot exceed 15 digits.")]
-    public string Phone { get; set; } = null!;
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")]    public string Phone { get; set; } = null!;
+
 
     [Required(ErrorMessage = "Please select a country.")]
     public int Countryid { get; set; }
@@ -43,7 +45,8 @@ namespace pizzashop.Entity.ViewModels
     public string Email { get; set; } = null!;
 
     [Required(ErrorMessage = "Username is required.")]
-    [StringLength(30, ErrorMessage = "Username cannot exceed 30 characters.")]
+    [RegularExpression(@"^[A-Za-z0-9_]{3,20}$",
+            ErrorMessage = "Username must be 3 to 20 characters long and can contain letters, numbers, and underscores only.")]
     public string Username { get; set; } = null!;
 
     [Required(ErrorMessage = "Role name is required.")]
@@ -53,7 +56,7 @@ namespace pizzashop.Entity.ViewModels
 
     
   [Display(Name = "Profile Picture")]
-  public IFormFile ProfilePicture { get; set; }
+  public IFormFile? ProfilePicture { get; set; }
 
 
     public List<SelectListItem>? Countries { get; set; }

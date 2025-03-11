@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static pizzashop.Entity.Models.Enums;
 
 namespace pizzashop.Entity.Models;
 
@@ -17,7 +18,7 @@ public partial class Item
 
     public int Unitid { get; set; }
 
-    public bool? Isavailable { get; set; }
+    public bool Isavailable { get; set; }
 
     public decimal? Taxpercentage { get; set; }
 
@@ -25,7 +26,7 @@ public partial class Item
 
     public bool? Isfavourite { get; set; }
 
-    public bool? Isdefaulttax { get; set; }
+    public bool Isdefaulttax { get; set; }
 
     public string? Itemimg { get; set; }
 
@@ -48,4 +49,7 @@ public partial class Item
     public virtual ICollection<Ordereditem> Ordereditems { get; set; } = new List<Ordereditem>();
 
     public virtual Unit Unit { get; set; } = null!;
+
+    
+    public itemtype itemtype { get; set; }
 }

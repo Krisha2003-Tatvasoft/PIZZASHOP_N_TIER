@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
@@ -51,5 +52,11 @@ public class CategoryRepository : ICategoryRepository
 
     }
 
+
+     public async Task<List<SelectListItem>> GetAllCatyAsync() =>
+        await _context.Categories.Select
+        (c => new SelectListItem 
+        { Value = c.Categoryid.ToString(), Text = c.Categoryname })
+        .ToListAsync();
 
 }

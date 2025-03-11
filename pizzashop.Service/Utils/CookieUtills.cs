@@ -34,11 +34,8 @@ namespace pizzashop.Service.Utils
             return token;
         }
 
-        /// <summary>
+
         /// Save User data to Cookies
-        /// </summary>
-        /// <param name="response"></param>
-        /// <param name="user"></param>
         public static void SaveUserData(HttpResponse response, Userslogin user)
         {
        

@@ -81,22 +81,18 @@ public class ProfileController : Controller
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
             await _ProfileService.UpdateProfile(user.Userid, viewmodel);
+             TempData["SuccessMessage"] = "Profile Updated Sucessfully";
             return RedirectToAction("UserProfile", "Profile");
         }
         else
         {
-            ModelState.Remove(nameof(viewmodel.Email));
-            ModelState.Remove(nameof(viewmodel.Countries));
-            ModelState.Remove(nameof(viewmodel.States));
-            ModelState.Remove(nameof(viewmodel.Cities));
-            ModelState.Remove(nameof(viewmodel.Rolename));
-            ModelState.Remove(nameof(viewmodel.Username));
-            return View(viewmodel);
+            Console.WriteLine("helooooooooooooooooooooooooo");
+            return View(await _ProfileService.UserProfile(viewmodel.Email));
         }
 
     }
 
 
-   
+
 
 }

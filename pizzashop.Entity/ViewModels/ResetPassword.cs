@@ -18,4 +18,7 @@ public class ResetPassword
     [Required(ErrorMessage = "Confirm password is required.")]
     [Compare("Password", ErrorMessage = "Passwords do not match.")]
     public string ConfirmPassword { get; set; } // Confirm password
+
+    public string token {get ; set;}
+
 }

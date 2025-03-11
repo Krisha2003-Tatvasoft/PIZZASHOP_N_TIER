@@ -314,6 +314,13 @@ public partial class PizzashopContext : DbContext
                 .HasForeignKey(d => d.Unitid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("items_unitid_fkey");
+
+                entity.Property(e => e.itemtype)
+                .HasColumnName("itemtype")
+                .HasConversion(
+                    v => (int)v,
+                    v => (itemtype)v
+                );
         });
 
         modelBuilder.Entity<Itemmodifiergroupmap>(entity =>

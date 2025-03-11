@@ -7,4 +7,13 @@ public class Enums
         Active = 0,
         Inactive = 1
     }
+
+    public enum itemtype
+    {
+        Veg = 0,
+        NonVeg = 1,
+        Vegan=2
+    }
+
+    
 }

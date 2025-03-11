@@ -8,10 +8,20 @@ namespace pizzashop.Service.Implementations;
 public class ItemService :IItemService
 {
     private readonly IItemRepository _itemRepository;
+     private readonly ICategoryRepository _categoryRepository;
 
-    public ItemService(IItemRepository itemRepository)
+     private readonly IUnitRepository _unitRpository;
+
+      private readonly IModifiersGroupRepository _modifiersGropRepository ;
+     
+
+    public ItemService(IItemRepository itemRepository , ICategoryRepository categoryRepository
+    ,IUnitRepository unitRepository,IModifiersGroupRepository modifiersGropRepository)
     {
         _itemRepository = itemRepository;
+        _categoryRepository = categoryRepository;
+        _unitRpository = unitRepository;
+        _modifiersGropRepository = modifiersGropRepository;
     }
 
     public List<ItemTable> GetItemTable(int id)
@@ -29,5 +39,17 @@ public class ItemService :IItemService
         ).ToList();
 
       return items;
+    }
+
+    public async Task<AddItem> Additem()
+    {
+
+       AddItem model = new AddItem
+       {
+         Categories= await _categoryRepository.GetAllCatyAsync(),
+         Units = await _unitRpository.GetAllUnitAsync(),
+         MGList = await _modifiersGropRepository.GetAllMGAsync()
+       };
+       return  model;
     }
 }

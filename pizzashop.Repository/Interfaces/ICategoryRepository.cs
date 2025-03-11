@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using pizzashop.Entity.Models;
 
 namespace pizzashop.Repository.Interfaces;
@@ -13,4 +14,6 @@ public interface ICategoryRepository
     Task UpdateCat(Category category);
 
    Task<bool> DeleteCat(int id);
+
+   Task<List<SelectListItem>> GetAllCatyAsync();
 }

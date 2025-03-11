@@ -27,12 +27,12 @@ public class JwtService : IJwtService
 
         var claims = new List<Claim>
          {
-            
+
         new Claim(ClaimTypes.Email, email),
         new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         new Claim(ClaimTypes.Role, role),
         new Claim(ClaimTypes.Name, Username)
-         
+
           };
 
         // Add Profileimg claim only if it's not null or empty
@@ -59,11 +59,13 @@ public class JwtService : IJwtService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_key);
+        var tokenId = Guid.NewGuid().ToString();
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
             {
+                    new Claim("TokenId", tokenId),
                     new Claim(ClaimTypes.Email, email)
                 }),
             Expires = DateTime.UtcNow.AddHours(24),
