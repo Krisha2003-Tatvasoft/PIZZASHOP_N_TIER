@@ -15,5 +15,7 @@ public interface IUserRepository
 
     Task<Userslogin?> GetUserByIdAsync(int id);
 
+    Task<bool> UsernameExistsAsync(string Username);
+
 
 }

@@ -49,4 +49,9 @@ public class UserDetailsRepository : IUserDetailsRepository
 
     }
 
+    public async Task<bool> PhoneExistsAsync(string phone)
+    {
+        return await _context.Users.AnyAsync(u => u.Phone == phone);
+    }
+
 }

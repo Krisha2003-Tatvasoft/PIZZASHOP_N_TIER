@@ -24,7 +24,7 @@ public class AddNewUser
 
   [Required(ErrorMessage = "Password is required")]
   [DataType(DataType.Password)]
- [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+  [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
         ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
   public string Password { get; set; } = null!;
 
@@ -53,14 +53,17 @@ public class AddNewUser
   public string Email { get; set; } = null!;
 
   [Required(ErrorMessage = "Username is required")]
-   [RegularExpression(@"^[A-Za-z0-9_]{3,20}$",
-            ErrorMessage = "Username must be 3 to 20 characters long and can contain letters, numbers, and underscores only.")]
+  [RegularExpression(@"^(?!^\d+$)(?!^_+$)[A-Za-z0-9_]{3,20}$",
+  ErrorMessage = "Username must be 3 to 20 characters long and contain at least one letter. It can also include numbers and underscores.")]
   public string Username { get; set; } = null!;
+
 
   [Required(ErrorMessage = "Status is required")]
   public statustype status { get; set; }
 
   [Display(Name = "Profile Picture")]
+  [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" })]
+  [MaxFileSize(2 * 1024 * 1024)] // 2MB limit
   public IFormFile? ProfilePicture { get; set; }
 
   public string? Profileimg { get; set; }

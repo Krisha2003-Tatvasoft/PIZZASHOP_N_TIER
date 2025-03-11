@@ -224,6 +224,10 @@
                     });
                 });
             }
+            else{
+                $("#Stateid").empty().append('<option value="">Select State</option>');
+                $("#Cityid").empty().append('<option value="">Select City</option>');
+            }
         });
 
         // When state is changed
@@ -236,6 +240,10 @@
                         $("#Cityid").append('<option value="' + city.value + '">' + city.text + '</option>');
                     });
                 });
+            }
+            else
+            {
+                $("#Cityid").empty().append('<option value="">Select City</option>');
             }
         });
 

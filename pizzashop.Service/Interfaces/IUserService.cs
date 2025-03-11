@@ -8,12 +8,18 @@ public interface IUserService
     
     Task<AddNewUser> GetAddNewUser();
 
-    Task<bool> PostAddNewUser(AddNewUser model,int loginId);
+    Task PostAddNewUser(AddNewUser model,int loginId);
 
     Task<AddNewUser> GetUpdate(int id);
   
      Task<bool> PostUpdate(AddNewUser model);
 
-      Task<bool> Delete(int id);
+    Task<bool> Delete(int id);
+
+    Task<bool> emailExist(string email);
+
+    Task<bool> usernameExist(string Username);
+
+   Task<bool> phoneExist(string phone);
 
 }

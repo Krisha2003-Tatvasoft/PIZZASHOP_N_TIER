@@ -88,12 +88,12 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3 password">
                         <div class="form-floating position-relative">
-                            <input type="password" class="form-control password" id="floatingInput"
-                                placeholder="Password" asp-for="Password">
-                            <label for="floatingInput">Password</label>
-                            <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
-                            <span asp-validation-for="Password" class="text-danger"></span>
+                                <input type="password" class="form-control password" id="floatingInput"
+                                    placeholder="Password" asp-for="Password">
+                                <label for="floatingInput">Password</label>
+                                <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
                         </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                 </div>
             </div>
@@ -101,11 +101,11 @@
 
 
         <div>
-            <div class="container-fluid">
+            <div class="container-fluid mb-3">
                 <div class="row  file-upload ms-1 me-1">
                     <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
 
-                        <div class="input-group  d-flex justify-content-center align-items-center">
+                        @* <div class="input-group  d-flex justify-content-center align-items-center">
                             <!-- Button to trigger the file input -->
                             <button type="button" class="btn" id="inputGroupFileAddon04"
                                 onclick="document.getElementById('inputGroupFile01').click();">
@@ -120,8 +120,30 @@
                                 aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
                                 onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
                             <span id="fileNameDisplay">No file selected</span>
-                        </div>
+                        </div> *@
 
+
+
+                        <div class="input-group d-flex justify-content-center align-items-center">
+                            <!-- Button to trigger the file input -->
+                            <button type="button" class="btn" id="inputGroupFileAddon04"
+                                onclick="document.getElementById('inputGroupFile01').click();">
+                                <img class="upload-icon" src="~/images/cloud-arrow-up.svg" alt="Upload" />
+                                <div class="d-flex justify-content-center align-items-center">
+                                    Browse File
+                                </div>
+                            </button>
+
+                            <!-- Hidden file input -->
+                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                                asp-for="ProfilePicture" onchange="validateFile(this);">
+
+                            <!-- Display selected file name -->
+                            <span id="fileNameDisplay" class="ms-2">No file selected</span>
+
+                            <!-- ASP.NET Core Model Validation (only works after form submit) -->
+                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                        </div>
 
                     </div>
                 </div>
@@ -229,10 +251,16 @@
             if (countryId) {
                 $.get("/Location/GetStates?countryId=" + countryId, function (data) {
                     $("#Stateid").empty().append('<option value="">Select State</option>');
+                    $("#Cityid").empty().append('<option value="">Select City</option>');
                     $.each(data, function (index, state) {
                         $("#Stateid").append('<option value="' + state.value + '">' + state.text + '</option>');
                     });
                 });
+            }
+            else
+            {
+                $("#Stateid").empty().append('<option value="">Select State</option>');
+                $("#Cityid").empty().append('<option value="">Select City</option>');
             }
         });
 
@@ -267,8 +295,6 @@
 
         });
 
-
-
         // When state is changed
         $("#Stateid").change(function () {
             var stateId = $(this).val();
@@ -280,7 +306,34 @@
                     });
                 });
             }
+            else
+            {
+                $("#Cityid").empty().append('<option value="">Select City</option>');
+            }
         });
 
     });
+</script>
+
+<script>
+    function validateFile(input) {
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        const fileName = input.files.length > 0 ? input.files[0].name : '';
+        @*pop -  find last element in array *@
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        if (input.files.length > 0) {
+            if (!allowedExtensions.includes(fileExtension)) {
+                fileNameDisplay.textContent = "Invalid file selected!";
+                fileNameDisplay.classList.add('text-danger');
+                input.value = ''; // Reset file input
+            } else {
+                fileNameDisplay.textContent = fileName;
+                fileNameDisplay.classList.remove('text-danger');
+            }
+        } else {
+            fileNameDisplay.textContent = "No file selected";
+        }
+    }
 </script>

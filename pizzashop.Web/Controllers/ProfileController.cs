@@ -6,6 +6,7 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace pizzashop.Web.Controllers;
 
@@ -15,9 +16,12 @@ public class ProfileController : Controller
 
     private readonly IProfileService _ProfileService;
 
-    public ProfileController(IProfileService profileService)
+    private readonly IAuthService _authService;
+
+    public ProfileController(IProfileService profileService,IAuthService authService)
     {
         _ProfileService = profileService;
+        _authService = authService;
     }
 
     public IActionResult Index()
@@ -42,6 +46,7 @@ public class ProfileController : Controller
         }
 
         CookieData user = SessionUtils.GetUser(HttpContext);
+
         if (viewmodel.Newpassword != viewmodel.ConfirmPassword)
         {
             return View();
@@ -50,9 +55,16 @@ public class ProfileController : Controller
         {
             if (user != null)
             {
+                var authUser = await _authService.AuthenticateUser(user.Email, viewmodel.OldPassword);
+                if(authUser == null)
+                {
+                    TempData["ErrorMessage"] = "Old Password is Incorrect";
+                    return View();
+                }
                 await _ProfileService.ChangePassword(user.Email, viewmodel);
                 CookieUtils.ClearCookies(HttpContext);
                 HttpContext.Session.Clear();
+                TempData["SuccessMessage"] = "Password Updated Sucessfully";
                 return RedirectToAction("Login", "Auth");
             }
         }
@@ -86,7 +98,9 @@ public class ProfileController : Controller
         }
         else
         {
-            Console.WriteLine("helooooooooooooooooooooooooo");
+            ModelState.Remove("Countryid");
+            ModelState.Remove("Stateid");
+            ModelState.Remove("Cityid");
             return View(await _ProfileService.UserProfile(viewmodel.Email));
         }
 

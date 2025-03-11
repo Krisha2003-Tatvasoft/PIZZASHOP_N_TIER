@@ -11,4 +11,6 @@ public interface IUserDetailsRepository
       Task AddUser(User user);
 
       Task<bool> Delete(int id);
+
+      Task<bool> PhoneExistsAsync(string phone);
 }

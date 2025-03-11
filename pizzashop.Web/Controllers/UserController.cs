@@ -57,10 +57,29 @@ public class UserController : Controller
         {
 
             CookieData user = SessionUtils.GetUser(HttpContext);
-
-            if (await _userService.PostAddNewUser(model, user.Userid))
+            if(await _userService.emailExist(model.Email))
             {
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                TempData["ErrorMessage"] = "Email Already Exists";
+                ModelState.Remove("Countryid");
+                return View(await _userService.GetAddNewUser());
+            }
+            else if(await _userService.usernameExist(model.Username))
+            {
+                TempData["ErrorMessage"] = "Username Already Exists";
+                ModelState.Remove("Countryid");
+                return View(await _userService.GetAddNewUser());
+            }
+            else if(await _userService.phoneExist(model.Phone))
+            {
+                TempData["ErrorMessage"] = "This PhoneNUmber Already Exists";
+                ModelState.Remove("Countryid");
+                return View(await _userService.GetAddNewUser());
+            }
+            else 
+            {
+                await _userService.PostAddNewUser(model, user.Userid);
+                
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -99,13 +118,7 @@ public class UserController : Controller
                 await _emailService.SendResetPasswordEmail(model.Email, bodyBuilder);
                 TempData["SuccessMessage"] = "User Added Sucessfully";
                 return RedirectToAction("UserList", "user");
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "Email Already Exists";
-                ModelState.Remove("Countryid");
 
-                return View(await _userService.GetAddNewUser());
             }
         }
         else
@@ -126,6 +139,7 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> EditUserAsync(AddNewUser viewmodel)
     {
+        ModelState.Remove("password");
         if (ModelState.IsValid)
         {
             if (await _userService.PostUpdate(viewmodel))
@@ -141,7 +155,10 @@ public class UserController : Controller
         }
         else
         {
-           
+            TempData["ErrorMessage"] = "Invalid data";
+            ModelState.Remove("Countryid");
+            ModelState.Remove("Stateid");
+            ModelState.Remove("Cityid");
             return View(await _userService.GetUpdate(viewmodel.Userid));
         }
 

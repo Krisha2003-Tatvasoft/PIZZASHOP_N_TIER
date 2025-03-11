@@ -43,8 +43,8 @@ public class UserService : IUserService
 
   public async Task<(List<UserTable>, int totalUsers)> GetUserTable(int page, int pageSize, string search, string SortColumn, string SortOrder)
   {
-    var userList = await _userRepository.GetFilteredAsync(search,SortColumn,SortOrder);
-  
+    var userList = await _userRepository.GetFilteredAsync(search, SortColumn, SortOrder);
+
 
     int totalUsers = await userList.CountAsync();
 
@@ -81,53 +81,42 @@ public class UserService : IUserService
     return model;
   }
 
-  public async Task<bool> PostAddNewUser(AddNewUser model, int loginId)
+  public async Task PostAddNewUser(AddNewUser model, int loginId)
   {
-
-    if (await _userRepository.UserExistsAsync(model.Email))
+    string uniqueFileName = null;
+    if (model.ProfilePicture != null)
     {
-      return false;
+      uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
     }
-    else
+    var newUser = new User
     {
+      Firstname = model.Firstname,
+      Lastname = model.Lastname,
+      Phone = model.Phone,
+      Countryid = model.Countryid,
+      Stateid = model.Stateid,
+      Cityid = model.Cityid,
+      Address = model.Address,
+      Zipcode = model.Zipcode,
+      Createdby = loginId,
+      Modifiedby = loginId,
+      Profileimg = uniqueFileName
+    };
 
-      string uniqueFileName = null;
-      if (model.ProfilePicture != null)
-      {
-        uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
-      }
-      var newUser = new User
-      {
-        Firstname = model.Firstname,
-        Lastname = model.Lastname,
-        Phone = model.Phone,
-        Countryid = model.Countryid,
-        Stateid = model.Stateid,
-        Cityid = model.Cityid,
-        Address = model.Address,
-        Zipcode = model.Zipcode,
-        Createdby = loginId,
-        Modifiedby = loginId,
-        Profileimg = uniqueFileName 
-      };
+    var hashedPassword = PasswordUtills.HashPassword(model.Password);
 
-      var hashedPassword = PasswordUtills.HashPassword(model.Password);
+    await _userDetailsRepository.AddUser(newUser);
 
-      await _userDetailsRepository.AddUser(newUser);
+    var newUserLogin = new Userslogin
+    {
+      Email = model.Email,
+      Passwordhash = hashedPassword,
+      Userid = newUser.Userid,
+      Roleid = model.Roleid,
+      Username = model.Username
+    };
 
-      var newUserLogin = new Userslogin
-      {
-        Email = model.Email,
-        Passwordhash = hashedPassword,
-        Userid = newUser.Userid,
-        Roleid = model.Roleid,
-        Username = model.Username
-      };
-
-      await _userRepository.AddNewUser(newUserLogin);
-
-      return true;
-    }
+    await _userRepository.AddNewUser(newUserLogin);
   }
 
   public async Task<AddNewUser> GetUpdate(int id)
@@ -148,28 +137,31 @@ public class UserService : IUserService
       Zipcode = user.User.Zipcode,
       Roleid = user.Role.Roleid,
       Password = user.Passwordhash,
-       Profileimg = user.User.Profileimg != null
-            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{ user.User.Profileimg }"
+      Profileimg = user.User.Profileimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{user.User.Profileimg}"
             : null,
       Countries = await _countryRepository.GetAllCountryAsync(),
       States = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
       Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid),
       Roles = await _roleRepository.GetAllRolesAsync(),
       status = user.status,
-      
+
     };
     return modal;
   }
 
   public async Task<bool> PostUpdate(AddNewUser model)
   {
-    
-      string uniqueFileName = null;
-      if (model.ProfilePicture != null)
-      {
-        uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
-      }
     Userslogin user = await _userRepository.GetUserByIdAsync(model.Userid);
+    string uniqueFileName = null;
+    if (model.ProfilePicture != null)
+    {
+      uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
+    }
+    else
+    {
+      uniqueFileName = user.User?.Profileimg;
+    }
     if (user == null)
     {
       return false;
@@ -189,7 +181,7 @@ public class UserService : IUserService
       user.Roleid = model.Roleid;
       user.status = model.status;
       user.Passwordhash = model.Password;
-      user.Email= model.Email;
+      user.Email = model.Email;
       user.User.Profileimg = uniqueFileName;
 
       await _userRepository.UpdateUserLoginAsync(user);
@@ -208,6 +200,21 @@ public class UserService : IUserService
       return false;
     }
 
+  }
+
+  public async Task<bool> emailExist(string email)
+  {
+    return await _userRepository.UserExistsAsync(email);
+  }
+
+  public async Task<bool> usernameExist(string Username)
+  {
+    return await _userRepository.UsernameExistsAsync(Username);
+  }
+
+  public async Task<bool> phoneExist(string phone)
+  {
+    return await _userDetailsRepository.PhoneExistsAsync(phone);
   }
 
 }
