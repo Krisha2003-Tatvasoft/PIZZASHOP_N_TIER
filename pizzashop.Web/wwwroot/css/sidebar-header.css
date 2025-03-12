@@ -88,10 +88,24 @@
     background-color: lightgray;
 }
 
-.my-header .profile-dropdown .dropdown-item 
-{
-    color:grey;
+
+
+.my-header .profile-dropdown .dropdown-menu {
+    .dropdown-item {
+
+        &:hover,
+        &:focus {
+            background-color: #f0f0f0; 
+        }
+
+        &:active,
+        &.active {
+            background-color: #e0e0e0 !important; 
+            color: #000 !important; 
+        }
+    }
 }
+
 
 
 @media screen and (max-width: 992px) {

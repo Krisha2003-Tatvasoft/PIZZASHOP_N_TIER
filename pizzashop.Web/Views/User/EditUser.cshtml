@@ -138,7 +138,7 @@
                         <div class="input-group d-flex justify-content-center align-items-center">
 
 
-                            <img src="@(string.IsNullOrEmpty(Model.Profileimg) ? "../images/profile_div_bg.jpg" : Model.Profileimg)"
+                            <img src="@(string.IsNullOrEmpty(Model.Profileimg) ? Url.Content("~/images/Default_pfp.svg.png") : Model.Profileimg)"
                                 class="user-profile" id="profileImage" width="80px" height="80px"
                                 style="border-radius: 50%; ">
 
