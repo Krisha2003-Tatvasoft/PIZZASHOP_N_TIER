@@ -37,4 +37,7 @@ public class AddItem
 
   public int Modifiergroupid { get; set; }
 
+  public int Createdby { get; set; }
+
+
 }

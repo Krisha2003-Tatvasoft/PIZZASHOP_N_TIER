@@ -17,7 +17,7 @@ public class AllowedExtensionsAttribute : ValidationAttribute
             var extension = Path.GetExtension(file.FileName).ToLower();
             if (!_extensions.Contains(extension))
             {
-                return new ValidationResult($"Only {string.Join(", ", _extensions)} files are allowed.");
+                return new ValidationResult("Only image files are allowed");
             }
         }
         return ValidationResult.Success!;

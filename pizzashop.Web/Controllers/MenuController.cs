@@ -113,4 +113,24 @@ public class MenuController : Controller
         return PartialView("_Additem" ,await _itemService.Additem());
     }
 
+    [HttpPost]
+    public async Task<IActionResult> addItemPost(AddItem model)
+    {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+         if(await _itemService.AddItemPost(user.Userid,model))
+         {
+             return Json(new { sucess = true, message = "Item Added Sucessfully" });
+         }
+         else
+         {
+             return Json(new { error = true, message = "Error in add item" });
+         }
+    }
+
+     [HttpGet]
+    public async Task<IActionResult> EditItem(int id)
+    {
+        return PartialView("_Edititem" ,await _itemService.EditItem(id));
+    }
+
 }

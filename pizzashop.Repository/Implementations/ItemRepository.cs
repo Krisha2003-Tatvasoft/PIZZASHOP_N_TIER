@@ -36,6 +36,15 @@ public class ItemRepository : IItemRepository
          }
     }
 
+  public async Task AddNewItemAsync(Item item)
+  {
+      _context.Items.Add(item);
+        await _context.SaveChangesAsync();
+  }
     
+  public async Task<Item> ItemByIdAsync(int id)
+  {
+      return await _context.Items.FirstOrDefaultAsync(u => u.Itemid == id);
+  }  
 
 }

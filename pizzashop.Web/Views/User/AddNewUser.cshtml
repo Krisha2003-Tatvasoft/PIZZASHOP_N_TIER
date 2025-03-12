@@ -126,6 +126,12 @@
 
 
                         <div class="input-group d-flex justify-content-center align-items-center">
+
+                            <img src="@(string.IsNullOrEmpty(Model.Profileimg) ? " ../images/Default_pfp.svg.png" : Model.Profileimg)"
+                                class="user-profile" id="profileImage" width="80px" height="80px"
+                                style="border-radius: 50%; ">
+
+
                             <!-- Button to trigger the file input -->
                             <button type="button" class="btn" id="inputGroupFileAddon04"
                                 onclick="document.getElementById('inputGroupFile01').click();">
@@ -321,7 +327,7 @@
     function validateFile(input) {
         const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
         const fileName = input.files.length > 0 ? input.files[0].name : '';
-    @*pop -  find last element in array *@
+    @*pop - find last element in array *@
         const fileExtension = fileName.split('.').pop().toLowerCase();
         const fileNameDisplay = document.getElementById('fileNameDisplay');
 
@@ -338,4 +344,17 @@
             fileNameDisplay.textContent = "No file selected";
         }
     }
+</script>
+
+<script>
+    document.getElementById('inputGroupFile01').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profileImage').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 </script>

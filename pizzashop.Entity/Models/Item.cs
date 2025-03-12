@@ -49,7 +49,6 @@ public partial class Item
     public virtual ICollection<Ordereditem> Ordereditems { get; set; } = new List<Ordereditem>();
 
     public virtual Unit Unit { get; set; } = null!;
-
     
     public itemtype itemtype { get; set; }
 }

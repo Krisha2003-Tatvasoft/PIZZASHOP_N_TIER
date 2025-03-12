@@ -1,3 +1,5 @@
+using static pizzashop.Entity.Models.Enums;
+
 namespace pizzashop.Entity.ViewModels;
 
 public class ItemTable
@@ -11,4 +13,6 @@ public class ItemTable
     public short? Quantity { get; set; }
 
     public string Unitname { get; set; } = null!;
+
+      public itemtype itemtype { get; set; }
 }
