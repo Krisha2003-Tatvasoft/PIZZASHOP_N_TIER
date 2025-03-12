@@ -57,7 +57,7 @@ public class AuthController : Controller
                 return View();
             }
 
-            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename, user.Username, user.User.Profileimg);
+            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename);
 
             CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
 
@@ -112,7 +112,7 @@ public class AuthController : Controller
                 var resetLink = Url.Action("ResetPassword", "Auth",
                     new { token = token }, Request.Scheme);
 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";

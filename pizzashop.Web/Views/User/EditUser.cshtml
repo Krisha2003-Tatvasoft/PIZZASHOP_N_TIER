@@ -115,22 +115,23 @@
                 <div class="row  file-upload ms-1 me-1">
                     <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
 
-                        @* <div class="input-group  d-flex justify-content-center align-items-center">
-                            <!-- Button to trigger the file input -->
-                            <button type="button" class="btn" id="inputGroupFileAddon04"
-                                onclick="document.getElementById('inputGroupFile01').click();">
-                                <img class="upload-icon" src="~/images/cloud-arrow-up.svg" alt="Upload" />
-                                <div class="d-flex justify-content-center align-items-center">
-                                    Browes file
-                                </div>
-                            </button>
+                        @* <div class="input-group d-flex justify-content-center align-items-center">
+                        <!-- Button to trigger the file input -->
+                        <button type="button" class="btn" id="inputGroupFileAddon04"
+                        onclick="document.getElementById('inputGroupFile01').click();">
+                        <img class="upload-icon" src="~/images/cloud-arrow-up.svg" alt="Upload" />
+                        <div class="d-flex justify-content-center align-items-center">
+                        Browes file
+                        </div>
+                        </button>
 
-                            <!-- Hidden file input -->
-                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                                aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
-                                onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
-                            <span id="fileNameDisplay">No file selected</span>
-                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                        <!-- Hidden file input -->
+                        <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                        aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
+                        onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No
+                        file selected';">
+                        <span id="fileNameDisplay">No file selected</span>
+                        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
                         </div> *@
 
                         <div class="input-group d-flex justify-content-center align-items-center">
@@ -232,9 +233,12 @@
             <button class="create-button" type="submit">
                 Update User
             </button>
-            <button class="cancel-button">
-                Cancel
-            </button>
+            <a  asp-controller="User" asp-action="UserList">
+                <button class="cancel-button" type="button">
+                    Cancel
+                </button>
+            </a>
+
         </div>
 
     </form>
@@ -315,9 +319,9 @@
 </script>
 <script>
     function validateFile(input) {
-        const allowedExtensions = ['jpg', 'jpeg', 'png' , 'webp'];
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
         const fileName = input.files.length > 0 ? input.files[0].name : '';
-        @*pop -  find last element in array *@
+    @*pop -  find last element in array *@
         const fileExtension = fileName.split('.').pop().toLowerCase();
         const fileNameDisplay = document.getElementById('fileNameDisplay');
 

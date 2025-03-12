@@ -20,7 +20,7 @@ public class JwtService : IJwtService
         _audience = configuration["Jwt:Audience"];
     }
 
-    public string GenerateJwtToken(string email, int userId, string role, string Username, string? Profileimg)
+    public string GenerateJwtToken(string email, int userId, string role)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_key); // Secret Code (Salt)
@@ -31,16 +31,7 @@ public class JwtService : IJwtService
         new Claim(ClaimTypes.Email, email),
         new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         new Claim(ClaimTypes.Role, role),
-        new Claim(ClaimTypes.Name, Username)
-
-          };
-
-        // Add Profileimg claim only if it's not null or empty
-        if (!string.IsNullOrEmpty(Profileimg))
-        {
-            claims.Add(new Claim("Profileimg", Profileimg));
-        }
-
+        };
         var tokenDescriptor = new SecurityTokenDescriptor
         {
 

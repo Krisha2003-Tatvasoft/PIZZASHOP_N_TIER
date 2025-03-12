@@ -18,12 +18,11 @@ public class HomeController : Controller
      
     }
 
-    [CustomAuthorize("Chef" , "Admin" )]
+    [CustomAuthorize("Admin" , "Account Manager","Chef" )]
     public IActionResult Index()
     {
         return View();
     }
-
 
 
     public IActionResult Privacy()

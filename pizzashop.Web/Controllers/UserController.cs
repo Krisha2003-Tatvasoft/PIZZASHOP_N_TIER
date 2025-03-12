@@ -79,7 +79,7 @@ public class UserController : Controller
             {
                 await _userService.PostAddNewUser(model, user.Userid);
                 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";

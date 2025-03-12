@@ -1,4 +1,6 @@
 ﻿@using System.Security.Claims
+@using pizzashop.Entity.ViewModels
+@using pizzashop.Service.Utils
 @inject IHttpContextAccessor HttpContextAccessor
 
 <!DOCTYPE html>
@@ -16,12 +18,13 @@
 
 @await Html.PartialAsync("_Toast")
 
- @{
-    var username= User.FindFirst(ClaimTypes.Name)?.Value;
-    var Profileimg = HttpContextAccessor.HttpContext?.User?.FindFirst("Profileimg")?.Value;
+@{
+    CookieData user = SessionUtils.GetUser(HttpContextAccessor.HttpContext);
+    var Username = user?.Username;
+    var Profileimg = user?.Image;
     var defaultImg = Url.Content("../images/Default_pfp.svg.png");
     var profileImageUrl = !string.IsNullOrEmpty(Profileimg) ? Url.Content("~/uploads/" + Profileimg) : defaultImg;
-} 
+}
 
 <body>
     <div class="d-flex">
@@ -103,7 +106,7 @@
 
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
                         <li><a class="dropdown-item border-bottom"> <img src="@profileImageUrl" class="me-2"
-                                    width="40px" height="40px" style="border-radius:50%">@username</a></li>
+                                    width="40px" height="40px" style="border-radius:50%">@Username</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="UserProfile"> <i
                                     class="bi bi-person-circle me-3"></i>My profile</a></li>
                         <li><a class="dropdown-item" asp-controller="Profile" asp-action="ChagePassword"><i
@@ -177,7 +180,7 @@
             let currentController = path[1];
 
             $(".slider-content a").each(function () {
-                let menu = $(this).attr("href"); 
+                let menu = $(this).attr("href");
                 let path = menu.split("/");
                 let menuController = path[1];
 

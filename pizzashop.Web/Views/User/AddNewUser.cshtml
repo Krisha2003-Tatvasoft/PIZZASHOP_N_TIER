@@ -88,10 +88,10 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3 password">
                         <div class="form-floating position-relative">
-                                <input type="password" class="form-control password" id="floatingInput"
-                                    placeholder="Password" asp-for="Password">
-                                <label for="floatingInput">Password</label>
-                                <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
+                            <input type="password" class="form-control password" id="floatingInput"
+                                placeholder="Password" asp-for="Password">
+                            <label for="floatingInput">Password</label>
+                            <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
                         </div>
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
@@ -105,21 +105,22 @@
                 <div class="row  file-upload ms-1 me-1">
                     <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
 
-                        @* <div class="input-group  d-flex justify-content-center align-items-center">
-                            <!-- Button to trigger the file input -->
-                            <button type="button" class="btn" id="inputGroupFileAddon04"
-                                onclick="document.getElementById('inputGroupFile01').click();">
-                                <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
-                                <div class="d-flex justify-content-center align-items-center">
-                                    Browes file
-                                </div>
-                            </button>
+                        @* <div class="input-group d-flex justify-content-center align-items-center">
+                        <!-- Button to trigger the file input -->
+                        <button type="button" class="btn" id="inputGroupFileAddon04"
+                        onclick="document.getElementById('inputGroupFile01').click();">
+                        <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
+                        <div class="d-flex justify-content-center align-items-center">
+                        Browes file
+                        </div>
+                        </button>
 
-                            <!-- Hidden file input -->
-                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                                aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
-                                onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
-                            <span id="fileNameDisplay">No file selected</span>
+                        <!-- Hidden file input -->
+                        <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                        aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
+                        onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No
+                        file selected';">
+                        <span id="fileNameDisplay">No file selected</span>
                         </div> *@
 
 
@@ -219,9 +220,12 @@
             <button class="create-button" type="submit">
                 Create USer
             </button>
-            <button class="cancel-button">
-                Cancel
-            </button>
+            <a class="" asp-controller="User" asp-action="UserList">
+                <button class="cancel-button" type="button">
+                    Cancel
+                </button>
+            </a>
+
 
         </div>
 
@@ -257,8 +261,7 @@
                     });
                 });
             }
-            else
-            {
+            else {
                 $("#Stateid").empty().append('<option value="">Select State</option>');
                 $("#Cityid").empty().append('<option value="">Select City</option>');
             }
@@ -306,8 +309,7 @@
                     });
                 });
             }
-            else
-            {
+            else {
                 $("#Cityid").empty().append('<option value="">Select City</option>');
             }
         });
@@ -319,7 +321,7 @@
     function validateFile(input) {
         const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
         const fileName = input.files.length > 0 ? input.files[0].name : '';
-        @*pop -  find last element in array *@
+    @*pop -  find last element in array *@
         const fileExtension = fileName.split('.').pop().toLowerCase();
         const fileNameDisplay = document.getElementById('fileNameDisplay');
 

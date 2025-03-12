@@ -43,7 +43,8 @@ namespace pizzashop.Service.Utils
                 Email=user.Email,
                 Userid=user.Userid,
                 Rolename=user.Role.Rolename,
-                Username=user.Username
+                Username=user.Username,
+                Image = user.User.Profileimg
                };
 
             string userData = JsonSerializer.Serialize(userdata);

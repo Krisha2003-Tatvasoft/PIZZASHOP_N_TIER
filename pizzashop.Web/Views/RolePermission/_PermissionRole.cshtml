@@ -198,22 +198,24 @@
 
         // Permission toggle dependency handling
         $(document).on("change", ".form-check-input[role='switch']", function () {
+             $(".row-checkbox").trigger("change");
             let row = $(this).closest("tr");
             let permissionId = row.find(".permission-id").val();
             let viewToggle = row.find("#view-" + permissionId);
             let editToggle = row.find("#edit-" + permissionId);
             let deleteToggle = row.find("#delete-" + permissionId);
 
-            // Logic: If edit or delete is checked, view must be checked
-            if ((editToggle.prop("checked") || deleteToggle.prop("checked")) && !viewToggle.prop("checked")) {
-                viewToggle.prop("checked", true);
-            }
 
-            // Logic: If view is unchecked, edit and delete must be unchecked
-            if (!viewToggle.prop("checked")) {
-                editToggle.prop("checked", false);
-                deleteToggle.prop("checked", false);
-            }
+            if ($(this).is(viewToggle) && !viewToggle.prop("checked")) {
+        editToggle.prop("checked", false);
+        deleteToggle.prop("checked", false);
+    }
+
+    // *2. If any of "Edit", "Add", or "Delete" is turned ON, turn ON "View"*
+    if (!$(this).is(viewToggle) && (editToggle.prop("checked")  || deleteToggle.prop("checked"))) {
+        viewToggle.prop("checked", true);
+    }
+
         });
     // Function to update the master checkbox state (indeterminate/checked/unchecked)
 

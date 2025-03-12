@@ -82,7 +82,7 @@ public class ProfileController : Controller
         else
         {
             user = SessionUtils.GetUser(HttpContext);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Auth");
         }
     }
 
@@ -93,7 +93,7 @@ public class ProfileController : Controller
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
             await _ProfileService.UpdateProfile(user.Userid, viewmodel);
-             TempData["SuccessMessage"] = "Profile Updated Sucessfully";
+            TempData["SuccessMessage"] = "Profile Updated Sucessfully";
             return RedirectToAction("UserProfile", "Profile");
         }
         else

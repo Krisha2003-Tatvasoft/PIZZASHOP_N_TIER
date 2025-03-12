@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -101,9 +102,24 @@ public class ProfileService : IProfileService
         {
          user.Profileimg = uniqueFileName;
         }
-     
+         await _userDetailsRepository.UpdateAsync(user);
 
-        await _userDetailsRepository.UpdateAsync(user);
+        Userslogin userlogin = await _userRepository.GetUserLoginByEmailAsync(viewmodel.Email);
+
+        userlogin.Username= viewmodel.Username;
+    
+        await _userRepository.UpdateUserLoginAsync(userlogin);
+
+       var userSession = SessionUtils.GetUser(_httpContextAccessor.HttpContext);
+       if(userSession!=null)
+       {
+         userSession.Username = userlogin.Username;
+         userSession.Image = user.Profileimg;
+         string updatedusername = JsonSerializer.Serialize(userSession);
+        _httpContextAccessor.HttpContext.Session.SetString("UserData", updatedusername);
+       }
+
+       
     }
 
    public async Task<List<SelectListItem>> GetStatesByCountryAsync(int countryId)

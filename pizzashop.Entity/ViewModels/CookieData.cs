@@ -9,4 +9,6 @@ public partial class CookieData
    public string Rolename { get; set; } = null!;
     public string Username { get; set; } = null!;
 
+    public string? Image {get; set;}
+
 }

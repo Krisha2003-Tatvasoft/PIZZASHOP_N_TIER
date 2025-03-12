@@ -4,7 +4,7 @@ namespace pizzashop.Service.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateJwtToken(string email, int userId, string role,string Username,string Profileimg);
+    string GenerateJwtToken(string email, int userId, string role);
 
     string GenerateForgetToken(string email);
 

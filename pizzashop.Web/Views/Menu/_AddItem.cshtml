@@ -9,8 +9,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <div class="modal-body d-flex">
+            <form id="add-item-form" >
 
+            <div class="modal-body d-flex">
                 <div class="left-side-addItem w-75">
 
                     <!-- first row -->
@@ -45,7 +46,7 @@
                                 <div class="form-floating">
                                      <select asp-for="itemtype" asp-items="Html.GetEnumSelectList<itemtype>()"
                                 class="form-select">
-                                <option value="">--Select a type--</option>
+                                <option value="">Select a type</option>
                             </select>
                             <label for="floatingInput">Item Type*</label>
                                 </div>
@@ -163,9 +164,42 @@
             </div>
 
             <div class="modal-footer d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger">Cancel</button>
+                <button type="button" class="btn btn-primary" id="add-item" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </div>
+
+            </form>
+
         </div>
     </div>
 </div>
+
+<script>
+
+   $(document).ready(function () {
+
+
+      $("#add-item").click(function (e) {
+            e.preventDefault();
+            var formData = $("#add-item-form").serialize();
+                
+
+             $.ajax({
+                url: "/Menu/addItem",
+                type: "POST",
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    $("#add-item-form")[0].reset();
+                    loadItemTable(formData);
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            }); 
+
+         });
+    });
+
+
+</script>
