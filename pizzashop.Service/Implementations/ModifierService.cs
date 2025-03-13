@@ -13,9 +13,9 @@ public class ModifierService:IModifierService
         _modifierRepository = modifierRepository;
     }
 
-    public List<ModifierTable> GetModifiersTable(int id)
+    public async Task<List<ModifierTable>> GetModifiersTable(int id)
     {
-        var modifierList = _modifierRepository.GetModifierByMG(id);
+        var modifierList = await _modifierRepository.GetModifierByMG(id);
 
         var modifiers = modifierList.Select(i => new ModifierTable
         {

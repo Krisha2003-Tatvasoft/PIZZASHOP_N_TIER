@@ -3,21 +3,21 @@
 <ul class="list-unstyled">
     @foreach (var item in Model)
     {
-        <li class="d-flex justify-content-between p-2">
+        <li class="d-flex justify-content-between p-2 cat-list" tabindex="0">
             <a href="#" class="cat-link  d-flex align-items-center gap-2" data-id="@item.Categoryid">
                 <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
                 <div>
                     @item.Categoryname
                 </div>
             </a>
-            <div class="d-flex gap-1 edit-delet">
-                <a class="edit-link" data-catid="@item.Categoryid">
-                    <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory"><img
+            <div class="d-flex gap-1 edit-delet ">
+                <a class="edit-link " data-catid="@item.Categoryid">
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory"><img class="icon d-none"
                             src="../images/pencil.svg"></button>
                 </a>
 
-                <a class="delete-link" data-catid="@item.Categoryid">
-                    <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal"><img class="delete-icon"
+                <a class="delete-link " data-catid="@item.Categoryid">
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal"><img class="delete-icon icon  d-none"
                             src="../images/trash.svg"></button>
                 </a>
             </div>

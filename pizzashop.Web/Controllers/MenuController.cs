@@ -46,31 +46,31 @@ public class MenuController : Controller
     }
 
     [HttpGet]
-    public IActionResult CategoryList()
+    public async Task<IActionResult> CategoryList()
     {
-        List<Category> categories = _categoryService.GetCategoryList();
+        List<Category> categories = await _categoryService.GetCategoryList();
         return PartialView("_CategoryTable", categories);
     }
 
     [HttpGet]
-    public IActionResult itemTable(int id)
+    public async Task<IActionResult> itemTable(int id)
     {
-        List<ItemTable> items = _itemService.GetItemTable(id);
-        return PartialView("_ItemTable", items);
+        List<ItemTable> items = await _itemService.GetItemTable(id);
+        return   PartialView("_ItemTable", items);
     }
 
 
     [HttpGet]
-    public IActionResult ModiGroupList()
+    public  async Task<IActionResult> ModiGroupList()
     {
-        List<ModifiersGroup> modifiersGrops = _modifierGroupService.GetMGList();
+        List<ModifiersGroup> modifiersGrops = await  _modifierGroupService.GetMGList();
         return PartialView("_ModifiersGroup", modifiersGrops);
     }
 
     [HttpGet]
-    public IActionResult modifierTable(int id)
+    public async Task<IActionResult> modifierTable(int id)
     {
-        List<ModifierTable> modifiers = _modifierService.GetModifiersTable(id);
+        List<ModifierTable> modifiers = await _modifierService.GetModifiersTable(id);
         return PartialView("_Modifier", modifiers);
     }
 
@@ -119,7 +119,7 @@ public class MenuController : Controller
         CookieData user = SessionUtils.GetUser(HttpContext);
          if(await _itemService.AddItemPost(user.Userid,model))
          {
-             return Json(new { sucess = true, message = "Item Added Sucessfully" });
+             return  Json(new { sucess = true, message = "Item Added Sucessfully" });
          }
          else
          {
@@ -131,6 +131,50 @@ public class MenuController : Controller
     public async Task<IActionResult> EditItem(int id)
     {
         return PartialView("_Edititem" ,await _itemService.EditItem(id));
+    }
+
+   [HttpPost]
+   public async Task<IActionResult> EditItemPost(AddItem model)
+   {
+      CookieData user = SessionUtils.GetUser(HttpContext);
+      if(await _itemService.EditItemPost(user.Userid,model))
+      {
+           return Json(new { success = true, message = "Item Added Sucessfully" });
+      }
+      else
+      {
+          return Json(new { error = true, message = "Error in update item" });
+      }
+   }
+
+   
+    [HttpPost]
+    public async Task<IActionResult> DeleteItem(int id)
+    {
+        if (await _itemService.DeleteItem(id))
+        {
+            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+        }
+        else
+        {
+            return Json(new { error = true, message = "Item not deleted." });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteSelectedItem(List<int> selectedIds)
+    {
+        
+        
+        if (await _itemService.DeleteSelectedItem(selectedIds))
+        {
+            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+        }
+        else
+        {
+            return Json(new { error = true, message = "Item not deleted." });
+        }
+        
     }
 
 }

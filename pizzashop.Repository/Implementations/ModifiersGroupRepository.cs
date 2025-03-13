@@ -14,9 +14,9 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
         _context = context;
     }
 
-    public List<Modifiergroup> AllModifiersGroup()
+    public async Task<List<Modifiergroup>> AllModifiersGroup()
     {
-        return _context.Modifiergroups.ToList();
+        return await  _context.Modifiergroups.ToListAsync();
     }
 
       public async Task<List<SelectListItem>> GetAllMGAsync() =>

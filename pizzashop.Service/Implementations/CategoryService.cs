@@ -32,9 +32,9 @@ public class CategoryService : ICategoryService
     return true;
   }
 
-  public List<VMCategory> GetCategoryList()
+  public async Task<List<VMCategory>> GetCategoryList()
   {
-    var category = _categoryRepository.AllCategory();
+    var category = await _categoryRepository.AllCategory();
 
     var catList = category.Select(c => new VMCategory
     {

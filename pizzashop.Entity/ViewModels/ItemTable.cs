@@ -15,4 +15,6 @@ public class ItemTable
     public string Unitname { get; set; } = null!;
 
       public itemtype itemtype { get; set; }
+
+        public bool Isavailable { get; set; }
 }

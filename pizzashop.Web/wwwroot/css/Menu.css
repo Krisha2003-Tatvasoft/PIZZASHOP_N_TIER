@@ -183,6 +183,10 @@
     justify-content: space-between;
 }
 
+.cat-list:focus-within >div > a> button > img{
+   display: block!important;
+}
+
 .pagging input {
     width: 50px;
     border: 1px solid grey;

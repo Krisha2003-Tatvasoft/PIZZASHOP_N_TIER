@@ -7,6 +7,8 @@ public class AddItem
 {
   // public int Itemid { get; set; }
 
+    public int Itemid { get; set; }
+
   public string Itemname { get; set; } = null!;
 
   public int Categoryid { get; set; }

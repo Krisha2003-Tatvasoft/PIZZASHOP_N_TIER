@@ -9,7 +9,7 @@ public interface ICategoryRepository
 
     Task<Category> GetCatById(int id);
 
-    List<Category> AllCategory();
+    Task<List<Category>> AllCategory();
 
     Task UpdateCat(Category category);
 

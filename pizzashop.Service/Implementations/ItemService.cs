@@ -26,9 +26,9 @@ public class ItemService : IItemService
     _modifiersGropRepository = modifiersGropRepository;
   }
 
-  public List<ItemTable> GetItemTable(int id)
+  public async Task<List<ItemTable>> GetItemTable(int id)
   {
-    var itemList = _itemRepository.GetItemByCat(id);
+    var itemList = await _itemRepository.GetItemByCat(id);
 
     var items = itemList.Select(i => new ItemTable
     {
@@ -37,7 +37,8 @@ public class ItemService : IItemService
       Rate = i.Rate,
       Quantity = i.Quantity,
       Unitname = i.Unit.Unitname,
-      itemtype = i.itemtype
+      itemtype = i.itemtype,
+      Isavailable = i.Isavailable
     }
     ).ToList();
 
@@ -88,6 +89,7 @@ public class ItemService : IItemService
     Item item = await _itemRepository.ItemByIdAsync(id);
     AddItem viewmodel = new AddItem
     {
+      Itemid = item.Itemid,
       Itemname = item.Itemname,
       Categoryid = item.Categoryid,
       Rate = item.Rate,
@@ -98,8 +100,61 @@ public class ItemService : IItemService
       Isdefaulttax = item.Isdefaulttax,
       Shortcode = item.Shortcode,
       Description = item.Description,
-      itemtype = item.itemtype
+      itemtype = item.itemtype,
+      Categories = await _categoryRepository.GetAllCatyAsync(),
+      Units = await _unitRpository.GetAllUnitAsync(),
+      MGList = await _modifiersGropRepository.GetAllMGAsync()
     };
     return viewmodel;
   }
+
+  public async Task<bool> EditItemPost(int loginid, AddItem viewmodel)
+  {
+    if(loginid==null)
+    {
+      return false;
+    }
+    Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
+
+      item.Itemname = viewmodel.Itemname;
+      item.Categoryid = viewmodel.Categoryid;
+      item.Rate = viewmodel.Rate;
+      item.Quantity = viewmodel.Quantity;
+       item.Unitid = viewmodel.Unitid;
+      item.Isavailable = viewmodel.Isavailable;
+      item.Taxpercentage = viewmodel.Taxpercentage;
+      item.Isdefaulttax = viewmodel.Isdefaulttax;
+      item.Shortcode = viewmodel.Shortcode;
+      item.Description = viewmodel.Description;
+      item.itemtype = viewmodel.itemtype;
+      item.Modifiedby = loginid;
+    
+       await _itemRepository.UpdateItem(item);
+
+      return true;
+
+  }
+
+
+  public async Task<bool> DeleteItem(int id)
+  {
+     Item item = await _itemRepository.ItemByIdAsync(id);
+     if(item==null)
+     {
+      return false;
+     }
+     else
+     {
+      await _itemRepository.DeleteItem(item);
+       return true;
+     }
+
+  }
+
+  public async Task<bool> DeleteSelectedItem(List<int> selectedIds)
+  {
+    if(selectedIds.Count == 0)
+    
+  }
+
 }

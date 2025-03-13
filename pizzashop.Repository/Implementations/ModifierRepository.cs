@@ -13,10 +13,10 @@ public class ModifierRepository :IModifierRepository
         _context = context;
     }
 
-    public List<Modifier> GetModifierByMG(int id)
+    public async Task<List<Modifier>> GetModifierByMG(int id)
     {
-        return _context.Modifiers
+        return await _context.Modifiers
         .Include(u => u.Unit)
-        .Where(c => c.Modifiergroupid == id).ToList();
+        .Where(c => c.Modifiergroupid == id).ToListAsync();
     }
 }

@@ -4,7 +4,7 @@
 
 @model pizzashop.Entity.ViewModels.MenuViewModels;
 
-<link rel="stylesheet" href="~/css/Menu.css"/>
+<link rel="stylesheet" href="~/css/Menu.css" />
 
 <div class="w-100 main-content px-4">
 
@@ -81,16 +81,17 @@
                             </div>
 
 
-                            <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedItem"
+                            <button id="delete-selected-item" class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedItem"
                                 class="delet-btn">
                                 <image class="delet-icon" src="../images/trash.svg" />
                             </button>
 
-                            @* <button class="new-item-btn button" data-bs-toggle="modal" data-bs-target="#addItem" onclick="" >
-                                + New Item
+                            @* <button class="new-item-btn button" data-bs-toggle="modal" data-bs-target="#addItem"
+                            onclick="" >
+                            + New Item
                             </button> *@
 
-                             <button class="new-item-btn button openModel" >
+                            <button class="new-item-btn button openModel">
                                 + New Item
                             </button>
 
@@ -155,9 +156,9 @@
                             </div>
 
 
-                            <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedModifier"
-                                class="delet-btn">
-                                <image class="delet-icon" src="../images/trash.svg" />
+                            <button data-bs-toggle="modal" data-bs-target="#deleteSelectedModifier"
+                                class=" button delet-btn ">
+                                <image class="delet-icon " src="../images/trash.svg" />
                             </button>
 
                             <button class=" button new-Modifiers-btn" data-bs-toggle="modal"
@@ -284,6 +285,28 @@
 <!-- Add new item -->
 <div class="modal-addNewItem"></div>
 
+  <!-- delete selected Items -->
+    <div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                    <span>Are you sure you want to delete these Items?</span>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
+                    <button type="button" class="btn btn-danger">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 <script src="../js/bootstarp.bundle.min.js"></script>
@@ -310,7 +333,7 @@
     $(document).ready(function () {
 
 
-         $(document).on("click", ".openModel", function (e) {
+        $(document).on("click", ".openModel", function (e) {
             $.ajax({
                 url: "/Menu/AddItem",
                 type: "GET",
@@ -323,7 +346,7 @@
                 }
             });
         });
- 
+
         function catList() {
             $.ajax({
                 url: "/Menu/CategoryList",
@@ -365,6 +388,7 @@
         });
 
         function loadItemTable(categoryId) {
+            console.log(categoryId);
             $.ajax({
                 url: '@Url.Action("itemTable", "Menu")',
                 type: "GET",
@@ -423,6 +447,7 @@
             });
 
         function GetEditCat(categoryId) {
+
             $.ajax({
                 url: "/Menu/EditCat",
                 type: "GET",
@@ -488,6 +513,100 @@
         }
 
 
+        $(document).on("click", "#edit-item", function (e) {
+            e.preventDefault();
+
+            var formData = new FormData($("#edit-item-form")[0]);
+            var categoryId = formData.get("Categoryid")
+            console.log(categoryId);
+            $.ajax({
+                url: "/Menu/EditItemPost",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (response) {
+                    loadItemTable(categoryId);
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            });
+
+        });
+
+        $(document).on("click", "#add-item", function (e) {
+            e.preventDefault();
+            var formData = $("#add-item-form").serialize();
+            var categoryId = formData.get("Categoryid");
+            console.log("heloooo" + categoryId);
+            $.ajax({
+                url: "/Menu/addItemPost",
+                type: "POST",
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    $("#add-item-form")[0].reset();
+                    loadItemTable(1);
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            });
+        });
+
+
+          @* Delete Item *@
+
+            $(document).on("click", ".delete-item", function (e) {
+                var itemId = $("#hidden").val();
+
+
+                $.ajax({
+                    url: "/Menu/DeleteItem",
+                    type: "POST",
+                    data: { id: itemId },
+                    success: function (response) {
+                        loadItemTable(1);
+                    },
+                    error: function (error) {
+                        console.error("Error updating permissions:", error);
+                    }
+                });
+
+            });
+
+        @* deleted selected item *@
+
+
+          var selectedIds =[];
+
+         $(document).on("click", "#delete-selected-item", function (e) {
+            selectedIds =[];
+            $(".item-checkbox:checked").each(function()
+            {
+                selectedIds.push($(this).val());
+            });
+        });
+
+
+         $(document).on("click", ".delete-selected-yes", function (e) {
+           
+             $.ajax({
+                    url: "/Menu/DeleteSelectedItem",
+                    type: "POST",
+                    data: { selectedIds: selectedIds },
+                    success: function (response) {
+                        loadItemTable(1);
+                    },
+                    error: function (error) {
+                        console.error("Error updating permissions:", error);
+                    }
+                });
+
+
+        });
 
     });
 

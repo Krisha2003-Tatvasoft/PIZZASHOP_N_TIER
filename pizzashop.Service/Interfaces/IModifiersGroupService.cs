@@ -3,5 +3,5 @@ using VMModifierGroup = pizzashop.Entity.ViewModels.ModifiersGroup;
 
 public interface IModifiersGroupService
 {
-    List<VMModifierGroup> GetMGList();
+    Task<List<VMModifierGroup>> GetMGList();
 }

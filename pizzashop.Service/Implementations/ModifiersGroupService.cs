@@ -12,9 +12,9 @@ public class ModifiersGroupService : IModifiersGroupService
     {
         _modifierGroupRepository = modifiersGroupRepository;
     }
-    public List<VMModifierGroup> GetMGList()
+    public async Task<List<VMModifierGroup>> GetMGList()
     {
-        var category = _modifierGroupRepository.AllModifiersGroup();
+        var category = await _modifierGroupRepository.AllModifiersGroup();
 
         var MGList = category.Select(c => new VMModifierGroup
         {

@@ -18,7 +18,7 @@ public partial class Item
 
     public int Unitid { get; set; }
 
-    public bool Isavailable { get; set; }
+    public bool Isavailable { get; set; } 
 
     public decimal? Taxpercentage { get; set; }
 

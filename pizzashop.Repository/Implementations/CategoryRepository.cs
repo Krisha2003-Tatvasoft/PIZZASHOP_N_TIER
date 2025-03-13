@@ -20,9 +20,9 @@ public class CategoryRepository : ICategoryRepository
         await _context.SaveChangesAsync();
     }
 
-    public List<Category> AllCategory()
+    public async Task<List<Category>> AllCategory()
     {
-        return _context.Categories.Where(c=>c.Isdeleted == false).ToList();
+        return await  _context.Categories.Where(c=>c.Isdeleted == false).ToListAsync();
     }
 
     public async Task<Category> GetCatById(int id)

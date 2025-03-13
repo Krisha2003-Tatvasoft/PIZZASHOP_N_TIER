@@ -88,18 +88,18 @@
                         <div class="row">
                             <div class=" col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3 d-flex align-items-center">
                                 <div class="form-check form-switch d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" role="switch" @(Model.Isavailable? "checked" : "")
-                                        id="flexSwitchCheckDefault" >
-                                    <label class="form-check-label" for="flexSwitchCheckDefault">Available</label>
+                                    <input class="form-check-input" type="checkbox" role="switch" 
+                                        id="isAvailable" asp-for=Isavailable>
+                                    <label class="form-check-label" for="isAvailable">Available</label>
                                 </div>
                             </div>
 
                             <div class="col-xxl-3 col-lg-6 col-md-6  col-sm-6 col-12 mb-3 d-flex align-items-center">
                                 <div
                                     class="form-check form-switch d-flex gap-2 align-items-center justify-content-start">
-                                    <input class="form-check-input" type="checkbox" role="switch" @(Model.Isdefaulttax? "checked" : "")
-                                        id="flexSwitchCheckDefault" >
-                                    <label class="form-check-label" for="flexSwitchCheckDefault">DefaultTax</label>
+                                    <input class="form-check-input" type="checkbox" role="switch"  asp-for=Isdefaulttax
+                                        id="IsDefaultTax" >
+                                    <label class="form-check-label" for="IsDefaultTax">DefaultTax</label>
                                 </div>
                             </div>
 
@@ -174,12 +174,12 @@
     </div>
 </div>
 
-<script>
+@* <script>
 
    $(document).ready(function () {
 
 
-      $("#add-item").click(function (e) {
+       $("#add-item").click(function (e) {
             e.preventDefault();
             var formData = $("#add-item-form").serialize();
                 
@@ -191,15 +191,15 @@
                 dataType: 'json',
                 success: function (response) {
                     $("#add-item-form")[0].reset();
-                    loadItemTable(formData);
+                    loadItemTable(1);
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);
                 }
             }); 
 
-         });
+         }); 
     });
 
 
-</script>
+</script> *@

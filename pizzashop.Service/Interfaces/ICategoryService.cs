@@ -6,7 +6,7 @@ public interface ICategoryService
 {
      Task<bool> AddCategoryAsync(VMCategory model,int loginId);
      
-     List<VMCategory> GetCategoryList();
+     Task<List<VMCategory>> GetCategoryList();
 
      Task<VMCategory> GetCategoryById(int id);
 

@@ -4,5 +4,5 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface IModifierRepository
 {
-    List<Modifier> GetModifierByMG(int id);
+    Task<List<Modifier>> GetModifierByMG(int id);
 }
