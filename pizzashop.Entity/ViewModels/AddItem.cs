@@ -37,7 +37,7 @@ public class AddItem
 
   public List<SelectListItem>? MGList { get; set; }
 
-  public int Modifiergroupid { get; set; }
+  public List<IMGMviewmodel> ModifierGroups { get; set; } = new List<IMGMviewmodel>();
 
   public int Createdby { get; set; }
 

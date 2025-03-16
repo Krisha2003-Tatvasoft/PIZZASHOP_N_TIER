@@ -3,4 +3,6 @@ using pizzashop.Entity.ViewModels;
 public interface IModifierService
 {
     Task<List<ModifierTable>> GetModifiersTable(int id);
+
+    Task<List<ModifierList>> GetModifiersList(int id);
 }

@@ -29,4 +29,20 @@ public class ModifierService:IModifierService
 
         return modifiers;
     }
+
+  
+    public async Task<List<ModifierList>> GetModifiersList(int id)
+    {
+        var modifierList = await _modifierRepository.GetModifierList(id);
+
+        var modifiers = modifierList.Select(i => new ModifierList
+        {
+            Modifierid = i.Modifierid,
+            Modifiername = i.Modifiername,
+        }
+        ).ToList();
+
+        return modifiers;
+    }
+
 }

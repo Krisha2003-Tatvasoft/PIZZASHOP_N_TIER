@@ -4,7 +4,6 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
 
-
 namespace pizzashop.Service.Implementations;
 
 public class ItemService : IItemService
@@ -16,14 +15,18 @@ public class ItemService : IItemService
 
   private readonly IModifiersGroupRepository _modifiersGropRepository;
 
+  private readonly IItemmodifiergroupmapRepository _itemmodifiergroupmapRepository;
+
 
   public ItemService(IItemRepository itemRepository, ICategoryRepository categoryRepository
-  , IUnitRepository unitRepository, IModifiersGroupRepository modifiersGropRepository)
+  , IUnitRepository unitRepository, IModifiersGroupRepository modifiersGropRepository
+  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository)
   {
     _itemRepository = itemRepository;
     _categoryRepository = categoryRepository;
     _unitRpository = unitRepository;
     _modifiersGropRepository = modifiersGropRepository;
+    _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
   }
 
   public async Task<List<ItemTable>> GetItemTable(int id)
@@ -57,10 +60,15 @@ public class ItemService : IItemService
     return model;
   }
 
-  public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
+    public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
   {
     if (loginId == null)
     {
+      return false;
+    }
+    if (viewmodel.ModifierGroups == null || !viewmodel.ModifierGroups.Any())
+    {
+      Console.WriteLine("ModifierGroups is either null or empty, skipping mapping.");
       return false;
     }
     Item item = new Item
@@ -79,7 +87,22 @@ public class ItemService : IItemService
       Createdby = loginId
     };
 
-    _itemRepository.AddNewItemAsync(item);
+    await _itemRepository.AddNewItemAsync(item);
+
+    foreach (var group in viewmodel.ModifierGroups)
+    {
+    
+      var newMapping = new Itemmodifiergroupmap
+      {
+
+        Itemid = item.Itemid,
+        Modifiergroupid = group.Modifiergroupid,
+        Minselectionrequired = group.Minselectionrequired,
+        Maxselectionallowed = group.Maxselectionallowed
+      };
+
+      await _itemmodifiergroupmapRepository.AddNewMapping(newMapping);
+    }
     return true;
 
   }
@@ -110,51 +133,56 @@ public class ItemService : IItemService
 
   public async Task<bool> EditItemPost(int loginid, AddItem viewmodel)
   {
-    if(loginid==null)
+    if (loginid == null)
     {
       return false;
     }
     Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
 
-      item.Itemname = viewmodel.Itemname;
-      item.Categoryid = viewmodel.Categoryid;
-      item.Rate = viewmodel.Rate;
-      item.Quantity = viewmodel.Quantity;
-       item.Unitid = viewmodel.Unitid;
-      item.Isavailable = viewmodel.Isavailable;
-      item.Taxpercentage = viewmodel.Taxpercentage;
-      item.Isdefaulttax = viewmodel.Isdefaulttax;
-      item.Shortcode = viewmodel.Shortcode;
-      item.Description = viewmodel.Description;
-      item.itemtype = viewmodel.itemtype;
-      item.Modifiedby = loginid;
-    
-       await _itemRepository.UpdateItem(item);
+    item.Itemname = viewmodel.Itemname;
+    item.Categoryid = viewmodel.Categoryid;
+    item.Rate = viewmodel.Rate;
+    item.Quantity = viewmodel.Quantity;
+    item.Unitid = viewmodel.Unitid;
+    item.Isavailable = viewmodel.Isavailable;
+    item.Taxpercentage = viewmodel.Taxpercentage;
+    item.Isdefaulttax = viewmodel.Isdefaulttax;
+    item.Shortcode = viewmodel.Shortcode;
+    item.Description = viewmodel.Description;
+    item.itemtype = viewmodel.itemtype;
+    item.Modifiedby = loginid;
 
-      return true;
+    await _itemRepository.UpdateItem(item);
+
+    return true;
 
   }
 
 
   public async Task<bool> DeleteItem(int id)
   {
-     Item item = await _itemRepository.ItemByIdAsync(id);
-     if(item==null)
-     {
+    Item item = await _itemRepository.ItemByIdAsync(id);
+    if (item == null)
+    {
       return false;
-     }
-     else
-     {
+    }
+    else
+    {
       await _itemRepository.DeleteItem(item);
-       return true;
-     }
+      return true;
+    }
 
   }
 
   public async Task<bool> DeleteSelectedItem(List<int> selectedIds)
   {
-    if(selectedIds.Count == 0)
-    
+    if (selectedIds.Count == 0)
+    {
+      return false;
+    }
+
+    await _itemRepository.DeleteSelected(selectedIds);
+    return true;
   }
 
 }

@@ -360,7 +360,7 @@
         }
 
         catList();
-        loadItemTable(1);
+        loadItemTable(6);
 
         $("#save-cat").click(function (e) {
             e.preventDefault();
@@ -388,9 +388,8 @@
         });
 
         function loadItemTable(categoryId) {
-            console.log(categoryId);
             $.ajax({
-                url: '@Url.Action("itemTable", "Menu")',
+                url: "/Menu/itemTable",
                 type: "GET",
                 data: { id: categoryId },
                 success: function (data) {
@@ -539,8 +538,7 @@
         $(document).on("click", "#add-item", function (e) {
             e.preventDefault();
             var formData = $("#add-item-form").serialize();
-            var categoryId = formData.get("Categoryid");
-            console.log("heloooo" + categoryId);
+            console.log(formData);
             $.ajax({
                 url: "/Menu/addItemPost",
                 type: "POST",
@@ -548,7 +546,7 @@
                 dataType: 'json',
                 success: function (response) {
                     $("#add-item-form")[0].reset();
-                    loadItemTable(1);
+                    loadItemTable(6);
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);

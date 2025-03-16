@@ -177,4 +177,13 @@ public class MenuController : Controller
         
     }
 
+
+    [HttpGet]
+    public async Task<IActionResult> modifierList(int id)
+    {
+        List<ModifierList> modifiers = await _modifierService.GetModifiersList(id);
+        
+        return Ok(modifiers);
+    }
+
 }

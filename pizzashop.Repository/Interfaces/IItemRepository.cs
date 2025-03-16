@@ -15,4 +15,6 @@ public interface IItemRepository
    Task UpdateItem(Item item);
    
    Task DeleteItem(Item item);
+
+   Task DeleteSelected(List<int> SelectedIds);
 }

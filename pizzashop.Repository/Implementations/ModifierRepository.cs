@@ -19,4 +19,12 @@ public class ModifierRepository :IModifierRepository
         .Include(u => u.Unit)
         .Where(c => c.Modifiergroupid == id).ToListAsync();
     }
+
+    public async Task<List<Modifier>> GetModifierList(int id)
+    {
+        return await _context.Modifiers
+        .Where(c => c.Modifiergroupid == id).ToListAsync();
+    }
+
+
 }

@@ -55,9 +55,18 @@ public class ItemRepository : IItemRepository
 
     public async Task DeleteItem(Item item)
     {
-      item.Isdeleted = true;
-            _context.Items.Update(item);
-            await _context.SaveChangesAsync();
+        item.Isdeleted = true;
+        _context.Items.Update(item);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteSelected(List<int> SelectedIds)
+    {
+        await _context.Items
+       .Where(i => SelectedIds.Contains(i.Itemid))
+       .ExecuteUpdateAsync(s => s.SetProperty(i => i.Isdeleted, true));
+
+        await _context.SaveChangesAsync();
     }
 
 }

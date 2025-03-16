@@ -9,164 +9,171 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form id="add-item-form" >
+            <form id="add-item-form">
 
-            <div class="modal-body d-flex">
-                <div class="left-side-addItem w-75">
+                <div class="modal-body d-flex">
+                    <div class="left-side-addItem w-75">
 
-                    <!-- first row -->
-                    <div>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="Categoryid floatingSelect" asp-for=Categoryid
-                                            asp-items="Model.Categories">
-                                            <option value="">Select Category</option>
-                                        </select>
-                                        <label for="Categoryid">Category</label>
+                        <input type="hidden" asp-for="Itemid" id="Itemid" value="@Model.Itemid" />
+
+                        <!-- first row -->
+                        <div>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                                        <div class="form-floating">
+                                            <select class="form-select" id="Categoryid floatingSelect"
+                                                asp-for=Categoryid asp-items="Model.Categories">
+                                                <option value="">Select Category</option>
+                                            </select>
+                                            <label for="Categoryid">Category</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="floatingInput" placeholder="Name" asp-for=Itemname
-                                            required>
-                                        <label for="floatingInput">Name*</label>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="floatingInput"
+                                                placeholder="Name" asp-for=Itemname required>
+                                            <label for="floatingInput">Name*</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- two row -->
+                        <!-- two row -->
 
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class=" col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                     <select asp-for="itemtype" asp-items="Html.GetEnumSelectList<itemtype>()"
-                                class="form-select">
-                                <option value="">Select a type</option>
-                            </select>
-                            <label for="floatingInput">Item Type*</label>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class=" col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <select asp-for="itemtype" asp-items="Html.GetEnumSelectList<itemtype>()"
+                                            class="form-select">
+                                            <option value="">Select a type</option>
+                                        </select>
+                                        <label for="floatingInput">Item Type*</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xxl-3 col-lg-6 col-md-6  col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" placeholder="Rate"
-                                        required  asp-for=Rate>
-                                    <label for="floatingInput">Rate*</label>
+                                <div class="col-xxl-3 col-lg-6 col-md-6  col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="floatingInput" placeholder="Rate"
+                                            required asp-for=Rate>
+                                        <label for="floatingInput">Rate*</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" placeholder="Quantity"
-                                        required value="0" asp-for=Quantity>
-                                    <label for="floatingInput">Quantity*</label>
+                                <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="floatingInput"
+                                            placeholder="Quantity" required value="0" asp-for=Quantity>
+                                        <label for="floatingInput">Quantity*</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                    <select class="form-select" id="Unitid floatingSelect" asp-for=Unitid
+                                <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <select class="form-select" id="Unitid floatingSelect" asp-for=Unitid
                                             asp-items="Model.Units">
                                             <option value="">Select Unit</option>
                                         </select>
                                         <label for="Unitid">Unit</label>
-                                </div>
-                                
-                            </div>
+                                    </div>
 
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- three row -->
+                        <!-- three row -->
 
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class=" col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3 d-flex align-items-center">
-                                <div class="form-check form-switch d-flex gap-2 align-items-center">
-                                    <input class="form-check-input" type="checkbox" role="switch" 
-                                        id="isAvailable" asp-for=Isavailable>
-                                    <label class="form-check-label" for="isAvailable">Available</label>
-                                </div>
-                            </div>
-
-                            <div class="col-xxl-3 col-lg-6 col-md-6  col-sm-6 col-12 mb-3 d-flex align-items-center">
+                        <div class="container-fluid">
+                            <div class="row">
                                 <div
-                                    class="form-check form-switch d-flex gap-2 align-items-center justify-content-start">
-                                    <input class="form-check-input" type="checkbox" role="switch"  asp-for=Isdefaulttax
-                                        id="IsDefaultTax" >
-                                    <label class="form-check-label" for="IsDefaultTax">DefaultTax</label>
+                                    class=" col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3 d-flex align-items-center">
+                                    <div class="form-check form-switch d-flex gap-2 align-items-center">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="isAvailable"
+                                            asp-for=Isavailable>
+                                        <label class="form-check-label" for="isAvailable">Available</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput"
-                                        placeholder="Tax Percentage"  asp-for=Taxpercentage>
-                                    <label for="floatingInput">Tax Percentage</label>
+                                <div
+                                    class="col-xxl-3 col-lg-6 col-md-6  col-sm-6 col-12 mb-3 d-flex align-items-center">
+                                    <div
+                                        class="form-check form-switch d-flex gap-2 align-items-center justify-content-start">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            asp-for=Isdefaulttax id="IsDefaultTax">
+                                        <label class="form-check-label" for="IsDefaultTax">DefaultTax</label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="floatingInput" placeholder="Short Code"  asp-for=Shortcode>
-                                    <label for="floatingInput">Short Code</label>
+                                <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="floatingInput"
+                                            placeholder="Tax Percentage" asp-for=Taxpercentage>
+                                        <label for="floatingInput">Tax Percentage</label>
+                                    </div>
                                 </div>
-                            </div>
 
+                                <div class="col-xxl-3 col-lg-6 col-md-6 col-sm-6 col-12 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="floatingInput"
+                                            placeholder="Short Code" asp-for=Shortcode>
+                                        <label for="floatingInput">Short Code</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="container-fluid form-floating mb-3">
+                            <textarea class="form-control" placeholder="Give Description of this Item"
+                                id="floatingTextarea2" style="height: 100px" asp-for=Description></textarea>
+                            <label for="floatingTextarea2">Description</label>
+                        </div>
+
+
+                        <div class="container-fluid">
+                            <span>Upload Image</span>
+                            <div class="input-group d-flex justify-content-center align-items-center file-upload p-4">
+                                <!-- Button to trigger the file input -->
+                                <button type="button" class="btn d-flex align-items-center gap-2"
+                                    id="inputGroupFileAddon04"
+                                    onclick="document.getElementById('inputGroupFile01').click();">
+                                    <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
+                                    <div>
+                                        Drag and Drop Or Browse files
+                                    </div>
+                                </button>
+
+                                <!-- Hidden file input -->
+                                <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                                    aria-describedby="fileNameDisplay"
+                                    onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="right-side-addItem w-25">
+                        <div class="container-fluid mt-2">
+                            <select class="form-select" id="MGid" asp-items="Model.MGList">
+                                <option selected val="">Select Modifiers Groups(s)</option>
+                            </select>
+
+                            <div id="modifierContainer" class="mt-3"></div>
                         </div>
                     </div>
 
 
-                    <div class="container-fluid form-floating mb-3">
-                        <textarea class="form-control" placeholder="Give Description of this Item"
-                            id="floatingTextarea2" style="height: 100px"  asp-for=Description></textarea>
-                        <label for="floatingTextarea2">Description</label>
-                    </div>
-
-
-                    <div class="container-fluid">
-                        <span>Upload Image</span>
-                        <div class="input-group d-flex justify-content-center align-items-center file-upload p-4">
-                            <!-- Button to trigger the file input -->
-                            <button type="button" class="btn d-flex align-items-center gap-2" id="inputGroupFileAddon04"
-                                onclick="document.getElementById('inputGroupFile01').click();">
-                                <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
-                                <div>
-                                    Drag and Drop Or Browse files
-                                </div>
-                            </button>
-
-                            <!-- Hidden file input -->
-                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                                aria-describedby="fileNameDisplay"
-                                onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
-
-                        </div>
-                    </div>
-
                 </div>
 
-                <div class="right-side-addItem w-25">
-                    <div class="container-fluid mt-2">
-                         <select class="form-select" id="MGid floatingSelect" asp-for=Unitid
-                                            asp-items="Model.MGList">
-                            <option selected val="">Select Modifiers Groups(s)</option>
-                         </select>
-                    </div>
+                <div class="modal-footer d-flex justify-content-end gap-2">
+                    <button type="button" class="btn btn-primary" id="add-item" data-bs-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
-
-
-            </div>
-
-            <div class="modal-footer d-flex justify-content-end gap-2">
-                <button type="button" class="btn btn-primary" id="add-item" data-bs-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            </div>
 
             </form>
 
@@ -174,32 +181,95 @@
     </div>
 </div>
 
-@* <script>
+<script src="~/js/script.js"></script>
+<script src="../js/bootstarp.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var modifierIndex = 0;
 
-   $(document).ready(function () {
+        $("#MGid").change(function () {
+
+            var groupId = $(this).val();
+            var groupText = $("#MGid option:selected").text();
+            var itemId = $("#Itemid").val();
+
+            // Check if the group is already in the list
+            if (groupId && $("#group_" + groupId).length === 0) {
+                $.ajax({
+                    url: "/Menu/modifierList",
+                    type: "GET",
+                    data: { id: groupId },
+                    success: function (data) {
+
+                        var currentIndex = modifierIndex++;
 
 
-       $("#add-item").click(function (e) {
-            e.preventDefault();
-            var formData = $("#add-item-form").serialize();
-                
+                        var modifierList = `<div id="group_${groupId}" class="modifier-group">
 
-             $.ajax({
-                url: "/Menu/addItemPost",
-                type: "POST",
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    $("#add-item-form")[0].reset();
-                    loadItemTable(1);
-                },
-                error: function (error) {
-                    console.error("Error updating permissions:", error);
-                }
-            }); 
+                        <input type="hidden" class="modifier-group-id" name="ModifierGroups[${currentIndex}].Modifiergroupid" value="${groupId}" />
 
-         }); 
+                        <div class="d-flex justify-content-between align-items-center">
+                         <h6>${groupText} </h6>
+                        <button class="delete-group" style="border:none; background:none;" data-group="${groupId}">
+                        <img  src="../images/trash.svg"></button>
+                        </div>
+
+
+                       <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
+                       <div class="flex-fill">
+                        <select class="form-select min-selection" id="min_${groupId}"  name="ModifierGroups[${currentIndex}].Minselectionrequired" style="border-radius:25px;">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                       </div>
+                       <div class="flex-fill">
+                        <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" name="ModifierGroups[${currentIndex}].Maxselectionallowed">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="5">5</option>
+                        </select>
+                       </div>
+                       </div>
+                      
+                        
+                        <ul>`;
+
+                        // Append all modifiers inside the group
+                        data.forEach(modifier => {
+                            modifierList += `<li>${modifier.modifiername}</li>`;
+                        });
+
+                        modifierList += "</ul></div>";
+
+                        // Append to container
+                        $("#modifierContainer").append(modifierList);
+                        updateModifierGroupIndexes();
+                        $("#MGid").val("");
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseJSON.message || "Failed to load modifiers.");
+                    }
+                });
+            }
+        });
+
+        // Remove Selected Modifier Group
+        $(document).on("click", ".delete-group", function () {
+            var groupId = $(this).data("group");
+            $(`#group_${groupId}`).remove(); // Remove from UI
+            updateModifierGroupIndexes();
+        });
+
+        function updateModifierGroupIndexes() {
+            $(".modifier-group").each(function (index) {
+                $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
+                $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
+                $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
+            });
+        }
     });
 
-
-</script> *@
+</script>
