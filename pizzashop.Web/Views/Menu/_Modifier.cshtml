@@ -2,27 +2,29 @@
 
 
 
-<div class="table-responsive">
+<div class="table-responsive" id="modifier-table">
     <table class="table">
-            <tr>
-                <th>
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                </th>
-                <th>
-                    Name
-                </th>
-                <th>Unit</th>
-                <th>Rate</th>
-                <th>Quantity</th>
-                <th>Action</th>
-            </tr>
+        <tr>
+            <th>
+
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            </th>
+            <th>
+                Name
+            </th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
+             <input type="hidden" id="MGid" value="@(Model.FirstOrDefault()?.Modifiergroupid ?? 0)"> 
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <input class="form-check-input modifier-checkbox" type="checkbox" value="@item.Modifierid">
                     </td>
                     <td>
 
@@ -36,10 +38,13 @@
                     <td>@item.Rate</td>
                     <td>@item.Quantity</td>
                     <td>
-                        <div class="d-flex gap-3 edit-delet"><button class="button" data-bs-toggle="modal"
-                                data-bs-target="#updateNewModifier"><img src="../images/pencil.svg"></button><button
-                                class="button" data-bs-toggle="modal" data-bs-target="#deleteModifier"><img
-                                    class="delete-icon" src="../images/trash.svg"></button>
+                        <div class="d-flex gap-3 edit-delet">
+                            <button class="button edit-modifier" data-modifierid="@item.Modifierid"><img
+                                    src="../images/pencil.svg"></button>
+                            <button class="button delete-modifier-link" data-bs-toggle="modal"
+                                data-bs-target="#deleteModifier" data-modifierid="@item.Modifierid"
+                                data-modifiergroupid="@item.Modifiergroupid">
+                                <img class="delete-icon" src="../images/trash.svg"></button>
                         </div>
                     </td>
                 </tr>
@@ -48,14 +53,121 @@
     </table>
 </div>
 
-<div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
-    <label>Items Per Page:</label>
-    <input type="number" placeholder="1">
-    <span>
-        Showing 1-5 of 5
-    </span>
-    <button>
-        < </button>
+@* <div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
+<label>Items Per Page:</label>
+<input type="number" placeholder="1">
+<span>
+Showing 1-5 of 5
+</span>
+<button>
+< </button>
 
-            <button>></button>
+<button>></button>
+</div> *@
+
+<div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3 text-secondary">
+    <div class="d-flex align-items-center">
+        <span class="d-none d-sm-inline px-1">Items Per page:</span>
+        <select id="pageSizeSelectM" class="form-select form-select-sm" style="width: auto;">
+            <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+            <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+            <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
+        </select>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <span class="d-none d-sm-inline px-1">
+            Showing @(ViewBag.totalMoidifier > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
+            - @(ViewBag.totalitem > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+              ViewBag.totalMoidifier) :
+              0)
+            of @ViewBag.totalMoidifier
+        </span>
+        <nav class="mt-3">
+            <ul class="pagination pagination-sm">
+                <!-- Previous Page -->
+                <li class="page-item @(ViewBag.CurrentPage > 1 ? "" : "disabled")">
+                    <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage - 1)">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Next Page -->
+                <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
+                    <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
+
+
+
+
+<!--edit  modifier -->
+<div class="modal-editModifier">
+</div>
+
+<!-- delete modifier -->
+<div class="modal fade modal-delete" id="deleteModifier" tabindex="-1" aria-labelledby="deleteModifier"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <input type="hidden" id="hidden" value="">
+        <input type="hidden" id="modifiergroupid" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModifier">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete this Modifier?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-modifier" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $(".edit-modifier").click(function (e) {
+            e.preventDefault();
+            var modifierId = $(this).data("modifierid");
+
+            $.ajax({
+                url: "/Menu/EditModifier",
+                type: "GET",
+                data: { id: modifierId },
+                success: function (data) {
+                    $(".modal-editModifier").html(data);
+                    $("#updateNewModifier").modal("show");
+                },
+                error: function () {
+                    alert("failed to reload modal");
+                }
+            });
+
+        });
+
+        $(document).on("click", ".delete-modifier-link", function (e) {
+            var ModifierId = $(this).data("modifierid");
+            var MGId = $(this).data("modifiergroupid");
+
+            $("#hidden").val(ModifierId);
+            $("#modifiergroupid").val(MGId);
+        });
+
+
+    });
+
+
+</script>

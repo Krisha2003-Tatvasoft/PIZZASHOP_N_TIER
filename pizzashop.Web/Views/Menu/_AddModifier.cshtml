@@ -1,0 +1,88 @@
+@model pizzashop.Entity.ViewModels.AddModifier;
+
+<div class="modal fade" id="addNewModifier" tabindex="-1" aria-labelledby="addNewModifier" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewModifier">Add New Modifier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+        <form id="add-modifier-form">
+
+            <div class="modal-body">
+
+                <!-- first row -->
+                <div>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                                <div class="form-floating">
+                                    <select class="form-select" id="Modifiergroupid" asp-items="Model.MGList" asp-for="Modifiergroupid">
+                                        <option selected val="">Select Modifiers Groups(s)</option>
+                                    </select>
+                                    <label for="Modifiergroupid">Modifier</label>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="floatingInput" placeholder="Name" asp-for="Modifiername"
+                                        required>
+                                    <label for="floatingInput">Name*</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid ">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Rate" required
+                                    value="0" asp-for="Rate">
+                                <label for="floatingInput">Rate*</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Quantity"
+                                    required value="0" asp-for="Quantity">
+                                <label for="floatingInput">Quantity*</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 doted-border">
+                            <div class="form-floating">
+                                 <select class="form-select" id="Unitid floatingSelect" asp-for=Unitid
+                                            asp-items="Model.Units">
+                                            <option value="">Select Unit</option>
+                                        </select>
+                                <label for="floatingSelect">Unit*</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="container-fluid form-floating">
+                    <textarea class="form-control" placeholder="Give Description of this Modifier"
+                        id="description" asp-for="Description"></textarea>
+                    <label for="description">Description</label>
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-primary" id="add-modifier" data-bs-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </form>
+
+
+        </div>
+    </div>
+</div>

@@ -4,7 +4,7 @@ using pizzashop.Repository.Interfaces;
 
 namespace pizzashop.Repository.Implementations;
 
-public class ModifierRepository :IModifierRepository
+public class ModifierRepository : IModifierRepository
 {
     private readonly PizzashopContext _context;
 
@@ -13,18 +13,55 @@ public class ModifierRepository :IModifierRepository
         _context = context;
     }
 
-    public async Task<List<Modifier>> GetModifierByMG(int id)
+    public async Task<List<Modifier>> GetModifierByMG(int id,string search)
     {
+         string lowerSearch = search.ToLower();
         return await _context.Modifiers
         .Include(u => u.Unit)
-        .Where(c => c.Modifiergroupid == id).ToListAsync();
+        .Where(c => c.Modifiergroupid == id && c.Isdeleted == false)
+          .Where(c=> string.IsNullOrEmpty(lowerSearch) ||
+         c.Modifiername.ToLower().Contains(lowerSearch))
+         .OrderBy(c => c.Modifierid).ToListAsync();
     }
 
     public async Task<List<Modifier>> GetModifierList(int id)
     {
         return await _context.Modifiers
-        .Where(c => c.Modifiergroupid == id).ToListAsync();
+        .Where(c => c.Modifiergroupid == id && c.Isdeleted == false).ToListAsync();
     }
 
+    public async Task AddNewModifier(Modifier modifier)
+    {
+        _context.Modifiers.Add(modifier);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Modifier> ModifierByIdAsync(int id)
+    {
+        return await _context.Modifiers.FirstOrDefaultAsync(u => u.Modifierid == id);
+    }
+
+    public async Task UpdateModifier(Modifier modifier)
+    {
+        _context.Modifiers.Update(modifier);
+        await _context.SaveChangesAsync();
+    }
+
+     public async Task DeleteModifier(Modifier modifier)
+    {
+        modifier.Isdeleted = true;
+        _context.Modifiers.Update(modifier);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteSelectedModifier(List<int> SelectedIds)
+    {
+        await _context.Modifiers
+       .Where(i => SelectedIds.Contains(i.Modifierid))
+       .ExecuteUpdateAsync(s => s.SetProperty(i => i.Isdeleted, true));
+
+        await _context.SaveChangesAsync();
+    }
+    
 
 }

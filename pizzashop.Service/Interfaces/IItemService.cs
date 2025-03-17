@@ -5,7 +5,7 @@ namespace pizzashop.Service.Interfaces;
 
 public interface IItemService 
 {
-  Task<List<ItemTable>> GetItemTable(int id);
+ Task<(List<ItemTable> , int totalitem)> GetItemTable(int id,int page, int pageSize, string search);
 
   Task<AddItem> Additem();
 

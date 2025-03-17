@@ -13,11 +13,15 @@ public class ItemRepository : IItemRepository
         _context = context;
     }
 
-    public async Task<List<Item>> GetItemByCat(int id)
+    public async Task<List<Item>> GetItemByCat(int id,string search)
     {
+        string lowerSearch = search.ToLower();
         return await _context.Items
         .Include(u => u.Unit)
-        .Where(c => c.Categoryid == id && c.Isdeleted == false).ToListAsync();
+        .Where(c => c.Categoryid == id && c.Isdeleted == false)
+        .Where(c=> string.IsNullOrEmpty(lowerSearch) ||
+         c.Itemname.ToLower().Contains(lowerSearch))
+        .OrderBy(c => c.Itemid).ToListAsync();
     }
 
     public async Task<bool> DeleteByCat(int id)

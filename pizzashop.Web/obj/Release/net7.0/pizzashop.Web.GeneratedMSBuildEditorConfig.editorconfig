@@ -44,12 +44,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQWRkSXRlbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Menu/_AddModifier.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQWRkTW9kaWZpZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Menu/_CategoryTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQ2F0ZWdvcnlUYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Menu/_EditItem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfRWRpdEl0ZW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Menu/_EditModifier.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfRWRpdE1vZGlmaWVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Menu/_ItemTable.cshtml]

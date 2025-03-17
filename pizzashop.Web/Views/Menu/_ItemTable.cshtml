@@ -2,7 +2,7 @@
 @model List<pizzashop.Entity.ViewModels.ItemTable>;
 
 
-<div class="table-responsive">
+<div class="table-responsive" id="item-table">
     <table class="table">
         <thead>
             <tr>
@@ -20,9 +20,10 @@
             </tr>
         </thead>
         <tbody>
+              <input type="hidden" id="catid" value="@(Model.FirstOrDefault()?.Categoryid ?? 0)"> 
             @foreach (var item in Model)
             {
-
+                
                 <tr>
                     <td>
                         <input class="form-check-input item-checkbox" type="checkbox" value="@item.Itemid">
@@ -57,7 +58,8 @@
                         <div class="d-flex gap-3 edit-delet"><button class="button edit-item" data-itemid="@item.Itemid"
                                 ><img src="../images/pencil.svg"></button><button class="button"
                                 data-bs-toggle="modal" data-bs-target="#deleteItem"><img class="delete-icon delete-item-link"
-                                   data-itemid="@item.Itemid" src="../images/trash.svg"></button>
+                                   data-itemid="@item.Itemid" data-categoryid="@item.Categoryid
+                                   " src="../images/trash.svg"></button>
                         </div>
                     </td>
                 </tr>
@@ -66,7 +68,7 @@
     </table>
 </div>
 
-<div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
+@* <div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
     <label>Items Per Page:</label>
     <input type="number" placeholder="1">
     <span>
@@ -75,7 +77,45 @@
     <button>
         < </button>
             <button>></button>
-</div>
+</div> *@
+
+             <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3 text-secondary">
+                <div class="d-flex align-items-center">
+                    <span class="d-none d-sm-inline px-1">Items Per page:</span>
+                    <select id="pageSizeSelect" class="form-select form-select-sm" style="width: auto;">
+                        <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                        <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                        <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-none d-sm-inline px-1">
+                        Showing @(ViewBag.totalitem > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
+                        - @(ViewBag.totalitem > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+                          ViewBag.totalitem) :
+                          0)
+                        of @ViewBag.totalitem
+                    </span>
+                    <nav class="mt-3">
+                        <ul class="pagination pagination-sm">
+                            <!-- Previous Page -->
+                            <li class="page-item @(ViewBag.CurrentPage > 1 ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage - 1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <!-- Next Page -->
+                            <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
 
 
  <!-- Edit item -->
@@ -88,6 +128,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <input type="hidden" id="hidden" value="">
+            <input type="hidden" id="Categoryid" value="">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
@@ -128,11 +169,14 @@
                      alert("failed to reload modal");
                 }
             });
+            
          }); 
 
          $(document).on("click", ".delete-item-link", function (e) {
              var ItemId = $(this).data("itemid");
+             var Categoryid = $(this).data("categoryid");
                  $("#hidden").val(ItemId); 
+                 $("#Categoryid").val(Categoryid);
          });
 
     });

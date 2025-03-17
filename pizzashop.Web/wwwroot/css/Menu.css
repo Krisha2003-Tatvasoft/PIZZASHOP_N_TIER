@@ -187,6 +187,11 @@
    display: block!important;
 }
 
+.mg-list:focus-within > div > button > img{
+    display: block!important;
+ }
+ 
+
 .pagging input {
     width: 50px;
     border: 1px solid grey;

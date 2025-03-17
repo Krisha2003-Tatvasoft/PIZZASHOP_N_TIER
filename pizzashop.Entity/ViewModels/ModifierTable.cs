@@ -2,6 +2,7 @@ namespace pizzashop.Entity.ViewModels;
 
 public class ModifierTable
 {
+    public int Modifiergroupid { get; set; }
     public int Modifierid { get; set; }
 
     public string Modifiername { get; set; } = null!;

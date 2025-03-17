@@ -9,117 +9,125 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = pizzashop.Web
 build_property.RootNamespace = pizzashop.Web
-build_property.ProjectDir = D:\pizzashop_nTier\pizzashop.web\
+build_property.ProjectDir = D:\PIZZASHOP_N_TIER\pizzashop.web\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\pizzashop_nTier\pizzashop.web
+build_property.MSBuildProjectDirectory = D:\PIZZASHOP_N_TIER\pizzashop.web
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Auth/AccessDenied.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Auth/AccessDenied.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxBY2Nlc3NEZW5pZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Auth/Forget.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Auth/Forget.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxGb3JnZXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Auth/Login.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Auth/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Auth/ResetPassword.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Auth/ResetPassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Home/Index.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/Menu.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/Menu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxNZW51LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_AddItem.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_AddItem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQWRkSXRlbS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_CategoryTable.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_AddModifier.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQWRkTW9kaWZpZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_CategoryTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfQ2F0ZWdvcnlUYWJsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_EditItem.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_EditItem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfRWRpdEl0ZW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_ItemTable.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_EditModifier.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfRWRpdE1vZGlmaWVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_ItemTable.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfSXRlbVRhYmxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_Modifier.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_Modifier.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfTW9kaWZpZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Menu/_ModifiersGroup.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Menu/_ModifiersGroup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfTW9kaWZpZXJzR3JvdXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Profile/ChagePassword.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Profile/ChagePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxDaGFnZVBhc3N3b3JkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Profile/UserProfile.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Profile/UserProfile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmlsZVxVc2VyUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/RolePermission/Role.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/RolePermission/Role.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZVBlcm1pc3Npb25cUm9sZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/RolePermission/_PermissionRole.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/RolePermission/_PermissionRole.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUm9sZVBlcm1pc3Npb25cX1Blcm1pc3Npb25Sb2xlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Shared/Error.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Shared/_LoginLayout.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Shared/_LoginLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Shared/_Toast.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Shared/_Toast.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Ub2FzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/User/AddNewUser.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/User/AddNewUser.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxBZGROZXdVc2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/User/EditUser.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/User/EditUser.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxFZGl0VXNlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/User/UserList.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/User/UserList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxVc2VyTGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/User/_ShowUserList.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/User/_ShowUserList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxfU2hvd1VzZXJMaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/_ViewImports.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/_ViewStart.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/pizzashop_nTier/pizzashop.web/Views/Shared/_Layout.cshtml]
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-qdnztay9q2

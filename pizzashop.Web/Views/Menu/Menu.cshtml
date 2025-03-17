@@ -76,13 +76,13 @@
                         <div class="button-input mb-2 me-3">
 
                             <div class="search-field">
-                                <input class="search form-control me-2 border-0" type="search" placeholder="Search"
-                                    aria-label="Search">
+                                <input class="search form-control me-2 border-0" id="searchInput" type="search"
+                                    placeholder="Search" aria-label="Search">
                             </div>
 
 
-                            <button id="delete-selected-item" class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedItem"
-                                class="delet-btn">
+                            <button id="delete-selected-item" class="button" data-bs-toggle="modal"
+                                data-bs-target="#deleteSelectedItem" class="delet-btn">
                                 <image class="delet-icon" src="../images/trash.svg" />
                             </button>
 
@@ -151,18 +151,17 @@
                         <div class="button-input mb-2 me-3">
 
                             <div class="search-field">
-                                <input class="search form-control me-2 border-0" type="search" placeholder="Search"
-                                    aria-label="Search">
+                                <input class="search form-control me-2 border-0" type="search" id="searchModifier"
+                                    placeholder="Search" aria-label="Search">
                             </div>
 
 
-                            <button data-bs-toggle="modal" data-bs-target="#deleteSelectedModifier"
-                                class=" button delet-btn ">
+                            <button id="delete-selected-modifiers" data-bs-toggle="modal"
+                                data-bs-target="#deleteSelectedModifier" class=" button delet-btn ">
                                 <image class="delet-icon " src="../images/trash.svg" />
                             </button>
 
-                            <button class=" button new-Modifiers-btn" data-bs-toggle="modal"
-                                data-bs-target="#addNewModifier">
+                            <button class=" button new-Modifiers-btn openModifierModel">
                                 + New Modifier
                             </button>
 
@@ -285,26 +284,50 @@
 <!-- Add new item -->
 <div class="modal-addNewItem"></div>
 
-  <!-- delete selected Items -->
-    <div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-                    <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
-                    <span>Are you sure you want to delete these Items?</span>
-                </div>
-                <div class="modal-footer d-flex justify-content-center gap-2">
-                    <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
-                    <button type="button" class="btn btn-danger">NO</button>
-                </div>
+<!-- delete selected Items -->
+<div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete these Items?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger">NO</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- add new modifier -->
+<div class="modal-addNewModifier"></div>
+
+<!-- delete selected modifiers -->
+<div class="modal fade modal-delete" id="deleteSelectedModifier" tabindex="-1" aria-labelledby="deleteSelectedModifier"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSelectedModifier">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete these Modifiers?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-selectedM-Yes" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -333,7 +356,70 @@
     $(document).ready(function () {
 
 
+
+    @* page link *@
+            $("#item-table").on("click", ".pagination-link", function (e) {
+                var categoryId = $("#catid").val();
+                e.preventDefault();
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    console.log(categoryId)
+                    loadItemTable(categoryId, page);
+                    console.log("clicked")
+                }
+            });
+
+    @* page size *@
+            $("#item-table").on("change", "#pageSizeSelect", function () {
+                var categoryId = $("#catid").val();
+                loadItemTable(categoryId, 1)
+            });
+
+
+    @* search field *@
+
+            let searchTimer;
+        $("#searchInput").on("input", function () {
+            var categoryId = $("#catid").val();
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(function () {
+                loadItemTable(categoryId, 1)  // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
+
+    @* page link modifier*@
+            $("#modifier-table").on("click", ".pagination-link", function (e) {
+                var MGid = $("#MGid").val();
+                e.preventDefault();
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadModifierTable(MGid, page);
+                }
+            });
+
+    @* page size modifier*@
+            $("#modifier-table").on("change", "#pageSizeSelectM", function () {
+                var MGid = $("#MGid").val();
+               loadModifierTable(MGid, 1) 
+            });
+
+
+    @* search field modifier*@
+
+        let searchTimer1;
+        $("#searchModifier").on("input", function () {
+            var MGid = $("#MGid").val();
+            clearTimeout(searchTimer1);
+            searchTimer = setTimeout(function () {
+                loadModifierTable(MGid, 1)  // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
         $(document).on("click", ".openModel", function (e) {
+
             $.ajax({
                 url: "/Menu/AddItem",
                 type: "GET",
@@ -346,6 +432,8 @@
                 }
             });
         });
+
+
 
         function catList() {
             $.ajax({
@@ -360,7 +448,7 @@
         }
 
         catList();
-        loadItemTable(6);
+        loadFirstItemTable(1);
 
         $("#save-cat").click(function (e) {
             e.preventDefault();
@@ -383,17 +471,28 @@
 
 
         $(document).on("click", ".cat-link", function (e) {
+            $("#searchInput").val("");
             var categoryId = $(this).data("id");
             loadItemTable(categoryId);
         });
 
-        function loadItemTable(categoryId) {
+        function loadItemTable(categoryId, page) {
+
+            let pageSize = $("#pageSizeSelect").val();
+            let search = $("#searchInput").val();
+
             $.ajax({
                 url: "/Menu/itemTable",
                 type: "GET",
-                data: { id: categoryId },
+                data: {
+                    id: categoryId,
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
                 success: function (data) {
                     $('#item-table').html(data);
+                    currentPage = page;
                 },
                 error: function () {
                 }
@@ -416,34 +515,91 @@
                 });
             }
 
+        function loadFirstModitable(page) {
+
+            let pageSize = $("#pageSizeSelectM").val();
+            let search = $("#searchModifier").val();
+
+
+            $.ajax({
+                url: "/Menu/FirstMGId",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
+                success: function (response) {
+                    loadItemTable(response);
+                     currentPage = page;
+                },
+                error: function (error) {
+                }
+            });
+        }
+
+        function loadFirstItemTable(page) {
+
+            let pageSize = $("#pageSizeSelect").val();
+            let search = $("#searchInput").val();
+
+            $.ajax({
+                url: "/Menu/FirstCatId",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
+                success: function (response) {
+                    loadModifierTable(response);
+                    currentPage = page;
+                },
+                error: function (error) {
+                }
+            });
+        }
+
+
+
         MGList();
-        loadModifierTable(1);
+        loadFirstModitable(1);
+
 
         $(document).on("click", ".MG-link", function (e) {
+            $("#searchModifier").val("");
             var MGId = $(this).data("id");
             loadModifierTable(MGId);
         });
 
-        function loadModifierTable(MGId) {
+        function loadModifierTable(MGId, page) {
+            let pageSize = $("#pageSizeSelectM").val();
+            let search = $("#searchModifier").val();
+
+
             $.ajax({
                 url: '@Url.Action("modifierTable", "Menu")',
                 type: "GET",
-                data: { id: MGId },
+                data: {
+                    id: MGId,
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
                 success: function (data) {
                     $('#modifier-table').html(data);
+                     currentPage = page;
                 },
                 error: function () {
                 }
             });
         }
 
-    @* add mofier group *@
 
-
-            $(document).on("click", ".edit-link", function (e) {
-                var categoryId = $(this).data("catid");
-                GetEditCat(categoryId);
-            });
+        $(document).on("click", ".edit-link", function (e) {
+            var categoryId = $(this).data("catid");
+            GetEditCat(categoryId);
+        });
 
         function GetEditCat(categoryId) {
 
@@ -511,62 +667,66 @@
             });
         }
 
+    @* edit item *@
 
-        $(document).on("click", "#edit-item", function (e) {
-            e.preventDefault();
+            $(document).on("click", "#edit-item", function (e) {
+                e.preventDefault();
 
-            var formData = new FormData($("#edit-item-form")[0]);
-            var categoryId = formData.get("Categoryid")
-            console.log(categoryId);
-            $.ajax({
-                url: "/Menu/EditItemPost",
-                type: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function (response) {
-                    loadItemTable(categoryId);
-                },
-                error: function (error) {
-                    console.error("Error updating permissions:", error);
-                }
+                var formData = new FormData($("#edit-item-form")[0]);
+                var categoryId = formData.get("Categoryid")
+
+                $.ajax({
+                    url: "/Menu/EditItemPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        loadItemTable(categoryId);
+                    },
+                    error: function (error) {
+                        console.error("Error updating permissions:", error);
+                    }
+                });
+
             });
 
-        });
+    @* add item *@
 
-        $(document).on("click", "#add-item", function (e) {
-            e.preventDefault();
-            var formData = $("#add-item-form").serialize();
-            console.log(formData);
-            $.ajax({
-                url: "/Menu/addItemPost",
-                type: "POST",
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    $("#add-item-form")[0].reset();
-                    loadItemTable(6);
-                },
-                error: function (error) {
-                    console.error("Error updating permissions:", error);
-                }
+            $(document).on("click", "#add-item", function (e) {
+                e.preventDefault();
+                var formData = $("#add-item-form").serialize();
+                var categoryId = $("#Categoryid").val();
+
+                console.log(categoryId);
+                $.ajax({
+                    url: "/Menu/addItemPost",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#add-item-form")[0].reset();
+                        loadItemTable(categoryId);
+                    },
+                    error: function (error) {
+                        console.error("Error updating permissions:", error);
+                    }
+                });
             });
-        });
 
-
-          @* Delete Item *@
+    @* Delete Item *@
 
             $(document).on("click", ".delete-item", function (e) {
                 var itemId = $("#hidden").val();
-
+                var Categoryid = $("#Categoryid").val();
 
                 $.ajax({
                     url: "/Menu/DeleteItem",
                     type: "POST",
                     data: { id: itemId },
                     success: function (response) {
-                        loadItemTable(1);
+                        loadItemTable(Categoryid);
                     },
                     error: function (error) {
                         console.error("Error updating permissions:", error);
@@ -575,36 +735,146 @@
 
             });
 
-        @* deleted selected item *@
+    @* deleted selected item *@
+          var selectedIds = [];
 
-
-          var selectedIds =[];
-
-         $(document).on("click", "#delete-selected-item", function (e) {
-            selectedIds =[];
-            $(".item-checkbox:checked").each(function()
-            {
+        $(document).on("click", "#delete-selected-item", function (e) {
+            selectedIds = [];
+            $(".item-checkbox:checked").each(function () {
                 selectedIds.push($(this).val());
             });
         });
 
 
-         $(document).on("click", ".delete-selected-yes", function (e) {
-           
-             $.ajax({
-                    url: "/Menu/DeleteSelectedItem",
-                    type: "POST",
-                    data: { selectedIds: selectedIds },
+        $(document).on("click", ".delete-selected-yes", function (e) {
+
+            $.ajax({
+                url: "/Menu/DeleteSelectedItem",
+                type: "POST",
+                data: { selectedIds: selectedIds },
+                success: function (response) {
+                    loadItemTable(1);
+                },
+                error: function (error) {
+                    console.error("Error updating permissions:", error);
+                }
+            });
+        });
+
+
+    @* open model for add modifier *@
+            $(document).on("click", ".openModifierModel", function (e) {
+                $.ajax({
+                    url: "/Menu/AddModifier",
+                    type: "GET",
                     success: function (response) {
-                        loadItemTable(1);
+                        $(".modal-addNewModifier").html(response);
+                        $("#addNewModifier").modal("show");
                     },
                     error: function (error) {
-                        console.error("Error updating permissions:", error);
+                        alert("failed to reload modal");
+                    }
+                });
+            });
+
+    @* add modifier *@
+
+            $(document).on("click", "#add-modifier", function (e) {
+                e.preventDefault();
+                var formData = $("#add-modifier-form").serialize();
+                var Modifiergroupid = $("#Modifiergroupid").val();
+                console.log(Modifiergroupid);
+
+                $.ajax({
+                    url: "/Menu/addModifierPost",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#add-modifier-form")[0].reset();
+                        loadModifierTable(Modifiergroupid);
+                    },
+                    error: function (error) {
+                        console.error("Error in Add Modifier:", error);
+                    }
+                });
+            });
+
+    @* edit modifier *@
+
+            $(document).on("click", "#edit-modifier", function (e) {
+                e.preventDefault();
+
+                var formData = new FormData($("#edit-modifier-form")[0]);
+                var Modifiergroupid = $("#Modifiergroupid").val();
+                var Modifierid = formData.get("Modifierid")
+
+                $.ajax({
+                    url: "/Menu/EditModifietrPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        loadModifierTable(Modifiergroupid);
+                    },
+                    error: function (error) {
+                        console.error("Error updating modifier:", error);
                     }
                 });
 
+            });
+
+
+    @* Delete Modifier *@
+
+            $(document).on("click", ".delete-modifier", function (e) {
+                var ModifierId = $("#hidden").val();
+                var MGId = $("#modifiergroupid").val();
+
+                $.ajax({
+                    url: "/Menu/DeleteModifier",
+                    type: "POST",
+                    data: { id: ModifierId },
+                    success: function (response) {
+                        loadModifierTable(MGId);
+                    },
+                    error: function (error) {
+                        console.error("Error in delete Modifier:", error);
+                    }
+                });
+
+            });
+
+    @* deleted selected modifier*@
+
+        var selectedModifierIds = [];
+
+        $(document).on("click", "#delete-selected-modifiers", function (e) {
+            selectedModifierIds = [];
+            $(".modifier-checkbox:checked").each(function () {
+                selectedModifierIds.push($(this).val());
+            });
 
         });
+
+
+        $(document).on("click", ".delete-selectedM-Yes", function (e) {
+
+            $.ajax({
+                url: "/Menu/DeleteSelectedModifiers",
+                type: "POST",
+                data: { selectedIds: selectedModifierIds },
+                success: function (response) {
+                    loadModifierTable(1);
+                },
+                error: function (error) {
+                    console.error("Error in delete Modifi9ers", error);
+                }
+            });
+        });
+
 
     });
 

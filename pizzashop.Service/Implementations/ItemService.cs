@@ -29,12 +29,18 @@ public class ItemService : IItemService
     _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
   }
 
-  public async Task<List<ItemTable>> GetItemTable(int id)
+  public async Task<(List<ItemTable> , int totalitem)> GetItemTable(int id,int page, int pageSize, string search)
   {
-    var itemList = await _itemRepository.GetItemByCat(id);
+    var itemList = await _itemRepository.GetItemByCat(id,search);
 
-    var items = itemList.Select(i => new ItemTable
+    int totalitem =  itemList.Count();
+
+    var items = itemList
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
+    .Select(i => new ItemTable
     {
+      Categoryid = id,
       Itemid = i.Itemid,
       Itemname = i.Itemname,
       Rate = i.Rate,
@@ -45,7 +51,7 @@ public class ItemService : IItemService
     }
     ).ToList();
 
-    return items;
+    return (items,totalitem);
   }
 
   public async Task<AddItem> Additem()
@@ -60,7 +66,7 @@ public class ItemService : IItemService
     return model;
   }
 
-    public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
+  public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
   {
     if (loginId == null)
     {
@@ -91,7 +97,7 @@ public class ItemService : IItemService
 
     foreach (var group in viewmodel.ModifierGroups)
     {
-    
+
       var newMapping = new Itemmodifiergroupmap
       {
 

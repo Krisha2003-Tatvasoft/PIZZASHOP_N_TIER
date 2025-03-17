@@ -4,7 +4,7 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface IItemRepository
 {
-   Task<List<Item>> GetItemByCat(int id);
+   Task<List<Item>> GetItemByCat(int id,string search);
 
    Task<bool> DeleteByCat(int id);
 
