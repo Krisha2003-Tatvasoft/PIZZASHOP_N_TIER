@@ -22,7 +22,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<List<Category>> AllCategory()
     {
-        return await  _context.Categories.Where(c=>c.Isdeleted == false).ToListAsync();
+        return await  _context.Categories.Where(c=>c.Isdeleted == false).OrderBy(c=> c.Categoryid).ToListAsync();
     }
 
     public async Task<Category> GetCatById(int id)

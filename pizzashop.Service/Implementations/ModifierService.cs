@@ -22,11 +22,11 @@ public class ModifierService : IModifierService
     _modifiersGropRepository = modifiersGropRepository;
   }
 
-  public async Task<(List<ModifierTable> , int totalMoidifier)> GetModifiersTable(int id,int page, int pageSize, string search)
+  public async Task<(List<ModifierTable>, int totalMoidifier)> GetModifiersTable(int id, int page, int pageSize, string search)
   {
-    var modifierList = await _modifierRepository.GetModifierByMG(id,search);
+    var modifierList = await _modifierRepository.GetModifierByMG(id, search);
 
-     int totalMoidifier =  modifierList.Count();
+    int totalMoidifier = modifierList.Count();
 
 
     var modifiers = modifierList
@@ -43,7 +43,7 @@ public class ModifierService : IModifierService
     }
     ).ToList();
 
-    return (modifiers , totalMoidifier);
+    return (modifiers, totalMoidifier);
   }
 
 
@@ -153,7 +153,7 @@ public class ModifierService : IModifierService
 
   }
 
-    public async Task<bool> DeleteSelectedModifier(List<int> selectedIds)
+  public async Task<bool> DeleteSelectedModifier(List<int> selectedIds)
   {
     if (selectedIds.Count == 0)
     {
@@ -164,7 +164,23 @@ public class ModifierService : IModifierService
     return true;
   }
 
+   public async Task<List<ModifierTable>> GetAllModifier(page, pageSize, search)
+  {
+    var modifierList = await _modifierRepository.GetAllModifier(search);
 
+    var modifiers = modifierList
+    .Select(i => new ModifierTable
+    {
+      Modifierid = i.Modifierid,
+      Modifiername = i.Modifiername,
+      Rate = i.Rate,
+      Quantity = i.Quantity,
+      Unitname = i.Unit.Unitname
+    }
+    ).ToList();
+
+    return modifiers;
+  }
 
 
 

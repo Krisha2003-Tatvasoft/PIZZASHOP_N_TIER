@@ -31,8 +31,8 @@ public class PermissionRepository : IPermissionRepository
                Candelete = u.Candelete,
            }
            ).ToListAsync();
-           
-          return roleList; 
+
+        return roleList;
     }
 
     public async Task<Permission> GetPerByIdAsync(int id)
@@ -43,6 +43,14 @@ public class PermissionRepository : IPermissionRepository
     public async Task UpdateAsync()
     {
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<Permission?> GetRolePermissionAsync(string role, string module)
+    {
+        return await _context.Permissions
+           .Include(u => u.Module)
+           .Include(u => u.Role)
+           .FirstOrDefaultAsync(u => u.Role.Rolename == role && u.Module.Modulename == module);
     }
 
 }

@@ -1,0 +1,100 @@
+@model pizzashop.Entity.ViewModels.AddModifierGroup;
+
+<div class="modal fade modal-addModifiersGroup" id="addModifiersGroup" tabindex="-1" aria-labelledby="AddNewCategory"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModifiersGroup">Add Modifier Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="add-MG-form">
+                <div class="modal-body ">
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="Modifiergroupname" id="MGname"
+                            placeholder="Category name" required>
+                        <label for="MGname">Name*</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" asp-for="Description" placeholder="Add a Description of Xategory"
+                            id="Description"></textarea>
+                        <label for="Description">Description</label>
+                    </div>
+
+                    <a href="" class="select-existing">+ Add Existing
+                        Modifiers</a>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button submit" class="btn btn-primary sav-btn" id="add-MG"
+                        data-bs-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-selectExisting">
+    <!-- select existing modifiers -->
+    <div class="modal fade modal-delete" id="selectExistingModifiers" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectExistingModifiers">Select Existing Modifiers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="search-field w-50">
+                        <input class="search form-control me-2 border-0" type="search" placeholder="Search"
+                            aria-label="Search">
+                    </div>
+                    <div class="existing-modifier-data"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+
+            $(".select-existing").click(function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "/Menu/SelectExModifier",
+                    type: "GET",
+                    success: function (data) {
+                        console.log("in sucess");
+                        $(".existing-modifier-data").html(data);
+                        $("#selectExistingModifiers").modal("show");
+                    },
+                    error: function (error) {
+                        console.log("in error");
+                        console.error("Error in load modal", error);
+                    }
+                });
+
+            });
+
+
+        });
+
+
+    </script>

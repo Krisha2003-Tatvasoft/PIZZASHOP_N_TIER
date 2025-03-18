@@ -43,4 +43,20 @@ public class RolePerService : IRolePerService
         return true;
 
     }
+
+      public async Task<bool> HasPermissionAsync(string role, string module, string permission)
+    {
+        var rolePermission = await _permissionRepository.GetRolePermissionAsync(role, module);
+
+        if (rolePermission == null)
+            return false;
+
+        return permission switch
+        {
+            "View" => rolePermission.Canview,
+            "AddEdit" => rolePermission.Canaddedit,
+            "Delete" => rolePermission.Candelete,
+            _ => false
+        };
+    }
 }

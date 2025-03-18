@@ -37,6 +37,12 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    // In non-development environments, Redirect to a custom error page, e.g., /Error/404
+ app.UseStatusCodePagesWithReExecute("/Error/{0}");
+ 
+}
 
 app.UseSession();
 

@@ -22,7 +22,7 @@ public class AuthService : IAuthService
     public async Task<Userslogin?> AuthenticateUser(string email, string password)
     {
         var user = await _userRepository.GetUserByEmailAsync(email);
-        if (user == null || !PasswordUtills.VerifyPassword(password, user.Passwordhash))
+        if (user == null || !PasswordUtills.VerifyPassword(password, user.Passwordhash) || user.User.Isdeleted == true || user.status == Enums.statustype.Inactive)
             return null;
 
         return user;

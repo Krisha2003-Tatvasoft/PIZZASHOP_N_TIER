@@ -86,11 +86,6 @@
                                 <image class="delet-icon" src="../images/trash.svg" />
                             </button>
 
-                            @* <button class="new-item-btn button" data-bs-toggle="modal" data-bs-target="#addItem"
-                            onclick="" >
-                            + New Item
-                            </button> *@
-
                             <button class="new-item-btn button openModel">
                                 + New Item
                             </button>
@@ -118,8 +113,7 @@
                             <div class="slider-heading-text">
                                 <b>Modifiers Group</b>
                             </div>
-                            <button class="plus-button button" data-bs-toggle="modal"
-                                data-bs-target="#addModifiersGroup" class="delet-btn">
+                            <button class="plus-button button delet-btn" id="openMGModel">
                                 <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
                             </button>
                         </div>
@@ -329,6 +323,11 @@
     </div>
 </div>
 
+<!-- Add New modifier group -->
+<div class="modal-addNewMG"></div>
+
+
+
 
 
 
@@ -403,13 +402,13 @@
     @* page size modifier*@
             $("#modifier-table").on("change", "#pageSizeSelectM", function () {
                 var MGid = $("#MGid").val();
-               loadModifierTable(MGid, 1) 
+                loadModifierTable(MGid, 1)
             });
 
 
     @* search field modifier*@
 
-        let searchTimer1;
+            let searchTimer1;
         $("#searchModifier").on("input", function () {
             var MGid = $("#MGid").val();
             clearTimeout(searchTimer1);
@@ -418,34 +417,36 @@
             }, 500); // 500ms delay to avoid excessive requests
         });
 
-        $(document).on("click", ".openModel", function (e) {
+    @* add item model *@
+            $(document).on("click", ".openModel", function (e) {
 
-            $.ajax({
-                url: "/Menu/AddItem",
-                type: "GET",
-                success: function (response) {
-                    $(".modal-addNewItem").html(response);
-                    $("#addItem").modal("show");
-                },
-                error: function (error) {
-                    alert("failed to reload modal");
-                }
+                $.ajax({
+                    url: "/Menu/AddItem",
+                    type: "GET",
+                    success: function (response) {
+                        $(".modal-addNewItem").html(response);
+                        $("#addItem").modal("show");
+                    },
+                    error: function (error) {
+                        alert("failed to reload modal");
+                    }
+                });
             });
-        });
 
 
+    @* get category list *@
 
-        function catList() {
-            $.ajax({
-                url: "/Menu/CategoryList",
-                type: "GET",
-                success: function (response) {
-                    $("#category-list").html(response);
-                },
-                error: function (error) {
-                }
-            });
-        }
+            function catList() {
+                $.ajax({
+                    url: "/Menu/CategoryList",
+                    type: "GET",
+                    success: function (response) {
+                        $("#category-list").html(response);
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
 
         catList();
         loadFirstItemTable(1);
@@ -530,8 +531,8 @@
                     search: search
                 },
                 success: function (response) {
-                    loadItemTable(response);
-                     currentPage = page;
+                    loadItemTable(response, 1);
+                    currentPage = page;
                 },
                 error: function (error) {
                 }
@@ -552,7 +553,7 @@
                     search: search
                 },
                 success: function (response) {
-                    loadModifierTable(response);
+                    loadModifierTable(response, 1);
                     currentPage = page;
                 },
                 error: function (error) {
@@ -569,7 +570,7 @@
         $(document).on("click", ".MG-link", function (e) {
             $("#searchModifier").val("");
             var MGId = $(this).data("id");
-            loadModifierTable(MGId);
+            loadModifierTable(MGId, 1);
         });
 
         function loadModifierTable(MGId, page) {
@@ -588,7 +589,7 @@
                 },
                 success: function (data) {
                     $('#modifier-table').html(data);
-                     currentPage = page;
+                    currentPage = page;
                 },
                 error: function () {
                 }
@@ -683,7 +684,7 @@
                     contentType: false,
                     dataType: 'json',
                     success: function (response) {
-                        loadItemTable(categoryId);
+                        loadItemTable(categoryId, 1);
                     },
                     error: function (error) {
                         console.error("Error updating permissions:", error);
@@ -696,21 +697,26 @@
 
             $(document).on("click", "#add-item", function (e) {
                 e.preventDefault();
-                var formData = $("#add-item-form").serialize();
+                var formData = new FormData($("#add-item-form")[0]);
                 var categoryId = $("#Categoryid").val();
 
                 console.log(categoryId);
+
                 $.ajax({
                     url: "/Menu/addItemPost",
                     type: "POST",
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     dataType: 'json',
                     success: function (response) {
+                        console.log("in sucess");
                         $("#add-item-form")[0].reset();
-                        loadItemTable(categoryId);
+                        loadItemTable(categoryId, 1);
                     },
                     error: function (error) {
-                        console.error("Error updating permissions:", error);
+                        console.log("in error");
+                        console.error("Error in Add Modifier:", error);
                     }
                 });
             });
@@ -726,7 +732,7 @@
                     type: "POST",
                     data: { id: itemId },
                     success: function (response) {
-                        loadItemTable(Categoryid);
+                        loadItemTable(Categoryid, 1);
                     },
                     error: function (error) {
                         console.error("Error updating permissions:", error);
@@ -781,18 +787,22 @@
 
             $(document).on("click", "#add-modifier", function (e) {
                 e.preventDefault();
-                var formData = $("#add-modifier-form").serialize();
+
+                var formData = new FormData($("#add-modifier-form")[0]);
                 var Modifiergroupid = $("#Modifiergroupid").val();
+
                 console.log(Modifiergroupid);
 
                 $.ajax({
                     url: "/Menu/addModifierPost",
                     type: "POST",
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     dataType: 'json',
                     success: function (response) {
                         $("#add-modifier-form")[0].reset();
-                        loadModifierTable(Modifiergroupid);
+                        loadModifierTable(Modifiergroupid, 1);
                     },
                     error: function (error) {
                         console.error("Error in Add Modifier:", error);
@@ -806,8 +816,9 @@
                 e.preventDefault();
 
                 var formData = new FormData($("#edit-modifier-form")[0]);
-                var Modifiergroupid = $("#Modifiergroupid").val();
-                var Modifierid = formData.get("Modifierid")
+                var Modifiergroupid = $("#MGid").val();
+                console.log(Modifiergroupid);
+
 
                 $.ajax({
                     url: "/Menu/EditModifietrPost",
@@ -817,7 +828,7 @@
                     contentType: false,
                     dataType: 'json',
                     success: function (response) {
-                        loadModifierTable(Modifiergroupid);
+                        loadModifierTable(Modifiergroupid, 1);
                     },
                     error: function (error) {
                         console.error("Error updating modifier:", error);
@@ -874,6 +885,97 @@
                 }
             });
         });
+
+
+    @* Add modifier group model *@
+
+            $(document).on("click", "#openMGModel", function (e) {
+
+
+                $.ajax({
+                    url: "/Menu/AddMG",
+                    type: "GET",
+                    success: function (response) {
+                        $(".modal-addNewMG").html(response);
+                        $("#addModifiersGroup").modal("show");
+                    },
+                    error: function (error) {
+                        console.error("Error in delete Modifi9", error);
+                    }
+                });
+            });
+
+    @* Add modifier group *@
+
+            $(document).on("click", "#add-MG", function (e) {
+
+                e.preventDefault();
+                var formData = new FormData($("#add-MG-form")[0]);
+
+                $.ajax({
+                    url: "/Menu/AddMGPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        $("#add-MG-form")[0].reset();
+                        MGList();
+                    },
+                    error: function (error) {
+                         console.error("Error in add Modifiergroup", error);
+                    }
+                });
+
+            });
+
+    @* Edit Modifier group *@
+
+
+            $(document).on("click", "#edit-MG-Yes", function (e) {
+                e.preventDefault();
+               
+
+                var formData = new FormData($("#edit-MG-form")[0]);
+
+                $.ajax({
+                    url: "/Menu/EditMGPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        MGList();
+                    },
+                    error: function (error) {
+                        console.error("Error updating modifierGroup:", error);
+                    }
+                }); 
+
+            });
+
+     @* Delete ModifierGroup *@
+
+            $(document).on("click", ".delete-MG", function (e) {
+                var MGId = $("#hidden").val();
+              
+                $.ajax({
+                    url: "/Menu/DeleteMG",
+                    type: "POST",
+                    data: { id: MGId },
+                    success: function (response) {
+                         MGList();
+                    },
+                    error: function (error) {
+                        console.error("Error in delete Modifier group:", error);
+                    }
+                }); 
+
+            });
+        
+
 
 
     });

@@ -1,4 +1,5 @@
-using AuthenticationDemo.Attributes;
+// using AuthenticationDemo.Attributes;
+using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
@@ -8,7 +9,7 @@ using VMCategory = pizzashop.Entity.ViewModels.Category;
 
 namespace pizzashop.Controllers;
 
-[CustomAuthorize]
+[CustomAuthorize("Menu", "View")]
 public class MenuController : Controller
 {
 
@@ -28,6 +29,7 @@ public class MenuController : Controller
         _modifierGroupService = modifiersGroupService;
         _modifierService = modifierService;
     }
+
 
     public IActionResult Menu()
     {
@@ -131,7 +133,7 @@ public class MenuController : Controller
     public async Task<IActionResult> addItemPost(AddItem model)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _itemService.AddItemPost(user.Userid, model))
+        if (await _itemService.AddItemPost(user.Userid, model) == true)
         {
             return Json(new { sucess = true, message = "Item Added Sucessfully" });
         }
@@ -295,6 +297,64 @@ public class MenuController : Controller
     }
 
 
+    [HttpGet]
+    public async Task<IActionResult> AddMG()
+    {
+         return PartialView("_AddModifierGroup");
+    }
 
+
+   [HttpPost]
+   public async Task<IActionResult> AddMGPost(AddModifierGroup model)
+   {
+      CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _modifierGroupService.AddMGPost(user.Userid,model))
+        {
+            return Json(new { sucess = true, message = "ModifierGroup Added Sucessfully" });
+        }
+        else
+        {
+            return Json(new { error = true, message = "Error in add ModifierGroup" });
+        }
+   }
+
+    [HttpGet]
+    public async Task<IActionResult> EditMG(int id)
+    {
+        return PartialView("_EditModifierGroup", await _modifierGroupService.EditMG(id));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditMGPost(AddModifierGroup model)
+    {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _modifierGroupService.EditMGPost(user.Userid,model))
+        {
+            return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
+        }
+        else
+        {
+            return Json(new { error = true, message = "Error in update modifiergroup" });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteMG(int id)
+    {
+        if (await _modifierGroupService.DeleteMG(id))
+        {
+            return Json(new { sucess = true, message = "ModifierGroup deleted Sucessfully." });
+        }
+        else
+        {
+            return Json(new { error = true, message = "ModifierGroup not deleted." });
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> SelectExModifier(int page = 1, int pageSize = 5, string search = "")
+    {
+        return PartialView("_SelectExistingModifier" , await _modifierService.GetAllModifier(page, pageSize, search));
+    }
 
 }

@@ -17,5 +17,7 @@ public interface IModifierService
      Task<bool> DeleteModifier(int id);
 
      Task<bool> DeleteSelectedModifier(List<int> selectedIds);
+
+    Task<List<ModifierTable>> GetAllModifier(page, pageSize, search);
     
 }

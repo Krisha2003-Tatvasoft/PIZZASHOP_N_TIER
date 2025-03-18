@@ -1,4 +1,5 @@
-using AuthenticationDemo.Attributes;
+// using AuthenticationDemo.Attributes;
+using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MimeKit;
@@ -9,7 +10,7 @@ using pizzashop.Service.Utils;
 namespace pizzashop.Web.Controllers;
 
 
-[CustomAuthorize]
+
 public class UserController : Controller
 {
     private readonly IUserService _userService;
@@ -25,6 +26,7 @@ public class UserController : Controller
         _emailService = eMailService;
     }
 
+    [CustomAuthorize("Users", "View")]
     [HttpGet]
     public async Task<IActionResult> UserList(int page = 1, int pageSize = 5, string search = "", string SortColumn = "", string SortOrder = "")
     {
@@ -44,12 +46,14 @@ public class UserController : Controller
 
     }
 
+    [CustomAuthorize("Users", "AddEdit")]
     [HttpGet]
     public async Task<IActionResult> AddNewUser()
     {
         return View(await _userService.GetAddNewUser());
     }
 
+    [CustomAuthorize("Users", "AddEdit")]
     [HttpPost]
     public async Task<IActionResult> AddNewUser(AddNewUser model)
     {
@@ -57,28 +61,28 @@ public class UserController : Controller
         {
 
             CookieData user = SessionUtils.GetUser(HttpContext);
-            if(await _userService.emailExist(model.Email))
+            if (await _userService.emailExist(model.Email))
             {
                 TempData["ErrorMessage"] = "Email Already Exists";
                 ModelState.Remove("Countryid");
                 return View(await _userService.GetAddNewUser());
             }
-            else if(await _userService.usernameExist(model.Username))
+            else if (await _userService.usernameExist(model.Username))
             {
                 TempData["ErrorMessage"] = "Username Already Exists";
                 ModelState.Remove("Countryid");
                 return View(await _userService.GetAddNewUser());
             }
-            else if(await _userService.phoneExist(model.Phone))
+            else if (await _userService.phoneExist(model.Phone))
             {
                 TempData["ErrorMessage"] = "This PhoneNUmber Already Exists";
                 ModelState.Remove("Countryid");
                 return View(await _userService.GetAddNewUser());
             }
-            else 
+            else
             {
                 await _userService.PostAddNewUser(model, user.Userid);
-                
+
                 string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
@@ -129,14 +133,22 @@ public class UserController : Controller
 
     }
 
+    [CustomAuthorize("Users", "AddEdit")]
     [HttpGet]
     public async Task<IActionResult> EditUserAsync(int id)
     {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (user.Userid == id)
+        {
+            TempData["ErrorMessage"] = "User Can not Edit themself";
+            return RedirectToAction("UserList", "User");
+        }
         return View(await _userService.GetUpdate(id));
     }
 
 
     [HttpPost]
+    [CustomAuthorize("Users", "AddEdit")]
     public async Task<IActionResult> EditUserAsync(AddNewUser viewmodel)
     {
         ModelState.Remove("password");
@@ -165,16 +177,25 @@ public class UserController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Users", "Delete")]
+
     public async Task<IActionResult> DeleteUserAsync(int id)
     {
-        if (await _userService.Delete(id))
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (user.Userid == id)
+        {
+            TempData["ErrorMessage"] = "User Can not Delete themself";
+            return RedirectToAction("UserList", "User");
+        }
+        else if (await _userService.Delete(id))
         {
             TempData["SuccessMessage"] = "User Deleted Sucessfully";
             return RedirectToAction("UserList", "User");
         }
         else
         {
-            return View();
+            TempData["ErrorMessage"] = "User Can not Deleted";
+            return RedirectToAction("UserList", "User");
         }
     }
 

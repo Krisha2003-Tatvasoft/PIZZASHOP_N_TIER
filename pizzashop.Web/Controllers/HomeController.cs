@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using AuthenticationDemo.Attributes;
+// using AuthenticationDemo.Attributes;
+using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Web.Models;
 using pizzashop.Entity.ViewModels;
@@ -18,8 +19,7 @@ public class HomeController : Controller
      
     }
 
-    [CustomAuthorize("Admin" , "Account Manager","Chef" )]
-    public IActionResult Index()
+      public IActionResult Index()
     {
         return View();
     }

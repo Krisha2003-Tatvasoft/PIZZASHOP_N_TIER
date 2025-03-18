@@ -62,6 +62,12 @@ public class ModifierRepository : IModifierRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<Modifier>> GetAllModifier()
+    {
+        return await _context.Modifiers.Include(u => u.Unit)
+        .Where(m=> m.Isdeleted == false).ToListAsync();
+    }
     
 
 }

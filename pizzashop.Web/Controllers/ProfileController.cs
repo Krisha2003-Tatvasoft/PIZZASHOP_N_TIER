@@ -1,5 +1,6 @@
 using System.Diagnostics;
-using AuthenticationDemo.Attributes;
+// using AuthenticationDemo.Attributes;
+using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Web.Models;
 using pizzashop.Entity.ViewModels;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace pizzashop.Web.Controllers;
 
-[CustomAuthorize]
+ [CustomAuthorize]
 public class ProfileController : Controller
 {
 

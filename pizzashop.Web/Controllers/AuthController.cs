@@ -6,6 +6,7 @@ using MimeKit;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using pizzashop.web.Attributes;
 
 using VMLogin = pizzashop.Repository.ViewModels.Login;
 
@@ -79,6 +80,7 @@ public class AuthController : Controller
         return View();
     }
 
+    [CustomAuthorize]
     public IActionResult Logout()
     {
         // Clear out all the Cookie data
@@ -91,6 +93,7 @@ public class AuthController : Controller
     }
 
 
+    [CustomAuthorize]
     [HttpGet]
     public IActionResult Forget()
     {

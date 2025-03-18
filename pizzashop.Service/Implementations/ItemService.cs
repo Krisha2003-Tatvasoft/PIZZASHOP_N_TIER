@@ -72,11 +72,12 @@ public class ItemService : IItemService
     {
       return false;
     }
-    if (viewmodel.ModifierGroups == null || !viewmodel.ModifierGroups.Any())
-    {
-      Console.WriteLine("ModifierGroups is either null or empty, skipping mapping.");
-      return false;
-    }
+    // if (viewmodel.ModifierGroups == null || !viewmodel.ModifierGroups.Any())
+    // {
+    //   Console.WriteLine("ModifierGroups is either null or empty, skipping mapping.");
+    //   return false;
+    // }
+  
     Item item = new Item
     {
       Itemname = viewmodel.Itemname,
@@ -109,6 +110,7 @@ public class ItemService : IItemService
 
       await _itemmodifiergroupmapRepository.AddNewMapping(newMapping);
     }
+
     return true;
 
   }

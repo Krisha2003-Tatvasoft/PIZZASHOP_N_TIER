@@ -1,0 +1,41 @@
+@model pizzashop.Entity.ViewModels.AddModifierGroup;
+
+<div class="modal fade modal-updateModifiersGroup" id="updateModifiersGroup" tabindex="-1"
+    aria-labelledby="AddNewCategory" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModifiersGroup">Update Modifier Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="edit-MG-form">
+                <div class="modal-body ">
+                    <input type="hidden" asp-for="Modifiergroupid">
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="MGname" placeholder="Category name"
+                            asp-for="Modifiergroupname" required>
+                        <label for="MGname">Name*</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Add a Description of Xategory" id="description"
+                            asp-for="Description"></textarea>
+                        <label for="description">Description</label>
+                    </div>
+
+                    <a href="" data-bs-toggle="modal" data-bs-target="#selectExistingModifiers">+ Add Existing
+                        Modifiers</a>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary sav-btn" id="edit-MG-Yes"
+                        data-bs-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

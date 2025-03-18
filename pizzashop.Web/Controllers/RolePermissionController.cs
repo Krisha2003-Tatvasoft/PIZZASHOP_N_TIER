@@ -1,4 +1,5 @@
-using AuthenticationDemo.Attributes;
+// using AuthenticationDemo.Attributes;
+using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using pizzashop.Entity.ViewModels;
@@ -6,7 +7,7 @@ using pizzashop.Service.Interfaces;
 
 namespace pizzashop.Web.Controllers;
 
-[CustomAuthorize]
+ [CustomAuthorize("RoleAndPermission", "View")]
 public class RolePermissionController : Controller
 {
     private readonly IRolePerService _rolePerService;
