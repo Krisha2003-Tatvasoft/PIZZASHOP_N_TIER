@@ -13,14 +13,17 @@ public class ModifierRepository : IModifierRepository
         _context = context;
     }
 
-    public async Task<List<Modifier>> GetModifierByMG(int id,string search)
+    public async Task<List<Modifier>> GetModifierByMG(int id, string search)
     {
-         string lowerSearch = search.ToLower();
+        string lowerSearch = search.ToLower();
         return await _context.Modifiers
         .Include(u => u.Unit)
         .Where(c => c.Modifiergroupid == id && c.Isdeleted == false)
-          .Where(c=> string.IsNullOrEmpty(lowerSearch) ||
-         c.Modifiername.ToLower().Contains(lowerSearch))
+          .Where(c => string.IsNullOrEmpty(lowerSearch) ||
+           c.Modifiername.ToLower().Contains(lowerSearch) ||
+           c.Unit.Unitname.ToLower().Contains(lowerSearch) ||
+           c.Quantity.ToString().ToLower().Contains(lowerSearch) ||
+          c.Rate.ToString().ToLower().Contains(lowerSearch))
          .OrderBy(c => c.Modifierid).ToListAsync();
     }
 
@@ -47,7 +50,7 @@ public class ModifierRepository : IModifierRepository
         await _context.SaveChangesAsync();
     }
 
-     public async Task DeleteModifier(Modifier modifier)
+    public async Task DeleteModifier(Modifier modifier)
     {
         modifier.Isdeleted = true;
         _context.Modifiers.Update(modifier);
@@ -63,11 +66,19 @@ public class ModifierRepository : IModifierRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Modifier>> GetAllModifier()
+    public async Task<List<Modifier>> GetAllModifier(string search)
     {
+        string lowerSearch = search.ToLower();
+
         return await _context.Modifiers.Include(u => u.Unit)
-        .Where(m=> m.Isdeleted == false).ToListAsync();
+        .Where(c => c.Isdeleted == false)
+          .Where(c => string.IsNullOrEmpty(lowerSearch) ||
+         c.Modifiername.ToLower().Contains(lowerSearch) ||
+           c.Unit.Unitname.ToLower().Contains(lowerSearch) ||
+           c.Quantity.ToString().ToLower().Contains(lowerSearch) ||
+          c.Rate.ToString().ToLower().Contains(lowerSearch))
+         .OrderBy(c => c.Modifierid).ToListAsync();
     }
-    
+
 
 }

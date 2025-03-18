@@ -164,11 +164,15 @@ public class ModifierService : IModifierService
     return true;
   }
 
-   public async Task<List<ModifierTable>> GetAllModifier(page, pageSize, search)
+  public async Task<(List<ModifierTable> , int totalExMoidifier)> GetAllModifier(int page,int pageSize,string search)
   {
     var modifierList = await _modifierRepository.GetAllModifier(search);
 
+    int totalExMoidifier = modifierList.Count();
+
     var modifiers = modifierList
+    .Skip((page - 1) * pageSize)
+    .Take(pageSize)
     .Select(i => new ModifierTable
     {
       Modifierid = i.Modifierid,
@@ -179,7 +183,7 @@ public class ModifierService : IModifierService
     }
     ).ToList();
 
-    return modifiers;
+    return (modifiers, totalExMoidifier);
   }
 
 

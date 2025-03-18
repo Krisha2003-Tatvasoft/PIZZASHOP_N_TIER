@@ -354,7 +354,15 @@ public class MenuController : Controller
     [HttpGet]
     public async Task<IActionResult> SelectExModifier(int page = 1, int pageSize = 5, string search = "")
     {
-        return PartialView("_SelectExistingModifier" , await _modifierService.GetAllModifier(page, pageSize, search));
+        var (Exmodifiers, totalExMoidifier) = await _modifierService.GetAllModifier(page, pageSize, search);
+
+        ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.totalExMoidifier = totalExMoidifier;
+
+        ViewBag.TotalPages = (int)Math.Ceiling((double)totalExMoidifier / pageSize);
+
+        return PartialView("_SelectExistingModifier" , Exmodifiers);
     }
 
 }

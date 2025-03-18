@@ -45,7 +45,7 @@
     <!-- select existing modifiers -->
     <div class="modal fade modal-delete" id="selectExistingModifiers" tabindex="-1" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered" id="exModifier-table">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="selectExistingModifiers">Select Existing Modifiers</h5>
@@ -54,7 +54,7 @@
                 <div class="modal-body">
 
                     <div class="search-field w-50">
-                        <input class="search form-control me-2 border-0" type="search" placeholder="Search"
+                        <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
                             aria-label="Search">
                     </div>
                     <div class="existing-modifier-data"></div>
@@ -69,32 +69,73 @@
 
 
 
-    <script>
+<script>
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
 
-            $(".select-existing").click(function (e) {
-                e.preventDefault();
+        $(".select-existing").click(function (e) {
+            e.preventDefault();
 
-                $.ajax({
-                    url: "/Menu/SelectExModifier",
-                    type: "GET",
-                    success: function (data) {
-                        console.log("in sucess");
-                        $(".existing-modifier-data").html(data);
-                        $("#selectExistingModifiers").modal("show");
-                    },
-                    error: function (error) {
-                        console.log("in error");
-                        console.error("Error in load modal", error);
-                    }
-                });
-
-            });
-
+            loadExistingModifier(1);
 
         });
 
+        function loadExistingModifier(page) {
 
-    </script>
+            let pageSize = $("#pageSizeSelectEXM").val();
+            let search = $("#searchExModifier").val();
+
+            $.ajax({
+                url: "/Menu/SelectExModifier",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
+                success: function (data) {
+                    console.log("in sucess");
+                    $(".existing-modifier-data").html(data);
+                    $("#selectExistingModifiers").modal("show");
+                },
+                error: function (error) {
+                    console.log("in error");
+                    console.error("Error in load modal", error);
+                }
+            });
+
+        }
+
+        @* page link *@
+            $("#exModifier-table").on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+               
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadExistingModifier(page);
+                }
+            });
+
+        @* page size *@
+            $("#exModifier-table").on("change", "#pageSizeSelectEXM", function () {
+                console.log("page size select");
+                loadExistingModifier(1);
+            });
+
+
+        let searchTimer3;
+        $("#searchExModifier").on("input", function () {
+            clearTimeout(searchTimer3);
+            searchTimer3 = setTimeout(function () {
+                loadExistingModifier(1);  // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
+
+
+    });
+
+
+</script>

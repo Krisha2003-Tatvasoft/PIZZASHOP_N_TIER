@@ -13,14 +13,16 @@ public class ItemRepository : IItemRepository
         _context = context;
     }
 
-    public async Task<List<Item>> GetItemByCat(int id,string search)
+    public async Task<List<Item>> GetItemByCat(int id, string search)
     {
         string lowerSearch = search.ToLower();
         return await _context.Items
         .Include(u => u.Unit)
         .Where(c => c.Categoryid == id && c.Isdeleted == false)
-        .Where(c=> string.IsNullOrEmpty(lowerSearch) ||
-         c.Itemname.ToLower().Contains(lowerSearch))
+        .Where(c => string.IsNullOrEmpty(lowerSearch) ||
+         c.Itemname.ToLower().Contains(lowerSearch) ||
+          c.Quantity.ToString().ToLower().Contains(lowerSearch) ||
+           c.Rate.ToString().ToLower().Contains(lowerSearch))
         .OrderBy(c => c.Itemid).ToListAsync();
     }
 

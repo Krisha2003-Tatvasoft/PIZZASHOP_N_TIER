@@ -279,7 +279,7 @@
 <div class="modal-addNewItem"></div>
 
 <!-- delete selected Items -->
-<div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" aria-labelledby="deleteModalLabel"
+<div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" a ria-labelledby="deleteModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -356,27 +356,25 @@
 
 
 
-    @* page link *@
+        @* page link *@
             $("#item-table").on("click", ".pagination-link", function (e) {
                 var categoryId = $("#catid").val();
                 e.preventDefault();
                 let page = $(this).data("page");
 
                 if (page > 0) {
-                    console.log(categoryId)
-                    loadItemTable(categoryId, page);
-                    console.log("clicked")
+                    loadItemTable(categoryId, page);  
                 }
             });
 
-    @* page size *@
+        @* page size *@
             $("#item-table").on("change", "#pageSizeSelect", function () {
                 var categoryId = $("#catid").val();
                 loadItemTable(categoryId, 1)
             });
 
 
-    @* search field *@
+        @* search field *@
 
             let searchTimer;
         $("#searchInput").on("input", function () {
@@ -388,7 +386,7 @@
         });
 
 
-    @* page link modifier*@
+        @* page link modifier*@
             $("#modifier-table").on("click", ".pagination-link", function (e) {
                 var MGid = $("#MGid").val();
                 e.preventDefault();
@@ -399,14 +397,14 @@
                 }
             });
 
-    @* page size modifier*@
+        @* page size modifier*@
             $("#modifier-table").on("change", "#pageSizeSelectM", function () {
                 var MGid = $("#MGid").val();
                 loadModifierTable(MGid, 1)
             });
 
 
-    @* search field modifier*@
+        @* search field modifier*@
 
             let searchTimer1;
         $("#searchModifier").on("input", function () {
@@ -417,7 +415,7 @@
             }, 500); // 500ms delay to avoid excessive requests
         });
 
-    @* add item model *@
+        @* add item model *@
             $(document).on("click", ".openModel", function (e) {
 
                 $.ajax({
@@ -434,7 +432,7 @@
             });
 
 
-    @* get category list *@
+        @* get category list *@
 
             function catList() {
                 $.ajax({
@@ -494,6 +492,8 @@
                 success: function (data) {
                     $('#item-table').html(data);
                     currentPage = page;
+                    restoreCheckedState();
+                    console.log(selectedIds);
                 },
                 error: function () {
                 }
@@ -501,7 +501,7 @@
         }
 
 
-    @* modifier *@
+        @* modifier *@
 
 
             function MGList() {
@@ -590,6 +590,8 @@
                 success: function (data) {
                     $('#modifier-table').html(data);
                     currentPage = page;
+                    restoreCheckedModifier();
+                    console.log(selectedModifierIds);
                 },
                 error: function () {
                 }
@@ -619,7 +621,7 @@
             });
         }
 
-    @* Update category *@
+        @* Update category *@
             $("#save-edit-cat").click(function (e) {
                 e.preventDefault();
                 var formData = {
@@ -642,7 +644,7 @@
                 });
             });
 
-    @* delete Category *@
+        @* delete Category *@
 
             $(document).on("click", ".delete-link", function (e) {
                 var categoryId = $(this).data("catid");
@@ -668,7 +670,7 @@
             });
         }
 
-    @* edit item *@
+        @* edit item *@
 
             $(document).on("click", "#edit-item", function (e) {
                 e.preventDefault();
@@ -693,7 +695,7 @@
 
             });
 
-    @* add item *@
+        @* add item *@
 
             $(document).on("click", "#add-item", function (e) {
                 e.preventDefault();
@@ -721,7 +723,7 @@
                 });
             });
 
-    @* Delete Item *@
+        @* Delete Item *@
 
             $(document).on("click", ".delete-item", function (e) {
                 var itemId = $("#hidden").val();
@@ -741,16 +743,27 @@
 
             });
 
-    @* deleted selected item *@
+        @* deleted selected item *@
           var selectedIds = [];
 
-        $(document).on("click", "#delete-selected-item", function (e) {
-            selectedIds = [];
-            $(".item-checkbox:checked").each(function () {
-                selectedIds.push($(this).val());
-            });
+        $(document).on("change", "input[name='Sitem']", function (e){
+            let value = $(this).val();
+
+            if ($(this).is(":checked")) {
+                // Add value if checked
+                selectedIds.push(value);
+            } else {
+                // Remove value if unchecked
+                selectedIds = selectedIds.filter(item => item !== value);
+            }
         });
 
+        function restoreCheckedState() {
+            $("input[name='Sitem']").each(function () {
+                let value = $(this).val();
+                $(this).prop("checked", selectedIds.includes(value));
+            });
+        }
 
         $(document).on("click", ".delete-selected-yes", function (e) {
 
@@ -759,6 +772,7 @@
                 type: "POST",
                 data: { selectedIds: selectedIds },
                 success: function (response) {
+                    selectedIds =[];
                     loadItemTable(1);
                 },
                 error: function (error) {
@@ -768,7 +782,7 @@
         });
 
 
-    @* open model for add modifier *@
+        @* open model for add modifier *@
             $(document).on("click", ".openModifierModel", function (e) {
                 $.ajax({
                     url: "/Menu/AddModifier",
@@ -783,7 +797,7 @@
                 });
             });
 
-    @* add modifier *@
+        @* add modifier *@
 
             $(document).on("click", "#add-modifier", function (e) {
                 e.preventDefault();
@@ -810,7 +824,7 @@
                 });
             });
 
-    @* edit modifier *@
+        @* edit modifier *@
 
             $(document).on("click", "#edit-modifier", function (e) {
                 e.preventDefault();
@@ -838,7 +852,7 @@
             });
 
 
-    @* Delete Modifier *@
+        @* Delete Modifier *@
 
             $(document).on("click", ".delete-modifier", function (e) {
                 var ModifierId = $("#hidden").val();
@@ -858,17 +872,39 @@
 
             });
 
-    @* deleted selected modifier*@
+        @* deleted selected modifier*@
 
         var selectedModifierIds = [];
 
-        $(document).on("click", "#delete-selected-modifiers", function (e) {
+        $(document).on("change", "input[name='SModifier']", function (e) {
+            let value = $(this).val();
+
+            if ($(this).is(":checked")) {
+                // Add value if checked
+                selectedModifierIds.push(value);
+            } else {
+                // Remove value if unchecked
+                selectedModifierIds = selectedModifierIds.filter(item => item !== value);
+            }
+        });
+
+        function restoreCheckedModifier() {
+            $("input[name='SModifier']").each(function () {
+                let value = $(this).val();
+                $(this).prop("checked", selectedModifierIds.includes(value));
+            });
+        }
+
+
+
+
+        @* $(document).on("click", "#delete-selected-modifiers", function (e) {
             selectedModifierIds = [];
             $(".modifier-checkbox:checked").each(function () {
                 selectedModifierIds.push($(this).val());
             });
 
-        });
+        }); *@
 
 
         $(document).on("click", ".delete-selectedM-Yes", function (e) {
@@ -878,16 +914,17 @@
                 type: "POST",
                 data: { selectedIds: selectedModifierIds },
                 success: function (response) {
+                        selectedModifierIds=[];
                     loadModifierTable(1);
                 },
                 error: function (error) {
-                    console.error("Error in delete Modifi9ers", error);
+                    console.error("Error in delete Modifiers", error);
                 }
             });
         });
 
 
-    @* Add modifier group model *@
+        @* Add modifier group model *@
 
             $(document).on("click", "#openMGModel", function (e) {
 
@@ -905,7 +942,7 @@
                 });
             });
 
-    @* Add modifier group *@
+        @* Add modifier group *@
 
             $(document).on("click", "#add-MG", function (e) {
 
@@ -924,18 +961,18 @@
                         MGList();
                     },
                     error: function (error) {
-                         console.error("Error in add Modifiergroup", error);
+                        console.error("Error in add Modifiergroup", error);
                     }
                 });
 
             });
 
-    @* Edit Modifier group *@
+        @* Edit Modifier group *@
 
 
             $(document).on("click", "#edit-MG-Yes", function (e) {
                 e.preventDefault();
-               
+
 
                 var formData = new FormData($("#edit-MG-form")[0]);
 
@@ -952,29 +989,29 @@
                     error: function (error) {
                         console.error("Error updating modifierGroup:", error);
                     }
-                }); 
+                });
 
             });
 
-     @* Delete ModifierGroup *@
+        @* Delete ModifierGroup *@
 
             $(document).on("click", ".delete-MG", function (e) {
                 var MGId = $("#hidden").val();
-              
+
                 $.ajax({
                     url: "/Menu/DeleteMG",
                     type: "POST",
                     data: { id: MGId },
                     success: function (response) {
-                         MGList();
+                        MGList();
                     },
                     error: function (error) {
                         console.error("Error in delete Modifier group:", error);
                     }
-                }); 
+                });
 
             });
-        
+
 
 
 
