@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static pizzashop.Entity.Models.Enums;
 
 namespace pizzashop.Entity.Models;
 
@@ -12,6 +13,8 @@ public partial class Table
     public int? Sectionid { get; set; }
 
     public decimal Capacity { get; set; }
+
+     public tablestatus tablestatus { get; set; }
 
     public bool? Isdeleted { get; set; }
 

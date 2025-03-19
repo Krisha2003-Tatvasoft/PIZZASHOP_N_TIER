@@ -98,6 +98,7 @@ public class ProfileService : IProfileService
         user.Countryid = viewmodel.Countryid;
         user.Stateid = viewmodel.Stateid;
         user.Cityid=viewmodel.Cityid;
+        user.Address = viewmodel.Address;
         if(uniqueFileName !=null)
         {
          user.Profileimg = uniqueFileName;

@@ -1,0 +1,52 @@
+@model List<pizzashop.Entity.ViewModels.Table>;
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>Capacity</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                    </td>
+                    <td class="w-25">
+
+                        <div class="d-flex gap-3 align-items-center">
+                            <div>@item.Tablename</div>
+                        </div>
+                    </td>
+                    <td>
+                        @item.Capacity
+                    </td>
+                    <td>
+                        @item.tablestatus 
+                    </td>
+                    <td>
+                        <div class="d-flex gap-3 edit-delet"><button class="button" data-bs-toggle="modal"
+                                data-bs-target="#updateItem"><img src="../images/pencil.svg"></button><button class="button"
+                                data-bs-toggle="modal" data-bs-target="#deleteItem"><img class="delete-icon"
+                                    src="../images/trash.svg"></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+
+
+        </tbody>
+    </table>
+</div>

@@ -21,7 +21,8 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
     }
 
     public async Task<List<SelectListItem>> GetAllMGAsync() =>
-      await _context.Modifiergroups.Select
+      await _context.Modifiergroups
+      .Where(c=>c.Isdeleted == false).Select
       (c => new SelectListItem
       { Value = c.Modifiergroupid.ToString(), Text = c.Modifiergroupname })
       .ToListAsync();

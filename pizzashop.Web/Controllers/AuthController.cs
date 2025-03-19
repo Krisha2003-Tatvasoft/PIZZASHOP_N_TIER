@@ -93,7 +93,6 @@ public class AuthController : Controller
     }
 
 
-    [CustomAuthorize]
     [HttpGet]
     public IActionResult Forget()
     {
@@ -115,7 +114,7 @@ public class AuthController : Controller
                 var resetLink = Url.Action("ResetPassword", "Auth",
                     new { token = token }, Request.Scheme);
 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "d:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -197,14 +196,14 @@ public class AuthController : Controller
         if (principal == null)
         {
             TempData["ErrorMessage"] = "Invalid or expired token.";
-            return View();
+            return RedirectToAction("Forget", "Auth");
         }
 
         var tokenId = principal.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
         if (string.IsNullOrEmpty(tokenId) || IsTokenBlacklisted(tokenId))
         {
-            TempData["ErrorMessage"] = "This password reset link has already been used or is invalid.";
-            return View();
+            TempData["ErrorMessage"] = "This Reset password link has already been used or is invalid.";
+            return RedirectToAction("Forget", "Auth");
         }
 
         string email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -264,6 +263,8 @@ public class AuthController : Controller
         // Redirect user to login page or show success message
         CookieUtils.ClearCookies(HttpContext);
         HttpContext.Session.Clear();
+
+        TempData["SuccessMessage"] = "Password Reset Sucessfully";
         return RedirectToAction("Login", "Auth");
     }
 

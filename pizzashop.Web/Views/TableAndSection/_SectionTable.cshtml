@@ -1,0 +1,25 @@
+@model List<pizzashop.Entity.ViewModels.Section>;
+
+
+<ul class="list-unstyled">
+
+    @foreach (var item in Model)
+    {
+
+        <li class="d-flex justify-content-between p-2">
+            <a href="#" class="d-flex align-items-center gap-2 section-link" data-secid="@item.Sectionid">
+                <img src="../images/menu_11809294.png" alt="" class="Section-svgs">
+                <div>
+                    @item.Sectionname
+                </div>
+            </a>
+            <div class="d-flex gap-1 edit-delet"><button class="button" data-bs-toggle="modal"
+                    data-bs-target="#editNewCategory"><img src="../images/pencil.svg"></button><button class="button"
+                    data-bs-toggle="modal" data-bs-target="#deleteModal"><img class="delete-icon"
+                        src="../images/trash.svg"></button>
+            </div>
+        </li>
+
+    }
+
+</ul>

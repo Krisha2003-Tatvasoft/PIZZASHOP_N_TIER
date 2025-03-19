@@ -7,7 +7,8 @@ using pizzashop.Service.Interfaces;
 
 namespace pizzashop.Web.Controllers;
 
- [CustomAuthorize("RoleAndPermission", "View")]
+
+[CustomAuthorize]
 public class RolePermissionController : Controller
 {
     private readonly IRolePerService _rolePerService;

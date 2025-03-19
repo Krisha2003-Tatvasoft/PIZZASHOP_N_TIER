@@ -157,7 +157,10 @@
                 contentType: "application/json",
                 data: JSON.stringify(updatedPermissions),
                 success: function (response) {
-                    console.sucess("Permission updated sucessfully", sucess);
+                    $('#permissionpartial').hide();
+                    $('#roletable').show();
+                    toastr.success("Permission Updated sucessfully.");
+                    console.success("Permission updated sucessfully", sucess);
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);

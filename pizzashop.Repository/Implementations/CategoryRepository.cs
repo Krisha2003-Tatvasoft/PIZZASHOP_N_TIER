@@ -54,7 +54,7 @@ public class CategoryRepository : ICategoryRepository
 
 
      public async Task<List<SelectListItem>> GetAllCatyAsync() =>
-        await _context.Categories.Select
+        await _context.Categories.Where(c=>c.Isdeleted == false).Select
         (c => new SelectListItem 
         { Value = c.Categoryid.ToString(), Text = c.Categoryname })
         .ToListAsync();

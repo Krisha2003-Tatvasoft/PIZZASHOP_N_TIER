@@ -25,7 +25,7 @@ public class AddNewUser
   [Required(ErrorMessage = "Password is required")]
   [DataType(DataType.Password)]
   [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-        ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
+        ErrorMessage = "Password must be contain 1 special chracter , 1 uppercase letter and  at least 8 characters.")]
   public string Password { get; set; } = null!;
 
   [Required(ErrorMessage = "Phone number is required")]
@@ -54,7 +54,7 @@ public class AddNewUser
 
   [Required(ErrorMessage = "Username is required")]
   [RegularExpression(@"^(?!^\d+$)(?!^_+$)[A-Za-z0-9_]{3,20}$",
-  ErrorMessage = "Username must be 3 to 20 characters long and contain at least one letter. It can also include numbers and underscores.")]
+  ErrorMessage = "Username must be 3 to 20 characters long and Starting with Character. It can also include numbers and underscores.")]
   public string Username { get; set; } = null!;
 
 

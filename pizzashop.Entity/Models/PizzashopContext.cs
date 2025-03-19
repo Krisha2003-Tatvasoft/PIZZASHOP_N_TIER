@@ -700,6 +700,13 @@ public partial class PizzashopContext : DbContext
             entity.HasOne(d => d.Section).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.Sectionid)
                 .HasConstraintName("tables_sectionid_fkey");
+
+             entity.Property(e => e.tablestatus)
+                .HasColumnName("status")
+                .HasConversion(
+                    v => (int)v,
+                    v => (tablestatus)v
+                );    
         });
 
         modelBuilder.Entity<Taxis>(entity =>

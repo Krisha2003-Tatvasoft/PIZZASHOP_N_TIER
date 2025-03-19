@@ -1,0 +1,187 @@
+.heading-text {
+    color: #087cc4;
+}
+
+.Section-slider {
+    width: 300px;
+    background-color: white;
+    padding: 8px;
+    height: auto;
+}
+
+
+.slider-heading-text {
+    font-size: 20px;
+    color: #087cc4;
+}
+
+
+.plus-img {
+    width: 25px;
+    height: 25px;
+}
+
+.plus-button {
+    padding: 2px;
+    border: 1px solid #087cc4;
+    border-radius: 5px;
+    height: 35px;
+    width: 35px;
+    background-color: white;
+}
+
+.Section-svgs {
+    width: 15px;
+    height: 15px;
+}
+
+.Section-slider ul {
+    height: 350px !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.Section-slider li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.Section-slider a {
+    text-decoration: none;
+    color: grey;
+    width: 100%;
+}
+
+
+.Section-slider .active {
+    color: #087cc4;
+}
+
+.Tables-table {
+    border-left: 2px solid #087cc4;
+    background-color: white;
+}
+
+.Tables-table-heading-text {
+    color: #087cc4;
+}
+
+
+.button-input {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.search-field {
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.button-input .delet-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+.delet-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.button-input .new-table-btn {
+    width: 100px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    background-color: #087cc4;
+
+}
+
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem;
+    color: grey !important;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: var(--bs-border-width);
+    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
+}
+
+.main-content .edit-delet button {
+    border: none;
+    background: none;
+    justify-content: space-between;
+}
+
+.overlay1 {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* z-index: 1500; */
+    transition: opacity 0s;
+}
+
+
+@media screen and (max-width: 1200px) {
+
+
+
+    .parent .main-content .tables {
+        position: relative;
+    }
+
+    .parent .main-content .tables .Section-slider {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 220px;
+        background-color: white;
+        height: inherit;
+        z-index: 800;
+    }
+
+    .collapse.show {
+        display: block;
+    }
+
+    .collapse.show~#overlay1 {
+        display: block;
+        opacity: 1;
+    }
+
+
+}
+
+@media screen and (max-width: 572px) {
+ 
+    .button-input {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .search-field {
+        width: 90px;
+    }
+
+    .button-input .delet-btn {
+        width: 30px;
+        height: 30px;
+    }
+
+
+    .button-input .new-table-btn {
+        font-size: 12px;
+        width: 60px;
+
+    }
+}
+

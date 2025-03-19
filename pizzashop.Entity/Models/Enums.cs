@@ -12,8 +12,15 @@ public class Enums
     {
         Veg = 0,
         NonVeg = 1,
-        Vegan=2
+        Vegan = 2
     }
 
-    
+    public enum tablestatus
+    {
+        Available = 0,
+        Occupied = 1,
+        Reserved = 2
+    }
+
+
 }

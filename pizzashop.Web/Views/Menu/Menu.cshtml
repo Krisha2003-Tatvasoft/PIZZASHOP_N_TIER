@@ -493,7 +493,6 @@
                     $('#item-table').html(data);
                     currentPage = page;
                     restoreCheckedState();
-                    console.log(selectedIds);
                 },
                 error: function () {
                 }
@@ -591,7 +590,6 @@
                     $('#modifier-table').html(data);
                     currentPage = page;
                     restoreCheckedModifier();
-                    console.log(selectedModifierIds);
                 },
                 error: function () {
                 }
@@ -702,8 +700,6 @@
                 var formData = new FormData($("#add-item-form")[0]);
                 var categoryId = $("#Categoryid").val();
 
-                console.log(categoryId);
-
                 $.ajax({
                     url: "/Menu/addItemPost",
                     type: "POST",
@@ -712,12 +708,10 @@
                     contentType: false,
                     dataType: 'json',
                     success: function (response) {
-                        console.log("in sucess");
                         $("#add-item-form")[0].reset();
                         loadItemTable(categoryId, 1);
                     },
                     error: function (error) {
-                        console.log("in error");
                         console.error("Error in Add Modifier:", error);
                     }
                 });
@@ -805,7 +799,7 @@
                 var formData = new FormData($("#add-modifier-form")[0]);
                 var Modifiergroupid = $("#Modifiergroupid").val();
 
-                console.log(Modifiergroupid);
+                
 
                 $.ajax({
                     url: "/Menu/addModifierPost",
@@ -831,7 +825,7 @@
 
                 var formData = new FormData($("#edit-modifier-form")[0]);
                 var Modifiergroupid = $("#MGid").val();
-                console.log(Modifiergroupid);
+              
 
 
                 $.ajax({

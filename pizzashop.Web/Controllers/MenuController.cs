@@ -9,7 +9,8 @@ using VMCategory = pizzashop.Entity.ViewModels.Category;
 
 namespace pizzashop.Controllers;
 
-[CustomAuthorize("Menu", "View")]
+
+[CustomAuthorize]
 public class MenuController : Controller
 {
 
@@ -31,11 +32,13 @@ public class MenuController : Controller
     }
 
 
+    [CustomAuthorize("Menu", "View")]
     public IActionResult Menu()
     {
         return View();
     }
 
+   
     [HttpPost]
     public async Task<IActionResult> addCategory(MenuViewModels MenuVM)
     {
@@ -44,7 +47,7 @@ public class MenuController : Controller
 
         await _categoryService.AddCategoryAsync(model, user.Userid);
 
-        return Json(new { sucess = true, message = "wdcf" });
+        return Json(new { sucess = true, message = "Category Added sucessfully" });
     }
 
     [HttpGet]
@@ -110,6 +113,7 @@ public class MenuController : Controller
         }
     }
 
+    
     [HttpPost]
     public async Task<IActionResult> DeleteCat(int id)
     {

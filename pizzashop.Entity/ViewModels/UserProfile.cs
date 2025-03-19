@@ -46,7 +46,7 @@ namespace pizzashop.Entity.ViewModels
 
     [Required(ErrorMessage = "Username is required")]
     [RegularExpression(@"^(?!^\d+$)(?!^_+$)[A-Za-z0-9_]{3,20}$",
-    ErrorMessage = "Username must be 3 to 20 characters long and contain at least one letter. It can also include numbers and underscores.")]
+    ErrorMessage = "Username must be 3 to 20 characters long and Starting with Character. It can also include numbers and underscores.")]
     public string Username { get; set; } = null!;
 
     [Required(ErrorMessage = "Role name is required.")]

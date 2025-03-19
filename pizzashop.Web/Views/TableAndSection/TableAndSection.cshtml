@@ -1,0 +1,155 @@
+@{
+    ViewData["Title"] = "TableAndSection Page";
+}
+
+<link rel="stylesheet" href="~/css/TableAndSection.css" />
+
+<div class="w-100 main-content px-4">
+
+
+
+    <div class="heading-text py-2">
+        <h1><b>Sections/Tables</b></h1>
+    </div>
+
+    <div class="d-flex tables">
+
+        <div class="Section-slider collapse d-xl-block" id="SectionSlider">
+
+
+            <div class="mb-4 d-flex justify-content-between">
+                <div class="slider-heading-text">
+                    <b>Section</b>
+                </div>
+                <button class="plus-button button" data-bs-toggle="modal" data-bs-target="#addNewCategory"
+                    class="delet-btn">
+                    <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
+                </button>
+            </div>
+
+            <div id="section-list"></div>
+
+        </div>
+
+        <div id="overlay1" class="overlay1"></div>
+
+        <div class="Tables-table w-100">
+
+
+            <div class="Tables-table-heading-text mb-2 mt-2 ms-3 d-flex gap-2 justify-content-start">
+
+
+                <button class="navbar-toggler d-block d-xl-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#SectionSlider" aria-controls="SectionSlider" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <img src="../images/list (1).svg" width="25px" height="25px" alt="Menu Icon" class="menu-icon">
+                </button>
+
+                <h3><b>Tables</b></h3>
+            </div>
+
+
+
+
+            <div class="button-input mb-2 me-3">
+
+                <div class="search-field">
+                    <input class="search form-control me-2 border-0" type="search" placeholder="Search"
+                        aria-label="Search">
+                </div>
+
+
+                <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedItem" class="delet-btn">
+                    <image class="delet-icon" src="../images/trash.svg" />
+                </button>
+
+                <button class="new-table-btn button" data-bs-toggle="modal" data-bs-target="#addItem">
+                    + New Table
+                </button>
+
+            </div>
+
+            <div id="load-tables"></div>
+
+            @* <div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
+            <label>Items Per Page:</label>
+            <input type="number" placeholder="1">
+            <span>
+            Showing 1-5 of 5
+            </span>
+            <button>
+            < </button>
+
+            <button>></button>
+            </div> *@
+
+
+        </div>
+
+    </div>
+</div>
+
+<div id="modal-addSection"></div>
+
+
+<script src="../js/bootstarp.bundle.min.js"></script>
+<script src="../js/bootstarp.bundle.min.js"></script>
+<script>
+    // Get elements
+    const sidebar = document.getElementById('SectionSlider');
+    const overlay1 = document.getElementById('overlay1');
+
+    // Add event listener to overlay
+    overlay1.addEventListener('click', function () {
+        // Close the sidebar by removing the 'show' class
+        sidebar.classList.remove('show');
+
+    });
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        function SectionList() {
+
+            $.ajax({
+                url: "/TableAndSection/SectionList",
+                type: "GET",
+                success: function (response) {
+                    $("#section-list").html(response);
+                },
+                error: function (error) {
+                }
+            });
+        }
+
+        SectionList();
+
+        $(document).on("click", ".section-link", function (e) {
+            var sectionId = $(this).data("secid");
+            loadTablesBySec(sectionId);
+        });
+
+        loadTablesBySec(1);
+
+
+        function loadTablesBySec(sectionId) {
+
+            $.ajax({
+                url: "/TableAndSection/TablesList",
+                type: "GET",
+                data: { id: sectionId },
+                success: function (data) {
+                    $('#load-tables').html(data);
+                },
+                error: function () {
+                }
+            });
+        }
+
+
+    });
+
+
+</script>

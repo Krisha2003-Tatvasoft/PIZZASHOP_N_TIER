@@ -10,12 +10,13 @@ public class ChangePassword
 
     [Required(ErrorMessage = "New password is required.")]
    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-        ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
+        ErrorMessage = "Password must be contain 1 special chracter , 1 uppercase letter and  at least 8 characters.")]
     public string Newpassword { get; set; }
 
     [Required(ErrorMessage = "Confirm password is required.")]
+     [Compare("Newpassword", ErrorMessage = "Passwords do not match.")]
    [RegularExpression(@"^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
-        ErrorMessage = "Password must be at least 8 characters, contain 1 uppercase letter, 1 number, and 1 special character.")]
+        ErrorMessage = "Password must be contain 1 special chracter , 1 uppercase letter and  at least 8 characters.")]
     public string ConfirmPassword { get; set; }
 
 }
