@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {}
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {}
   },
   "projects": {
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
         "projectName": "pizzashop.Entity",
-        "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"

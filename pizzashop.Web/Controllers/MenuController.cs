@@ -347,7 +347,7 @@ public class MenuController : Controller
     {
         if (await _modifierGroupService.DeleteMG(id))
         {
-            return Json(new { sucess = true, message = "ModifierGroup deleted Sucessfully." });
+            return Json(new { success = true, message = "ModifierGroup deleted Sucessfully." });
         }
         else
         {

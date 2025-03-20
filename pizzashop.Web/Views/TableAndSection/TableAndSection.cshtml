@@ -21,8 +21,7 @@
                 <div class="slider-heading-text">
                     <b>Section</b>
                 </div>
-                <button class="plus-button button" data-bs-toggle="modal" data-bs-target="#addNewCategory"
-                    class="delet-btn">
+                <button class="plus-button button" id="loadAddSectionModel" class="delet-btn">
                     <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
                 </button>
             </div>
@@ -63,7 +62,7 @@
                     <image class="delet-icon" src="../images/trash.svg" />
                 </button>
 
-                <button class="new-table-btn button" data-bs-toggle="modal" data-bs-target="#addItem">
+                <button class="new-table-btn button openAddTableModel">
                     + New Table
                 </button>
 
@@ -92,6 +91,9 @@
 <div id="modal-addSection"></div>
 
 
+<div class="modal-addNewTable"></div>
+
+
 <script src="../js/bootstarp.bundle.min.js"></script>
 <script src="../js/bootstarp.bundle.min.js"></script>
 <script>
@@ -111,18 +113,20 @@
 
     $(document).ready(function () {
 
-        function SectionList() {
+        @* load section table *@
 
-            $.ajax({
-                url: "/TableAndSection/SectionList",
-                type: "GET",
-                success: function (response) {
-                    $("#section-list").html(response);
-                },
-                error: function (error) {
-                }
-            });
-        }
+            function SectionList() {
+
+                $.ajax({
+                    url: "/TableAndSection/SectionList",
+                    type: "GET",
+                    success: function (response) {
+                        $("#section-list").html(response);
+                    },
+                    error: function (error) {
+                    }
+                });
+            }
 
         SectionList();
 
@@ -133,20 +137,220 @@
 
         loadTablesBySec(1);
 
+        @* load tablelist *@
 
-        function loadTablesBySec(sectionId) {
+            function loadTablesBySec(sectionId) {
 
-            $.ajax({
-                url: "/TableAndSection/TablesList",
-                type: "GET",
-                data: { id: sectionId },
-                success: function (data) {
-                    $('#load-tables').html(data);
-                },
-                error: function () {
-                }
+                $.ajax({
+                    url: "/TableAndSection/TablesList",
+                    type: "GET",
+                    data: { id: sectionId },
+                    success: function (data) {
+                        $('#load-tables').html(data);
+                    },
+                    error: function () {
+                    }
+                });
+            }
+
+        @* load add section model *@
+
+            $(document).on("click", "#loadAddSectionModel", function (e) {
+
+                $.ajax({
+                    url: "/TableAndSection/AddSectionGet",
+                    type: "GET",
+                    success: function (data) {
+                        $('#modal-addSection').html(data);
+                        $("#addNewSection").modal("show");
+                    },
+                    error: function () {
+                    }
+                });
+
             });
-        }
+
+        @* add section *@
+
+            $(document).on("click", "#add-section", function (e) {
+                e.preventDefault();
+                var formData = new FormData($("#add-section-form")[0]);
+
+
+                $.ajax({
+                    url: "/TableAndSection/AddSectionPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#add-section-form")[0].reset();
+                            $("#addNewSection").modal("hide");
+                            SectionList();
+                        }
+                        else {
+                            toastr.error("This Section name is already exist.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error in add Section", error);
+                    }
+                });
+            });
+
+        @* edit section *@
+
+            $(document).on("click", "#edit-Section", function (e) {
+                console.log("yess button");
+                e.preventDefault();
+
+
+                var formData = new FormData($("#edit-section-form")[0]);
+
+                $.ajax({
+                    url: "/TableAndSection/EditSectionPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#editSection").modal("hide");
+                            SectionList();
+                        }
+                        else {
+                            toastr.error("This Section name is already exist.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error updating modifierGroup:", error);
+                    }
+                });
+
+            });
+
+        @* Delete Section *@
+
+            $(document).on("click", ".delete-section", function (e) {
+                var sectionid = $("#hidden").val();
+
+                $.ajax({
+                    url: "/TableAndSection/DeleteSection",
+                    type: "POST",
+                    data: { id: sectionid },
+                    success: function (response) {
+                        SectionList();
+                    },
+                    error: function (error) {
+                        console.error("Error in delete delete group:", error);
+                    }
+                });
+
+            });
+
+        @* open model for add table *@
+            $(document).on("click", ".openAddTableModel", function (e) {
+
+                $.ajax({
+                    url: "/TableAndSection/AddTable",
+                    type: "GET",
+                    success: function (response) {
+                        $(".modal-addNewTable").html(response);
+                        $("#addNewTable").modal("show");
+                    },
+                    error: function (error) {
+                        alert("failed to reload modal");
+                    }
+                });
+            });
+
+
+        @* add table *@
+
+            $(document).on("click", "#add-table", function (e) {
+                e.preventDefault();
+                var formData = new FormData($("#add-table-form")[0]);
+                var sectionId = $("#Sectionid").val();
+
+                $.ajax({
+                    url: "/TableAndSection/AddTablePost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#add-table-form")[0].reset();
+                            $("#addNewTable").modal("hide");
+                            loadTablesBySec(sectionId);
+                        }
+                        else {
+                            toastr.error("This Tablename name is already exist in this section.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error in add Section", error);
+                    }
+                });
+            });
+
+        @* edit table *@
+
+            $(document).on("click", "#edit-table", function (e) {
+                var sectionId = $("#Sectionid").val();
+                e.preventDefault();
+
+
+                var formData = new FormData($("#edit-table-form")[0]);
+
+
+                $.ajax({
+                    url: "/TableAndSection/EditTablePost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#editTable").modal("hide");
+                            loadTablesBySec(sectionId);
+                        }
+                        else {
+                            toastr.error("This table name is already exists in this section.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error updating modifierGroup:", error);
+                    }
+                });
+
+            });
+
+        @* Delete Table *@
+
+            $(document).on("click", ".delete-table", function (e) {
+                var tableId = $("#hidden").val();
+                var sectionid = $("#sectionid").val();
+
+                $.ajax({
+                    url: "/TableAndSection/DeleteTable",
+                    type: "POST",
+                    data: { id: tableId },
+                    success: function (response) {
+                        loadTablesBySec(sectionid);
+                    },
+                    error: function (error) {
+                        console.error("Error in delete delete group:", error);
+                    }
+                });
+
+            });
+
 
 
     });

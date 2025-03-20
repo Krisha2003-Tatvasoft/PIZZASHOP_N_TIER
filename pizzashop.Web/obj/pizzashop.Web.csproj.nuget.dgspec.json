@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj": {}
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj": {}
   },
   "projects": {
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
         "projectName": "pizzashop.Entity",
-        "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -85,14 +85,14 @@
         }
       }
     },
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj",
         "projectName": "pizzashop.Repository",
-        "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -107,8 +107,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
-                "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj"
+              "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
+                "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj"
               }
             }
           }
@@ -166,14 +166,14 @@
         }
       }
     },
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
         "projectName": "pizzashop.Service",
-        "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -188,8 +188,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
-                "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
+              "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
+                "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
               }
             }
           }
@@ -237,14 +237,14 @@
         }
       }
     },
-    "d:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
         "projectName": "pizzashop.Web",
-        "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Web\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -259,11 +259,11 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
-                "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
+              "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
+                "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
               },
-              "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj": {
-                "projectPath": "d:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj"
+              "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj": {
+                "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj"
               }
             }
           }

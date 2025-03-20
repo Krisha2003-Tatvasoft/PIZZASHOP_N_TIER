@@ -36,17 +36,76 @@
                         @item.tablestatus 
                     </td>
                     <td>
-                        <div class="d-flex gap-3 edit-delet"><button class="button" data-bs-toggle="modal"
-                                data-bs-target="#updateItem"><img src="../images/pencil.svg"></button><button class="button"
-                                data-bs-toggle="modal" data-bs-target="#deleteItem"><img class="delete-icon"
+                        <div class="d-flex gap-3 edit-delet"><button class="button edit-table" data-tableid="@item.Tableid"><img src="../images/pencil.svg"></button>
+                        <button class="button delete-table-link"
+                                data-bs-toggle="modal" data-bs-target="#deleteTable" data-tableid="@item.Tableid" data-sectionid="@item.Sectionid"><img class="delete-icon"
                                     src="../images/trash.svg"></button>
                         </div>
                     </td>
                 </tr>
             }
 
-
-
         </tbody>
     </table>
 </div>
+
+<div class="modal-editTable"></div>
+
+<div class="modal fade modal-delete" id="deleteTable" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <input type="hidden" id="hidden" value="">
+        <input type="hidden" id="sectionid" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTable">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete this Table?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-table" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+
+        $(".edit-table").click(function (e) {
+            e.preventDefault();
+            var tableId = $(this).data("tableid");
+            
+             $.ajax({
+                url: "/TableAndSection/EditTable",
+                type: "GET",
+                data: { id: tableId },
+                success: function (data) {
+                    $(".modal-editTable").html(data);
+                    $("#editTable").modal("show");
+                },
+                error: function () {
+                    alert("failed to reload modal");
+                }
+            }); 
+
+        });
+
+        $(document).on("click", ".delete-table-link", function (e) {
+            var tableId = $(this).data("tableid");
+            var sectionid = $(this).data("sectionid");
+
+            $("#hidden").val(tableId);
+            $("#sectionid").val(sectionid);
+        });
+
+    });
+
+
+</script>

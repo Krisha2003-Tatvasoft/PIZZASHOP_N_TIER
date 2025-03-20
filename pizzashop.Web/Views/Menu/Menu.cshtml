@@ -363,7 +363,7 @@
                 let page = $(this).data("page");
 
                 if (page > 0) {
-                    loadItemTable(categoryId, page);  
+                    loadItemTable(categoryId, page);
                 }
             });
 
@@ -381,7 +381,13 @@
             var categoryId = $("#catid").val();
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
-                loadItemTable(categoryId, 1)  // Reset to page 1 when searching
+                if (categoryId !== '0') {
+                    loadItemTable(categoryId, 1);
+                }
+                else {
+                    loadItemTable(globalCat, 1);
+                }
+                // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
         });
 
@@ -411,7 +417,13 @@
             var MGid = $("#MGid").val();
             clearTimeout(searchTimer1);
             searchTimer = setTimeout(function () {
-                loadModifierTable(MGid, 1)  // Reset to page 1 when searching
+                if (MGid !== '0') {
+                    loadModifierTable(MGid, 1);
+                }
+                else {
+                    loadModifierTable(globalModifier, 1);
+                }
+                // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
         });
 
@@ -469,13 +481,19 @@
         });
 
 
+        var globalCat;
+        var globalModifier;
+
         $(document).on("click", ".cat-link", function (e) {
+             selectedIds = [];
             $("#searchInput").val("");
             var categoryId = $(this).data("id");
             loadItemTable(categoryId);
         });
 
         function loadItemTable(categoryId, page) {
+
+            globalCat = categoryId;
 
             let pageSize = $("#pageSizeSelect").val();
             let search = $("#searchInput").val();
@@ -540,6 +558,7 @@
 
         function loadFirstItemTable(page) {
 
+
             let pageSize = $("#pageSizeSelect").val();
             let search = $("#searchInput").val();
 
@@ -567,12 +586,16 @@
 
 
         $(document).on("click", ".MG-link", function (e) {
+             selectedIds = [];
             $("#searchModifier").val("");
             var MGId = $(this).data("id");
             loadModifierTable(MGId, 1);
         });
 
         function loadModifierTable(MGId, page) {
+
+            globalModifier = MGId;
+
             let pageSize = $("#pageSizeSelectM").val();
             let search = $("#searchModifier").val();
 
@@ -740,7 +763,7 @@
         @* deleted selected item *@
           var selectedIds = [];
 
-        $(document).on("change", "input[name='Sitem']", function (e){
+        $(document).on("change", "input[name='Sitem']", function (e) {
             let value = $(this).val();
 
             if ($(this).is(":checked")) {
@@ -766,7 +789,7 @@
                 type: "POST",
                 data: { selectedIds: selectedIds },
                 success: function (response) {
-                    selectedIds =[];
+                    selectedIds = [];
                     loadItemTable(1);
                 },
                 error: function (error) {
@@ -799,7 +822,7 @@
                 var formData = new FormData($("#add-modifier-form")[0]);
                 var Modifiergroupid = $("#Modifiergroupid").val();
 
-                
+
 
                 $.ajax({
                     url: "/Menu/addModifierPost",
@@ -825,7 +848,7 @@
 
                 var formData = new FormData($("#edit-modifier-form")[0]);
                 var Modifiergroupid = $("#MGid").val();
-              
+
 
 
                 $.ajax({
@@ -901,21 +924,21 @@
         }); *@
 
 
-        $(document).on("click", ".delete-selectedM-Yes", function (e) {
+            $(document).on("click", ".delete-selectedM-Yes", function (e) {
 
-            $.ajax({
-                url: "/Menu/DeleteSelectedModifiers",
-                type: "POST",
-                data: { selectedIds: selectedModifierIds },
-                success: function (response) {
-                        selectedModifierIds=[];
-                    loadModifierTable(1);
-                },
-                error: function (error) {
-                    console.error("Error in delete Modifiers", error);
-                }
+                $.ajax({
+                    url: "/Menu/DeleteSelectedModifiers",
+                    type: "POST",
+                    data: { selectedIds: selectedModifierIds },
+                    success: function (response) {
+                        selectedModifierIds = [];
+                        loadModifierTable(1);
+                    },
+                    error: function (error) {
+                        console.error("Error in delete Modifiers", error);
+                    }
+                });
             });
-        });
 
 
         @* Add modifier group model *@

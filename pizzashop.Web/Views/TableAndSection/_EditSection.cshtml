@@ -1,37 +1,33 @@
 @model pizzashop.Entity.ViewModels.Section;
 
-<div class="modal fade modal" id="addNewSection" tabindex="-1" aria-labelledby="addNewSection" aria-hidden="true">
+<div class="modal fade modal" id="editSection" tabindex="-1" aria-labelledby="editSection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNewSection">Add Section</h5>
+                <h5 class="modal-title" id="editSection">Edit Section</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="add-section-form">
+            <form id="edit-section-form">
                 <div class="modal-body">
-<input type="hidden" asp-for="Sectionid" >
+                    <input type="hidden" asp-for="Sectionid">
+
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="sectionname" placeholder="Category name" asp-for="Sectionname" required>
+                        <input type="text" class="form-control" id="sectionname" placeholder="Category name"
+                            asp-for="Sectionname" required>
                         <label for="sectionname">Name*</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Add a Description of Xategory"
-                            id="Description" asp-for="Description"></textarea>
+                        <textarea class="form-control" placeholder="Add a Description of Xategory" id="Description"
+                            asp-for="Description"></textarea>
                         <label for="Description">Description</label>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary sav-btn" id="add-section">Save</button>
+                    <button type="button" class="btn btn-primary sav-btn" id="edit-Section">Save</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
-
             </form>
-
         </div>
     </div>
 </div>
-
-
-

@@ -1,0 +1,65 @@
+@using static pizzashop.Entity.Models.Enums
+@model pizzashop.Entity.ViewModels.AddTable;
+
+<div class="modal fade modal-addNewCategory" id="editTable" tabindex="-1" aria-labelledby="editTable"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editTable">Edit Table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <form id="edit-table-form">
+                    <input type="hidden" asp-for="Tableid">
+
+                    <div class="row">
+                        <div class=" col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="Tablename" placeholder="Category name"
+                                    required asp-for=Tablename>
+                                <label for="Tablename">Name*</label>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <select class="form-select" asp-for="Sectionid" id="Sectionid"
+                                    asp-items="Model.SectionList">
+                                    <option value="">Select Section</option>
+                                </select>
+                                <label for="Unitid">Section*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class=" col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="capacity" placeholder="Category name"
+                                    asp-for=Capacity required>
+                                <label for="capacity">Capacity*</label>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <select asp-for="tablestatus" asp-items="Html.GetEnumSelectList<tablestatus>()"
+                                    class="form-select">
+                                    <option value="">Select a Status</option>
+                                </select>
+                                <label for="floatingInput">Status*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <button type="button submit" class="btn btn-primary sav-btn" id="edit-table">Save</button>
+                <button type="button" class="btn btn-danger">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
