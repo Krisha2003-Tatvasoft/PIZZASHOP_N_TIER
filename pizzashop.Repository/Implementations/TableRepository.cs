@@ -14,11 +14,14 @@ public class TableRepository : ITableRepository
         _context = context;
     }
 
-    public async Task<List<Table>> GetTablesySec(int id)
+    public async Task<List<Table>> GetTablesySec(int id, string search)
     {
-
+        string lowerSearch = search.ToLower();
         return await _context.Tables
         .Where(c => c.Sectionid == id && c.Isdeleted == false)
+          .Where(c => string.IsNullOrEmpty(lowerSearch) ||
+         c.Tablename.ToLower().Contains(lowerSearch) ||
+          c.Capacity.ToString().ToLower().Contains(lowerSearch))
         .OrderBy(c => c.Tableid).ToListAsync();
     }
 
@@ -45,7 +48,7 @@ public class TableRepository : ITableRepository
 
     public async Task<bool> TableNameExist(int? sectionId, string tableName)
     {
-        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename == tableName);
+        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower());
     }
 
 
@@ -57,7 +60,8 @@ public class TableRepository : ITableRepository
 
     public async Task<bool> TableNameExistInEdit(int? sectionId, string tableName, int tableId)
     {
-        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename == tableName && s.Tableid != tableId);
+        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower() 
+        && s.Tableid != tableId);
     }
 
 
@@ -74,6 +78,14 @@ public class TableRepository : ITableRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task DeleteSelected(List<int> SelectedIds)
+    {
+        await _context.Tables
+       .Where(i => SelectedIds.Contains(i.Tableid))
+       .ExecuteUpdateAsync(s => s.SetProperty(i => i.Isdeleted, true));
+
+        await _context.SaveChangesAsync();
+    }
 
 
 }

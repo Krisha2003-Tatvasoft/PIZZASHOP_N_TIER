@@ -34,9 +34,18 @@ public class TableAndSectionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> TablesList(int id)
+    public async Task<IActionResult> TablesList(int id, int page = 1, int pageSize = 5, string search = "")
     {
-        return PartialView("_TablesTable", await _tableService.GetTableBySec(id));
+
+        var (tables, totalTables) =  await _tableService.GetTableBySec(id, page, pageSize, search);
+
+        ViewBag.CurrentPage = page;
+        ViewBag.PageSize = pageSize;
+        ViewBag.totalTables = totalTables;
+
+        ViewBag.TotalPages = (int)Math.Ceiling((double)totalTables / pageSize);
+
+        return PartialView("_TablesTable", tables);
     }
 
     [HttpGet]
@@ -147,6 +156,22 @@ public class TableAndSectionController : Controller
         {
             return Json(new { success = false, message = "Table not deleted." });
         }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteSelectedTables(List<int> selectedTableIds)
+    {
+
+
+        if (await _tableService.DeleteSelectedTable(selectedTableIds))
+        {
+            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+        }
+        else
+        {
+            return Json(new { error = true, message = "Item not deleted." });
+        }
+
     }
 
 }

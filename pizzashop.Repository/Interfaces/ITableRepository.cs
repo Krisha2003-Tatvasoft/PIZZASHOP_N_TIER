@@ -4,7 +4,7 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface ITableRepository
 {
-    Task<List<Table>> GetTablesySec(int id);
+    Task<List<Table>> GetTablesySec(int id, string search);
 
     Task<Table> TableByIdAsync(int id);
 
@@ -19,5 +19,7 @@ public interface ITableRepository
       Task UpdateTable(Table table);
 
       Task DeleteTable(Table table);
+
+      Task DeleteSelected(List<int> SelectedIds);
 
 }

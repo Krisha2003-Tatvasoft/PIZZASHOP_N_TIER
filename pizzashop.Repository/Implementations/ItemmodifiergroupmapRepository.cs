@@ -19,4 +19,10 @@ public class ItemmodifiergroupmapRepository : IItemmodifiergroupmapRepository
         _context.Itemmodifiergroupmaps.Add(itemmodifiergroupmap);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<Itemmodifiergroupmap>> GetMGMByitemid(int id)
+    {
+       return  await _context.Itemmodifiergroupmaps
+        .Where(img => img.Itemid == id).ToListAsync();
+    }
 }

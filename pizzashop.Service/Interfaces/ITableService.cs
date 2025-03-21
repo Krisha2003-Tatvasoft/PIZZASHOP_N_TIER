@@ -4,7 +4,7 @@ using VMAddTable = pizzashop.Entity.ViewModels.AddTable;
 
 public interface ITableService
 {
-  Task<List<VMTable>> GetTableBySec(int id);
+Task<(List<VMTable>, int totalTables)> GetTableBySec(int id, int page, int pageSize, string search);
 
   Task<VMAddTable> AddTable();
 
@@ -16,4 +16,7 @@ public interface ITableService
 
   Task<bool> DeleteTable(int id);
   
+  Task<bool> DeleteSelectedTable(List<int> selectedIds);
+  
+
 }

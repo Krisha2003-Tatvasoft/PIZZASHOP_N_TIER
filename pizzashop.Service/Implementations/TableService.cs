@@ -18,11 +18,15 @@ public class TableService : ITableService
         _sectionRepository = sectionRepository;
     }
 
-    public async Task<List<VMTable>> GetTableBySec(int id)
+    public async Task<(List<VMTable>, int totalTables)> GetTableBySec(int id, int page, int pageSize, string search)
     {
-        List<Table> tables = await _tableRepository.GetTablesySec(id);
+        var tables = await _tableRepository.GetTablesySec(id, search);
+
+        int totalTables = tables.Count();
 
         var tableList = tables
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
         .Select(t => new VMTable
         {
             Tableid = t.Tableid,
@@ -33,7 +37,7 @@ public class TableService : ITableService
         }
         ).ToList();
 
-        return tableList;
+        return (tableList, totalTables);
     }
 
     public async Task<VMAddTable> AddTable()
@@ -106,7 +110,7 @@ public class TableService : ITableService
 
     public async Task<bool> DeleteTable(int id)
     {
-       Table table = await _tableRepository.TableByIdAsync(id);
+        Table table = await _tableRepository.TableByIdAsync(id);
         if (table == null)
         {
             return false;
@@ -118,6 +122,18 @@ public class TableService : ITableService
         }
 
     }
+
+    public async Task<bool> DeleteSelectedTable(List<int> selectedIds)
+    {
+        if (selectedIds.Count == 0)
+        {
+            return false;
+        }
+
+        await _tableRepository.DeleteSelected(selectedIds);
+        return true;
+    }
+
 
 
 

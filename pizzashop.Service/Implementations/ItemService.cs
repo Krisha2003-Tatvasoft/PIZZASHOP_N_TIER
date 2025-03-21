@@ -29,11 +29,11 @@ public class ItemService : IItemService
     _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
   }
 
-  public async Task<(List<ItemTable> , int totalitem)> GetItemTable(int id,int page, int pageSize, string search)
+  public async Task<(List<ItemTable>, int totalitem)> GetItemTable(int id, int page, int pageSize, string search)
   {
-    var itemList = await _itemRepository.GetItemByCat(id,search);
+    var itemList = await _itemRepository.GetItemByCat(id, search);
 
-    int totalitem =  itemList.Count();
+    int totalitem = itemList.Count();
 
     var items = itemList
     .Skip((page - 1) * pageSize)
@@ -51,7 +51,7 @@ public class ItemService : IItemService
     }
     ).ToList();
 
-    return (items,totalitem);
+    return (items, totalitem);
   }
 
   public async Task<AddItem> Additem()
@@ -77,7 +77,7 @@ public class ItemService : IItemService
     //   Console.WriteLine("ModifierGroups is either null or empty, skipping mapping.");
     //   return false;
     // }
-  
+
     Item item = new Item
     {
       Itemname = viewmodel.Itemname,
@@ -118,6 +118,8 @@ public class ItemService : IItemService
   public async Task<AddItem> EditItem(int id)
   {
     Item item = await _itemRepository.ItemByIdAsync(id);
+    var selectedMG = await _itemmodifiergroupmapRepository.GetMGMByitemid(id);
+
     AddItem viewmodel = new AddItem
     {
       Itemid = item.Itemid,
@@ -134,7 +136,17 @@ public class ItemService : IItemService
       itemtype = item.itemtype,
       Categories = await _categoryRepository.GetAllCatyAsync(),
       Units = await _unitRpository.GetAllUnitAsync(),
-      MGList = await _modifiersGropRepository.GetAllMGAsync()
+      MGList = await _modifiersGropRepository.GetAllMGAsync(),
+      ModifierGroups = selectedMG.Select(img => new IMGMviewmodel
+      {
+        Itemmodifiergroupid = img.Itemmodifiergroupid,
+        Itemid = img.Itemid,
+        Modifiergroupid = img.Modifiergroupid,
+        Minselectionrequired = img.Minselectionrequired,
+        Maxselectionallowed = img.Maxselectionallowed,
+        
+      }).ToList(),
+      selectedMGList = selectedMG.Select(m => m.Modifiergroupid).ToList()
     };
     return viewmodel;
   }

@@ -41,5 +41,7 @@ public class AddItem
 
   public int Createdby { get; set; }
 
+  public List<int>? selectedMGList {get; set;}
+
 
 }

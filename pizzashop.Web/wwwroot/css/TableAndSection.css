@@ -183,7 +183,10 @@
 } 
 
 
-
+.sec-list:focus-within >div > button > img{
+    display: block!important;
+ }
+ 
 
 @media screen and (max-width: 1200px) {
 

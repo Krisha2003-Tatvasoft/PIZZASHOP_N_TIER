@@ -32,7 +32,7 @@
 
         <div id="overlay1" class="overlay1"></div>
 
-        <div class="Tables-table w-100">
+        <div class="Tables-table w-100" id="table-Table">
 
 
             <div class="Tables-table-heading-text mb-2 mt-2 ms-3 d-flex gap-2 justify-content-start">
@@ -54,11 +54,11 @@
 
                 <div class="search-field">
                     <input class="search form-control me-2 border-0" type="search" placeholder="Search"
-                        aria-label="Search">
+                        id="searchInTable" aria-label="Search">
                 </div>
 
 
-                <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedItem" class="delet-btn">
+                <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedTables" class="delet-btn">
                     <image class="delet-icon" src="../images/trash.svg" />
                 </button>
 
@@ -70,18 +70,6 @@
 
             <div id="load-tables"></div>
 
-            @* <div class="d-flex justify-content-end gap-2 pagging pe-2 mb-5">
-            <label>Items Per Page:</label>
-            <input type="number" placeholder="1">
-            <span>
-            Showing 1-5 of 5
-            </span>
-            <button>
-            < </button>
-
-            <button>></button>
-            </div> *@
-
 
         </div>
 
@@ -92,6 +80,27 @@
 
 
 <div class="modal-addNewTable"></div>
+
+   <!-- delete selected Tables -->
+    <div class="modal fade modal-delete" id="deleteSelectedTables" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteSelectedTables">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                    <span>Are you sure you want to delete these Tables?</span>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 <script src="../js/bootstarp.bundle.min.js"></script>
@@ -113,6 +122,37 @@
 
     $(document).ready(function () {
 
+
+        var globalSectionId;
+
+        @* page link  *@
+            $("#table-Table").on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadTablesBySec(globalSectionId, page);
+                }
+            });
+
+        @* page size *@
+            $("#table-Table").on("change", "#pageSizeTable", function () {
+                loadTablesBySec(globalSectionId, 1)
+            });
+
+
+        @* search field *@
+
+            let searchTimer4;
+        $("#searchInTable").on("input", function () {
+            clearTimeout(searchTimer4);
+            searchTimer4 = setTimeout(function () {
+                loadTablesBySec(globalSectionId, 1);
+                // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
+
         @* load section table *@
 
             function SectionList() {
@@ -131,22 +171,36 @@
         SectionList();
 
         $(document).on("click", ".section-link", function (e) {
+            selectedTableIds = [];
+            $("#searchInTable").val("");
             var sectionId = $(this).data("secid");
-            loadTablesBySec(sectionId);
+            loadTablesBySec(sectionId, 1);
         });
 
-        loadTablesBySec(1);
+        loadTablesBySec(1, 1);
 
         @* load tablelist *@
 
-            function loadTablesBySec(sectionId) {
+            function loadTablesBySec(sectionId, page) {
+
+                globalSectionId = sectionId;
+
+                let pageSize = $("#pageSizeTable").val();
+                let search = $("#searchInTable").val();
 
                 $.ajax({
                     url: "/TableAndSection/TablesList",
                     type: "GET",
-                    data: { id: sectionId },
+                    data: {
+                        id: sectionId,
+                        page: page,
+                        pageSize: pageSize,
+                        search: search
+                    },
                     success: function (data) {
                         $('#load-tables').html(data);
+                         restoreCheckedState();
+                        currentPage = page;
                     },
                     error: function () {
                     }
@@ -286,7 +340,7 @@
                         if (response.success) {
                             $("#add-table-form")[0].reset();
                             $("#addNewTable").modal("hide");
-                            loadTablesBySec(sectionId);
+                            loadTablesBySec(sectionId, 1);
                         }
                         else {
                             toastr.error("This Tablename name is already exist in this section.");
@@ -318,7 +372,7 @@
                     success: function (response) {
                         if (response.success) {
                             $("#editTable").modal("hide");
-                            loadTablesBySec(sectionId);
+                            loadTablesBySec(sectionId, 1);
                         }
                         else {
                             toastr.error("This table name is already exists in this section.");
@@ -328,7 +382,6 @@
                         console.error("Error updating modifierGroup:", error);
                     }
                 });
-
             });
 
         @* Delete Table *@
@@ -342,7 +395,7 @@
                     type: "POST",
                     data: { id: tableId },
                     success: function (response) {
-                        loadTablesBySec(sectionid);
+                        loadTablesBySec(sectionid, 1);
                     },
                     error: function (error) {
                         console.error("Error in delete delete group:", error);
@@ -351,6 +404,47 @@
 
             });
 
+
+ @* deleted selected Tables *@
+    
+      var selectedTableIds = [];
+
+        $(document).on("change", "input[name='Stable']", function (e) {
+            let value = $(this).val();
+
+            if ($(this).is(":checked")) {
+                // Add value if checked
+                selectedTableIds.push(value);
+            } else {
+                // Remove value if unchecked
+                selectedTableIds = selectedTableIds.filter(item => item !== value);
+            }
+
+            console.log(selectedTableIds);
+        });
+
+        function restoreCheckedState() {
+            $("input[name='Stable']").each(function () {
+                let value = $(this).val();
+                $(this).prop("checked", selectedTableIds.includes(value));
+            });
+        }
+
+        $(document).on("click", ".delete-selected-yes", function (e) {
+
+            $.ajax({
+                url: "/TableAndSection/DeleteSelectedTables",
+                type: "POST",
+                data: { selectedTableIds: selectedTableIds },
+                success: function (response) {
+                    selectedTableIds = [];
+                    loadTablesBySec(1, 1);
+                },
+                error: function (error) {
+                    console.error("Error deleting table:", error);
+                }
+            });
+        });
 
 
     });

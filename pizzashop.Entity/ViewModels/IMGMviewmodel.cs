@@ -12,6 +12,6 @@ public class IMGMviewmodel
 
     public short? Maxselectionallowed { get; set; }
 
-
+    
 
 }
