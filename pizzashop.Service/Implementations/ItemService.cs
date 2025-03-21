@@ -17,16 +17,19 @@ public class ItemService : IItemService
 
   private readonly IItemmodifiergroupmapRepository _itemmodifiergroupmapRepository;
 
+  private readonly IModifierRepository _modifierRepository;
+
 
   public ItemService(IItemRepository itemRepository, ICategoryRepository categoryRepository
   , IUnitRepository unitRepository, IModifiersGroupRepository modifiersGropRepository
-  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository)
+  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository, IModifierRepository modifierRepository)
   {
     _itemRepository = itemRepository;
     _categoryRepository = categoryRepository;
     _unitRpository = unitRepository;
     _modifiersGropRepository = modifiersGropRepository;
     _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
+    _modifierRepository = modifierRepository;
   }
 
   public async Task<(List<ItemTable>, int totalitem)> GetItemTable(int id, int page, int pageSize, string search)
@@ -120,6 +123,26 @@ public class ItemService : IItemService
     Item item = await _itemRepository.ItemByIdAsync(id);
     var selectedMG = await _itemmodifiergroupmapRepository.GetMGMByitemid(id);
 
+    var ModifierGroups = new List<IMGMviewmodel>();
+
+foreach (var img in selectedMG)
+{
+    var modifiers = await _modifierRepository.GetModifierList(img.Modifiergroupid);
+
+    ModifierGroups.Add(new IMGMviewmodel
+    {
+        Itemmodifiergroupid = img.Itemmodifiergroupid,
+        Itemid = img.Itemid,
+        Modifiergroupid = img.Modifiergroupid,
+        Minselectionrequired = img.Minselectionrequired,
+        Maxselectionallowed = img.Maxselectionallowed,
+        modifiers = modifiers,
+        Modifiername = img.Modifiergroup.Modifiergroupname
+    });
+
+}
+
+
     AddItem viewmodel = new AddItem
     {
       Itemid = item.Itemid,
@@ -137,15 +160,7 @@ public class ItemService : IItemService
       Categories = await _categoryRepository.GetAllCatyAsync(),
       Units = await _unitRpository.GetAllUnitAsync(),
       MGList = await _modifiersGropRepository.GetAllMGAsync(),
-      ModifierGroups = selectedMG.Select(img => new IMGMviewmodel
-      {
-        Itemmodifiergroupid = img.Itemmodifiergroupid,
-        Itemid = img.Itemid,
-        Modifiergroupid = img.Modifiergroupid,
-        Minselectionrequired = img.Minselectionrequired,
-        Maxselectionallowed = img.Maxselectionallowed,
-        
-      }).ToList(),
+      ModifierGroups = ModifierGroups,
       selectedMGList = selectedMG.Select(m => m.Modifiergroupid).ToList()
     };
     return viewmodel;

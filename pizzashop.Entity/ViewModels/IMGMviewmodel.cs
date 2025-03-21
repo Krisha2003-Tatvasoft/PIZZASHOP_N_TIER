@@ -1,3 +1,5 @@
+using pizzashop.Entity.Models;
+
 namespace pizzashop.Entity.ViewModels;
 
 public class IMGMviewmodel
@@ -12,6 +14,7 @@ public class IMGMviewmodel
 
     public short? Maxselectionallowed { get; set; }
 
+     public string? Modifiername { get; set; }
     
-
+    public List<Modifier>? modifiers {get; set;}
 }

@@ -22,7 +22,7 @@ public class ItemmodifiergroupmapRepository : IItemmodifiergroupmapRepository
 
     public async Task<List<Itemmodifiergroupmap>> GetMGMByitemid(int id)
     {
-       return  await _context.Itemmodifiergroupmaps
+       return  await _context.Itemmodifiergroupmaps.Include(c=>c.Modifiergroup)
         .Where(img => img.Itemid == id).ToListAsync();
     }
 }
