@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static pizzashop.Entity.Models.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace pizzashop.Entity.ViewModels;
 
@@ -7,7 +8,7 @@ public class AddItem
 {
   // public int Itemid { get; set; }
 
-    public int Itemid { get; set; }
+  public int Itemid { get; set; }
 
   public string Itemname { get; set; } = null!;
 
@@ -42,6 +43,10 @@ public class AddItem
   public int Createdby { get; set; }
 
   public List<int>? selectedMGList {get; set;}
+
+  public IFormFile? ItemPicture { get; set; }
+
+  public string? Itemimg { get; set; }
 
 
 }

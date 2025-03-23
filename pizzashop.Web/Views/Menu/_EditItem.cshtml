@@ -146,7 +146,7 @@
                                 </button>
 
                                 <!-- Hidden file input -->
-                                <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
+                                <input type="file" class="form-control" id="inputGroupFile01" style="display: none;" asp-for="ItemPicture"
                                     aria-describedby="fileNameDisplay"
                                     onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
 
@@ -168,7 +168,6 @@
                                 {
                                     <div id="group_@group.Modifiergroupid" class="modifier-group">
                                         <input type="hidden" class="modifier-group-id"
-                                            name="ModifierGroups[@group.Modifiergroupid].Modifiergroupid"
                                             value="@group.Modifiergroupid" />
                                         <div class="d-flex justify-content-between align-items-center">
                                             <h6>@group.Modifiername</h6>
@@ -182,7 +181,7 @@
                                         <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
                                             <div class="flex-fill">
                                                 <select class="form-select min-selection" id="min_@group.Modifiergroupid" asp-for="@group.Minselectionrequired"
-                                                    name="ModifierGroups[@group.Modifiergroupid].Minselectionrequired">
+                                                    >
                                                     <option value="0">0</option>
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
@@ -191,11 +190,11 @@
                                             </div>
                                             <div class="flex-fill">
                                                 <select class="form-select max-selection" id="max_@group.Modifiergroupid" asp-for="@group.Maxselectionallowed"
-                                                    name="ModifierGroups[@group.Modifiergroupid].Maxselectionallowed">
-                                                    <option value="0">0</option>
+                                                    >
                                                     <option value="1">1</option>
                                                     <option value="2">2</option>
                                                     <option value="3">3</option>
+                                                    <option value="5">5</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -223,7 +222,7 @@
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
 
-            </form>>
+            </form>
 
         </div>
     </div>
@@ -231,20 +230,7 @@
 
 <script>
     $(document).ready(function () {
-
         var modifierIndex = 0;
-
-        var selectedGroups = @Html.Raw(Json.Serialize(Model.selectedMGList));
-        console.log(selectedGroups);
-
-        function loadexmodifier() {
-            // Load selected groups on page load (Edit Mode)
-            selectedGroups.forEach(groupId => {
-                addModifierGroup(groupId);
-            });
-        }
-
-        loadexmodifier();
 
         $("#MGid").change(function () {
 
@@ -252,15 +238,7 @@
             var groupText = $("#MGid option:selected").text();
             var itemId = $("#Itemid").val();
 
-            addmodifiers(groupId);
-
             // Check if the group is already in the list
-
-        });
-
-
-        function addmodifiers(groupId) {
-
             if (groupId && $("#group_" + groupId).length === 0) {
                 $.ajax({
                     url: "/Menu/modifierList",
@@ -270,9 +248,10 @@
 
                         var currentIndex = modifierIndex++;
 
+
                         var modifierList = `<div id="group_${groupId}" class="modifier-group">
 
-                        <input type="hidden" class="modifier-group-id" name="ModifierGroups[${currentIndex}].Modifiergroupid" value="${groupId}" />
+                        <input type="hidden" class="modifier-group-id" value="${groupId}" />
 
                         <div class="d-flex justify-content-between align-items-center">
                          <h6>${groupText} </h6>
@@ -280,10 +259,10 @@
                         <img  src="../images/trash.svg"></button>
                         </div>
 
-
+ 
                        <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
                        <div class="flex-fill">
-                        <select class="form-select min-selection" id="min_${groupId}"  name="ModifierGroups[${currentIndex}].Minselectionrequired" style="border-radius:25px;">
+                        <select class="form-select min-selection" id="min_${groupId}"  style="border-radius:25px;">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -291,7 +270,7 @@
                         </select>
                        </div>
                        <div class="flex-fill">
-                        <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" name="ModifierGroups[${currentIndex}].Maxselectionallowed">
+                        <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" >
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -312,7 +291,6 @@
 
                         // Append to container
                         $("#modifierContainer").append(modifierList);
-                        updateModifierGroupIndexes();
                         $("#MGid").val("");
                     },
                     error: function (xhr) {
@@ -320,25 +298,20 @@
                     }
                 });
             }
+        });
 
-        }
-
-
-
+      
+   
+      
         // Remove Selected Modifier Group
         $(document).on("click", ".delete-group", function () {
             var groupId = $(this).data("group");
             $(`#group_${groupId}`).remove(); // Remove from UI
-            updateModifierGroupIndexes();
         });
 
-        function updateModifierGroupIndexes() {
-            $(".modifier-group").each(function (index) {
-                $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
-                $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
-                $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
-            });
-        }
+
+      
+
     });
 
 </script>

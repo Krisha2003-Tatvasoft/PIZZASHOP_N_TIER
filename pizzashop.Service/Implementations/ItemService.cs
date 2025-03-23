@@ -19,10 +19,12 @@ public class ItemService : IItemService
 
   private readonly IModifierRepository _modifierRepository;
 
+  private readonly IFileService _fileService;
+
 
   public ItemService(IItemRepository itemRepository, ICategoryRepository categoryRepository
   , IUnitRepository unitRepository, IModifiersGroupRepository modifiersGropRepository
-  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository, IModifierRepository modifierRepository)
+  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository, IModifierRepository modifierRepository, IFileService fileService)
   {
     _itemRepository = itemRepository;
     _categoryRepository = categoryRepository;
@@ -30,6 +32,7 @@ public class ItemService : IItemService
     _modifiersGropRepository = modifiersGropRepository;
     _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
     _modifierRepository = modifierRepository;
+    _fileService = fileService;
   }
 
   public async Task<(List<ItemTable>, int totalitem)> GetItemTable(int id, int page, int pageSize, string search)
@@ -168,6 +171,12 @@ foreach (var img in selectedMG)
 
   public async Task<bool> EditItemPost(int loginid, AddItem viewmodel)
   {
+    string uniqueFileName = null;
+    if (viewmodel.ItemPicture != null)
+    {
+      uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
+    }
+
     if (loginid == null)
     {
       return false;
@@ -186,9 +195,60 @@ foreach (var img in selectedMG)
     item.Description = viewmodel.Description;
     item.itemtype = viewmodel.itemtype;
     item.Modifiedby = loginid;
+    item.Itemimg = uniqueFileName;
 
     await _itemRepository.UpdateItem(item);
 
+    // Fetch all existing mappings once
+    var existingMappings = await _itemmodifiergroupmapRepository.GetMGMByitemid(viewmodel.Itemid);
+    var existingGroupIds = existingMappings.Select(m => m.Modifiergroupid).ToList();
+
+   
+    var newGroupIds = viewmodel.ModifierGroups.Select(m => m.Modifiergroupid).ToList();
+
+    // ✅ Fix: Remove only groups that are explicitly missing in the new list
+    var groupsToRemove = existingMappings
+        .Where(m => !newGroupIds.Contains(m.Modifiergroupid))
+        .ToList();
+
+    foreach (var group in groupsToRemove)
+    {
+      await _itemmodifiergroupmapRepository.DeleteMapping(group);
+    }
+
+    // ✅ Fix: Add only new groups that are not in the existing list
+    var groupsToAdd = viewmodel.ModifierGroups
+        .Where(m => !existingGroupIds.Contains(m.Modifiergroupid))
+        .ToList();
+
+    foreach (var group in groupsToAdd)
+    {
+      var newMapping = new Itemmodifiergroupmap
+      {
+        Itemid = item.Itemid,
+        Modifiergroupid = group.Modifiergroupid,
+        Minselectionrequired = group.Minselectionrequired,
+        Maxselectionallowed = group.Maxselectionallowed
+      };
+
+      await _itemmodifiergroupmapRepository.AddNewMapping(newMapping);
+    }
+
+
+    foreach (var existingMapping in existingMappings)
+    {
+      var updatedGroup = viewmodel.ModifierGroups.FirstOrDefault(m => m.Modifiergroupid == existingMapping.Modifiergroupid);
+      if (updatedGroup != null)
+      {
+        if (existingMapping.Minselectionrequired != updatedGroup.Minselectionrequired ||
+            existingMapping.Maxselectionallowed != updatedGroup.Maxselectionallowed)
+        {
+          existingMapping.Minselectionrequired = updatedGroup.Minselectionrequired;
+          existingMapping.Maxselectionallowed = updatedGroup.Maxselectionallowed;
+          await _itemmodifiergroupmapRepository.UpdateMapping(existingMapping);
+        }
+      }
+    }
     return true;
 
   }
@@ -204,6 +264,7 @@ foreach (var img in selectedMG)
     else
     {
       await _itemRepository.DeleteItem(item);
+      await _itemmodifiergroupmapRepository.DeleteMappingByItem(id);
       return true;
     }
 
@@ -217,6 +278,10 @@ foreach (var img in selectedMG)
     }
 
     await _itemRepository.DeleteSelected(selectedIds);
+    foreach(var id in selectedIds)
+    {
+        await _itemmodifiergroupmapRepository.DeleteMappingByItem(id);
+    }
     return true;
   }
 

@@ -691,13 +691,26 @@
             });
         }
 
+        function updateModifierGroupIndexes() {
+            console.log("in function");
+            $(".modifier-group").each(function (index) {
+                console.log("in loop");
+                $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
+                $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
+                $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
+            });
+        }
+
         @* edit item *@
 
             $(document).on("click", "#edit-item", function (e) {
-                e.preventDefault();
 
+                e.preventDefault();
+                updateModifierGroupIndexes();
                 var formData = new FormData($("#edit-item-form")[0]);
-                var categoryId = formData.get("Categoryid")
+                var categoryId = formData.get("Categoryid");
+
+               
 
                 $.ajax({
                     url: "/Menu/EditItemPost",
@@ -722,6 +735,7 @@
                 e.preventDefault();
                 var formData = new FormData($("#add-item-form")[0]);
                 var categoryId = $("#Categoryid").val();
+                
 
                 $.ajax({
                     url: "/Menu/addItemPost",
@@ -848,7 +862,6 @@
 
                 var formData = new FormData($("#edit-modifier-form")[0]);
                 var Modifiergroupid = $("#MGid").val();
-
 
 
                 $.ajax({
