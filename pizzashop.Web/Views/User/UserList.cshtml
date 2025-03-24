@@ -2,7 +2,6 @@
     ViewData["Title"] = "User page";
 }
 
-
 <link rel="stylesheet" href="~/css/Users.css" />
 
 <div class="w-100 main-content px-lg-5 px-sm-4 px-4">
@@ -33,6 +32,7 @@
 
     <script>
         $(document).ready(function () {
+            
             let currentPage = @ViewBag.CurrentPage;
             let searchQuery = "@ViewBag.SearchQuery" || "";
             let SortColumn = "@ViewBag.SortColumn" || "";

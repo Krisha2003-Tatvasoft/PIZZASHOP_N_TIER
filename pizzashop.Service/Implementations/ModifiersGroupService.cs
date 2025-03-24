@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -10,9 +11,12 @@ public class ModifiersGroupService : IModifiersGroupService
 {
     private readonly IModifiersGroupRepository _modifierGroupRepository;
 
-    public ModifiersGroupService(IModifiersGroupRepository modifiersGroupRepository)
+    private readonly IModifiergroupModifierRepository _modifiergroupModifierRepository;
+
+    public ModifiersGroupService(IModifiersGroupRepository modifiersGroupRepository,IModifiergroupModifierRepository modifiergroupModifierRepository)
     {
         _modifierGroupRepository = modifiersGroupRepository;
+        _modifiergroupModifierRepository = modifiergroupModifierRepository;
     }
     public async Task<List<VMModifierGroup>> GetMGList()
     {
@@ -45,6 +49,17 @@ public class ModifiersGroupService : IModifiersGroupService
                 Createdby = loginId
             };
             await _modifierGroupRepository.AddNewMG(Mg);
+
+            List<int> modifiersIds = JsonConvert.DeserializeObject<List<int>>(viewmodel.selectedModifier);
+
+            foreach(int id in modifiersIds)
+            {
+               ModifierGroupModifier MGM = new ModifierGroupModifier{
+                  ModifierGroupId=Mg.Modifiergroupid,
+                  ModifierId=id
+               };
+               await _modifiergroupModifierRepository.AddNewMapping(MGM);
+            }
             return true;
         }
     }

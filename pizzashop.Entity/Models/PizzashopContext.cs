@@ -70,6 +70,8 @@ public partial class PizzashopContext : DbContext
 
     public virtual DbSet<Waitingtoken> Waitingtokens { get; set; }
 
+    public virtual DbSet<ModifierGroupModifier> ModifierGroupModifiers { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=PIZZASHOP;Username=postgres; password=tatva123");
@@ -315,12 +317,12 @@ public partial class PizzashopContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("items_unitid_fkey");
 
-                entity.Property(e => e.itemtype)
-                .HasColumnName("itemtype")
-                .HasConversion(
-                    v => (int)v,
-                    v => (itemtype)v
-                );
+            entity.Property(e => e.itemtype)
+            .HasColumnName("itemtype")
+            .HasConversion(
+                v => (int)v,
+                v => (itemtype)v
+            );
         });
 
         modelBuilder.Entity<Itemmodifiergroupmap>(entity =>
@@ -417,6 +419,31 @@ public partial class PizzashopContext : DbContext
                 .HasMaxLength(30)
                 .HasColumnName("modifiergroupname");
         });
+
+
+        modelBuilder.Entity<ModifierGroupModifier>(entity =>
+             {
+                 entity.HasKey(e => e.Id).HasName("modifiergroupmodifiers_pkey");
+
+                 entity.ToTable("modifiergroupmodifiers");
+
+                 entity.Property(e => e.Id).HasColumnName("id");
+                 entity.Property(e => e.ModifierGroupId).HasColumnName("modifiergroupid");
+                 entity.Property(e => e.ModifierId).HasColumnName("modifierid");
+
+                 entity.HasOne(d => d.Modifiergroup)
+                  .WithMany(p => p.ModifierGroupModifier)
+                  .HasForeignKey(d => d.ModifierGroupId)
+                  .OnDelete(DeleteBehavior.Cascade)
+                  .HasConstraintName("modifiergroupmodifiers_modifiergroupid_fkey");
+
+                 entity.HasOne(d => d.Modifier)
+                   .WithMany(p => p.ModifierGroupModifier)
+                   .HasForeignKey(d => d.ModifierId)
+                   .OnDelete(DeleteBehavior.Cascade)
+                   .HasConstraintName("modifiergroupmodifiers_modifierid_fkey");
+             });
+
 
         modelBuilder.Entity<Order>(entity =>
         {
@@ -701,12 +728,12 @@ public partial class PizzashopContext : DbContext
                 .HasForeignKey(d => d.Sectionid)
                 .HasConstraintName("tables_sectionid_fkey");
 
-             entity.Property(e => e.tablestatus)
-                .HasColumnName("status")
-                .HasConversion(
-                    v => (int)v,
-                    v => (tablestatus)v
-                );    
+            entity.Property(e => e.tablestatus)
+               .HasColumnName("status")
+               .HasConversion(
+                   v => (int)v,
+                   v => (tablestatus)v
+               );
         });
 
         modelBuilder.Entity<Taxis>(entity =>

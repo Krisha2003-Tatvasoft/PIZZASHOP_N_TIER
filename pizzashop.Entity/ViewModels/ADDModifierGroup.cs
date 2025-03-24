@@ -8,4 +8,7 @@ public class AddModifierGroup
 
     public string? Description { get; set; }
 
+    public string selectedModifier {get; set;}
+
+
 }

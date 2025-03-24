@@ -1,0 +1,50 @@
+@* @model pizzashop.Entity.ViewModels.AddTax;
+
+<div class="modal fade modal" id="addNewSection" tabindex="-1" aria-labelledby="addNewSection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewSection">Add Section</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+           <form id="add-table-form">
+
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="Taxname" placeholder="Category name"
+                                    required asp-for=Taxname>
+                                <label for="Taxname">Name*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class=" col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                             <div class="form-floating mb-3">
+                                <select asp-for="tablestatus" asp-items="Html.GetEnumSelectList<tablestatus>()"
+                                    class="form-select">
+                                    <option value="">Select a Status</option>
+                                </select>
+                                <label for="floatingInput">Status*</label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="capacity" placeholder="Category name" value="0"
+                                 asp-for=Capacity  required>
+                                <label for="capacity">Capacity*</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+        </div>
+    </div>
+</div>
+
+
+ *@

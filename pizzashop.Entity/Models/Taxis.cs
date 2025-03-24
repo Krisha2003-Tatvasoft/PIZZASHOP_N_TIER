@@ -13,7 +13,7 @@ public partial class Taxis
 
     public bool? Isdefault { get; set; }
 
-    public string Taxtype { get; set; } = null!;
+    public int Taxtype { get; set; }
 
     public string Taxvalue { get; set; } = null!;
 

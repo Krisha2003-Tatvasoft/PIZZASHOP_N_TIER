@@ -22,5 +22,12 @@ public class Enums
         Reserved = 2
     }
 
+    public enum taxtype
+    {
+        Percentage =0,
+
+        FlatAmount =1
+    }
+
 
 }

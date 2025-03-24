@@ -326,6 +326,33 @@
 <!-- Add New modifier group -->
 <div class="modal-addNewMG"></div>
 
+<div class="modal-selectExisting">
+    <!-- select existing modifiers -->
+    <div class="modal fade modal-delete" id="selectExistingModifiers" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" id="exModifier-table">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectExistingModifiers">Select Existing Modifiers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="search-field w-50">
+                        <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
+                            aria-label="Search">
+                    </div>
+                    <div class="existing-modifier-data"></div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
 
 
 
@@ -485,7 +512,7 @@
         var globalModifier;
 
         $(document).on("click", ".cat-link", function (e) {
-             selectedIds = [];
+            selectedIds = [];
             $("#searchInput").val("");
             var categoryId = $(this).data("id");
             loadItemTable(categoryId);
@@ -586,7 +613,7 @@
 
 
         $(document).on("click", ".MG-link", function (e) {
-             selectedIds = [];
+            selectedIds = [];
             $("#searchModifier").val("");
             var MGId = $(this).data("id");
             loadModifierTable(MGId, 1);
@@ -710,7 +737,7 @@
                 var formData = new FormData($("#edit-item-form")[0]);
                 var categoryId = formData.get("Categoryid");
 
-               
+
 
                 $.ajax({
                     url: "/Menu/EditItemPost",
@@ -735,7 +762,7 @@
                 e.preventDefault();
                 var formData = new FormData($("#add-item-form")[0]);
                 var categoryId = $("#Categoryid").val();
-                
+
 
                 $.ajax({
                     url: "/Menu/addItemPost",
@@ -972,12 +999,140 @@
                 });
             });
 
+        @* add existing modifier *@
+
+     var selectExModifier = [];
+        var selectedModifiername = new Map();
+
+        function restoreCheckedState() {
+            $("input[name='SExmodifier']").each(function () {
+                let value = $(this).val();
+                $(this).prop("checked", selectExModifier.includes(value));
+            });
+        }
+
+
+        $(document).on("change", "input[name='SExmodifier']", function (e) {
+            let value = $(this).val();
+            let modifierName = $(this).data("id");
+
+            if ($(this).is(":checked")) {
+                // Add value if checked
+                selectExModifier.push(value);
+                selectedModifiername.set(value, modifierName);
+            } else {
+                // Remove value if unchecked
+                selectExModifier = selectExModifier.filter(item => item !== value);
+                selectedModifiername.delete(value);
+            }
+        });
+
+        @* Existing modifier Table *@
+
+
+            $(document).on("click", ".select-existing", function (e) {
+                e.preventDefault();
+                loadExistingModifier(1);
+            });
+
+        function loadExistingModifier(page) {
+
+            let pageSize = $("#pageSizeSelectEXM").val();
+            let search = $("#searchExModifier").val();
+
+            $.ajax({
+                url: "/Menu/SelectExModifier",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
+                success: function (data) {
+                    $(".existing-modifier-data").html(data);
+                    $("#selectExistingModifiers").modal("show");
+                    restoreCheckedState();
+                },
+                error: function (error) {
+                    console.log("in error");
+                    console.error("Error in load modal", error);
+                }
+            });
+
+        }
+
+        @* page link *@
+            $("#exModifier-table").on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadExistingModifier(page);
+                }
+            });
+
+        @* page size *@
+            $("#exModifier-table").on("change", "#pageSizeSelectEXM", function () {
+                loadExistingModifier(1);
+            });
+
+
+        let searchTimer3;
+        $("#searchExModifier").on("input", function () {
+            clearTimeout(searchTimer3);
+            searchTimer3 = setTimeout(function () {
+                loadExistingModifier(1);  // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
+        $(document).on("click", ".add-ex-modifier", function (e) {
+            e.preventDefault();
+            displaySelectedModifiers(); 
+        });
+
+        @* display list of selected modifier *@
+
+            function displaySelectedModifiers() {
+                const container = $(".ex-modifier");
+                container.empty(); // Clear previous content
+
+                selectedModifiername.forEach((modifierName, id) => {
+                    const tag = $(`
+            <span class="badge bg-white me-2 mb-2 p-2" style="    font-size: 15px;
+     color: #212529;
+    font-weight: 500;
+    border: 1px solid #21252942;
+    border-radius: 30px;">
+                ${modifierName} <i class="bi bi-x-circle remove-modifier" data-id="${id}"></i>
+            </span>
+        `);
+                    container.append(tag);
+                });
+            }
+
+        @* remove button in existing modifier*@
+
+            $(document).on("click", ".remove-modifier", function (e) {
+                e.preventDefault();
+                let value = $(this).data("id");
+                console.log(value);
+                selectExModifier = selectExModifier.filter(item => item !== value);
+                
+                selectedModifiername.delete(value);
+                console.log(selectedModifiername);
+                @* console.log(selectExModifier); *@
+                @* displaySelectedModifiers(); *@
+            });
+
+
         @* Add modifier group *@
 
             $(document).on("click", "#add-MG", function (e) {
-
                 e.preventDefault();
+
                 var formData = new FormData($("#add-MG-form")[0]);
+                formData.append("selectedModifier", JSON.stringify(selectExModifier));
 
                 $.ajax({
                     url: "/Menu/AddMGPost",
