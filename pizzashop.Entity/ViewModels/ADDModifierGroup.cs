@@ -10,5 +10,4 @@ public class AddModifierGroup
 
     public string selectedModifier {get; set;}
 
-
 }

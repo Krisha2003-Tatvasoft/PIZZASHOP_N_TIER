@@ -12,8 +12,6 @@ public class TaxTable
 
     public bool Isdefault { get; set; }
 
-    public int Taxtype { get; set; }
-
     public string Taxvalue { get; set; } = null!;
 
     public taxtype taxtype { get; set; }

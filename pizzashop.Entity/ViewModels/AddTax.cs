@@ -1,3 +1,5 @@
+using static pizzashop.Entity.Models.Enums;
+
 namespace pizzashop.Entity.ViewModels;
 
 public class AddTax
@@ -10,7 +12,7 @@ public class AddTax
 
     public bool Isdefault { get; set; }
 
-    public int Taxtype { get; set; }
+     public taxtype taxtype { get; set; }
 
     public string Taxvalue { get; set; } = null!;
 

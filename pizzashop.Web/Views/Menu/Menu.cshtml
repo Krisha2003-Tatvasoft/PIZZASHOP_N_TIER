@@ -342,8 +342,8 @@
                         <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
                             aria-label="Search">
                     </div>
-                    <div class="existing-modifier-data"></div>
-
+                    <div class="existing-modifier-data"></div> 
+                   
                 </div>
             </div>
         </div>
@@ -1001,7 +1001,7 @@
 
         @* add existing modifier *@
 
-     var selectExModifier = [];
+        var selectExModifier = [];
         var selectedModifiername = new Map();
 
         function restoreCheckedState() {
@@ -1088,7 +1088,7 @@
 
         $(document).on("click", ".add-ex-modifier", function (e) {
             e.preventDefault();
-            displaySelectedModifiers(); 
+            displaySelectedModifiers();
         });
 
         @* display list of selected modifier *@
@@ -1115,14 +1115,11 @@
 
             $(document).on("click", ".remove-modifier", function (e) {
                 e.preventDefault();
-                let value = $(this).data("id");
-                console.log(value);
+                let value = $(this).data("id").toString();
                 selectExModifier = selectExModifier.filter(item => item !== value);
-                
+
                 selectedModifiername.delete(value);
-                console.log(selectedModifiername);
-                @* console.log(selectExModifier); *@
-                @* displaySelectedModifiers(); *@
+                displaySelectedModifiers(); 
             });
 
 

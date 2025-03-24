@@ -15,10 +15,50 @@ public class TaxesRepository : ITaxesRepository
     public async Task<List<Taxis>> GetTaxTableAsync(string search)
     {
         string lowerSearch = search.ToLower();
-        return await  _context.Taxes
+        return await _context.Taxes
         .Where(u => u.Isdeleted == false)
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Taxname.ToLower().Contains(lowerSearch)).ToListAsync();
     }
+
+    public async Task<bool> TaxesNameExist(string taxname)
+    {
+        return await _context.Taxes.AnyAsync(s => s.Isdeleted == false && s.Taxname.ToLower() == taxname.ToLower());
+    }
+
+    public async Task AddNewTax(Taxis tax)
+    {
+        _context.Taxes.Add(tax);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> TaxNameExistInEdit(string taxname, int taxid)
+    {
+        return await _context.Taxes.AnyAsync(s => s.Isdeleted == false && s.Taxname.ToLower() == taxname.ToLower()
+        && s.Taxid != taxid);
+    }
+
+    public async Task UpdateTax(Taxis tax)
+    {
+        _context.Taxes.Update(tax);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Taxis> TaxByIdAsync(int id)
+    {
+        return await _context.Taxes.FirstOrDefaultAsync(u => u.Taxid == id);
+    }
+
+
+    public async Task DeleteTax(Taxis tax)
+    {
+        tax.Isdeleted = true;
+        _context.Taxes.Update(tax);
+        await _context.SaveChangesAsync();
+    }
+
+
+
+
 
 }

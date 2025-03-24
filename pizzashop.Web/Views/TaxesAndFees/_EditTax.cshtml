@@ -1,20 +1,20 @@
 @using static pizzashop.Entity.Models.Enums
 @model pizzashop.Entity.ViewModels.AddTax;
 
-<div class="modal fade modal" id="addNewTax" tabindex="-1" aria-labelledby="addNewSection" aria-hidden="true">
+<div class="modal fade modal" id="editTax" tabindex="-1" aria-labelledby="editTax" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addNewTax">Add Tax</h5>
+                <h5 class="modal-title" id="editTax">Edit Tax</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
-                <form id="add-tax-form">
-
+                <form id="edit-tax-form">
+<input type="hidden" asp-for="Taxid">
                     <div class="row">
                         <div class="col-12 mb-3">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="Taxname" placeholder="Taxname"
+                                <input type="text" class="form-control" id="Taxname" placeholder="Category" 
                                     required asp-for=Taxname>
                                 <label for="Taxname">Name*</label>
                             </div>
@@ -35,7 +35,7 @@
 
                         <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-2">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="Taxvalue" placeholder="" value="0"
+                                <input type="text" class="form-control" id="Taxvalue" placeholder="" 
                                     asp-for=Taxvalue required>
                                 <label for="Taxvalue">Tax Amount*</label>
                             </div>
@@ -56,7 +56,7 @@
             </div>
 
             <div class="modal-footer ">
-                <button type="button " class="btn btn-primary sav-btn" id="add-tax">Save</button>
+                <button type="button " class="btn btn-primary sav-btn" id="edit-tax-yes">Save</button>
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </div>
             

@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="~/css/TaxesAndFees.css" />
 
-<div class="w-100 main-content px-lg-5 px-sm-4 px-4">
+<div class="w-100 main-content px-lg-5 px-sm-4 px-4" id="tax-table">
 
     <!-- heading text -->
 
@@ -26,10 +26,10 @@
         </div>
     </div>
 
-<div id="table-container"></div>
+    <div id="table-container"></div>
 </div>
 
-<div></div>
+<div class="modal-add-tax"></div>
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -44,14 +44,13 @@
 
         function loadUserTable(page) {
             let pageSize = $("#pageSizeTax").val();
-            let search = $("#searchTax").val(); 
+            let search = $("#searchTax").val();
 
             $.ajax({
                 url: "/TaxesAndFees/TaxesAndFees",
                 type: "GET",
                 data: { page: page, pageSize: pageSize, search: search },
                 success: function (data) {
-                    console.log(data);
                     $("#table-container").html(data);
                     currentPage = page;
                 },
@@ -62,6 +61,7 @@
         }
 
         $("#tax-table").on("click", ".pagination-link", function (e) {
+            console.log("in paggination");
             e.preventDefault();
             let page = $(this).data("page");
 
@@ -83,6 +83,107 @@
                 loadUserTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
         });
+
+
+        $(".add-tax").click(function (e) {
+            e.preventDefault();
+            var MGId = $(this).data("modifiergroupid");
+
+
+            $.ajax({
+                url: "/TaxesAndFees/AddTax",
+                type: "GET",
+                success: function (data) {
+                    $(".modal-add-tax").html(data);
+                    $("#addNewTax").modal("show");
+                },
+                error: function () {
+                    console.error("Error in update mg", error);
+                }
+            });
+
+        });
+
+
+        @* add new tax post *@
+            $(document).on("click", "#add-tax", function (e) {
+                e.preventDefault();
+                var formData = new FormData($("#add-tax-form")[0]);
+
+
+                $.ajax({
+                    url: "/TaxesAndFees/AddTaxPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#add-tax-form")[0].reset();
+                            $("#addNewTax").modal("hide");
+                            loadUserTable(1);
+                        }
+                        else {
+                            toastr.error("This Tax name is already exist.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error in add Section", error);
+                    }
+                });
+            });
+
+        @* edit tax post *@
+
+            $(document).on("click", "#edit-tax-yes", function (e) {
+                e.preventDefault();
+
+
+                var formData = new FormData($("#edit-tax-form")[0]);
+
+                $.ajax({
+                    url: "/TaxesAndFees/EditTaxPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#editTax").modal("hide");
+                           loadUserTable(1);
+                        }
+                        else {
+                            toastr.error("This Tax name is already exist.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error updating tax:", error);
+                    }
+                });
+
+            });
+
+             @* Delete tax *@
+
+            $(document).on("click", ".delete-tax", function (e) {
+                var taxid = $("#hidden").val();
+
+                $.ajax({
+                    url: "/TaxesAndFees/DeleteTax",
+                    type: "POST",
+                    data: { id: taxid },
+                    success: function (response) {
+                       loadUserTable(1);
+                    },
+                    error: function (error) {
+                        console.error("Error in delete tax:", error);
+                    }
+                });
+
+            });
+
 
 
     });
