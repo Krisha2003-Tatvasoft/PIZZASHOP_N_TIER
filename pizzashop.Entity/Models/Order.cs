@@ -11,7 +11,9 @@ public partial class Order
 
     public int Customerid { get; set; }
 
-    public string? Paymentmode { get; set; }
+    public int Paymentmode { get; set; }
+
+     public int status { get; set; }
 
     public string? Orderwisecomment { get; set; }
 

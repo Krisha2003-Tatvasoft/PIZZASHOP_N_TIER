@@ -1,0 +1,8 @@
+using pizzashop.Entity.Models;
+
+namespace pizzashop.Repository.Interfaces;
+
+public interface IOrderRepository
+{
+    Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder);
+}

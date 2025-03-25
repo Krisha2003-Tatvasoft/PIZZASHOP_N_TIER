@@ -19,6 +19,8 @@ public interface IModifierRepository
      Task DeleteSelectedModifier(List<int> SelectedIds);
 
      Task<List<Modifier>> GetAllModifier(string search);
+
+     Task<List<Modifier>> GetModifiersByIds(List<int> modifierIds);
      
     
 }

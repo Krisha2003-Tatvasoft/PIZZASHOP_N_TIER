@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
 
@@ -18,4 +19,17 @@ public class ModifiergroupModifierRepository : IModifiergroupModifierRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<List<ModifierGroupModifier>> GetMappingsByGroupId(int modifierGroupId)
+    {
+        return await _context.ModifierGroupModifiers
+            .Where(mgm => mgm.ModifierGroupId == modifierGroupId)
+            .ToListAsync();
+    }
+
+    public async Task Delete(ModifierGroupModifier mapping)
+    {
+        _context.ModifierGroupModifiers.Remove(mapping);
+        await _context.SaveChangesAsync();
+    }
+    
 }

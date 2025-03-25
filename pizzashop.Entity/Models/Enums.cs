@@ -29,5 +29,32 @@ public class Enums
         FlatAmount =1
     }
 
+    public enum orderstatus
+    {
+        InProgress=0,
+
+        Pending=1,
+
+        Served=2,
+
+        Completed=3,
+
+        Cancelled=4,
+
+        OnHold=5,
+
+        Failed =6
+
+    }
+
+    public enum paymentmode{
+
+        Online =0,
+
+        Card=1,
+
+        Cash =2
+    }
+
 
 }

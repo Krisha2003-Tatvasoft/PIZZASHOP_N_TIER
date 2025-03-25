@@ -80,5 +80,12 @@ public class ModifierRepository : IModifierRepository
          .OrderBy(c => c.Modifierid).ToListAsync();
     }
 
+    public async Task<List<Modifier>> GetModifiersByIds(List<int> modifierIds)
+    {
+        return await _context.Modifiers
+            .Where(m => modifierIds.Contains(m.Modifierid))
+            .ToListAsync();
+    }
+
 
 }

@@ -342,8 +342,8 @@
                         <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
                             aria-label="Search">
                     </div>
-                    <div class="existing-modifier-data"></div> 
-                   
+                    <div class="existing-modifier-data"></div>
+
                 </div>
             </div>
         </div>
@@ -379,8 +379,11 @@
     });
 
 
-    $(document).ready(function () {
+    var selectExModifier = [];
+    var selectedModifiername = new Map();
 
+
+    $(document).ready(function () {
 
 
         @* page link *@
@@ -1001,15 +1004,13 @@
 
         @* add existing modifier *@
 
-        var selectExModifier = [];
-        var selectedModifiername = new Map();
 
-        function restoreCheckedState() {
-            $("input[name='SExmodifier']").each(function () {
-                let value = $(this).val();
-                $(this).prop("checked", selectExModifier.includes(value));
-            });
-        }
+            function restoreCheckedState() {
+                $("input[name='SExmodifier']").each(function () {
+                    let value = $(this).val();
+                    $(this).prop("checked", selectExModifier.includes(value));
+                });
+            }
 
 
         $(document).on("change", "input[name='SExmodifier']", function (e) {
@@ -1117,11 +1118,9 @@
                 e.preventDefault();
                 let value = $(this).data("id").toString();
                 selectExModifier = selectExModifier.filter(item => item !== value);
-
                 selectedModifiername.delete(value);
-                displaySelectedModifiers(); 
+                displaySelectedModifiers();
             });
-
 
         @* Add modifier group *@
 
@@ -1149,6 +1148,48 @@
 
             });
 
+        @* get edit modifier group *@
+
+            $(document).on("click", ".edit-MG", function (e) {
+
+                e.preventDefault();
+                var MGId = $(this).data("modifiergroupid");
+
+
+                $.ajax({
+                    url: "/Menu/EditMG",
+                    type: "GET",
+                    data: { id: MGId },
+                    success: function (data) {
+
+                        if (data.selectedModifiers) {
+                            selectExModifier.length = 0; // Clear old data
+                            selectedModifiername.clear();
+
+                            data.selectedModifiers.forEach(modifier => {
+                                if (modifier && modifier.modifierid !== undefined) {
+                                    let modifierId = modifier.modifierid.toString();
+                                    selectExModifier.push(modifierId);
+                                    selectedModifiername.set(modifierId, modifier.modifiername);
+                                }
+                            });
+                            $(".modal-editMG").html(data.html);
+                            $("#updateModifiersGroup").modal("show");
+                            restoreCheckedModifier();
+                            displaySelectedModifiers();
+                        }
+                    },
+                    error: function () {
+                        console.error("Error in update mg", error);
+                    }
+                });
+
+            });
+
+
+
+
+
         @* Edit Modifier group *@
 
 
@@ -1157,6 +1198,7 @@
 
 
                 var formData = new FormData($("#edit-MG-form")[0]);
+                formData.append("selectedModifier", JSON.stringify(selectExModifier));
 
                 $.ajax({
                     url: "/Menu/EditMGPost",

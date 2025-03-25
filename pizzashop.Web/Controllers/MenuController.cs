@@ -5,6 +5,9 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using VMCategory = pizzashop.Entity.ViewModels.Category;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 
 namespace pizzashop.Controllers;
@@ -38,7 +41,7 @@ public class MenuController : Controller
         return View();
     }
 
-   
+
     [HttpPost]
     public async Task<IActionResult> addCategory(MenuViewModels MenuVM)
     {
@@ -113,7 +116,7 @@ public class MenuController : Controller
         }
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> DeleteCat(int id)
     {
@@ -304,15 +307,15 @@ public class MenuController : Controller
     [HttpGet]
     public async Task<IActionResult> AddMG()
     {
-         return PartialView("_AddModifierGroup");
+        return PartialView("_AddModifierGroup");
     }
 
 
-   [HttpPost]
-   public async Task<IActionResult> AddMGPost(AddModifierGroup model)
-   {
-      CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierGroupService.AddMGPost(user.Userid,model))
+    [HttpPost]
+    public async Task<IActionResult> AddMGPost(AddModifierGroup model)
+    {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _modifierGroupService.AddMGPost(user.Userid, model))
         {
             return Json(new { sucess = true, message = "ModifierGroup Added Sucessfully" });
         }
@@ -320,25 +323,52 @@ public class MenuController : Controller
         {
             return Json(new { error = true, message = "Error in add ModifierGroup" });
         }
-   }
+    }
+
+    private async Task<string> RenderPartialViewToString(string viewName, object model)
+    {
+        ViewData.Model = model;
+
+        using (var writer = new StringWriter())
+        {
+            var viewEngine = HttpContext.RequestServices.GetService<ICompositeViewEngine>();
+            var viewResult = viewEngine?.FindView(ControllerContext, viewName, false);
+
+            if (!viewResult.Success)
+            {
+                throw new InvalidOperationException($"View '{viewName}' not found.");
+            }
+
+            var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, writer, new HtmlHelperOptions());
+            await viewResult.View.RenderAsync(viewContext);
+            return writer.GetStringBuilder().ToString();
+        }
+    }
 
     [HttpGet]
     public async Task<IActionResult> EditMG(int id)
     {
-        return PartialView("_EditModifierGroup", await _modifierGroupService.EditMG(id));
+        var data =await _modifierGroupService.EditMG(id);
+          string partialViewHtml = await RenderPartialViewToString("_EditModifierGroup",data );
+
+            return Json(new
+            {
+                selectedModifiers= data.SelectedModifiers,
+                html = partialViewHtml   // Return the rendered partial view
+            });
     }
 
     [HttpPost]
     public async Task<IActionResult> EditMGPost(AddModifierGroup model)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierGroupService.EditMGPost(user.Userid,model))
+        if (await _modifierGroupService.EditMGPost(user.Userid, model))
         {
             return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
         }
         else
         {
-            return Json(new { error = true, message = "Error in update modifiergroup" });
+            return Json(new { success = false, message = "Error in update modifiergroup" });
         }
     }
 
@@ -366,7 +396,7 @@ public class MenuController : Controller
 
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalExMoidifier / pageSize);
 
-        return PartialView("_SelectExistingModifier" , Exmodifiers);
+        return PartialView("_SelectExistingModifier", Exmodifiers);
     }
 
 }

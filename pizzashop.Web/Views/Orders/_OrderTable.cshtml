@@ -1,0 +1,131 @@
+@using static pizzashop.Entity.Models.Enums
+@model List<pizzashop.Entity.ViewModels.OrderTable>
+
+<div class="table-responsive">
+    <table class="table mb-0">
+        <caption class="bg-white">
+            <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
+                <div class="d-flex align-items-center">
+                    <span class="d-none d-sm-inline px-1">Items Per page:</span>
+                    <select id="pageSizeOrder" class="form-select form-select-sm" style="width: auto;">
+                        <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                        <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                        <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-none d-sm-inline px-1">
+                        Showing @(ViewBag.totalOrder > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
+                        - @(ViewBag.totalOrder > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+                                                ViewBag.totalOrder) :
+                                                0)
+                        of @ViewBag.totalOrder
+                    </span>
+                    <nav class="mt-3">
+                        <ul class="pagination pagination-sm">
+                            <!-- Previous Page -->
+                            <li class="page-item @(ViewBag.CurrentPage > 1 ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage - 1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <!-- Next Page -->
+                            <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </caption>
+
+        <thead>
+            <tr>
+                <th>#Order
+                    <a href="#" class="sort" data-column="OrderId" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="OrderId" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
+                <th>Date
+                    <a href="#" class="sort" data-column="OrderDate" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="OrderDate" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
+                <th>Customer
+                    <a href="#" class="sort" data-column="CustomerName" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="CustomerName" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
+                <th>Status</th>
+                <th>Payment Mode</th>
+                <th>Rating</th>
+                <th>Total Amount
+                    <a href="#" class="sort" data-column="TotalAmount" data-order="asc">
+                        <i class="bi bi-arrow-up"></i>
+                    </a>
+                    <a href="#" class="sort" data-column="TotalAmount" data-order="desc">
+                        <i class="bi bi-arrow-down"></i>
+                    </a>
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>
+                        #@order.Orderid
+                    </td>
+                    <td>@order.Orderdate</td>
+                    <td>@order.Customername</td>
+                    <td>@order.orderstatus</td>
+                    <td>@order.paymentmode</td>
+                   <td>
+    <span class="text-warning">
+        @for (int i = 1; i <= Math.Floor(@order.Rating); i++)  
+        {
+            @Html.Raw("<i class='bi bi-star-fill'></i>")  <!-- Full Star -->
+        }  
+        @if (order.Rating % 1 >= 0.5m)  
+        {  
+            @Html.Raw("<i class='bi bi-star-half'></i>")  <!-- Half Star -->
+        }  
+    </span>
+    <span class="text-secondary">
+        @for (int i = (int)Math.Ceiling(@order.Rating); i < 5; i++)  
+        {  
+            @Html.Raw("<i class='bi bi-star'></i>")  <!-- Empty Star -->
+        }  
+    </span>
+</td>
+
+                    <td>@order.Totalamount</td>
+                    <td>
+                        <div class="d-flex gap-3 edit-delet"><button><a class=""><img
+                                        src="../images/pencil.svg"></a></button><button class="button delete"><img
+                                    class="delete-icon" src="../images/trash.svg"></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+
+    </table>
+
+</div>

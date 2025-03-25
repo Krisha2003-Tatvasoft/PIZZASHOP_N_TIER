@@ -80,7 +80,7 @@ public partial class PizzashopContext : DbContext
     {
         modelBuilder
             .HasPostgresEnum("itemtype", new[] { "Veg", "Non-Veg", "Vegan" })
-            .HasPostgresEnum("orderstatus", new[] { "InProgress", "Pending", "Served", "Completed", "Cancelled", "On Hold", "Failed" })
+            .HasPostgresEnum("orderstatus", new[] { "InProgress", "Pending", "Served", "Completed", "Cancelled", "OnHold", "Failed" })
             .HasPostgresEnum("statustype", new[] { "Active", "Inactive" })
             .HasPostgresEnum("tablestatus", new[] { "Available", "Occupied", "Reserved" });
 
@@ -475,6 +475,9 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Paymentmode)
                 .HasMaxLength(20)
                 .HasColumnName("paymentmode");
+            entity.Property(e => e.status)
+                .HasMaxLength(20)
+                .HasColumnName("status");    
             entity.Property(e => e.Rating)
                 .HasPrecision(1)
                 .HasColumnName("rating");
