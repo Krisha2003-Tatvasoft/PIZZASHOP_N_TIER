@@ -9,4 +9,8 @@ public interface IModifiergroupModifierRepository
      Task<List<ModifierGroupModifier>> GetMappingsByGroupId(int modifierGroupId);
 
       Task Delete(ModifierGroupModifier mapping);
+
+      Task DeleteMappingsByModifierGroupId(List<ModifierGroupModifier> mappings);
+
+      Task<List<ModifierGroupModifier>> GetMappingsByModifierId(int modifierId);
 }

@@ -157,9 +157,11 @@ public class ModifiersGroupService : IModifiersGroupService
         else
         {
             await _modifierGroupRepository.DeleteMG(mg);
+
+            var mappings = await _modifiergroupModifierRepository.GetMappingsByGroupId(id);
+             await _modifiergroupModifierRepository.DeleteMappingsByModifierGroupId(mappings);
             return true;
         }
-
     }
 
 }

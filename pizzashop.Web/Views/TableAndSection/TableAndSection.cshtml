@@ -81,26 +81,26 @@
 
 <div class="modal-addNewTable"></div>
 
-   <!-- delete selected Tables -->
-    <div class="modal fade modal-delete" id="deleteSelectedTables" tabindex="-1" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteSelectedTables">Delete Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-                    <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
-                    <span>Are you sure you want to delete these Tables?</span>
-                </div>
-                <div class="modal-footer d-flex justify-content-center gap-2">
-                    <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
-                </div>
+<!-- delete selected Tables -->
+<div class="modal fade modal-delete" id="deleteSelectedTables" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteSelectedTables">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete these Tables?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
+</div>
 
 
 <script src="../js/bootstarp.bundle.min.js"></script>
@@ -199,7 +199,7 @@
                     },
                     success: function (data) {
                         $('#load-tables').html(data);
-                         restoreCheckedState();
+                       restoreCheckedState();
                         currentPage = page;
                     },
                     error: function () {
@@ -405,7 +405,7 @@
             });
 
 
- @* deleted selected Tables *@
+        @* deleted selected Tables *@
     
       var selectedTableIds = [];
 
@@ -419,8 +419,7 @@
                 // Remove value if unchecked
                 selectedTableIds = selectedTableIds.filter(item => item !== value);
             }
-
-            console.log(selectedTableIds);
+            updateTableMasterCheckbox();
         });
 
         function restoreCheckedState() {
@@ -428,6 +427,7 @@
                 let value = $(this).val();
                 $(this).prop("checked", selectedTableIds.includes(value));
             });
+            updateTableMasterCheckbox();
         }
 
         $(document).on("click", ".delete-selected-yes", function (e) {
@@ -446,7 +446,41 @@
             });
         });
 
+        @* master checkbox  *@
 
+            $(document).on("change", "#TablemasterCheckbox", function (e) {
+                let isChecked = $(this).is(":checked");
+
+                // Select only checkboxes **visible on the current page**
+                $("input[name='Stable']").each(function () {
+
+                    let value = $(this).val();
+
+
+                    if (isChecked) {
+                        if (!selectedTableIds.includes(value)) {
+                            selectedTableIds.push(value);
+                        }
+                    } else {
+                        selectedTableIds = selectedTableIds.filter(item => item !== value);
+                    }
+
+                });
+
+                // Check/uncheck only the checkboxes on the current page
+                $("input[name='Stable']").prop("checked", isChecked);
+            });
+
+
+        function updateTableMasterCheckbox() {
+            let totalCheckboxes = $("input[name='Stable']").length;
+            let checkedCheckboxes = $("input[name='Stable']:checked").length;
+
+            $("#TablemasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
+            $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+        }
+
+        
     });
 
 

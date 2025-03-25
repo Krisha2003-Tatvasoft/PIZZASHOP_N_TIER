@@ -12,4 +12,6 @@ public interface IItemmodifiergroupmapRepository
     Task DeleteMapping(Itemmodifiergroupmap mapping);
 
     Task DeleteMappingByItem(int id);
+
+    
 }

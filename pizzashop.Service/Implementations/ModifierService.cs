@@ -13,13 +13,16 @@ public class ModifierService : IModifierService
 
   private readonly IModifiersGroupRepository _modifiersGropRepository;
 
+  private readonly IModifiergroupModifierRepository _modifiergroupModifierRepository;
+
 
   public ModifierService(IModifierRepository modifierRepository, IUnitRepository unitRepository
-  , IModifiersGroupRepository modifiersGropRepository)
+  , IModifiersGroupRepository modifiersGropRepository, IModifiergroupModifierRepository modifiergroupModifierRepository)
   {
     _modifierRepository = modifierRepository;
     _unitRpository = unitRepository;
     _modifiersGropRepository = modifiersGropRepository;
+    _modifiergroupModifierRepository = modifiergroupModifierRepository;
   }
 
   public async Task<(List<ModifierTable>, int totalMoidifier)> GetModifiersTable(int id, int page, int pageSize, string search)
@@ -148,6 +151,8 @@ public class ModifierService : IModifierService
     else
     {
       await _modifierRepository.DeleteModifier(modifier);
+     List<ModifierGroupModifier> mapping =  await _modifiergroupModifierRepository.GetMappingsByModifierId(id);
+     await _modifiergroupModifierRepository.DeleteMappingsByModifierGroupId(mapping);
       return true;
     }
 
@@ -164,7 +169,7 @@ public class ModifierService : IModifierService
     return true;
   }
 
-  public async Task<(List<ModifierTable> , int totalExMoidifier)> GetAllModifier(int page,int pageSize,string search)
+  public async Task<(List<ModifierTable>, int totalExMoidifier)> GetAllModifier(int page, int pageSize, string search)
   {
     var modifierList = await _modifierRepository.GetAllModifier(search);
 

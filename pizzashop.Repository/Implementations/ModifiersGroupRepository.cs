@@ -17,12 +17,12 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
     public async Task<List<Modifiergroup>> AllModifiersGroup()
     {
         return await _context.Modifiergroups
-        .Where(c=>c.Isdeleted == false).OrderBy(c=> c.Modifiergroupid).ToListAsync();
+        .Where(c => c.Isdeleted == false).OrderBy(c => c.Modifiergroupid).ToListAsync();
     }
 
     public async Task<List<SelectListItem>> GetAllMGAsync() =>
       await _context.Modifiergroups
-      .Where(c=>c.Isdeleted == false).Select
+      .Where(c => c.Isdeleted == false).Select
       (c => new SelectListItem
       { Value = c.Modifiergroupid.ToString(), Text = c.Modifiergroupname })
       .ToListAsync();
@@ -33,24 +33,29 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
         await _context.SaveChangesAsync();
     }
 
-     public async Task<Modifiergroup> MGByIdAsync(int id)
+    public async Task<Modifiergroup> MGByIdAsync(int id)
     {
         return await _context.Modifiergroups.FirstOrDefaultAsync(u => u.Modifiergroupid == id);
     }
 
-     public async Task UpdateMG(Modifiergroup modifiergroup)
+    public async Task UpdateMG(Modifiergroup modifiergroup)
     {
         _context.Modifiergroups.Update(modifiergroup);
         await _context.SaveChangesAsync();
     }
 
 
-   public async Task DeleteMG(Modifiergroup modifiergroup)
+    public async Task DeleteMG(Modifiergroup modifiergroup)
     {
         modifiergroup.Isdeleted = true;
         _context.Modifiergroups.Update(modifiergroup);
+
+
         await _context.SaveChangesAsync();
     }
+
+   
+
 
 
 

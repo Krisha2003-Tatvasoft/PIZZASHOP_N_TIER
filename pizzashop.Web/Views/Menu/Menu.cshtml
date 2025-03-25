@@ -524,6 +524,7 @@
         function loadItemTable(categoryId, page) {
 
             globalCat = categoryId;
+            console.log(selectedIds);
 
             let pageSize = $("#pageSizeSelect").val();
             let search = $("#searchInput").val();
@@ -616,7 +617,7 @@
 
 
         $(document).on("click", ".MG-link", function (e) {
-            selectedIds = [];
+            selectedModifierIds = [];
             $("#searchModifier").val("");
             var MGId = $(this).data("id");
             loadModifierTable(MGId, 1);
@@ -804,6 +805,7 @@
 
             });
 
+
         @* deleted selected item *@
           var selectedIds = [];
 
@@ -817,6 +819,8 @@
                 // Remove value if unchecked
                 selectedIds = selectedIds.filter(item => item !== value);
             }
+
+            updateMasterCheckbox();
         });
 
         function restoreCheckedState() {
@@ -824,6 +828,8 @@
                 let value = $(this).val();
                 $(this).prop("checked", selectedIds.includes(value));
             });
+
+            updateMasterCheckbox();
         }
 
         $(document).on("click", ".delete-selected-yes", function (e) {
@@ -946,6 +952,8 @@
                 // Remove value if unchecked
                 selectedModifierIds = selectedModifierIds.filter(item => item !== value);
             }
+
+            updateModifierMasterCheckbox();
         });
 
         function restoreCheckedModifier() {
@@ -953,6 +961,7 @@
                 let value = $(this).val();
                 $(this).prop("checked", selectedModifierIds.includes(value));
             });
+            updateModifierMasterCheckbox();
         }
 
 
@@ -1005,11 +1014,12 @@
         @* add existing modifier *@
 
 
-            function restoreCheckedState() {
+            function restoreCheckedExState() {
                 $("input[name='SExmodifier']").each(function () {
                     let value = $(this).val();
                     $(this).prop("checked", selectExModifier.includes(value));
                 });
+                updateExMMasterCheckbox();
             }
 
 
@@ -1026,6 +1036,7 @@
                 selectExModifier = selectExModifier.filter(item => item !== value);
                 selectedModifiername.delete(value);
             }
+            updateExMMasterCheckbox();
         });
 
         @* Existing modifier Table *@
@@ -1052,7 +1063,7 @@
                 success: function (data) {
                     $(".existing-modifier-data").html(data);
                     $("#selectExistingModifiers").modal("show");
-                    restoreCheckedState();
+                    restoreCheckedExState();
                 },
                 error: function (error) {
                     console.log("in error");
@@ -1237,6 +1248,111 @@
             });
 
 
+        @* master check box in item *@
+
+            function updateMasterCheckbox() {
+                let totalCheckboxes = $("input[name='Sitem']").length;
+                let checkedCheckboxes = $("input[name='Sitem']:checked").length;
+
+                $("#masterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
+                $("#masterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+
+            }
+
+
+        $(document).on("change", "#masterCheckbox", function (e) {
+            let isChecked = $(this).is(":checked");
+
+            // Select only checkboxes **visible on the current page**
+            $("input[name='Sitem']").each(function () {
+
+                let value = $(this).val();
+
+                if (isChecked) {
+                    if (!selectedIds.includes(value)) {
+                        selectedIds.push(value);
+                    }
+                } else {
+                    selectedIds = selectedIds.filter(item => item !== value);
+                }
+
+            });
+
+            // Check/uncheck only the checkboxes on the current page
+            $("input[name='Sitem']").prop("checked", isChecked);
+        });
+
+
+
+        @* modifier master checkbox *@
+
+            $(document).on("change", "#ModifierMasterCheckbox", function (e) {
+                let isChecked = $(this).is(":checked");
+
+                // Select only checkboxes **visible on the current page**
+                $("input[name='SModifier']").each(function () {
+
+                    let value = $(this).val();
+
+                    if (isChecked) {
+                        if (!selectedModifierIds.includes(value)) {
+                            selectedModifierIds.push(value);
+                        }
+                    } else {
+                        selectedModifierIds = selectedModifierIds.filter(item => item !== value);
+                    }
+
+                });
+
+                // Check/uncheck only the checkboxes on the current page
+                $("input[name='SModifier']").prop("checked", isChecked);
+            });
+
+        function updateModifierMasterCheckbox() {
+            let totalCheckboxes = $("input[name='SModifier']").length;
+            let checkedCheckboxes = $("input[name='SModifier']:checked").length;
+
+            $("#ModifierMasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
+            $("#ModifierMasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+
+        }
+
+
+        @* master checkbox in existing modifier *@
+
+            $(document).on("change", "#ExMmasterCheckbox", function (e) {
+                let isChecked = $(this).is(":checked");
+
+                // Select only checkboxes **visible on the current page**
+                $("input[name='SExmodifier']").each(function () {
+
+                    let value = $(this).val();
+                      let modifierName = $(this).data("id");
+
+                    if (isChecked) {
+                        if (!selectExModifier.includes(value)) {
+                            selectExModifier.push(value);
+                             selectedModifiername.set(value, modifierName);
+                        }
+                    } else {
+                        selectExModifier = selectExModifier.filter(item => item !== value);
+                          selectedModifiername.delete(value);
+                    }
+
+                });
+
+                // Check/uncheck only the checkboxes on the current page
+                $("input[name='SExmodifier']").prop("checked", isChecked);
+            });
+
+        function updateExMMasterCheckbox() {
+            let totalCheckboxes = $("input[name='SExmodifier']").length;
+            let checkedCheckboxes = $("input[name='SExmodifier']:checked").length;
+
+            $("#ExMmasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
+            $("#ExMmasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+
+        }
 
 
     });
