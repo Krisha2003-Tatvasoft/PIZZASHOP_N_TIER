@@ -1,7 +1,6 @@
 // using AuthenticationDemo.Attributes;
 using pizzashop.web.Attributes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MimeKit;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
@@ -17,14 +16,18 @@ public class UserController : Controller
     private readonly IUserService _userService;
     private readonly IEMailService _emailService;
 
+    private readonly IProfileService _profileService;
+
 
     private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public UserController(IUserService userService, IWebHostEnvironment webHostEnvironment, IEMailService eMailService)
+    public UserController(IUserService userService, IWebHostEnvironment webHostEnvironment, IEMailService eMailService,
+    IProfileService profileService)
     {
         _userService = userService;
         _webHostEnvironment = webHostEnvironment;
         _emailService = eMailService;
+        _profileService = profileService;
     }
 
     [CustomAuthorize("Users", "View")]
@@ -60,25 +63,33 @@ public class UserController : Controller
     {
         if (ModelState.IsValid)
         {
-
             CookieData user = SessionUtils.GetUser(HttpContext);
             if (await _userService.emailExist(model.Email))
             {
                 TempData["ErrorMessage"] = "Email Already Exists";
-                ModelState.Remove("Countryid");
-                return View(await _userService.GetAddNewUser());
+                model.Countries = await _profileService.GetCountryAsync();
+                model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
+                model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
+                model.Roles = await _userService.GetRolesAsync();
+                return View(model);
             }
             else if (await _userService.usernameExist(model.Username))
             {
                 TempData["ErrorMessage"] = "Username Already Exists";
-                ModelState.Remove("Countryid");
-                return View(await _userService.GetAddNewUser());
+                model.Countries = await _profileService.GetCountryAsync();
+                model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
+                model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
+                model.Roles = await _userService.GetRolesAsync();
+                return View(model);
             }
             else if (await _userService.phoneExist(model.Phone))
             {
-                TempData["ErrorMessage"] = "This PhoneNUmber Already Exists";
-                ModelState.Remove("Countryid");
-                return View(await _userService.GetAddNewUser());
+                TempData["ErrorMessage"] = "PhoneNumber Already Exists";
+                model.Countries = await _profileService.GetCountryAsync();
+                model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
+                model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
+                model.Roles = await _userService.GetRolesAsync();
+                return View(model);
             }
             else
             {
@@ -128,8 +139,11 @@ public class UserController : Controller
         }
         else
         {
-            ModelState.Remove("Countryid");
-            return View(await _userService.GetAddNewUser());
+            model.Countries = await _profileService.GetCountryAsync();
+            model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
+            model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
+            model.Roles = await _userService.GetRolesAsync();
+            return View(model);
         }
 
     }
@@ -155,7 +169,25 @@ public class UserController : Controller
         ModelState.Remove("password");
         if (ModelState.IsValid)
         {
-            if (await _userService.PostUpdate(viewmodel))
+            if (await _userService.usernameExistEdit(viewmodel.Username, viewmodel.Userid))
+            {
+                TempData["ErrorMessage"] = "Username Already Exist.";
+                viewmodel.Countries = await _profileService.GetCountryAsync();
+                viewmodel.States = await _profileService.GetStatesByCountryAsync(viewmodel.Countryid);
+                viewmodel.Cities = await _profileService.GetCitiesByStateAsync(viewmodel.Stateid);
+                viewmodel.Roles = await _userService.GetRolesAsync();
+                return View(viewmodel);
+            }
+            else if (await _userService.phoneExistEdit(viewmodel.Phone, viewmodel.Userid))
+            {
+                TempData["ErrorMessage"] = "PhoneNumber Already Exist.";
+                viewmodel.Countries = await _profileService.GetCountryAsync();
+                viewmodel.States = await _profileService.GetStatesByCountryAsync(viewmodel.Countryid);
+                viewmodel.Cities = await _profileService.GetCitiesByStateAsync(viewmodel.Stateid);
+                viewmodel.Roles = await _userService.GetRolesAsync();
+                return View(viewmodel);
+            }
+            else if (await _userService.PostUpdate(viewmodel))
             {
                 TempData["SuccessMessage"] = "User Updated Sucessfully";
                 return RedirectToAction("UserList", "User");
@@ -169,12 +201,12 @@ public class UserController : Controller
         else
         {
             TempData["ErrorMessage"] = "Invalid data";
-            ModelState.Remove("Countryid");
-            ModelState.Remove("Stateid");
-            ModelState.Remove("Cityid");
-            return View(await _userService.GetUpdate(viewmodel.Userid));
+            viewmodel.Countries = await _profileService.GetCountryAsync();
+            viewmodel.States = await _profileService.GetStatesByCountryAsync(viewmodel.Countryid);
+            viewmodel.Cities = await _profileService.GetCitiesByStateAsync(viewmodel.Stateid);
+            viewmodel.Roles = await _userService.GetRolesAsync();
+            return View(viewmodel);
         }
-
     }
 
     [HttpPost]

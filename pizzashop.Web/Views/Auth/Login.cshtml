@@ -22,7 +22,7 @@
 
             <div class="position-relative">
 
-                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control">
+                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control" id="email">
                 <i class="bi bi-person-fill custom-icon"></i>
             </div>
             <span asp-validation-for="Email" class="text-danger"></span>
@@ -60,25 +60,29 @@
 
     </form>
 
-   
+
 </div>
 
 <script>
-    $(document).ready(function()
-    {
-       
-       $(document).on("click",".eye-icon",function()
-       {
-           let passwordInput = $("#password");
-           if(passwordInput.attr("type") === "password")        
-           {
-              passwordInput.attr("type","text");
+    $(document).ready(function () {
+
+        $(document).on("click", ".eye-icon", function () {
+            let passwordInput = $("#password");
+            if (passwordInput.attr("type") === "password") {
+                passwordInput.attr("type", "text");
                 $(this).removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
-           }
-           else{
+            }
+            else {
                 passwordInput.attr("type", "password");
                 $(this).removeClass("bi-eye-fill").addClass("bi-eye-slash-fill");
-           }
-       });
+            }
+        });
+
+        $(document).ready(function () {
+            $("#email").on("input", function () {
+                localStorage.setItem("userEmail", $(this).val());
+            });
+        });
+
     });
 </script>

@@ -26,10 +26,10 @@
 
         <div>
             <div class="position-relative">
-                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control" id="password">
+                <input placeholder="E-mail*" asp-for="Email" type="text" class="form-control email" id="password">
                 <i class="bi bi-person-fill custom-icon"></i>
             </div>
-            
+
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
@@ -45,3 +45,13 @@
     </form>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+        var email = localStorage.getItem("userEmail");
+        if (email) {
+            $(".email").val(email);
+             localStorage.setItem("userEmail", "");
+        }
+    });
+</script>

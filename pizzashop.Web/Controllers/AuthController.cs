@@ -71,7 +71,7 @@ public class AuthController : Controller
 
             return RedirectToAction("Index", "Home");
         }
-        return View();
+        return View(model);
 
     }
 
@@ -96,7 +96,12 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult Forget()
     {
-        return View();
+        var model = new Forget();
+        if(TempData["UserEmail"] !=null)
+        { 
+           model.Email = TempData["UserEmail"].ToString();  
+        }
+        return View(model);
     }
 
 

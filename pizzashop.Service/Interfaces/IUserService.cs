@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using pizzashop.Entity.ViewModels;
 
 namespace pizzashop.Service.Interfaces;
@@ -21,5 +22,13 @@ public interface IUserService
     Task<bool> usernameExist(string Username);
 
    Task<bool> phoneExist(string phone);
+
+    Task<List<SelectListItem>> GetRolesAsync();
+
+    Task<bool> usernameExistEdit(string Username, int userid);
+
+    Task<bool> phoneExistEdit(string phone,int userid);
+
+
 
 }

@@ -9,10 +9,12 @@ public interface IProfileService
 
      Task<UserProfile?> UserProfile(string email);
 
-     Task UpdateProfile(int id,UserProfile viewmodel);
+     Task<bool> UpdateProfile(int id,UserProfile viewmodel);
 
      Task<List<SelectListItem>> GetStatesByCountryAsync(int countryId);
 
      Task<List<SelectListItem>> GetCitiesByStateAsync(int stateId);
+
+     Task<List<SelectListItem>> GetCountryAsync();
 
 }

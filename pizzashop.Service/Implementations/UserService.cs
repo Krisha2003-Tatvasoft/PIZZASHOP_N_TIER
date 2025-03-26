@@ -168,7 +168,6 @@ public class UserService : IUserService
     }
     else
     {
-
       user.Username = model.Username;
       user.User.Firstname = model.Firstname;
       user.User.Lastname = model.Lastname;
@@ -212,9 +211,24 @@ public class UserService : IUserService
     return await _userRepository.UsernameExistsAsync(Username);
   }
 
+  public async Task<bool> usernameExistEdit(string Username, int userid)
+  {
+    return await _userRepository.UsernameExistsEditAsync(Username, userid);
+  }
+
   public async Task<bool> phoneExist(string phone)
   {
     return await _userDetailsRepository.PhoneExistsAsync(phone);
+  }
+
+  public async Task<bool> phoneExistEdit(string phone,int userid)
+  {
+    return await _userDetailsRepository.PhoneExistsEditAsync(phone,userid);
+  }
+
+  public async Task<List<SelectListItem>> GetRolesAsync()
+  {
+    return await _roleRepository.GetAllRolesAsync();
   }
 
 }

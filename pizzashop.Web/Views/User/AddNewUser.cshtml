@@ -174,7 +174,7 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
 
                     <div class="form-floating">
-                        <select class="form-select" id="Stateid" asp-for="Stateid">
+                        <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
                             <option value="">Select State</option>
                         </select>
                         <label for="Stateid">State</label>
@@ -182,9 +182,8 @@
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
-
                     <div class="form-floating">
-                        <select class="form-select" id="Cityid" asp-for="Cityid">
+                        <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
                             <option value="">Select City</option>
                         </select>
                         <label for="Cityid">City</label>

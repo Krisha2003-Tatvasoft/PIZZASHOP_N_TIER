@@ -17,5 +17,7 @@ public interface IUserRepository
 
     Task<bool> UsernameExistsAsync(string Username);
 
+    Task<bool> UsernameExistsEditAsync(string Username,int userid);
+
 
 }

@@ -14,13 +14,13 @@
         </div>
         <div class="back-to-button d-flex gap-3 align-items-center">
             <div class="position-relative">
-                <input class="search form-control me-2 border-0" id="searchInput" type="text" placeholder="Search"
+                <input class="search form-control me-2 border-0" id="searchInput" type="search" placeholder="Search"
                     aria-label="Search">
                 <i class="bi bi-search custom-icon"></i>
             </div>
             <a clas="" asp-controller="User" asp-action="AddNewUser">
                 <button class="back-button">
-                    <span>+ Add User</span>
+                    <span>+<span class="d-none d-md-inline"> Add User</span></span>
                 </button>
             </a>
         </div>
@@ -32,12 +32,12 @@
 
     <script>
         $(document).ready(function () {
-            
+
             let currentPage = @ViewBag.CurrentPage;
             let searchQuery = "@ViewBag.SearchQuery" || "";
             let SortColumn = "@ViewBag.SortColumn" || "";
             let SortOrder = "@ViewBag.SortOrder" || "";
-            
+
             loadUserTable(1);
 
             function loadUserTable(page) {
@@ -81,11 +81,24 @@
             // Trigger search on input change (with delay to prevent excessive calls)
             let searchTimer;
             $("#searchInput").on("input", function () {
+                var element = $(".custom-icon");
+                element.addClass("d-none");
                 clearTimeout(searchTimer);
                 searchTimer = setTimeout(function () {
                     loadUserTable(1); // Reset to page 1 when searching
                 }, 500); // 500ms delay to avoid excessive requests
+                searchcross();
             });
+
+            function searchcross() {
+                let search = $("#searchInput").val();
+                console.log(search);
+                if (search === "") {
+                    var element = $(".custom-icon");
+                    element.removeClass("d-none");
+                }
+            }
+
         });
     </script>
 

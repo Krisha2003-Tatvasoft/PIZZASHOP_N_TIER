@@ -18,16 +18,16 @@ public class ProfileService : IProfileService
 
     private readonly ICountryRepository _countryRepository;
 
-     private readonly IStateRepository _stateRepository;
-      private readonly ICityRepository _cityRepository;
+    private readonly IStateRepository _stateRepository;
+    private readonly ICityRepository _cityRepository;
 
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-      private readonly IFileService _fileService;
+    private readonly IFileService _fileService;
 
-    public ProfileService(IUserRepository userRepository, IUserDetailsRepository userDetailsRepository, 
-    ICountryRepository countryRepository,IStateRepository stateRepository, IFileService fileService
-    ,ICityRepository cityRepository, IHttpContextAccessor httpContextAccessor)
+    public ProfileService(IUserRepository userRepository, IUserDetailsRepository userDetailsRepository,
+    ICountryRepository countryRepository, IStateRepository stateRepository, IFileService fileService
+    , ICityRepository cityRepository, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _userDetailsRepository = userDetailsRepository;
@@ -56,7 +56,7 @@ public class ProfileService : IProfileService
     {
 
         var user = await _userRepository.GetUserByEmailAsync(email);
-        
+
         UserProfile viewmodel = new UserProfile
         {
             Email = user.Email,
@@ -71,8 +71,8 @@ public class ProfileService : IProfileService
             Address = user.User.Address,
             Zipcode = user.User.Zipcode,
             Rolename = user.Role.Rolename,
-            Countries=await _countryRepository.GetAllCountryAsync(),
-            States  = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
+            Countries = await _countryRepository.GetAllCountryAsync(),
+            States = await _stateRepository.GetStatesByCountryAsync(user.User.Countryid),
             Cities = await _cityRepository.GetCitiesByStateAsync(user.User.Stateid),
             Profileimg = user.User.Profileimg != null
             ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{user.User.Profileimg}"
@@ -81,15 +81,19 @@ public class ProfileService : IProfileService
         return viewmodel;
     }
 
-    public async Task UpdateProfile(int id, UserProfile viewmodel)
+    public async Task<bool> UpdateProfile(int id, UserProfile viewmodel)
     {
-         string uniqueFileName = null;
-      if (viewmodel.ProfilePicture != null)
-      {
-        uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ProfilePicture, "uploads");
-      }
+        if (await _userRepository.UsernameExistsEditAsync(viewmodel.Username, viewmodel.Userid))
+        {
+            return false;
+        }
+        string uniqueFileName = null;
+        if (viewmodel.ProfilePicture != null)
+        {
+            uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ProfilePicture, "uploads");
+        }
 
-     
+
         User user = await _userDetailsRepository.GetUserByIdAsync(id);
         user.Firstname = viewmodel.Firstname;
         user.Lastname = viewmodel.Lastname;
@@ -97,36 +101,41 @@ public class ProfileService : IProfileService
         user.Zipcode = viewmodel.Zipcode;
         user.Countryid = viewmodel.Countryid;
         user.Stateid = viewmodel.Stateid;
-        user.Cityid=viewmodel.Cityid;
+        user.Cityid = viewmodel.Cityid;
         user.Address = viewmodel.Address;
-        if(uniqueFileName !=null)
+        if (uniqueFileName != null)
         {
-         user.Profileimg = uniqueFileName;
+            user.Profileimg = uniqueFileName;
         }
-         await _userDetailsRepository.UpdateAsync(user);
+        await _userDetailsRepository.UpdateAsync(user);
 
         Userslogin userlogin = await _userRepository.GetUserLoginByEmailAsync(viewmodel.Email);
 
-        userlogin.Username= viewmodel.Username;
-    
+        userlogin.Username = viewmodel.Username;
+
         await _userRepository.UpdateUserLoginAsync(userlogin);
 
-       var userSession = SessionUtils.GetUser(_httpContextAccessor.HttpContext);
-       if(userSession!=null)
-       {
-         userSession.Username = userlogin.Username;
-         userSession.Image = user.Profileimg;
-         string updatedusername = JsonSerializer.Serialize(userSession);
-        _httpContextAccessor.HttpContext.Session.SetString("UserData", updatedusername);
-       }
-
-       
+        var userSession = SessionUtils.GetUser(_httpContextAccessor.HttpContext);
+        if (userSession != null)
+        {
+            userSession.Username = userlogin.Username;
+            userSession.Image = user.Profileimg;
+            string updatedusername = JsonSerializer.Serialize(userSession);
+            _httpContextAccessor.HttpContext.Session.SetString("UserData", updatedusername);
+        }
+        return true;
     }
 
-   public async Task<List<SelectListItem>> GetStatesByCountryAsync(int countryId)
-   {
-      return await _stateRepository.GetStatesByCountryAsync(countryId);
-   }
+    public async Task<List<SelectListItem>> GetCountryAsync()
+    {
+        return await _countryRepository.GetAllCountryAsync();
+    }
+
+
+    public async Task<List<SelectListItem>> GetStatesByCountryAsync(int countryId)
+    {
+        return await _stateRepository.GetStatesByCountryAsync(countryId);
+    }
 
     public async Task<List<SelectListItem>> GetCitiesByStateAsync(int stateId)
     {

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace pizzashop.Web.Controllers;
 
- [CustomAuthorize]
+[CustomAuthorize]
 public class ProfileController : Controller
 {
 
@@ -19,7 +19,7 @@ public class ProfileController : Controller
 
     private readonly IAuthService _authService;
 
-    public ProfileController(IProfileService profileService,IAuthService authService)
+    public ProfileController(IProfileService profileService, IAuthService authService)
     {
         _ProfileService = profileService;
         _authService = authService;
@@ -57,7 +57,7 @@ public class ProfileController : Controller
             if (user != null)
             {
                 var authUser = await _authService.AuthenticateUser(user.Email, viewmodel.OldPassword);
-                if(authUser == null)
+                if (authUser == null)
                 {
                     TempData["ErrorMessage"] = "Old Password is Incorrect";
                     return View();
@@ -93,16 +93,25 @@ public class ProfileController : Controller
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            await _ProfileService.UpdateProfile(user.Userid, viewmodel);
+
+            if (await _ProfileService.UpdateProfile(user.Userid, viewmodel) == false)
+            {
+                TempData["ErrorMessage"] = "Username Already Exist.";
+
+                viewmodel.Countries = await _ProfileService.GetCountryAsync();
+                viewmodel.States = await _ProfileService.GetStatesByCountryAsync(viewmodel.Countryid);
+                viewmodel.Cities = await _ProfileService.GetCitiesByStateAsync(viewmodel.Stateid);
+                return View(viewmodel);
+            }
             TempData["SuccessMessage"] = "Profile Updated Sucessfully";
             return RedirectToAction("UserProfile", "Profile");
         }
         else
         {
-            ModelState.Remove("Countryid");
-            ModelState.Remove("Stateid");
-            ModelState.Remove("Cityid");
-            return View(await _ProfileService.UserProfile(viewmodel.Email));
+            viewmodel.Countries = await _ProfileService.GetCountryAsync();
+            viewmodel.States = await _ProfileService.GetStatesByCountryAsync(viewmodel.Countryid);
+            viewmodel.Cities = await _ProfileService.GetCitiesByStateAsync(viewmodel.Stateid);
+            return View(viewmodel);
         }
 
     }

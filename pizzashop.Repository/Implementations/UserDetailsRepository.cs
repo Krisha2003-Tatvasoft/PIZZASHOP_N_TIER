@@ -54,4 +54,10 @@ public class UserDetailsRepository : IUserDetailsRepository
         return await _context.Users.AnyAsync(u => u.Phone == phone);
     }
 
+    public async Task<bool> PhoneExistsEditAsync(string phone,int userid)
+    {
+        return await _context.Users.AnyAsync(u => u.Phone == phone && u.Userid !=userid);
+    }
+
+
 }

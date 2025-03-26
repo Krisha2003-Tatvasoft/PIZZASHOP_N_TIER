@@ -29,6 +29,12 @@ public class UserRepository : IUserRepository
         return await _context.Userslogins.AnyAsync(u => u.Username == Username);
     }
 
+     public async Task<bool> UsernameExistsEditAsync(string Username,int userid)
+    {
+        return await _context.Userslogins.AnyAsync(u => u.Username == Username && u.Userid!=userid);
+    }
+
+
     public async Task<Userslogin?> GetUserLoginByEmailAsync(string email)
     {
         return await _context.Userslogins.FirstOrDefaultAsync(u => u.Email == email);
