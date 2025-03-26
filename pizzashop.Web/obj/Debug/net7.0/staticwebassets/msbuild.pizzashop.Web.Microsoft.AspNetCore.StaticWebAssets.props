@@ -1840,6 +1840,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\1f1c8bf5-8bf7-4188-963a-baca93344245_customers-active.png))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\22b64fe7-5d86-4230-96f5-93462309df43_Screenshot (271).png))">
+      <SourceType>Package</SourceType>
+      <SourceId>pizzashop.Web</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/pizzashop.Web</BasePath>
+      <RelativePath>uploads/22b64fe7-5d86-4230-96f5-93462309df43_Screenshot (271).png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\22b64fe7-5d86-4230-96f5-93462309df43_Screenshot (271).png))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\27b189bd-32cd-4ece-ac18-57dfb5b4f4d6_icons8-google-48.png))">
       <SourceType>Package</SourceType>
       <SourceId>pizzashop.Web</SourceId>

@@ -28,4 +28,6 @@ public partial class Userslogin
     public virtual Role Role { get; set; } = null!;
 
     public virtual User? User { get; set; }
+
+     public bool FirstLogin { get; set; } = true;
 }

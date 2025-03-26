@@ -61,9 +61,9 @@ public class AddNewUser
   [Required(ErrorMessage = "Status is required")]
   public statustype status { get; set; }
 
-  [Display(Name = "Profile Picture")]
-  [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" })]
-  [MaxFileSize(2 * 1024 * 1024)] // 2MB limit
+  // [Display(Name = "Profile Picture")]
+  // [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" })]
+  // [MaxFileSize(2 * 1024 * 1024)] // 2MB limit
   public IFormFile? ProfilePicture { get; set; }
 
   public string? Profileimg { get; set; }

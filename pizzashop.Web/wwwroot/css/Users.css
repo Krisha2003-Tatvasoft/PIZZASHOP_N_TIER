@@ -16,6 +16,28 @@ justify-content: space-between;
 /* padding: 5px; */
 }
 
+.disabled-btn {
+    opacity: 0.5;  /* Makes it look lighter */
+    cursor: not-allowed; /* Shows a disabled cursor */
+    pointer-events: none; /* Prevents clicks */
+    background-color: #ccc; /* Light grey background */
+    border: 1px solid #aaa; /* Light border */
+}
+
+.disabled-btn {
+    opacity: 0.5;  /* Makes it look lighter */
+    cursor: not-allowed; /* Shows a disabled cursor */
+    pointer-events: none; /* Prevents clicks */
+    background-color: #ccc; /* Light grey background */
+    border: 1px solid #aaa; /* Light border */
+}
+
+.disabled-link {
+    pointer-events: none; /* Disables clicking on the link */
+    color: #aaa; /* Light grey color */
+}
+
+
 
 .heading-back-button .back-to-button button{
     color:white;

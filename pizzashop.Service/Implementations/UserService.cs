@@ -113,7 +113,8 @@ public class UserService : IUserService
       Passwordhash = hashedPassword,
       Userid = newUser.Userid,
       Roleid = model.Roleid,
-      Username = model.Username
+      Username = model.Username,
+      FirstLogin=true
     };
 
     await _userRepository.AddNewUser(newUserLogin);

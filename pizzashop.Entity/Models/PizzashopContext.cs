@@ -477,7 +477,7 @@ public partial class PizzashopContext : DbContext
                 .HasColumnName("paymentmode");
             entity.Property(e => e.status)
                 .HasMaxLength(20)
-                .HasColumnName("status");    
+                .HasColumnName("status");
             entity.Property(e => e.Rating)
                 .HasPrecision(1)
                 .HasColumnName("rating");
@@ -882,6 +882,12 @@ public partial class PizzashopContext : DbContext
                 v => (int)v,
                 v => (statustype)v
             );
+
+            entity.Property(e => e.FirstLogin)
+    .HasColumnName("firstlogin")
+    .HasDefaultValue(true);
+
+
         });
 
         modelBuilder.Entity<Waitingtablemapping>(entity =>

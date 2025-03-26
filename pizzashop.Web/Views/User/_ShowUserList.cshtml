@@ -1,6 +1,7 @@
 @using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.UserTable>
 
+
 <div class="table-responsive">
     <table class="table mb-0">
         <caption class="bg-white">
@@ -45,23 +46,23 @@
 
         <thead>
             <tr>
-                <th style="min-width: 7rem;">Name
-                    <a href="#" class="sort" data-column="Firstname" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;" class="ps-3">Name
+                    <a href="#" class="sort" data-column="Firstname" data-order=@(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                        <i class="bi bi-arrow-up"></i><i class="bi bi-arrow-down"></i>
                     </a>
-                    <a href="#" class="sort" data-column="Firstname" data-order="desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a>
+                    @* <a href="#" class="sort" data-column="Firstname" data-order="desc">
+                        
+                    </a> *@
                 </th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Role
-                    <a href="#" class="sort" data-column="Rolename" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;">Role
+                    <a href="#" class="sort" data-column="Rolename" data-order=@(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                        <i class="bi bi-arrow-up"></i><i class="bi bi-arrow-down"></i>
                     </a>
-                    <a href="#" class="sort" data-column="Rolename" data-order="desc">
+                    @* <a href="#" class="sort" data-column="Rolename" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
                 <th>Status</th>
                 <th>Action</th>
@@ -71,7 +72,7 @@
             @foreach (var user in Model)
             {
                 <tr>
-                    <td>
+                    <td class="ps-3">
                         <div class="d-flex gap-2"><img class="user-profile"
                                 src="@(string.IsNullOrEmpty(user.Profileimg) ? "../images/Default_pfp.svg.png" : user.Profileimg)"
                                 style="border-radius: 50%;" />@user.Firstname
@@ -84,10 +85,15 @@
                         <span class="@(@user.status == statustype.Active ? "activestatus" : "inactivestatus") badge rounded-pill">@user.status</span>
                     </td>
                     <td>
-                        <div class="d-flex gap-3 edit-delet"><button><a class="" asp-controller="User" asp-action="EditUser"
-                                    asp-route-id="@user.userId"><img src="../images/pencil.svg"></a></button><button
-                                class="button delete" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                data-id="@user.userId" onclick="opendeleteModel(@user.userId)"><img class="delete-icon"
+                        <div class="d-flex gap-3 edit-delet"><button 
+                        class="button edit @(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled-btn" : "")"><a 
+                        class="@(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled-link" : "")"
+                          asp-controller="User" asp-action="EditUser"
+                                    asp-route-id="@user.userId"><img src="../images/pencil.svg"></a></button>
+                                    <button
+                                class="button delete @(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled-btn" : "")" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                data-id="@user.userId" onclick="opendeleteModel(@user.userId)"  disabled="@(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled" : null)">
+                                <img class="delete-icon"
                                     src="../images/trash.svg"></button>
                         </div>
                     </td>
@@ -133,4 +139,5 @@
             $("#hidden").val(id);
         });
     });
+    
 </script>

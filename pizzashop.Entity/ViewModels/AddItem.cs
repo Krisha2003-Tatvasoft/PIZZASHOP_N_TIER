@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static pizzashop.Entity.Models.Enums;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace pizzashop.Entity.ViewModels;
 
@@ -10,6 +11,9 @@ public class AddItem
 
   public int Itemid { get; set; }
 
+
+
+  [Required(ErrorMessage = "Status is required")]
   public string Itemname { get; set; } = null!;
 
   public int Categoryid { get; set; }

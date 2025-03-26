@@ -109,13 +109,13 @@
             </div>
         </div>
 
-
+        @* 
         <div>
             <div class="container-fluid mb-3">
                 <div class="row  file-upload ms-1 me-1">
-                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3"> *@
 
-                        @* <div class="input-group d-flex justify-content-center align-items-center">
+        @* <div class="input-group d-flex justify-content-center align-items-center">
                         <!-- Button to trigger the file input -->
                         <button type="button" class="btn" id="inputGroupFileAddon04"
                         onclick="document.getElementById('inputGroupFile01').click();">
@@ -135,7 +135,7 @@
                         </div> *@
 
 
-                        <div class="input-group d-flex justify-content-center align-items-center">
+        @* <div class="input-group d-flex justify-content-center align-items-center">
 
 
                             <img src="@(string.IsNullOrEmpty(Model.Profileimg) ? Url.Content("~/images/Default_pfp.svg.png") : Model.Profileimg)"
@@ -162,15 +162,52 @@
 
                             <!-- ASP.NET Core Model Validation (only works after form submit) -->
                             <span asp-validation-for="ProfilePicture" class="text-danger"></span>
-                        </div>
+                        </div> *@
 
 
-                    </div>
+        @* </div>
                 </div>
             </div>
+        </div> *@
+
+        <div class="container-fluid mb-3">
+
+            <div class="col-12 mb-3 border border-2 rounded-3 p-4" style="border-style: dashed!important;">
+
+                <div class="d-flex align-items-center justify-content-center p-3 rounded flex-column"
+                    style="width: 100%;">
+                    <div class="d-flex flex-row">
+                        <!-- Image Preview (Initially Visible if Image Exists) -->
+                        <img id="imagePreview" class="rounded mb-2"
+                            style="border: 1px solid #ddd; height: 100px; display: none;">
+                    </div>
+
+                    <div class="align-self-center">
+                        <div id="upload-icon" onclick="document.getElementById('fileInput').click()"
+                            style="cursor: pointer;">
+                            <i class="bi bi-cloud-arrow-up display-4 ps-2"></i>
+                        </div>
+                        <div class="d-flex flex-row">
+                            <!-- File Name -->
+                            <span id="file-name" class="text-secondary text-truncate"
+                                style="max-width: 150px; cursor: pointer;"
+                                onclick="document.getElementById('fileInput').click()">Browse File</span>
+
+                            <!-- Delete Icon (Initially Visible if Image Exists) -->
+                            <i class="bi bi-trash text-danger ps-2" id="deleteFile"
+                                style="cursor: pointer; display: none;" onclick="removeFile()"></i>
+
+                            <input type="hidden" id="existingImagePath" name="Profileimg" asp-for="Profileimg" />
+                        </div>
+                    </div>
+
+                    <!-- Hidden File Input -->
+                    <input type="file" id="fileInput" name="ProfilePicture" accept="image/*" style="display: none;"
+                        onchange="previewFile(event)">
+                </div>
+            </div>
+
         </div>
-
-
 
         <div class="container-fluid">
             <div class="row">
@@ -360,4 +397,75 @@
             reader.readAsDataURL(file);
         }
     });
+</script>
+
+<script>
+
+    function previewFile(event) {
+        const fileInput = document.getElementById('fileInput');
+        const uploadIcon = document.getElementById('upload-icon');
+        const fileNameSpan = document.getElementById('file-name');
+        const imagePreview = document.getElementById('imagePreview');
+        const deleteFile = document.getElementById('deleteFile');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = "block"; // Show image
+                uploadIcon.style.display = "none"; // Hide upload icon
+                fileNameSpan.textContent = file.name; // Show file name
+                deleteFile.style.display = "block"; // Show delete icon
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function removeFile() {
+        const fileInput = document.getElementById('fileInput');
+        const uploadIcon = document.getElementById('upload-icon');
+        const fileNameSpan = document.getElementById('file-name');
+        const imagePreview = document.getElementById('imagePreview');
+        const deleteFile = document.getElementById('deleteFile');
+        const existingImagePath = document.getElementById('existingImagePath'); // Add this line
+
+        fileInput.value = ""; // Clear file input
+        uploadIcon.style.display = "block"; // Show upload icon again
+        fileNameSpan.textContent = "Browse File"; // Reset text
+        imagePreview.src = "";
+        imagePreview.style.display = "none"; // Hide image
+        deleteFile.style.display = "none"; // Hide delete icon
+
+        // Clear the hidden input for existing image path
+        if (existingImagePath) { // Check if the element exists
+            existingImagePath.value = ""; // Clear the existing image path
+        }
+    }
+
+    function loadExistingImage(imageUrl) {
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadIcon = document.getElementById('upload-icon');
+        const fileNameSpan = document.getElementById('file-name');
+        const deleteFile = document.getElementById('deleteFile');
+
+        if (imageUrl) {
+            imagePreview.src = imageUrl;
+            imagePreview.style.display = "block"; // Show image
+            uploadIcon.style.display = "none"; // Hide upload icon
+            fileNameSpan.textContent = "Current Image"; // Set default text
+            deleteFile.style.display = "block"; // Show delete icon
+        }
+    }
+
+    // Load the existing image from Model.UserProfile
+    window.onload = function () {
+        const existingImage = "@Model.Profileimg"; // Get image from Model
+        if (existingImage && existingImage !== "null" && existingImage.trim() !== "") {
+            loadExistingImage(existingImage);
+        }
+    };
+
 </script>
