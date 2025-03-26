@@ -13,11 +13,16 @@ public class OrderRepository : IOrderRepository
         _context = context;
     }
 
-    public async Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder)
+    public async Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder, string status, DateTime? fromDate, DateTime? toDate)
     {
+        Console.WriteLine("helooooo"+fromDate);
+
         string lowerSearch = search.ToLower();
         var orderList = _context.Orders
         .Include(o => o.Customer)
+        .Where(o => (string.IsNullOrEmpty(status) || o.status == int.Parse(status)) &&
+            (!fromDate.HasValue || o.Orderdate >= fromDate) &&
+            (!toDate.HasValue || o.Orderdate <= toDate))
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Customer.Customername.ToLower().Contains(lowerSearch) ||
                             u.Orderid.ToString().ToLower().Contains(lowerSearch) ||

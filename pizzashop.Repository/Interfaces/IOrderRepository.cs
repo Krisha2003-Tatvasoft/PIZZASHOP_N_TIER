@@ -4,5 +4,6 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface IOrderRepository
 {
-    Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder);
+    Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder,string status,
+    DateTime? fromDate,DateTime? toDate);
 }

@@ -15,9 +15,10 @@ public class OrderService : IOrderService
         _orderRepository = orderRepository;
     }
 
-    public async Task<(List<OrderTable>, int totalOrder)> GetOrderTable(int page, int pageSize, string search, string SortColumn, string SortOrder)
+    public async Task<(List<OrderTable>, int totalOrder)> GetOrderTable(int page, int pageSize, string search, 
+    string SortColumn, string SortOrder,string status,DateTime? fromDate,DateTime? toDate)
     {
-        var orderList = await _orderRepository.OrderTable(search, SortColumn, SortOrder);
+        var orderList = await _orderRepository.OrderTable(search, SortColumn, SortOrder,status,fromDate,toDate);
 
         if (orderList == null)
         {
