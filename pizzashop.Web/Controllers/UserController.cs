@@ -6,6 +6,7 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using System.Security.Claims;
+using System.Text;
 
 
 namespace pizzashop.Web.Controllers;
@@ -37,7 +38,7 @@ public class UserController : Controller
     public async Task<IActionResult> UserList(int page = 1, int pageSize = 5, string search = "", string SortColumn = "", string SortOrder = "")
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-           ViewBag.CurrentUserId = userId; 
+        ViewBag.CurrentUserId = userId;
         var (userlist, totalUsers) = await _userService.GetUserTable(page, pageSize, search, SortColumn, SortOrder);
 
         ViewBag.CurrentPage = page;
@@ -45,7 +46,6 @@ public class UserController : Controller
         ViewBag.TotalUsers = totalUsers;
         ViewBag.SortColumn = SortColumn;
         ViewBag.SortOrder = SortOrder;
-        ViewBag.CurrentUserId = userId;
 
 
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
@@ -77,6 +77,7 @@ public class UserController : Controller
                 model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
                 model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
                 model.Roles = await _userService.GetRolesAsync();
+                model.Password = _userService.GeneratePassword();
                 return View(model);
             }
             else if (await _userService.usernameExist(model.Username))
@@ -86,6 +87,7 @@ public class UserController : Controller
                 model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
                 model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
                 model.Roles = await _userService.GetRolesAsync();
+                model.Password = _userService.GeneratePassword();
                 return View(model);
             }
             else if (await _userService.phoneExist(model.Phone))
@@ -95,13 +97,14 @@ public class UserController : Controller
                 model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
                 model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
                 model.Roles = await _userService.GetRolesAsync();
+                model.Password = _userService.GeneratePassword();
                 return View(model);
             }
             else
             {
                 await _userService.PostAddNewUser(model, user.Userid);
 
-                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/pizzashop_nTier/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
+                string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, "D:/PIZZASHOP_N_TIER/pizzashop.Web/wwwroot/images/pizzashop_logo.png");
                 var bodyBuilder = new BodyBuilder();
                 var image = bodyBuilder.LinkedResources.Add(imagePath);
                 image.ContentId = "pizzashoplogo";
@@ -149,6 +152,7 @@ public class UserController : Controller
             model.States = await _profileService.GetStatesByCountryAsync(model.Countryid);
             model.Cities = await _profileService.GetCitiesByStateAsync(model.Stateid);
             model.Roles = await _userService.GetRolesAsync();
+            model.Password = _userService.GeneratePassword();
             return View(model);
         }
 
@@ -238,4 +242,8 @@ public class UserController : Controller
         }
     }
 
+
+    
+
 }
+

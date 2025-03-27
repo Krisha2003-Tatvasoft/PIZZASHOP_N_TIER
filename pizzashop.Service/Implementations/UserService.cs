@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -76,7 +77,8 @@ public class UserService : IUserService
       Countries = await _countryRepository.GetAllCountryAsync(),
       States = new List<SelectListItem>(),
       Cities = new List<SelectListItem>(),
-      Roles = await _roleRepository.GetAllRolesAsync()
+      Roles = await _roleRepository.GetAllRolesAsync(),
+      Password = GeneratePassword()
     };
     return model;
   }
@@ -114,7 +116,7 @@ public class UserService : IUserService
       Userid = newUser.Userid,
       Roleid = model.Roleid,
       Username = model.Username,
-      FirstLogin=true
+      FirstLogin = true
     };
 
     await _userRepository.AddNewUser(newUserLogin);
@@ -157,12 +159,17 @@ public class UserService : IUserService
     string uniqueFileName = null;
     if (model.ProfilePicture != null)
     {
+      if (!string.IsNullOrEmpty(user.User?.Profileimg))
+      {
+        _fileService.DeleteFile(user.User?.Profileimg);
+      }
       uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
     }
     else
     {
       uniqueFileName = user.User?.Profileimg;
     }
+    
     if (user == null)
     {
       return false;
@@ -222,14 +229,51 @@ public class UserService : IUserService
     return await _userDetailsRepository.PhoneExistsAsync(phone);
   }
 
-  public async Task<bool> phoneExistEdit(string phone,int userid)
+  public async Task<bool> phoneExistEdit(string phone, int userid)
   {
-    return await _userDetailsRepository.PhoneExistsEditAsync(phone,userid);
+    return await _userDetailsRepository.PhoneExistsEditAsync(phone, userid);
   }
 
   public async Task<List<SelectListItem>> GetRolesAsync()
   {
     return await _roleRepository.GetAllRolesAsync();
   }
+
+  public async Task<Userslogin> GetUserLoginByEmail(string email)
+  {
+    return await _userRepository.GetUserLoginByEmailAsync(email);
+  }
+
+
+  public async Task UpdateUserLogin(Userslogin userlogin)
+  {
+    await _userRepository.UpdateUserLoginAsync(userlogin);
+  }
+
+  public string GeneratePassword(int length = 8)
+  {
+    const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const string digits = "0123456789";
+    const string specialChars = "@$!%*?&";
+    const string allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&";
+
+    StringBuilder password = new StringBuilder();
+    Random random = new Random();
+
+    // Ensure at least one uppercase letter, one digit, and one special character
+    password.Append(uppercase[random.Next(uppercase.Length)]);
+    password.Append(digits[random.Next(digits.Length)]);
+    password.Append(specialChars[random.Next(specialChars.Length)]);
+
+    // Fill the remaining length with random characters
+    for (int i = 3; i < length; i++)
+    {
+      password.Append(allChars[random.Next(allChars.Length)]);
+    }
+
+    // Shuffle the password to make it random
+    return new string(password.ToString().OrderBy(x => random.Next()).ToArray());
+  }
+
 
 }

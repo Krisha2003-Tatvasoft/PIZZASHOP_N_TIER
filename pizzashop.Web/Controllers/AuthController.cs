@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
@@ -23,13 +24,16 @@ public class AuthController : Controller
 
     private static readonly ConcurrentDictionary<string, DateTime> _blacklistedTokens = new ConcurrentDictionary<string, DateTime>();
 
+    private readonly IUserService _userService;
 
-    public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService, IWebHostEnvironment webHostEnvironment)
+    public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService, 
+    IWebHostEnvironment webHostEnvironment, IUserService userService)
     {
         _authService = authService;
         _jwtService = jwtService;
         _emailService = emailService;
         _webHostEnvironment = webHostEnvironment;
+        _userService = userService;
     }
 
     [AllowAnonymous]
@@ -57,8 +61,15 @@ public class AuthController : Controller
                 TempData["ErrorMessage"] = "Invalis Email or Password";
                 return View();
             }
+            if (user.FirstLogin == true)
+            {
+                var tokenarfirstlogin = _jwtService.GenerateForgetToken(model.Email);
 
-            var token = _jwtService.GenerateJwtToken(user.Email, user.Userloginid, user.Role.Rolename);
+                var resetLink = Url.Action("ResetPassword", "Auth", new { token = tokenarfirstlogin }, Request.Scheme);
+                return Redirect(resetLink);
+            }
+
+            var token = _jwtService.GenerateJwtToken(user.Email, user.User.Userid, user.Role.Rolename);
 
             CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
 
@@ -97,9 +108,9 @@ public class AuthController : Controller
     public IActionResult Forget()
     {
         var model = new Forget();
-        if(TempData["UserEmail"] !=null)
-        { 
-           model.Email = TempData["UserEmail"].ToString();  
+        if (TempData["UserEmail"] != null)
+        {
+            model.Email = TempData["UserEmail"].ToString();
         }
         return View(model);
     }
@@ -194,7 +205,7 @@ public class AuthController : Controller
     }
 
     [HttpGet]
-    public IActionResult ResetPassword()
+    public async Task<IActionResult> ResetPassword()
     {
         var token = Request.Query["token"];
         var principal = _jwtService?.ValidateToken(token);
@@ -220,6 +231,12 @@ public class AuthController : Controller
             TempData["ErrorMessage"] = "User Not Found";
             return View();
         }
+        
+        var user = await _userService.GetUserLoginByEmail(email);
+        if(user.FirstLogin == true)
+        {
+             TempData["SuccessMessage"] = "You are First Time login. Reset Your Password.";
+        }
 
         // You can now use the email, e.g., check if it exists in the database
         // If everything is fine, you can pass the email to the view
@@ -233,28 +250,28 @@ public class AuthController : Controller
     [HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPassword model)
     {
-         var token = model.token;
-            var principal = _jwtService?.ValidateToken(token);
-            if (principal == null)
-            {
-                TempData["ErrorMessage"] = "Invalid or expired token.";
-                return View(model);
-            }
+        var token = model.token;
+        var principal = _jwtService?.ValidateToken(token);
+        if (principal == null)
+        {
+            TempData["ErrorMessage"] = "Invalid or expired token.";
+            return View(model);
+        }
 
-            // Extract TokenId claim.
-            var tokenId = principal.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
-            if (string.IsNullOrEmpty(tokenId))
-            {
-                TempData["ErrorMessage"] = "Invalid token payload.";
-                return View(model);
-            }
+        // Extract TokenId claim.
+        var tokenId = principal.Claims.FirstOrDefault(c => c.Type == "TokenId")?.Value;
+        if (string.IsNullOrEmpty(tokenId))
+        {
+            TempData["ErrorMessage"] = "Invalid token payload.";
+            return View(model);
+        }
 
-            // Check if the token is already blacklisted.
-            if (IsTokenBlacklisted(tokenId))
-            {
-                TempData["ErrorMessage"] = "This token has already been used.";
-                return View(model);
-            }
+        // Check if the token is already blacklisted.
+        if (IsTokenBlacklisted(tokenId))
+        {
+            TempData["ErrorMessage"] = "This token has already been used.";
+            return View(model);
+        }
 
         if (!ModelState.IsValid)
         {
@@ -262,14 +279,20 @@ public class AuthController : Controller
         }
 
         await _authService.ResetPassword(model);
-        
+
         BlacklistToken(tokenId, DateTime.UtcNow.AddYears(100));
 
         // Redirect user to login page or show success message
         CookieUtils.ClearCookies(HttpContext);
         HttpContext.Session.Clear();
 
+        var user = await _userService.GetUserLoginByEmail(model.Email);
         TempData["SuccessMessage"] = "Password Reset Sucessfully";
+        if(user.FirstLogin == true)
+        {
+            user.FirstLogin =false;
+        }
+        await _userService.UpdateUserLogin(user);
         return RedirectToAction("Login", "Auth");
     }
 
