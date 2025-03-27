@@ -35,7 +35,7 @@
             </select>
 
             <a clas="">
-                <button class="back-button">
+                <button class="back-button" id="exportOrdersBtn">
                     <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px">Export</span>
                 </button>
             </a>
@@ -233,7 +233,37 @@
                     loadOrderTable(1);
                 });
 
+            @* export button  *@
+                $("#exportOrdersBtn").click(function () {
+                    let searchQuery = $("#searchOrders").val();
+                    let status = $("#orderStatus").val();
+                    let dateFilter = $("#searchTimeWise").val();
+                    
+                    let fromDate = null;
+                    let toDate = null;
 
+                    let today = new Date();
+
+                    if (dateFilter === "7") {
+                        fromDate = new Date(today);
+                        fromDate.setDate(today.getDate() - 7);
+                        toDate = today;
+                    } else if (dateFilter === "30") {
+                        fromDate = new Date(today);
+                        fromDate.setDate(today.getDate() - 30);
+                        toDate = today;
+                    } else if (dateFilter === "currentMonth") {
+                        fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
+                        toDate = today;
+                    }
+
+                    fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
+                    toDate = toDate ? toDate.toISOString().split("T")[0] : null;
+
+                    let url = `/Orders/ExportOrders?search=${searchQuery}&status=${status}&fromDate=${fromDate}&toDate=${toDate}`;
+
+                    window.location.href = url; // Triggers file download
+                });
 
 
 

@@ -15,17 +15,12 @@ public class OrderService : IOrderService
         _orderRepository = orderRepository;
     }
 
-    public async Task<(List<OrderTable>, int totalOrder)> GetOrderTable(int page, int pageSize, string search, 
-    string SortColumn, string SortOrder,string status,DateTime? fromDate,DateTime? toDate)
+    public async Task<(List<OrderTable>, int totalOrder)> GetOrderTable(int page, int pageSize, string search,
+    string SortColumn, string SortOrder, string status, DateTime? fromDate, DateTime? toDate)
     {
-        var orderList = await _orderRepository.OrderTable(search, SortColumn, SortOrder,status,fromDate,toDate);
+        var orderList = await _orderRepository.OrderTable(search, SortColumn, SortOrder, status, fromDate, toDate);
 
-        if (orderList == null)
-        {
-            Console.WriteLine("orderList is null ");
-        }
-
-        int totalOrder =await orderList.CountAsync();
+        int totalOrder = await orderList.CountAsync();
 
         var orders = await orderList
         .Skip((page - 1) * pageSize)
@@ -44,4 +39,29 @@ public class OrderService : IOrderService
 
         return (orders, totalOrder);
     }
+
+
+    public async Task<List<OrderTable>> GetExcelOrderTable(string search,
+        string status, DateTime? fromDate, DateTime? toDate)
+    {
+        var orderList = await _orderRepository.OrderExcelTable(search,status, fromDate, toDate);
+
+        var orders = await orderList
+        .Select(o => new OrderTable
+        {
+            Orderid = o.Orderid,
+            Orderdate = o.Orderdate,
+            Customername = o.Customer.Customername,
+            orderstatus = (Entity.Models.Enums.orderstatus)o.status,
+            paymentmode = (Entity.Models.Enums.paymentmode)o.Paymentmode,
+            Rating = (decimal)o.Rating,
+            Totalamount = o.Totalamount
+        })
+        .ToListAsync();
+
+        return orders;
+    }
+
+
+
 }

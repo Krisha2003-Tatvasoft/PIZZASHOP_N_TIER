@@ -204,6 +204,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.10.0, )"

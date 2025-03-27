@@ -13,13 +13,13 @@
 .heading-back-button .back-to-button button {
     color: #087cc4;
     border-radius: 5px;
-    border: 1px solid #087cc4;
+    border: 1px solid rgb(8, 124, 196);
     height: 40px;
 }
 
 .form {
     padding: 20px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
 }
 
 .form .custom-icon {

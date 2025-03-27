@@ -14,4 +14,5 @@ public partial class Ordertable
     public virtual Order Order { get; set; } = null!;
 
     public virtual Table Table { get; set; } = null!;
+  
 }

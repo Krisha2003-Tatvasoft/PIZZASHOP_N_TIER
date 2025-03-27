@@ -3,6 +3,7 @@
     <ProjectReference Include="..\pizzashop.Repository\pizzashop.Repository.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="MailKit" Version="4.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
     <PackageReference Include="MimeKit" Version="4.10.0" />

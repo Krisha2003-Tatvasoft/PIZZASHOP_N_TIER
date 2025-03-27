@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj": {}
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj": {}
   },
   "projects": {
     "D:\\PIZZASHOP_N_TIER\\pizzashop.Entity\\pizzashop.Entity.csproj": {
@@ -204,6 +204,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.104.2, )"
+            },
             "MailKit": {
               "target": "Package",
               "version": "[4.10.0, )"
@@ -237,14 +241,14 @@
         }
       }
     },
-    "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj": {
+    "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
         "projectName": "pizzashop.Web",
-        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj",
+        "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
         "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\obj\\",
+        "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
