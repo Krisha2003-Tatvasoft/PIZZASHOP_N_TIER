@@ -11,6 +11,8 @@ public partial class Ordereditem
 
     public int Itemid { get; set; }
 
+     public int Quantity { get; set; }
+
     public string? Itemwisecomment { get; set; }
 
     public virtual Item Item { get; set; } = null!;

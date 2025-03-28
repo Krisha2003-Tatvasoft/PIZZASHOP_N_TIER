@@ -11,4 +11,6 @@ public interface IOrderService
     Task<List<OrderTable>> GetExcelOrderTable(string search,
         string status, DateTime? fromDate, DateTime? toDate);
 
+         Task<OrderDetails> OrderDetails(int id);
+
 }

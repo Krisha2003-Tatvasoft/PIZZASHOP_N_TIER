@@ -9,266 +9,301 @@
 
     <!-- heading text -->
 
-    <div class="w-100 heading-back-button p-2 mt-2">
-        <div class="heading-text">
-            <h1><b>Orders</b></h1>
+    <div id="orderTablePartial">
+        <div class="w-100 heading-back-button p-2 mt-2">
+            <div class="heading-text">
+                <h1><b>Orders</b></h1>
+            </div>
+            <div class="back-to-button d-flex gap-3 align-items-center">
+
+
+                <div class="position-relative">
+                    <input class="filter form-control me-2 border-0" id="searchOrders" type="text" placeholder="Search"
+                        aria-label="Search">
+                    <i class="bi bi-search custom-icon"></i>
+                </div>
+
+                <select class="form-select filter" asp-items="Html.GetEnumSelectList<orderstatus>()" id="orderStatus"
+                    aria-label="Default select example">
+                    <option selected value="">All Status</option>
+                </select>
+
+                <select class="form-select filter" id="searchTimeWise" aria-label="Default select example">
+                    <option selected value="all">All Time</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="currentMonth">Current Month</option>
+                </select>
+
+                <a clas="">
+                    <button class="back-button" id="exportOrdersBtn">
+                        <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px">Export</span>
+                    </button>
+                </a>
+
+            </div>
         </div>
-        <div class="back-to-button d-flex gap-3 align-items-center">
 
+        <div class=" d-flex justify-content-end gap-3 align-items-center mb-4">
 
-            <div class="position-relative">
-                <input class="filter form-control me-2 border-0" id="searchOrders" type="text" placeholder="Search"
-                    aria-label="Search">
-                <i class="bi bi-search custom-icon"></i>
+            <div class="form-floating filter">
+                <input type="date" class="form-control" id="FromDate" placeholder="fromDate">
+                <label for="fromDate">From Date</label>
             </div>
 
-            <select class="form-select filter" asp-items="Html.GetEnumSelectList<orderstatus>()" id="orderStatus"
-                aria-label="Default select example">
-                <option selected value="">All Status</option>
-            </select>
+            <div class="form-floating filter">
+                <input type="date" class="form-control" id="ToDate" placeholder="ToDate">
+                <label for="ToDate">To Date</label>
+            </div>
 
-            <select class="form-select filter" id="searchTimeWise" aria-label="Default select example">
-                <option selected value="all">All Time</option>
-                <option value="7">Last 7 Days</option>
-                <option value="30">Last 30 Days</option>
-                <option value="currentMonth">Current Month</option>
-            </select>
 
-            <a clas="">
-                <button class="back-button" id="exportOrdersBtn">
-                    <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px">Export</span>
-                </button>
-            </a>
+            <button class="search-btn" id="serachDate">
+                <span>Search</span>
+            </button>
+
+
+            <button class="clear-btn" id="clearbtn">
+                <span>Clear</span>
+            </button>
 
         </div>
-    </div>
 
-    <div class=" d-flex justify-content-end gap-3 align-items-center mb-4">
-
-        <div class="form-floating filter">
-            <input type="date" class="form-control" id="FromDate" placeholder="fromDate">
-            <label for="fromDate">From Date</label>
-        </div>
-
-        <div class="form-floating filter">
-            <input type="date" class="form-control" id="ToDate" placeholder="ToDate">
-            <label for="ToDate">To Date</label>
-        </div>
-
-
-        <button class="search-btn" id="serachDate">
-            <span>Search</span>
-        </button>
-
-
-        <button class="clear-btn" id="clearbtn">
-            <span>Clear</span>
-        </button>
+        <div id="table-container"></div>
 
     </div>
 
-    <div id="table-container"></div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        let GFromDate;
-        let GToDate;
-
-        $(document).ready(function () {
-
-            let currentPage = @ViewBag.CurrentPage;
-            let searchQuery = "@ViewBag.SearchQuery" || "";
-            let SortColumn = "@ViewBag.SortColumn" || "";
-            let SortOrder = "@ViewBag.SortOrder" || "";
-
-            @* load order table *@
-                loadOrderTable(1);
-
-            function loadOrderTable(page) {
-
-                let pageSize = $("#pageSizeOrder").val();
-                let search = $("#searchOrders").val(); // Get search input value
-                let status = $("#orderStatus").val();
-
-                $.ajax({
-                    url: "/Orders/Orders",
-                    type: "GET",
-                    data: {
-                        page: page,
-                        pageSize: pageSize,
-                        search: search,
-                        SortColumn: SortColumn,
-                        SortOrder: SortOrder,
-                        status: status,
-                        fromDate: GFromDate,
-                        toDate: GToDate
-                    },
-                    success: function (data) {
-                        $("#table-container").html(data);
-                        currentPage = page;
-                    },
-                    error: function () {
-                        alert("Failed to load data.");
-                    }
-                });
-            }
-
-            @* page link button *@
-
-                $("#order-table").on("click", ".pagination-link", function (e) {
-                    e.preventDefault();
-                    let page = $(this).data("page");
-
-                    if (page > 0) {
-                        loadOrderTable(page);
-                    }
-                });
-
-            @* sort column *@
-
-                $("#order-table").on("click", ".sort", function (e) {
-                    e.preventDefault();
-                    SortColumn = $(this).data("column");
-                    SortOrder = $(this).data("order");
-                    loadOrderTable(1);
-                });
-
-            @* page size  *@
-
-                $("#order-table").on("change", "#pageSizeOrder", function () {
-                    loadOrderTable(1);
-                });
-
-            @* pagination link *@
-
-                $("#order-table").on("click", ".pagination-link", function (e) {
-                    e.preventDefault();
-                    let page = $(this).data("page");
-
-                    if (page > 0) {
-                        loadOrderTable(page);
-                    }
-                });
-
-            @* search filter *@
-
-                let searchTimer;
-            $("#searchOrders").on("input", function () {
-                clearTimeout(searchTimer);
-                searchTimer = setTimeout(function () {
-                    loadOrderTable(1); // Reset to page 1 when searching
-                }, 500); // 500ms delay to avoid excessive requests
-            });
-
-            @* status filter *@
-
-                $("#orderStatus").on("change", function () {
-                    loadOrderTable(1);
-                });
-
-            @* search button *@
-
-                $("#serachDate").on("click", function () {
-                    GFromDate = $("#FromDate").val();
-                    GToDate = $("#ToDate").val();
-                    loadOrderTable(1);
-                });
-
-            @* Days filter *@
-
-                $("#searchTimeWise").on("change", function () {
-
-                    $("#FromDate").val("");
-                    $("#ToDate").val("");
-
-                    let dateFilter = $(this).val();
-
-                    let fromDate = null;
-                    let toDate = null; // Set to null for "All" option
-
-                    let today = new Date();
-
-                    if (dateFilter === "7") {
-                        fromDate = new Date(today);
-                        fromDate.setDate(today.getDate() - 7);
-                        toDate = today;
-                    } else if (dateFilter === "30") {
-                        fromDate = new Date(today);
-                        fromDate.setDate(today.getDate() - 30);
-                        toDate = today;
-                    } else if (dateFilter === "currentMonth") {
-                        fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
-                        toDate = today;
-                    }
-
-                    // Convert dates to YYYY-MM-DD format for PostgreSQL
-                    fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
-                    toDate = toDate ? toDate.toISOString().split("T")[0] : null;
-
-                    $("#FromDate").val(fromDate);
-                    $("#ToDate").val(toDate);
-
-
-                    GFromDate = fromDate;
-                    GToDate = toDate;
-
-                    loadOrderTable(1);
-
-                });
-
-            @* clear button *@
-
-                $("#clearbtn").on("click", function () {
-
-                    $("#searchTimeWise").val("All");
-                    $("#searchOrders").val("");
-                    $("#FromDate").val("");
-                    $("#ToDate").val("");
-                    $("#orderStatus").val("");
-
-                    GFromDate = "";
-                    GToDate = "";
-
-                    loadOrderTable(1);
-                });
-
-            @* export button  *@
-                $("#exportOrdersBtn").click(function () {
-                    let searchQuery = $("#searchOrders").val();
-                    let status = $("#orderStatus").val();
-                    let dateFilter = $("#searchTimeWise").val();
-                    
-                    let fromDate = null;
-                    let toDate = null;
-
-                    let today = new Date();
-
-                    if (dateFilter === "7") {
-                        fromDate = new Date(today);
-                        fromDate.setDate(today.getDate() - 7);
-                        toDate = today;
-                    } else if (dateFilter === "30") {
-                        fromDate = new Date(today);
-                        fromDate.setDate(today.getDate() - 30);
-                        toDate = today;
-                    } else if (dateFilter === "currentMonth") {
-                        fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
-                        toDate = today;
-                    }
-
-                    fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
-                    toDate = toDate ? toDate.toISOString().split("T")[0] : null;
-
-                    let url = `/Orders/ExportOrders?search=${searchQuery}&status=${status}&fromDate=${fromDate}&toDate=${toDate}`;
-
-                    window.location.href = url; // Triggers file download
-                });
-
-
-
-        });
-    </script>
-
+    <div id="orderDetailspartial"></div>
 
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    let GFromDate;
+    let GToDate;
+
+    $(document).ready(function () {
+
+        let currentPage = @ViewBag.CurrentPage;
+        let searchQuery = "@ViewBag.SearchQuery" || "";
+        let SortColumn = "@ViewBag.SortColumn" || "";
+        let SortOrder = "@ViewBag.SortOrder" || "";
+
+        @* load order table *@
+            loadOrderTable(1);
+
+        function loadOrderTable(page) {
+
+            let pageSize = $("#pageSizeOrder").val();
+            let search = $("#searchOrders").val(); // Get search input value
+            let status = $("#orderStatus").val();
+
+            $.ajax({
+                url: "/Orders/Orders",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search,
+                    SortColumn: SortColumn,
+                    SortOrder: SortOrder,
+                    status: status,
+                    fromDate: GFromDate,
+                    toDate: GToDate
+                },
+                success: function (data) {
+                    $("#table-container").html(data);
+                    currentPage = page;
+                },
+                error: function () {
+                    alert("Failed to load data.");
+                }
+            });
+        }
+
+        @* page link button *@
+
+            $("#order-table").on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadOrderTable(page);
+                }
+            });
+
+        @* sort column *@
+
+            $("#order-table").on("click", ".sort", function (e) {
+                e.preventDefault();
+                SortColumn = $(this).data("column");
+                SortOrder = $(this).data("order");
+                loadOrderTable(1);
+            });
+
+        @* page size  *@
+
+            $("#order-table").on("change", "#pageSizeOrder", function () {
+                loadOrderTable(1);
+            });
+
+        @* pagination link *@
+
+            $("#order-table").on("click", ".pagination-link", function (e) {
+                e.preventDefault();
+                let page = $(this).data("page");
+
+                if (page > 0) {
+                    loadOrderTable(page);
+                }
+            });
+
+        @* search filter *@
+
+            let searchTimer;
+        $("#searchOrders").on("input", function () {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(function () {
+                loadOrderTable(1); // Reset to page 1 when searching
+            }, 500); // 500ms delay to avoid excessive requests
+        });
+
+        @* status filter *@
+
+            $("#orderStatus").on("change", function () {
+                loadOrderTable(1);
+            });
+
+        @* search button *@
+
+            $("#serachDate").on("click", function () {
+                GFromDate = $("#FromDate").val();
+                GToDate = $("#ToDate").val();
+                loadOrderTable(1);
+            });
+
+        @* Days filter *@
+
+            $("#searchTimeWise").on("change", function () {
+
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+
+                let dateFilter = $(this).val();
+
+                let fromDate = null;
+                let toDate = null; // Set to null for "All" option
+
+                let today = new Date();
+
+                if (dateFilter === "7") {
+                    fromDate = new Date(today);
+                    fromDate.setDate(today.getDate() - 7);
+                    toDate = today;
+                } else if (dateFilter === "30") {
+                    fromDate = new Date(today);
+                    fromDate.setDate(today.getDate() - 30);
+                    toDate = today;
+                } else if (dateFilter === "currentMonth") {
+                    fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
+                    toDate = today;
+                }
+
+                // Convert dates to YYYY-MM-DD format for PostgreSQL
+                fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
+                toDate = toDate ? toDate.toISOString().split("T")[0] : null;
+
+                $("#FromDate").val(fromDate);
+                $("#ToDate").val(toDate);
+
+
+                GFromDate = fromDate;
+                GToDate = toDate;
+
+                loadOrderTable(1);
+
+            });
+
+        @* clear button *@
+
+            $("#clearbtn").on("click", function () {
+
+                $("#searchTimeWise").val("All");
+                $("#searchOrders").val("");
+                $("#FromDate").val("");
+                $("#ToDate").val("");
+                $("#orderStatus").val("");
+
+                GFromDate = "";
+                GToDate = "";
+
+                loadOrderTable(1);
+            });
+
+        @* export button  *@
+            $("#exportOrdersBtn").click(function () {
+                let searchQuery = $("#searchOrders").val();
+                let status = $("#orderStatus").val();
+                let dateFilter = $("#searchTimeWise").val();
+
+                let fromDate = null;
+                let toDate = null;
+
+                let today = new Date();
+
+                if (dateFilter === "7") {
+                    fromDate = new Date(today);
+                    fromDate.setDate(today.getDate() - 7);
+                    toDate = today;
+                } else if (dateFilter === "30") {
+                    fromDate = new Date(today);
+                    fromDate.setDate(today.getDate() - 30);
+                    toDate = today;
+                } else if (dateFilter === "currentMonth") {
+                    fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
+                    toDate = today;
+                }
+
+                fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
+                toDate = toDate ? toDate.toISOString().split("T")[0] : null;
+
+                let url = `/Orders/ExportOrders?search=${searchQuery}&status=${status}&fromDate=${fromDate}&toDate=${toDate}`;
+
+                window.location.href = url; // Triggers file download
+            });
+
+
+        @* load order details *@
+
+            $(document).on("click", ".order-details", function () {
+                var Orderid = $(this).data("orderid");
+                loadOrderDetails(Orderid);
+            });
+
+        function loadOrderDetails(Orderid) {
+
+            $.ajax({
+
+                url: "/Orders/OrdersDetails",
+                type: "GET",
+                data: { id: Orderid },
+                success: function (data) {
+                    $('#orderTablePartial').hide();
+                    $('#orderDetailspartial').html(data).show();
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        @* back button  *@
+
+            $(document).on("click", ".back", function () {
+                $('#orderTablePartial').show();
+                $('#orderDetailspartial').hide();
+            });
+
+
+    });
+</script>

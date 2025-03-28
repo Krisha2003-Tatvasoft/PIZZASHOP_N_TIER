@@ -1,0 +1,174 @@
+@model pizzashop.Entity.ViewModels.OrderDetails;
+
+<div class="order-detaile-container">
+
+    <div class="heading-back-button py-2">
+        <div class="heading-text">
+            <h1><b>Order-Details</b></h1>
+        </div>
+        <div class="back-to-button">
+            <a class="back">
+                <button><span>
+                        < Back</span></button>
+            </a>
+        </div>
+    </div>
+
+    <div class="o-details">
+        <div class="bg-white rounded mb-3">
+            <div class="d-flex justify-content-between align-items-center ms-3 pt-2 me-3">
+                <h4 class="mb-0"><strong>Order Summary </strong><span class="badge bg-info">@Model.orderstatus</span>
+                </h4>
+
+                <a>
+                    <button id="exportOrdersBtn">
+                        <span><img src="~/images/export.svg" class="me-2 mb-1" width="20px"><span
+                                class="d-none d-sm-inline">Export</span></span>
+                    </button>
+                </a>
+            </div>
+            <div class="row mb-3 ms-1">
+                <div class="col-12 mb-2">
+                    <p class="mb-1"><b>Invoice No.:</b>@Model.Invoicenumber</p>
+
+                    <div class="d-flex gap-md-3 flex-column flex-md-row">
+                        <h6><b>Paid on :</b> </h6>
+                        <h6><b>Placed on : @Model.PlacedOn</b></h6>
+                        <h6><b>Modified on :</b></h6>
+                        <h6><b>Order Duration : </b></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="d-flex flex-column flex-md-row ms-0 me-0" style="gap: .7rem !important;">
+            <div class="bg-white rounded mb-3 w-100 w-md-50">
+                <div class="mb-3">
+
+                    <h5 class="mb-4 mt-4 ms-4"><strong><img class="me-1" src="~/images/customers-default.png"
+                                width="25px" height="25px">Customer Details</strong></h5>
+
+                    <div class="ms-4">
+                        <p class="mb-1">Name: @Model.Customername</p>
+                        <p class="mb-1">Phone: @Model.Phoneno</p>
+                        <p class="mb-1">No of Person: @Model.Noofperson</p>
+                        <p class="mb-0">email: @Model.Email</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded mb-3 w-100 w-md-50" style="width: 49%;">
+                <div class=" mb-3">
+                    <h5 class="mb-4 mt-4 ms-4"><strong><img class="me-1" src="~/images/taxes-default.png" width="25px"
+                                height="25px">Table Details</strong></h5>
+
+                    <div class="mb-4 ms-4">
+                        <p class="mb-1">Table :
+                            @foreach (var table in Model.Tablenames)
+                            {
+                                <span>@table</span>
+                            }
+                        </p>
+                        <p class="mb-0">Section : @Model.Sectionname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded">
+
+            <h5 class="mb-4 ms-4 pt-3"><strong>Order Items</strong></h5>
+
+            <div class="table-responsive ms-4 me-4">
+                <table class="table">
+                    <thead>
+                        <tr class="text-center">
+                            <th>Sr.No</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr class="text-center">
+                                <td>1</td>
+                                <td>
+                                   @item.Itemname
+
+                                   @foreach(var modifiers in item.Modifiers)
+                                   {
+
+                                    <div class="text-muted">
+                                        <li class="list-group-disc">@modifiers.Modifiername</li>
+                                    </div>
+                                   }
+                                </td>
+                                <td>@item.Quantity
+                                    <br><small class="">1</small>
+                                </td>
+                                <td>@item.Rate
+                                    @foreach(var modifiers in item.Modifiers)
+                                    {
+                                        <div class="">@modifiers.Rate</div>
+                                    }
+                                </td>
+                                <td>@item.TotalAmount
+                                    @foreach(var modifiers in item.Modifiers)
+                                    {
+                                        <div class="">@modifiers.TotalAmount</div>
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end me-3">
+
+                <table class="">
+                    <tr class="d-flex justify-content-between gap-5">
+                        <td>Subtotal</td>
+                        <td class="text-end">₹399.00</td>
+                    </tr>
+                    @foreach (var tax in Model.Taxes)
+                    {
+                        <tr class="d-flex justify-content-between gap-5">
+                            <td>@tax.Taxname</td>
+                            <td class="text-end">₹@tax.Taxvalue</td>
+                        </tr>
+                    }
+                    <tr class="d-flex justify-content-between gap-5">
+                        <td>CGST</td>
+                        <td class="text-end">₹47.88</td>
+                    </tr>
+                    @* <tr class="d-flex justify-content-between gap-5">
+                        <td>SGST</td>
+                        <td class="text-end">₹150.00</td>
+                    </tr>
+                    <tr class="d-flex justify-content-between gap-5">
+                        <td>GST</td>
+                        <td class="text-end">₹77.98</td>
+                    </tr>
+                    <tr class="d-flex justify-content-between gap-5">
+                        <td>Other</td>
+                        <td class="text-end">₹19.95</td>
+                    </tr>
+                    <tr class="d-flex justify-content-between gap-5 mb-3">
+                        <td><strong>Total</strong></td>
+                        <td class="text-end"><strong>₹624.81</strong></td>
+                    </tr> *@
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>

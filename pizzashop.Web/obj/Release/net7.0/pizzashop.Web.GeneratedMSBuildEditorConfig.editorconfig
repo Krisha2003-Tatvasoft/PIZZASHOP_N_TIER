@@ -9,11 +9,11 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = pizzashop.Web
 build_property.RootNamespace = pizzashop.Web
-build_property.ProjectDir = D:\PIZZASHOP_N_TIER\pizzashop.Web\
+build_property.ProjectDir = D:\PIZZASHOP_N_TIER\pizzashop.web\
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\PIZZASHOP_N_TIER\pizzashop.Web
+build_property.MSBuildProjectDirectory = D:\PIZZASHOP_N_TIER\pizzashop.web
 build_property._RazorSourceGeneratorDebug = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Auth/AccessDenied.cshtml]
@@ -90,6 +90,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Orders/Orders.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXE9yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Orders/_OrderDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXF9PcmRlckRldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.Web/Views/Orders/_OrderTable.cshtml]

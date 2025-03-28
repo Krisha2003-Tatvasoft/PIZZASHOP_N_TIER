@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -44,7 +45,7 @@ public class OrderService : IOrderService
     public async Task<List<OrderTable>> GetExcelOrderTable(string search,
         string status, DateTime? fromDate, DateTime? toDate)
     {
-        var orderList = await _orderRepository.OrderExcelTable(search,status, fromDate, toDate);
+        var orderList = await _orderRepository.OrderExcelTable(search, status, fromDate, toDate);
 
         var orders = await orderList
         .Select(o => new OrderTable
@@ -61,6 +62,54 @@ public class OrderService : IOrderService
 
         return orders;
     }
+
+    public async Task<OrderDetails> OrderDetails(int id)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync(id);
+
+        List<OrderItem> items = order.Ordereditems.Select(i => new OrderItem
+        {
+            Itemid = i.Itemid,
+            Itemname = i.Item.Itemname,
+            Rate = i.Item.Rate,
+            Quantity = (short)i.Quantity,
+            TotalAmount = i.Item.Rate * i.Quantity,
+            Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
+            {
+                Modifierid = m.Modifiers.Modifierid,
+                Modifiername = m.Modifiers.Modifiername,
+                Rate = m.Modifiers.Rate,
+                TotalAmount = m.Modifiers.Rate 
+            }).ToList()
+        }).ToList();
+
+        List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
+        {
+            Taxid = t.Taxid,
+            Taxname = t.Tax.Taxname,
+            Taxvalue = t.Tax.Taxvalue
+        }).ToList();
+
+       OrderDetails model = new OrderDetails{
+           Orderid= order.Orderid,
+           PlacedOn = order.Createdat,
+           Customername = order.Customer.Customername,
+           Phoneno = order.Customer.Phoneno,
+           Noofperson = order.Noofperson,
+           orderstatus = (Entity.Models.Enums.orderstatus)order.status,
+           Email=order.Customer.Email,
+           Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
+           Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
+           Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
+           Items=items,
+           Taxes=taxes
+       };
+     return model;
+        
+    }
+
+
+
 
 
 

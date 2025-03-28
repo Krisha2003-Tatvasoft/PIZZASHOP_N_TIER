@@ -15,7 +15,7 @@ public class OrdersController : Controller
     public OrdersController(IOrderService orderService, IOrderExportService orderExportService)
     {
         _orderService = orderService;
-         _orderExportService = orderExportService;
+        _orderExportService = orderExportService;
     }
 
     [HttpGet]
@@ -49,6 +49,12 @@ public class OrdersController : Controller
 
         // Return as downloadable file
         return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Orders.xlsx");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> OrdersDetails(int id)
+    {
+        return PartialView("_OrderDetails", await _orderService.OrderDetails(id));
     }
 
 }

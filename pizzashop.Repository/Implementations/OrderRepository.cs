@@ -52,9 +52,27 @@ public class OrderRepository : IOrderRepository
                             u.Orderid.ToString().ToLower().Contains(lowerSearch) ||
                             u.Orderdate.ToString().ToLower().Contains(lowerSearch) ||
                             u.Totalamount.ToString().ToLower().Contains(lowerSearch));
+                            
 
         return orderList;
+
     }
+
+    public async Task<Order> OrderDetailsByIdAsync(int id)
+    {
+        return await _context.Orders
+        .Include(o => o.Customer)
+        .Include(o => o.Invoices)
+        .Include(o => o.Ordertables)
+          .ThenInclude(t => t.Table)
+          .ThenInclude(s=> s.Section)
+        .Include(o => o.Ordereditems).ThenInclude(i =>i.Item)   
+        .Include(o => o.Ordereditems).ThenInclude(i => i.Ordereditemmodifers).ThenInclude(m => m.Modifiers)
+        .Include(o =>o.Ordertaxmappings).ThenInclude(t => t.Tax)
+        .FirstOrDefaultAsync(o => o.Orderid == id);
+    }
+
+
 
 
 

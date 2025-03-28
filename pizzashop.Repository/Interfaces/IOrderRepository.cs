@@ -8,4 +8,6 @@ public interface IOrderRepository
     DateTime? fromDate,DateTime? toDate);
 
     Task<IQueryable<Order>> OrderExcelTable(string search, string status, DateTime? fromDate, DateTime? toDate);
+
+    Task<Order> OrderDetailsByIdAsync(int id);
 }
