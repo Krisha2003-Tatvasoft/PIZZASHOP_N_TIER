@@ -384,3 +384,44 @@
     }
 
 }
+
+
+.dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.dropdown .btn {
+    text-align: left;
+    padding-top: 0.75rem;
+    padding: 1rem;
+    background: white;
+    border: 1px solid #ced4da;
+}
+
+.dropdown-menu .form-check {
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+.modifier-pill {
+    /* display: inline-block; */
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px; /* Rounded edges */
+    background-color: #f8f9fa; /* Light gray background */
+    font-weight: bold;
+    color: #333;
+    margin-right: 5px;
+}
+
+.modifier-count {
+    font-size: 1rem;
+    color: #666;
+}
+

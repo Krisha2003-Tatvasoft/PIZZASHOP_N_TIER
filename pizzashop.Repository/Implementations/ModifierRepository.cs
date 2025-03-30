@@ -18,7 +18,9 @@ public class ModifierRepository : IModifierRepository
         string lowerSearch = search.ToLower();
         return await _context.Modifiers
         .Include(u => u.Unit)
-        .Where(c => c.Modifiergroupid == id && c.Isdeleted == false)
+        .Include(mgm => mgm.ModifierGroupModifier)
+        .Where(m => m.Isdeleted == false)
+         .Where(m => m.ModifierGroupModifier.Any(mgm => mgm.ModifierGroupId == id))
           .Where(c => string.IsNullOrEmpty(lowerSearch) ||
            c.Modifiername.ToLower().Contains(lowerSearch) ||
            c.Unit.Unitname.ToLower().Contains(lowerSearch) ||
@@ -87,5 +89,15 @@ public class ModifierRepository : IModifierRepository
             .ToListAsync();
     }
 
+    public async Task<bool> ModifierExistAsync(string Modifiername)
+    {
+        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower() == Modifiername.ToLower() && c.Isdeleted == false);
+    }
+
+    public async Task<bool> ModifierNameExistAtEditAsync(string Modifiername, int id)
+    {
+        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower() == Modifiername.ToLower() && c.Modifierid != id 
+        && c.Isdeleted == false);
+    }
 
 }

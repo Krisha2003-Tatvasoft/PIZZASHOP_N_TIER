@@ -40,7 +40,7 @@ public class ModifiersGroupService : IModifiersGroupService
 
     public async Task<bool> AddMGPost(int loginId, AddModifierGroup viewmodel)
     {
-        if (loginId == null)
+        if (await _modifierGroupRepository.MGExistAsync(viewmodel.Modifiergroupname))
         {
             return false;
         }
@@ -93,7 +93,7 @@ public class ModifiersGroupService : IModifiersGroupService
 
     public async Task<bool> EditMGPost(int loginId, AddModifierGroup viewmodel)
     {
-        if (loginId == null)
+        if (await _modifierGroupRepository.MGExistAtEditAsync(viewmodel.Modifiergroupname,viewmodel.Modifiergroupid))
         {
             return false;
         }
@@ -156,10 +156,27 @@ public class ModifiersGroupService : IModifiersGroupService
         }
         else
         {
+
+
+            List<ModifierGroupModifier> existingMappings = await _modifiergroupModifierRepository
+                    .GetMappingsByGroupId(id);
+
+            await _modifiergroupModifierRepository.DeleteMapping(existingMappings);
+
             await _modifierGroupRepository.DeleteMG(mg);
 
-            var mappings = await _modifiergroupModifierRepository.GetMappingsByGroupId(id);
-             await _modifiergroupModifierRepository.DeleteMappingsByModifierGroupId(mappings);
+            List<int> ModifierIds = existingMappings.Select(m => m.ModifierId).ToList();
+
+            foreach (int modifierId in ModifierIds)
+            {
+                int groupCount = await _modifiergroupModifierRepository.CountModifierId(id);
+
+                if (groupCount == 0)
+                {
+                     Modifier modifier = await _modifierRepository.ModifierByIdAsync(modifierId);
+                    await _modifierRepository.DeleteModifier(modifier);
+                }
+            }
             return true;
         }
     }

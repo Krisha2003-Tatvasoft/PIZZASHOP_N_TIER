@@ -48,9 +48,16 @@ public class MenuController : Controller
         VMCategory model = MenuVM.category;
         CookieData user = SessionUtils.GetUser(HttpContext);
 
-        await _categoryService.AddCategoryAsync(model, user.Userid);
+        if(await _categoryService.AddCategoryAsync(model, user.Userid))
+        {
 
-        return Json(new { sucess = true, message = "Category Added sucessfully" });
+        return Json(new { success = true, message = "Category Added sucessfully" });
+        }
+        else
+        {
+            return Json(new { success = false, message = "category not Added." });
+        }
+
     }
 
     [HttpGet]
@@ -99,6 +106,7 @@ public class MenuController : Controller
     [HttpGet]
     public async Task<IActionResult> EditCat(int id)
     {
+
         VMCategory category = await _categoryService.GetCategoryById(id);
         return Json(category);
     }
@@ -108,11 +116,11 @@ public class MenuController : Controller
     {
         if (await _categoryService.UpdateCat(model))
         {
-            return Json(new { sucess = true, message = "category edited succesfully" });
+            return Json(new { success = true, message = "category edited succesfully" });
         }
         else
         {
-            return Json(new { error = true, message = "error in edit category" });
+            return Json(new { success = false, message = "category not Added." });
         }
     }
 
@@ -142,11 +150,11 @@ public class MenuController : Controller
         CookieData user = SessionUtils.GetUser(HttpContext);
         if (await _itemService.AddItemPost(user.Userid, model) == true)
         {
-            return Json(new { sucess = true, message = "Item Added Sucessfully" });
+            return Json(new { success = true, message = "Item Added Sucessfully" });
         }
         else
         {
-            return Json(new { error = true, message = "Error in add item" });
+             return Json(new { success = false, message = "category not Added." });
         }
     }
 
@@ -166,7 +174,7 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { error = true, message = "Error in update item" });
+            return Json(new { success = false, message = "item not edited." });
         }
     }
 
@@ -222,18 +230,24 @@ public class MenuController : Controller
         CookieData user = SessionUtils.GetUser(HttpContext);
         if (await _modifierService.AddModifierPost(user.Userid, model))
         {
-            return Json(new { sucess = true, message = "Modifier Added Sucessfully" });
+            return Json(new { success = true, message = "Modifier Added Sucessfully" });
         }
         else
         {
-            return Json(new { error = true, message = "Error in add Modifier" });
+            return Json(new { success = false, message = "modifier not added." });
         }
     }
 
     [HttpGet]
     public async Task<IActionResult> EditModifier(int id)
     {
-        return PartialView("_EditModifier", await _modifierService.EditModifier(id));
+        var data = await _modifierService.EditModifier(id);
+         string partialViewHtml = await RenderPartialViewToString("_EditModifier",data );
+         return Json(new
+            {
+                selectedMGIds= data.SelectedMGIds,
+                html = partialViewHtml   // Return the rendered partial view
+            });
     }
 
     [HttpPost]
@@ -246,14 +260,14 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { error = true, message = "Error in update modifier" });
+            return Json(new { success = false, message = "modifier not edited." });
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteModifier(int id)
+    public async Task<IActionResult> DeleteModifier(int id , int MGId)
     {
-        if (await _modifierService.DeleteModifier(id))
+        if (await _modifierService.DeleteModifier(id,MGId))
         {
             return Json(new { sucess = true, message = "Item deleted Sucessfully." });
         }
@@ -264,11 +278,11 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteSelectedModifiers(List<int> selectedIds)
+    public async Task<IActionResult> DeleteSelectedModifiers(List<int> selectedIds , int MGId)
     {
 
 
-        if (await _modifierService.DeleteSelectedModifier(selectedIds))
+        if (await _modifierService.DeleteSelectedModifier(selectedIds,MGId))
         {
             return Json(new { sucess = true, message = "Item deleted Sucessfully." });
         }
@@ -317,11 +331,11 @@ public class MenuController : Controller
         CookieData user = SessionUtils.GetUser(HttpContext);
         if (await _modifierGroupService.AddMGPost(user.Userid, model))
         {
-            return Json(new { sucess = true, message = "ModifierGroup Added Sucessfully" });
+            return Json(new { success = true, message = "ModifierGroup Added Sucessfully" });
         }
         else
         {
-            return Json(new { error = true, message = "Error in add ModifierGroup" });
+              return Json(new { success = false, message = "modifiergroup not added." });
         }
     }
 
@@ -368,7 +382,7 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { success = false, message = "Error in update modifiergroup" });
+           return Json(new { success = false, message = "modifiergroup not edited." });
         }
     }
 

@@ -62,7 +62,6 @@ public class ItemService : IItemService
 
   public async Task<AddItem> Additem()
   {
-
     AddItem model = new AddItem
     {
       Categories = await _categoryRepository.GetAllCatyAsync(),
@@ -74,7 +73,7 @@ public class ItemService : IItemService
 
   public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
   {
-    if (loginId == null)
+    if (await _itemRepository.ItemExistAsync(viewmodel.Itemname))
     {
       return false;
     }
@@ -128,12 +127,12 @@ public class ItemService : IItemService
 
     var ModifierGroups = new List<IMGMviewmodel>();
 
-foreach (var img in selectedMG)
-{
-    var modifiers = await _modifierRepository.GetModifierList(img.Modifiergroupid);
-
-    ModifierGroups.Add(new IMGMviewmodel
+    foreach (var img in selectedMG)
     {
+      var modifiers = await _modifierRepository.GetModifierList(img.Modifiergroupid);
+
+      ModifierGroups.Add(new IMGMviewmodel
+      {
         Itemmodifiergroupid = img.Itemmodifiergroupid,
         Itemid = img.Itemid,
         Modifiergroupid = img.Modifiergroupid,
@@ -141,9 +140,9 @@ foreach (var img in selectedMG)
         Maxselectionallowed = img.Maxselectionallowed,
         modifiers = modifiers,
         Modifiername = img.Modifiergroup.Modifiergroupname
-    });
+      });
 
-}
+    }
 
 
     AddItem viewmodel = new AddItem
@@ -177,10 +176,11 @@ foreach (var img in selectedMG)
       uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
     }
 
-    if (loginid == null)
+    if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
     {
       return false;
     }
+
     Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
 
     item.Itemname = viewmodel.Itemname;
@@ -203,7 +203,7 @@ foreach (var img in selectedMG)
     var existingMappings = await _itemmodifiergroupmapRepository.GetMGMByitemid(viewmodel.Itemid);
     var existingGroupIds = existingMappings.Select(m => m.Modifiergroupid).ToList();
 
-   
+
     var newGroupIds = viewmodel.ModifierGroups.Select(m => m.Modifiergroupid).ToList();
 
     // ✅ Fix: Remove only groups that are explicitly missing in the new list
@@ -278,9 +278,9 @@ foreach (var img in selectedMG)
     }
 
     await _itemRepository.DeleteSelected(selectedIds);
-    foreach(var id in selectedIds)
+    foreach (var id in selectedIds)
     {
-        await _itemmodifiergroupmapRepository.DeleteMappingByItem(id);
+      await _itemmodifiergroupmapRepository.DeleteMappingByItem(id);
     }
     return true;
   }

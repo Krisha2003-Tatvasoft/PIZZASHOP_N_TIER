@@ -14,9 +14,9 @@ public interface IModifierService
 
      Task<bool> EditModifierPost(int loginId, AddModifier viewmodel);
 
-     Task<bool> DeleteModifier(int id);
+     Task<bool> DeleteModifier(int id, int MGId);
 
-     Task<bool> DeleteSelectedModifier(List<int> selectedIds);
+     Task<bool> DeleteSelectedModifier(List<int> selectedIds, int MGId);
 
      Task<(List<ModifierTable>, int totalExMoidifier)> GetAllModifier(int page, int pageSize, string search);
 

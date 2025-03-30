@@ -16,4 +16,8 @@ public interface ICategoryRepository
    Task<bool> DeleteCat(int id);
 
    Task<List<SelectListItem>> GetAllCatyAsync();
+
+    Task<bool> CatExistAsync(string Categoryname);
+
+    Task<bool> CatNameExistAtEditAsync(string Categoryname, int id);
 }

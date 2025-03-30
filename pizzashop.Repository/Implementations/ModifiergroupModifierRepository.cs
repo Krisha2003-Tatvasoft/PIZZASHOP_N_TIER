@@ -32,7 +32,7 @@ public class ModifiergroupModifierRepository : IModifiergroupModifierRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteMappingsByModifierGroupId(List<ModifierGroupModifier> mappings)
+    public async Task DeleteMapping(List<ModifierGroupModifier> mappings)
     {
         _context.ModifierGroupModifiers.RemoveRange(mappings);
         await _context.SaveChangesAsync();
@@ -44,6 +44,31 @@ public class ModifiergroupModifierRepository : IModifiergroupModifierRepository
         .Where(mg => mg.ModifierId == modifierId)
         .ToListAsync();
     }
+
+    public async Task<List<int>> GetModifierGroupIdsByModifierId(int modifierId)
+    {
+        return await _context.ModifierGroupModifiers
+                             .Where(mgm => mgm.ModifierId == modifierId)
+                             .Select(mgm => mgm.ModifierGroupId)
+                             .ToListAsync();
+    }
+
+    public async Task<int> CountModifierId(int modifierid)
+    {
+        return await _context.ModifierGroupModifiers
+        .CountAsync(mgm => mgm.ModifierId == modifierid);
+    }
+
+
+  public async Task<List<ModifierGroupModifier>> GetMappingsByMIdandMGId(int modifierId, int MGId)
+    {
+        return await _context.ModifierGroupModifiers
+        .Where(mg => mg.ModifierId == modifierId && mg.ModifierGroupId == MGId)
+        .ToListAsync();
+    }
+
+
+
 
 
 }

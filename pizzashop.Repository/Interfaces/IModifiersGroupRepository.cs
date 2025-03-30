@@ -16,4 +16,8 @@ public interface IModifiersGroupRepository
      Task UpdateMG(Modifiergroup modifiergroup);
 
      Task DeleteMG(Modifiergroup modifiergroup);
+
+     Task<bool> MGExistAsync(string MGName);
+
+      Task<bool> MGExistAtEditAsync(string MGName, int id);
 }

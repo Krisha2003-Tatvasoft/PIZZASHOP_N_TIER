@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -76,16 +77,19 @@ public class ModifierService : IModifierService
 
   public async Task<bool> AddModifierPost(int loginId, AddModifier viewmodel)
   {
-    if (loginId == null)
+    if (await _modifierRepository.ModifierExistAsync(viewmodel.Modifiername))
     {
       return false;
     }
     else
     {
+
+      List<int> ModifierGroupIds = JsonConvert.DeserializeObject<List<int>>(viewmodel.ModifierGroupIds);
+
       Modifier modifier = new Modifier
       {
         Modifiername = viewmodel.Modifiername,
-        Modifiergroupid = viewmodel.Modifiergroupid,
+        Modifiergroupid = ModifierGroupIds.FirstOrDefault(),
         Rate = viewmodel.Rate,
         Quantity = viewmodel.Quantity,
         Unitid = viewmodel.Unitid,
@@ -93,6 +97,17 @@ public class ModifierService : IModifierService
         Createdby = loginId
       };
       await _modifierRepository.AddNewModifier(modifier);
+
+      foreach (int groupid in ModifierGroupIds)
+      {
+        ModifierGroupModifier MGM = new ModifierGroupModifier
+        {
+          ModifierGroupId = groupid,
+          ModifierId = modifier.Modifierid
+        };
+        await _modifiergroupModifierRepository.AddNewMapping(MGM);
+      }
+
       return true;
     }
   }
@@ -100,11 +115,15 @@ public class ModifierService : IModifierService
   public async Task<AddModifier> EditModifier(int id)
   {
     Modifier modifier = await _modifierRepository.ModifierByIdAsync(id);
+
+    var mappedGroups = await _modifiergroupModifierRepository.GetModifierGroupIdsByModifierId(id);
+
+
     AddModifier viewmodel = new AddModifier
     {
       Modifierid = modifier.Modifierid,
       Modifiername = modifier.Modifiername,
-      Modifiergroupid = modifier.Modifiergroupid,
+      SelectedMGIds = mappedGroups,
       Rate = modifier.Rate,
       Quantity = modifier.Quantity,
       Unitid = modifier.Unitid,
@@ -118,16 +137,19 @@ public class ModifierService : IModifierService
 
   public async Task<bool> EditModifierPost(int loginId, AddModifier viewmodel)
   {
-    if (loginId == null)
+    if (await _modifierRepository.ModifierNameExistAtEditAsync(viewmodel.Modifiername,viewmodel.Modifierid))
     {
       return false;
     }
     else
     {
+      List<int> newModifierGroupIds = JsonConvert.DeserializeObject<List<int>>(viewmodel.ModifierGroupIds);
+
+
       Modifier modifier = await _modifierRepository.ModifierByIdAsync(viewmodel.Modifierid);
 
       modifier.Modifiername = viewmodel.Modifiername;
-      modifier.Modifiergroupid = viewmodel.Modifiergroupid;
+      modifier.Modifiergroupid = newModifierGroupIds.FirstOrDefault();
       modifier.Rate = viewmodel.Rate;
       modifier.Quantity = viewmodel.Quantity;
       modifier.Unitid = viewmodel.Unitid;
@@ -135,12 +157,48 @@ public class ModifierService : IModifierService
       modifier.Modifiedby = loginId;
 
       await _modifierRepository.UpdateModifier(modifier);
+
+      List<ModifierGroupModifier> existingMappings = await _modifiergroupModifierRepository
+          .GetMappingsByModifierId(modifier.Modifierid);
+
+      // Extract the existing modifiergroup IDs from mappings
+      List<int> existingMGIds = existingMappings.Select(m => m.ModifierGroupId).ToList();
+
+      // Find mappings to remove (previously existed but now removed)
+      List<int> toRemove = existingMGIds.Except(newModifierGroupIds).ToList();
+
+
+      // Find mappings to add (newly added mappings)
+      List<int> toAdd = newModifierGroupIds.Except(existingMGIds).ToList();
+
+
+      foreach (int mgId in toRemove)
+      {
+        ModifierGroupModifier mgm = existingMappings.FirstOrDefault(m => m.ModifierGroupId == mgId);
+        if (mgm != null)
+        {
+          await _modifiergroupModifierRepository.Delete(mgm);
+        }
+      }
+
+      foreach (int mgId in toAdd)
+      {
+        ModifierGroupModifier mgm = new ModifierGroupModifier
+        {
+          ModifierGroupId = mgId,
+          ModifierId = viewmodel.Modifierid
+        };
+        await _modifiergroupModifierRepository.AddNewMapping(mgm);
+      }
+
+
+
       return true;
 
     }
   }
 
-  public async Task<bool> DeleteModifier(int id)
+  public async Task<bool> DeleteModifier(int id, int MGId)
   {
     Modifier modifier = await _modifierRepository.ModifierByIdAsync(id);
 
@@ -150,22 +208,46 @@ public class ModifierService : IModifierService
     }
     else
     {
-      await _modifierRepository.DeleteModifier(modifier);
-     List<ModifierGroupModifier> mapping =  await _modifiergroupModifierRepository.GetMappingsByModifierId(id);
-     await _modifiergroupModifierRepository.DeleteMappingsByModifierGroupId(mapping);
+      List<ModifierGroupModifier> mapping = await _modifiergroupModifierRepository.GetMappingsByMIdandMGId(id, MGId);
+
+      await _modifiergroupModifierRepository.DeleteMapping(mapping);
+
+      // Count how many groups still have this Modifier
+      int groupCount = await _modifiergroupModifierRepository.CountModifierId(id);
+
+      if (groupCount == 0)
+      {
+        await _modifierRepository.DeleteModifier(modifier);
+      }
       return true;
     }
 
   }
 
-  public async Task<bool> DeleteSelectedModifier(List<int> selectedIds)
+  public async Task<bool> DeleteSelectedModifier(List<int> selectedIds, int MGId)
   {
     if (selectedIds.Count == 0)
     {
       return false;
     }
+    var softdeletedIds = new List<int>();
+    foreach (var modifierId in selectedIds)
+    {
+      List<ModifierGroupModifier> mapping = await _modifiergroupModifierRepository.GetMappingsByMIdandMGId(modifierId, MGId);
 
-    await _modifierRepository.DeleteSelectedModifier(selectedIds);
+      await _modifiergroupModifierRepository.DeleteMapping(mapping);
+
+      int groupCount = await _modifiergroupModifierRepository.CountModifierId(modifierId);
+      if (groupCount == 0)
+      {
+        softdeletedIds.Add(modifierId);
+      }
+    }
+
+    if (softdeletedIds.Count() != 0)
+    {
+      await _modifierRepository.DeleteSelectedModifier(softdeletedIds);
+    }
     return true;
   }
 

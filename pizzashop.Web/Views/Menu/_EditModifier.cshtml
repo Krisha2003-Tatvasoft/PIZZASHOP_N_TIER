@@ -11,7 +11,7 @@
             <form id="edit-modifier-form" method="post">
 
                 <input type="hidden" asp-for=Modifierid>
-         
+
                 <div class="modal-body">
 
                     <!-- first row -->
@@ -21,11 +21,31 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                                     <div class="form-floating">
-                                        <select class="form-select" id="MGid" asp-for=Modifiergroupid
+                                        @* <select class="form-select" id="MGid" asp-for=Modifiergroupid
                                             asp-items="Model.MGList">
                                             <option selected val="">Select Modifiers Groups(s)</option>
-                                        </select>
-                                        <label for="MGid">Modifier</label>
+                                        </select> *@
+                                        @* <label for="MGid">Modifier</label> *@
+
+
+
+                                        <div class="dropdown">
+                                            <button class="form-control btn btn-light dropdown-toggle" type="button"
+                                                id="modifierDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Select Modifiers Groups(s)
+                                            </button>
+                                            <ul class="dropdown-menu p-2" aria-labelledby="modifierDropdown">
+                                                @foreach (var item in Model.MGList)
+                                                {
+                                                    <li class="form-check">
+                                                        <input type="checkbox" class="form-check-input modifier-checkbox"
+                                                            id="mod_@item.Value" value="@item.Value" />
+                                                        <label class="form-check-label"
+                                                            for="mod_@item.Value">@item.Text</label>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -80,7 +100,8 @@
 
 
                 <div class="modal-footer d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="edit-modifier">Save</button>
+                    <button type="button" class="btn btn-primary" 
+                        id="edit-modifier">Save</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
 

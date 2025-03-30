@@ -138,24 +138,6 @@ Showing 1-5 of 5
 
     $(document).ready(function () {
 
-         $(".edit-modifier").click(function (e) {
-                e.preventDefault();
-                var modifierId = $(this).data("modifierid");
-
-                $.ajax({
-                    url: "/Menu/EditModifier",
-                    type: "GET",
-                    data: { id: modifierId },
-                    success: function (data) {
-                        $(".modal-editModifier").html(data);
-                        $("#updateNewModifier").modal("show");
-                    },
-                    error: function () {
-                        alert("failed to reload modal");
-                    }
-                });
-
-            });
 
         $(document).on("click", ".delete-modifier-link", function (e) {
             var ModifierId = $(this).data("modifierid");

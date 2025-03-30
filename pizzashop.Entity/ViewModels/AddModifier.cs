@@ -18,7 +18,9 @@ public class AddModifier
 
     public int? Createdby { get; set; }
 
-     public int Modifiergroupid { get; set; }
+    public string ModifierGroupIds { get; set; }
+
+    public List<int> SelectedMGIds {get; set;}
 
     public List<SelectListItem>? MGList { get; set; }
 

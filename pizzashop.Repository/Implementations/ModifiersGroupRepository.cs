@@ -49,15 +49,19 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
     {
         modifiergroup.Isdeleted = true;
         _context.Modifiergroups.Update(modifiergroup);
-
-
         await _context.SaveChangesAsync();
     }
 
-   
+    public async Task<bool> MGExistAsync(string MGName)
+    {
+        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower() == MGName.ToLower() && c.Isdeleted == false);
+    }
 
-
-
-
+    public async Task<bool> MGExistAtEditAsync(string MGName, int id)
+    {
+        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower() == MGName.ToLower() 
+        && c.Modifiergroupid != id && c.Isdeleted == false);
+    }
+    
 
 }

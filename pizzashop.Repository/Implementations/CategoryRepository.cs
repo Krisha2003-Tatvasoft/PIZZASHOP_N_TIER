@@ -22,7 +22,7 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<List<Category>> AllCategory()
     {
-        return await  _context.Categories.Where(c=>c.Isdeleted == false).OrderBy(c=> c.Categoryid).ToListAsync();
+        return await _context.Categories.Where(c => c.Isdeleted == false).OrderBy(c => c.Categoryid).ToListAsync();
     }
 
     public async Task<Category> GetCatById(int id)
@@ -46,17 +46,32 @@ public class CategoryRepository : ICategoryRepository
             await _context.SaveChangesAsync();
             return true;
         }
-        else{
+        else
+        {
             return false;
         }
 
     }
 
 
-     public async Task<List<SelectListItem>> GetAllCatyAsync() =>
-        await _context.Categories.Where(c=>c.Isdeleted == false).Select
-        (c => new SelectListItem 
-        { Value = c.Categoryid.ToString(), Text = c.Categoryname })
-        .ToListAsync();
+    public async Task<List<SelectListItem>> GetAllCatyAsync() =>
+       await _context.Categories.Where(c => c.Isdeleted == false).Select
+       (c => new SelectListItem
+       { Value = c.Categoryid.ToString(), Text = c.Categoryname })
+       .ToListAsync();
+
+
+
+    public async Task<bool> CatExistAsync(string Categoryname)
+    {
+        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower() == Categoryname.ToLower() && c.Isdeleted == false);
+    }
+
+    public async Task<bool> CatNameExistAtEditAsync(string Categoryname, int id)
+    {
+        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower() == Categoryname.ToLower() && c.Categoryid != id
+        && c.Isdeleted == false);
+    }
+
 
 }

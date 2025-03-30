@@ -190,3 +190,11 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\ExcelNumberFormat.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\RBush.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\SixLabors.Fonts.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\System.IO.Packaging.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\ClosedXML.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\ClosedXML.Parser.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\DocumentFormat.OpenXml.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\DocumentFormat.OpenXml.Framework.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\ExcelNumberFormat.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\RBush.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\SixLabors.Fonts.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.IO.Packaging.dll

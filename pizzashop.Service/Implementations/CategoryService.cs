@@ -14,13 +14,20 @@ public class CategoryService : ICategoryService
 
   private readonly IItemRepository _itemRepository;
 
-  public CategoryService(ICategoryRepository categoryRepository,IItemRepository itemRepository)
+  public CategoryService(ICategoryRepository categoryRepository, IItemRepository itemRepository)
   {
     _categoryRepository = categoryRepository;
     _itemRepository = itemRepository;
   }
+
+
   public async Task<bool> AddCategoryAsync(VMCategory model, int loginid)
   {
+    if(await _categoryRepository.CatExistAsync(model.Categoryname))
+    {
+      return false;
+    }
+
     Category category = new()
     {
       Categoryname = model.Categoryname,
@@ -30,7 +37,9 @@ public class CategoryService : ICategoryService
     };
     await _categoryRepository.addAsync(category);
     return true;
+
   }
+
 
   public async Task<List<VMCategory>> GetCategoryList()
   {
@@ -68,7 +77,7 @@ public class CategoryService : ICategoryService
   {
     var GetCatById = await _categoryRepository.GetCatById(model.Categoryid);
 
-    if (GetCatById == null)
+    if (await _categoryRepository.CatNameExistAtEditAsync(model.Categoryname, model.Categoryid))
     {
       return false;
     }
@@ -85,7 +94,7 @@ public class CategoryService : ICategoryService
 
   public async Task<bool> DeleteCat(int id)
   {
-    if(await _categoryRepository.DeleteCat(id))
+    if (await _categoryRepository.DeleteCat(id))
     {
       await _itemRepository.DeleteByCat(id);
       return true;
@@ -96,7 +105,7 @@ public class CategoryService : ICategoryService
     }
   }
 
-   
+
 
 
 }

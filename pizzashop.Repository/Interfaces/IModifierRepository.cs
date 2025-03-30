@@ -4,7 +4,7 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface IModifierRepository
 {
-    Task<List<Modifier>> GetModifierByMG(int id,string search);
+    Task<List<Modifier>> GetModifierByMG(int id, string search);
 
     Task<List<Modifier>> GetModifierList(int id);
 
@@ -14,13 +14,16 @@ public interface IModifierRepository
 
     Task UpdateModifier(Modifier modifier);
 
-     Task DeleteModifier(Modifier modifier);
+    Task DeleteModifier(Modifier modifier);
 
-     Task DeleteSelectedModifier(List<int> SelectedIds);
+    Task DeleteSelectedModifier(List<int> SelectedIds);
 
-     Task<List<Modifier>> GetAllModifier(string search);
+    Task<List<Modifier>> GetAllModifier(string search);
 
-     Task<List<Modifier>> GetModifiersByIds(List<int> modifierIds);
-     
-    
+    Task<List<Modifier>> GetModifiersByIds(List<int> modifierIds);
+
+    Task<bool> ModifierExistAsync(string Modifiername);
+
+    Task<bool> ModifierNameExistAtEditAsync(string Modifiername, int id);
+
 }

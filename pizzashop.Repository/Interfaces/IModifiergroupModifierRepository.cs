@@ -10,7 +10,13 @@ public interface IModifiergroupModifierRepository
 
       Task Delete(ModifierGroupModifier mapping);
 
-      Task DeleteMappingsByModifierGroupId(List<ModifierGroupModifier> mappings);
+      Task DeleteMapping(List<ModifierGroupModifier> mappings);
 
       Task<List<ModifierGroupModifier>> GetMappingsByModifierId(int modifierId);
+
+      Task<List<int>> GetModifierGroupIdsByModifierId(int modifierId);
+
+      Task<int> CountModifierId(int modifierid);
+
+      Task<List<ModifierGroupModifier>> GetMappingsByMIdandMGId(int modifierId, int MGId);
 }
