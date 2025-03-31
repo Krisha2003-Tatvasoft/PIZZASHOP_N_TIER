@@ -102,11 +102,10 @@ a.sort {
     box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
 }
 
-.order-detaile-container
-    {
-        padding-right: 5%;
-        padding-left: 5%;
-    }
+.order-detaile-container {
+    padding-right: 5%;
+    padding-left: 5%;
+}
 
 
 
@@ -126,8 +125,8 @@ a.sort {
     .o-details button {
         width: 50px;
     }
-    .order-detaile-container
-    {
+
+    .order-detaile-container {
         padding-right: 0px;
         padding-left: 0px;
     }

@@ -199,7 +199,7 @@
                     },
                     success: function (data) {
                         $('#load-tables').html(data);
-                       restoreCheckedState();
+                        restoreCheckedState();
                         currentPage = page;
                     },
                     error: function () {
@@ -228,61 +228,64 @@
 
             $(document).on("click", "#add-section", function (e) {
                 e.preventDefault();
-                var formData = new FormData($("#add-section-form")[0]);
 
+                if ($("#add-section-form").valid()) {
+                    var formData = new FormData($("#add-section-form")[0]);
 
-                $.ajax({
-                    url: "/TableAndSection/AddSectionPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#add-section-form")[0].reset();
-                            $("#addNewSection").modal("hide");
-                            SectionList();
+                    $.ajax({
+                        url: "/TableAndSection/AddSectionPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#add-section-form")[0].reset();
+                                $("#addNewSection").modal("hide");
+                                SectionList();
+                            }
+                            else {
+                                toastr.error("This Section name is already exist.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error in add Section", error);
                         }
-                        else {
-                            toastr.error("This Section name is already exist.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error in add Section", error);
-                    }
-                });
+                    });
+                }
             });
 
         @* edit section *@
 
             $(document).on("click", "#edit-Section", function (e) {
-                console.log("yess button");
+             
                 e.preventDefault();
 
+                if ($("#edit-section-form").valid()) {
+                    var formData = new FormData($("#edit-section-form")[0]);
 
-                var formData = new FormData($("#edit-section-form")[0]);
-
-                $.ajax({
-                    url: "/TableAndSection/EditSectionPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#editSection").modal("hide");
-                            SectionList();
+                    $.ajax({
+                        url: "/TableAndSection/EditSectionPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#editSection").modal("hide");
+                                SectionList();
+                            }
+                            else {
+                                toastr.error("This Section name is already exist.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error updating modifierGroup:", error);
                         }
-                        else {
-                            toastr.error("This Section name is already exist.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error updating modifierGroup:", error);
-                    }
-                });
+                    });
+                }
 
             });
 
@@ -326,31 +329,39 @@
 
             $(document).on("click", "#add-table", function (e) {
                 e.preventDefault();
-                var formData = new FormData($("#add-table-form")[0]);
-                var sectionId = $("#Sectionid").val();
 
-                $.ajax({
-                    url: "/TableAndSection/AddTablePost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#add-table-form")[0].reset();
-                            $("#addNewTable").modal("hide");
-                            loadTablesBySec(sectionId, 1);
+                // Trigger the client-side validation first
+                if ($("#add-table-form").valid()) {
+                    var formData = new FormData($("#add-table-form")[0]);
+
+                    $.ajax({
+                        url: "/TableAndSection/AddTablePost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                // Reset the form and close the modal if successful
+                                $("#add-table-form")[0].reset();
+                                $("#addNewTable").modal("hide");
+                                loadTablesBySec($("#Sectionid").val(), 1);
+                                toastr.success("Table Added Successfully.");
+                            } else {
+                                // Show error message if the table name is taken
+                                toastr.error("This Table name is already taken in this section.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error in add Table", error);
+                            toastr.error("Internal server error");
                         }
-                        else {
-                            toastr.error("This Tablename name is already exist in this section.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error in add Section", error);
-                    }
-                });
+                    });
+                }
+
             });
+
 
         @* edit table *@
 
@@ -358,30 +369,31 @@
                 var sectionId = $("#Sectionid").val();
                 e.preventDefault();
 
+                if ($("#edit-table-form").valid()) {
+                    var formData = new FormData($("#edit-table-form")[0]);
 
-                var formData = new FormData($("#edit-table-form")[0]);
 
-
-                $.ajax({
-                    url: "/TableAndSection/EditTablePost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#editTable").modal("hide");
-                            loadTablesBySec(sectionId, 1);
+                    $.ajax({
+                        url: "/TableAndSection/EditTablePost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#editTable").modal("hide");
+                                loadTablesBySec(sectionId, 1);
+                            }
+                            else {
+                                toastr.error("This table name is already exists in this section.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error updating modifierGroup:", error);
                         }
-                        else {
-                            toastr.error("This table name is already exists in this section.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error updating modifierGroup:", error);
-                    }
-                });
+                    });
+                }
             });
 
         @* Delete Table *@
@@ -480,7 +492,7 @@
             $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
         }
 
-        
+
     });
 
 

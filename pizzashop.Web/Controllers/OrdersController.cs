@@ -70,7 +70,7 @@ public class OrdersController : Controller
     
         return PartialView("_OrderInvoice", orderDetails);
     }
-
+    
 
 }
 

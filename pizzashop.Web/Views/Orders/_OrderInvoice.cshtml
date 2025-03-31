@@ -1,69 +1,141 @@
 @model pizzashop.Entity.ViewModels.OrderDetails
+@* <title> PizzaShop</title>
+<link rel="icon" type="image/x-icon" href="~/images/pizzashop_logo.png"> *@
+<style>
+        .main-color-text{
+                color: #087cc4;
+        }
+        .table .main-color-bg {
+                background-color: #087cc4;
+         }
+         .table .text-white
+         {
+           color: white!important;
+         }
+</style>
 
-<div class="container mt-4 p-4 bg-white shadow rounded">
-            <!-- Header -->
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
-                    <img src="your-logo-url.png" alt="Logo" class="img-fluid" style="height: 50px;">
-                    <h1 class="text-primary fw-bold">PIZZASHOP</h1>
-                </div>
-    
-            <!-- Customer & Order Details -->
-            <div class="row mt-3">
-                    <div class="col-md-6">
-                            <h5 class="fw-semibold">Customer Details</h5>
-                            <p><strong>Name:</strong> @Model.Customername</p>
-                            <p><strong>Mobile:</strong> @Model.Phoneno</p>
-                        </div>
-                    <div class="col-md-6 text-md-end">
-                            <h5 class="fw-semibold">Order Details</h5>
-                            <p><strong>Invoice No:</strong> @Model.Invoicenumber</p>
-                            <p><strong>Date:</strong> @Model.PlacedOn</p>
-                            <p><strong>Table:</strong> @foreach(var table in Model.Tablenames)
-                            {
-                                @table
-                                }</p>
-                        </div>
-                </div>
-    
-            <!-- Items Table -->
-            <div class="table-responsive">
-                    <table class="table table-bordered mt-3">
-                            <thead class="bg-primary text-white">
-                                    <tr>
-                                            <th>#</th>
-                                            <th>Item</th>
-                                            <th>Quantity</th>
-                                            <th>Unit Price</th>
-                                            <th>Total</th>
-                                        </tr>
-                                </thead>
-                            <tbody>
-                                    @for (int i = 0; i < Model.Items.Count; i++)
-                                    {
-                                            <tr>
-                                                    <td>@(i + 1)</td>
-                                                    <td>@Model.Items[i].Itemname</td>
-                                                    <td>@Model.Items[i].Quantity</td>
-                                                    <td>₹@Model.Items[i].Rate</td>
-                                                    <td>₹@(Model.Items[i].Quantity * Model.Items[i].Rate)</td>
-                                                </tr>
-                                    }
-                                </tbody>
-                        </table>
-                </div>
-    
-            <!-- Summary -->
-            <div class="text-end mt-3">
-                    <p><strong>Sub Total:</strong> ₹@Model.Subamount</p>
-                    @* <p><strong>CGST:</strong> ₹@Model.CGST</p>
-                    <p><strong>SGST:</strong> ₹@Model.SGST</p>
-                    <p><strong>GST:</strong> ₹@Model.GST</p> *@
-                    <h5 class="fw-bold text-primary mt-2">Total Amount Due: ₹@Model.Totalamount</h5>
-                </div>
-
-            <!-- Payment & Footer -->
-            <div class="mt-4">
-                    <p><strong>Payment Method:</strong>PaymentMethod</p>
-                    <h5 class="text-center fw-bold mt-3">THANK YOU!</h5>
-                </div>
+<body class="bg-white text-secondary mt-3">
+        <div class="full-logo fs-6 main-color-text fw-bolder d-flex gap-3 align-items-top ps-4 pt-2 mb-3 justify-content-center"
+                style="height: 80px">
+                <img src="~/images/pizzashop_logo.png" style="width: auto; height: 100%" alt="Pizza Image" />
+                <p class="mt-3 fs-3 ">PIZZASHOP</p>
         </div>
+        <div class="detail-div mx-5 px-5">
+
+
+                <div class=" d-flex justify-content-between mb-5  text-secondary">
+                        <div class="w-50">
+                                <span class="main-color-text fs-5">Customer Details</span><br>
+                                <div class="lh-sm mt-2">
+                                        <span>Name : @Model.Customername</span><br>
+                                        <span>Mob : @Model.Phoneno</span>
+                                </div>
+                        </div>
+                        <div class="w-50 ">
+                                <span class="main-color-text fs-5 mb-3">Order Details</span><br>
+                                <div class="lh-sm mt-2">
+                                        <span>Invoice Number : #@Model.Invoicenumber</span><br>
+                                        <span>Date : @Model.PlacedOn</span><br>
+                                        <span>Section : @Model.Sectionname</span><br>
+                                        <span>Table :
+                                                @foreach (var table in @Model.Tablenames)
+                                                {
+                                                        @table
+                                                }
+                                        </span>
+                                </div>
+                        </div>
+                </div>
+
+                <table class="table">
+                        <thead>
+                                <tr class="main-color-bg text-white">
+                                        <th scope="col" class="main-color-bg text-white">Sr No.</Src>
+                                        </th>
+                                        <th scope="col" class="main-color-bg text-white">Item</th>
+                                        <th scope="col" class="main-color-bg text-white">Quantity</th>
+                                        <th scope="col" class="main-color-bg text-white">Unit Price</th>
+                                        <th scope="col" class="main-color-bg text-white text-end">Total</th>
+                                </tr>
+                        </thead>
+                        <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                        <tr>
+                                                <td class="">1</td>@{
+                                                @* index++; *@
+                                        }
+                                        <td class="lh-sm">@item.Itemname<br>
+                                                @foreach (var modifiers in item.Modifiers)
+                                                {
+                                                        <span>@modifiers.Modifiername</span>
+                                                        <br>
+                                                }
+                                        </td>
+                                        <td class="lh-sm">@item.Quantity<br>
+                                                @foreach (var modifiers in item.Modifiers)
+                                                {
+                                                        <span>@modifiers.Quantity</span>
+                                                        <br>
+                                                }
+                                        </td>
+                                        <td class="lh-sm">@item.Rate<br>
+                                                @foreach (var modifiers in item.Modifiers)
+                                                {
+                                                        <span>@modifiers.Rate</span>
+                                                        <br>
+                                                }
+                                        </td>
+                                        <td class="lh-sm text-end">@item.TotalAmount<br>
+                                                @foreach (var modifiers in item.Modifiers)
+                                                {
+                                                        <span>@modifiers.TotalAmount</span>
+                                                        <br>
+                                                }
+                                        </td>
+
+                                </tr>
+                                
+                                      }
+
+                        </tbody>
+                </table>
+                <div class="text-secondary">
+                        <div class="d-flex justify-content-between">
+                                <div>SubTotal :</div>
+                                <div>@Model.Subamount</div>
+                        </div>
+                        @* @{
+                                totalBill = totalBill + subTotal;
+                                totalBill = totalBill + itemPerTax;
+                        } *@
+                        @foreach (var tax in Model.Taxes)
+                        {
+                                <div class="d-flex justify-content-between">
+                                        <div>@tax.Taxname :</div>
+                                        <div>₹@tax.Taxvalue
+                                        </div>
+                                </div>
+                        }
+                        <div>
+                                <div class="d-flex justify-content-between">
+                                        <div>Other :</div>
+                                        <div></div>
+                                </div>
+                                <hr style="background-color: #1f73ae; height: 3px; border: 0;">
+                                <div class="d-flex justify-content-between main-color-text fw-bolder">
+                                        <div>Total Amount Due: @Model.Totalamount</div>
+                                        <div></div>
+                                </div>
+                        </div>
+                        <div class="mt-5">
+                                <span class="main-color-text fw-bolder">Payment Information</span><br>
+                                Payment Method:
+                        </div>
+
+                </div>
+                <div class="  fw-bolder d-flex justify-content-center">
+
+                        <p class="mt-3 fs-5 main-color-text ">Thank You!</p>
+                </div>
+</body>

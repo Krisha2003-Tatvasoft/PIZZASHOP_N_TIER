@@ -15,12 +15,15 @@
                         <input type="text" class="form-control" id="sectionname" placeholder="Category name"
                             asp-for="Sectionname" required>
                         <label for="sectionname">Name*</label>
+                         <span class="text-danger" asp-validation-for="Sectionname"></span>
+                        
                     </div>
 
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="Add a Description of Xategory" id="Description"
                             asp-for="Description"></textarea>
                         <label for="Description">Description</label>
+                           <span class="text-danger" asp-validation-for="Description"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -31,3 +34,7 @@
         </div>
     </div>
 </div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

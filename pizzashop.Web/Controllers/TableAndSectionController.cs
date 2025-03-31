@@ -58,15 +58,27 @@ public class TableAndSectionController : Controller
     [HttpPost]
     public async Task<IActionResult> AddSectionPost(VMSection model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _sectionService.AddSectionPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "ModifierGroup deleted Sucessfully." });
+
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _sectionService.AddSectionPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "section added Sucessfully." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "section not added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "Item not deleted." });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
+
     }
 
     [HttpGet]
@@ -78,15 +90,26 @@ public class TableAndSectionController : Controller
     [HttpPost]
     public async Task<IActionResult> EditSectionPost(VMSection model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _sectionService.EditSectionPost(user.Userid, model))
+
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _sectionService.EditSectionPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Error in update modifiergroup" });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "Error in update modifiergroup" });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
     [HttpPost]
@@ -112,15 +135,25 @@ public class TableAndSectionController : Controller
     [HttpPost]
     public async Task<IActionResult> AddTablePost(AddTable model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _tableService.AddTablePost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Table Added Sucessfully." });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _tableService.AddTablePost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Table Added Successfully." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Table not Added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "Table not Added." });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
 
@@ -134,14 +167,22 @@ public class TableAndSectionController : Controller
     [HttpPost]
     public async Task<IActionResult> EditTablePost(AddTable model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _tableService.EditTablePost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Table Updated Sucessfully." });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _tableService.EditTablePost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Table Updated Sucessfully." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Error in update table." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "Error in update table." });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
         }
     }
 
@@ -196,9 +237,5 @@ public class TableAndSectionController : Controller
         }
 
     }
-
-   
-
-
 
 }

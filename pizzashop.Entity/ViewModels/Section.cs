@@ -1,11 +1,17 @@
-namespace pizzashop.Entity.ViewModels;
+using System.ComponentModel.DataAnnotations;
 
-public class Section
+namespace pizzashop.Entity.ViewModels
 {
-    public int Sectionid { get; set; }
+    public class Section
+    {
+        public int Sectionid { get; set; }
 
-    public string Sectionname { get; set; } = null!;
+        [Required(ErrorMessage = "Section name is required.")]
+        [StringLength(50, ErrorMessage = "Section name cannot exceed 50 characters.")]
+        [RegularExpression(@"^[^\d].*", ErrorMessage = "Section name cannot start with a number.")]
+        public string Sectionname { get; set; } = null!;
 
-    public string? Description { get; set; }
-
+        [StringLength(200, ErrorMessage = "Description cannot exceed 200 characters.")]
+        public string? Description { get; set; }
+    }
 }

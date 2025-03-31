@@ -19,6 +19,7 @@
                                 <input type="text" class="form-control" id="Tablename" placeholder="Category name"
                                     required asp-for=Tablename>
                                 <label for="Tablename">Name*</label>
+                                 <span class="text-danger" asp-validation-for="Tablename"></span>
                             </div>
                         </div>
 
@@ -29,6 +30,7 @@
                                     <option value="">Select Section</option>
                                 </select>
                                 <label for="Unitid">Section*</label>
+                                <span class="text-danger" asp-validation-for="Sectionid"></span>
                             </div>
                         </div>
                     </div>
@@ -39,6 +41,7 @@
                                 <input type="text" class="form-control" id="capacity" placeholder="Category name"
                                     asp-for=Capacity required>
                                 <label for="capacity">Capacity*</label>
+                                 <span class="text-danger" asp-validation-for="Capacity"></span>
                             </div>
                         </div>
 
@@ -49,6 +52,7 @@
                                     <option value="">Select a Status</option>
                                 </select>
                                 <label for="floatingInput">Status*</label>
+                                  <span class="text-danger" asp-validation-for="tablestatus"></span>
                             </div>
                         </div>
                     </div>
@@ -57,9 +61,13 @@
             </div>
             <div class="modal-footer ">
                 <button type="button submit" class="btn btn-primary sav-btn" id="edit-table">Save</button>
-                <button type="button" class="btn btn-danger">Cancel</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </div>
 
         </div>
     </div>
 </div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
