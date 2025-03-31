@@ -20,4 +20,6 @@ public interface IModifiersGroupRepository
      Task<bool> MGExistAsync(string MGName);
 
       Task<bool> MGExistAtEditAsync(string MGName, int id);
+
+      Task<List<Modifiergroup>> AllModifiersGroupOrder();
 }

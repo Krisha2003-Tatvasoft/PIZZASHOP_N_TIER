@@ -14,4 +14,6 @@ public interface ICategoryService
 
      Task<bool> DeleteCat(int id);
 
+     Task<bool> SaveOrderCategory(List<int> orderIds);
+
 }

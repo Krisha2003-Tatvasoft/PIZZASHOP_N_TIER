@@ -22,13 +22,19 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<List<Category>> AllCategory()
     {
-        return await _context.Categories.Where(c => c.Isdeleted == false).OrderBy(c => c.Categoryid).ToListAsync();
+        return await _context.Categories.Where(c => c.Isdeleted == false).OrderBy(c => c.sortOrder).ToListAsync();
     }
 
     public async Task<Category> GetCatById(int id)
     {
         return await _context.Categories.FirstOrDefaultAsync(c => c.Categoryid == id);
     }
+
+    public async Task<List<Category>> AllCategoryForOrder()
+    {
+        return await _context.Categories.Where(c => c.Isdeleted == false).OrderBy(c => c.Categoryid).ToListAsync();
+    }
+
 
     public async Task UpdateCat(Category category)
     {

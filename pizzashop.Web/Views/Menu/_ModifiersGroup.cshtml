@@ -1,87 +1,96 @@
 @model List<pizzashop.Entity.ViewModels.ModifiersGroup>;
 
 <ul class="list-unstyled">
-    @foreach (var item in Model)
-    {
-        <li class="d-flex justify-content-between p-2 mg-list" tabindex="0">
-            <a href="#" class="MG-link  d-flex align-items-center gap-2" data-id="@item.Modifiergroupid">
-                <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
-                <div>
-                    @item.Modifiergroupname
-                </div>
-            </a>
-            <div class="d-flex gap-1 edit-delet">
-                <button class="button edit-MG" data-modifiergroupid="@item.Modifiergroupid">
-                    <img class="icon d-none" src="../images/pencil.svg">
+    <div id="sortable-list-mg">
+        @foreach (var item in Model)
+        {
+            <li class="d-flex justify-content-between p-2 mg-list" tabindex="0" data-id="@item.Modifiergroupid">
+                <a href="#" class="MG-link  d-flex align-items-center gap-2" data-id="@item.Modifiergroupid">
+                    <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
+                    <div>
+                        @item.Modifiergroupname
+                    </div>
+                </a>
+                <div class="d-flex gap-1 edit-delet">
+                    <button class="button edit-MG" data-modifiergroupid="@item.Modifiergroupid">
+                        <img class="icon d-none" src="../images/pencil.svg">
                     </button>
-                <button class="button delete-MG-link"  data-bs-toggle="modal" data-bs-target="#deleteModifiersGrop" data-modifiergroupid="@item.Modifiergroupid">
-                    <img class="delete-icon icon  d-none" src="../images/trash.svg"></button>
-            </div>
-        </li>
-    }
+                    <button class="button delete-MG-link" data-bs-toggle="modal" data-bs-target="#deleteModifiersGrop"
+                        data-modifiergroupid="@item.Modifiergroupid">
+                        <img class="delete-icon icon  d-none" src="../images/trash.svg"></button>
+                </div>
+            </li>
+        }
+    </div>
 </ul>
 
 
-   <!-- edit Modifiers group -->
-   <div class="modal-editMG"></div>
+<!-- edit Modifiers group -->
+<div class="modal-editMG"></div>
 
-       <!-- delete modifiers grop -->
-    <div class="modal fade modal-delete" id="deleteModifiersGrop" tabindex="-1" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <input type="hidden" id="hidden" value="">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModifiersGrop">Delete Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-                    <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
-                    <span>Are you sure you want to delete this ModifiersGrop?</span>
-                </div>
-                <div class="modal-footer d-flex justify-content-center gap-2">
-                    <button type="button" class="btn btn-primary delete-MG" data-bs-dismiss="modal">YES</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
-                </div>
+<!-- delete modifiers grop -->
+<div class="modal fade modal-delete" id="deleteModifiersGrop" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <input type="hidden" id="hidden" value="">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModifiersGrop">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete this ModifiersGrop?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-MG" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
+</div>
 
 
 <script>
 
-   $(document).ready(function () {
+    $(document).ready(function () {
 
 
-       @* $(".edit-MG").click(function (e) {
-            e.preventDefault();
+        var sortable = new Sortable(document.getElementById('sortable-list-mg'), {
+            animation: 150,
+            onEnd: function (evt) {
+                var order = [];
+                $('#sortable-list-mg li').each(function () {
+                    order.push($(this).data('id'));
+                });
+                console.log(order, "after");
+                $.ajax({
+                    type: "POST",
+                    url: "/Menu/SaveOrderMg",
+                    data: JSON.stringify(order),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success("Order saved successfully!");
+                        } else {
+                            toastr.error("Error saving order!");
+                        }
+                        console.log("Order saved successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error saving order:", error);
+                    }
+                });
+            }
+        });
+
+
+        $(document).on("click", ".delete-MG-link", function (e) {
             var MGId = $(this).data("modifiergroupid");
-            
-
-              $.ajax({
-                url: "/Menu/EditMG",
-                type: "GET",
-                data: { id: MGId },
-                success: function (data) {
-                    $(".modal-editMG").html(data);
-                    $("#updateModifiersGroup").modal("show");
-                },
-                error: function () {
-                     console.error("Error in update mg", error);
-                }
-            }); 
-             
-         });  *@
-
-         $(document).on("click", ".delete-MG-link", function (e) {
-             var MGId = $(this).data("modifiergroupid");
-                 $("#hidden").val(MGId);
-         });
+            $("#hidden").val(MGId);
+        });
 
     });
 
 
 </script>
-
-
-

@@ -20,4 +20,6 @@ public interface ICategoryRepository
     Task<bool> CatExistAsync(string Categoryname);
 
     Task<bool> CatNameExistAtEditAsync(string Categoryname, int id);
+
+    Task<List<Category>> AllCategoryForOrder();
 }

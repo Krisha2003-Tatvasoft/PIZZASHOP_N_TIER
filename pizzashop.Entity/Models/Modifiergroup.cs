@@ -21,6 +21,9 @@ public partial class Modifiergroup
 
     public int Modifiedby { get; set; }
 
+     public int? sortOrder { get; set; }
+
+
     public virtual ICollection<Itemmodifiergroupmap> Itemmodifiergroupmaps { get; set; } = new List<Itemmodifiergroupmap>();
 
     public virtual ICollection<Modifier> Modifiers { get; set; } = new List<Modifier>();

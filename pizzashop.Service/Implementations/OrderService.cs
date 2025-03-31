@@ -78,10 +78,14 @@ public class OrderService : IOrderService
             {
                 Modifierid = m.Modifiers.Modifierid,
                 Modifiername = m.Modifiers.Modifiername,
+                Quantity = (short)i.Quantity,
                 Rate = m.Modifiers.Rate,
-                TotalAmount = m.Modifiers.Rate 
+                TotalAmount = m.Modifiers.Rate * i.Quantity 
             }).ToList()
         }).ToList();
+
+        decimal subTotal = order.Ordereditems.Sum
+            (oi => (oi.Item.Rate + oi.Ordereditemmodifers.Sum(mod => mod.Modifiers.Rate)) * oi.Quantity);
 
         List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
         {
@@ -102,11 +106,16 @@ public class OrderService : IOrderService
            Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
            Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
            Items=items,
-           Taxes=taxes
+           Taxes=taxes,
+           Totalamount=order.Totalamount,
+           Subamount= subTotal
        };
      return model;
         
     }
+
+
+    
 
 
 

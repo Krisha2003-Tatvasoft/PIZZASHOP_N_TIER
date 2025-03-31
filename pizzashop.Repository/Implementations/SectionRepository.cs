@@ -18,8 +18,17 @@ public class SectionRepository : ISectionRepository
     public async Task<List<Section>> AllSections()
     {
         return await _context.Sections.Where(c => c.Isdeleted == false)
+        .OrderBy(c => c.sortOrder).ToListAsync();
+    }
+
+
+    public async Task<List<Section>> AllSectionsorder()
+    {
+        return await _context.Sections.Where(c => c.Isdeleted == false)
         .OrderBy(c => c.Sectionid).ToListAsync();
     }
+
+    
 
     public async Task AddNewSection(Section section)
     {

@@ -2,26 +2,26 @@
 
 
 <ul class="list-unstyled">
+    <div id="sortable-list-section">
+        @foreach (var item in Model)
+        {
 
-    @foreach (var item in Model)
-    {
-
-        <li class="d-flex justify-content-between p-2 sec-list">
-            <a href="#" class="d-flex align-items-center gap-2 section-link" data-secid="@item.Sectionid">
-                <img src="../images/menu_11809294.png" alt="" class="Section-svgs">
-                <div>
-                    @item.Sectionname
+            <li class="d-flex justify-content-between p-2 sec-list"  tabindex="0" data-id="@item.Sectionid">
+                <a href="#" class="d-flex align-items-center gap-2 section-link" data-secid="@item.Sectionid">
+                    <img src="../images/menu_11809294.png" alt="" class="Section-svgs">
+                    <div>
+                        @item.Sectionname
+                    </div>
+                </a>
+                <div class="d-flex gap-1 edit-delet">
+                    <button class="button edit-section" data-sectionid="@item.Sectionid"><img class="d-none"
+                            src="../images/pencil.svg"></button>
+                    <button class="button delete-section-link" data-bs-toggle="modal" data-bs-target="#deleteSection"
+                        data-sectionid="@item.Sectionid"><img class="delete-icon d-none" src="../images/trash.svg"></button>
                 </div>
-            </a>
-            <div class="d-flex gap-1 edit-delet">
-                <button class="button edit-section" data-sectionid="@item.Sectionid"><img class="d-none"
-                        src="../images/pencil.svg"></button>
-                <button class="button delete-section-link" data-bs-toggle="modal" data-bs-target="#deleteSection"
-                    data-sectionid="@item.Sectionid"><img class="delete-icon d-none" src="../images/trash.svg"></button>
-            </div>
-        </li>
-    }
-
+            </li>
+        }
+    </div>
 </ul>
 
 <div class="modal-editsection"></div>
@@ -80,8 +80,33 @@
         });
 
 
-       
-
+        var sortable = new Sortable(document.getElementById('sortable-list-section'), {
+            animation: 150,
+            onEnd: function (evt) {
+                var order = [];
+                $('#sortable-list-section li').each(function () {
+                    order.push($(this).data('id'));
+                });
+                console.log(order, "after");
+                $.ajax({
+                    type: "POST",
+                    url: "/TableAndSection/SaveOrderSection",
+                    data: JSON.stringify(order),
+                    contentType: "application/json",
+                    success: function (response) {
+                        if (response.success) {
+                            toastr.success("Order saved successfully!");
+                        } else {
+                            toastr.error("Error saving order!");
+                        }
+                        console.log("Order saved successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error saving order:", error);
+                    }
+                });
+            }
+        });
 
 
     });

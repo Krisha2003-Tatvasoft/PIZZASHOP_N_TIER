@@ -182,3 +182,11 @@ d:\PIZZASHOP_N_TIER\pizzashop.Web\obj\Release\net7.0\refint\pizzashop.Web.dll
 d:\PIZZASHOP_N_TIER\pizzashop.Web\obj\Release\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Release\net7.0\pizzashop.Web.genruntimeconfig.cache
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Release\net7.0\ref\pizzashop.Web.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\ClosedXML.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\ClosedXML.Parser.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\DocumentFormat.OpenXml.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\DocumentFormat.OpenXml.Framework.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\ExcelNumberFormat.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\RBush.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\SixLabors.Fonts.dll
+d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.IO.Packaging.dll

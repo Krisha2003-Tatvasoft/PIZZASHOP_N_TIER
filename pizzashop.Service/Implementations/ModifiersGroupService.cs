@@ -93,7 +93,7 @@ public class ModifiersGroupService : IModifiersGroupService
 
     public async Task<bool> EditMGPost(int loginId, AddModifierGroup viewmodel)
     {
-        if (await _modifierGroupRepository.MGExistAtEditAsync(viewmodel.Modifiergroupname,viewmodel.Modifiergroupid))
+        if (await _modifierGroupRepository.MGExistAtEditAsync(viewmodel.Modifiergroupname, viewmodel.Modifiergroupid))
         {
             return false;
         }
@@ -173,12 +173,43 @@ public class ModifiersGroupService : IModifiersGroupService
 
                 if (groupCount == 0)
                 {
-                     Modifier modifier = await _modifierRepository.ModifierByIdAsync(modifierId);
+                    Modifier modifier = await _modifierRepository.ModifierByIdAsync(modifierId);
                     await _modifierRepository.DeleteModifier(modifier);
                 }
             }
             return true;
         }
     }
+
+
+    public async Task<bool> SaveOrderMG(List<int> orderIds)
+    {
+        var MgList = await _modifierGroupRepository.AllModifiersGroupOrder();
+
+        if (MgList == null)
+        {
+            return false;
+        }
+        foreach (var item in orderIds)
+        {
+            var updatesortorder = MgList.Where(u => u.Modifiergroupid == item).FirstOrDefault();
+
+            if (updatesortorder != null)
+            {
+                try
+                {
+                    updatesortorder.sortOrder = orderIds.IndexOf(item) + 1;
+                    await _modifierGroupRepository.UpdateMG(updatesortorder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

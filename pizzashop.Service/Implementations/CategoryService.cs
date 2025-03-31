@@ -23,7 +23,7 @@ public class CategoryService : ICategoryService
 
   public async Task<bool> AddCategoryAsync(VMCategory model, int loginid)
   {
-    if(await _categoryRepository.CatExistAsync(model.Categoryname))
+    if (await _categoryRepository.CatExistAsync(model.Categoryname))
     {
       return false;
     }
@@ -105,7 +105,33 @@ public class CategoryService : ICategoryService
     }
   }
 
+  public async Task<bool> SaveOrderCategory(List<int> orderIds)
+  {
+    var category = await _categoryRepository.AllCategoryForOrder();
 
+    if (category == null)
+    {
+      return false;
+    }
+    foreach (var item in orderIds)
+    {
+      var updatesortorder = category.Where(u => u.Categoryid == item).FirstOrDefault();
 
+      if (updatesortorder != null)
+      {
+        try
+        {
+          updatesortorder.sortOrder = orderIds.IndexOf(item) + 1;
+          await _categoryRepository.UpdateCat(updatesortorder);
+        }
+        catch (Exception e)
+        {
+          Console.WriteLine(e.Message);
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
 }

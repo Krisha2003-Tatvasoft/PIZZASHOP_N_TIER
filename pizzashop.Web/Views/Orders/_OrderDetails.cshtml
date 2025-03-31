@@ -81,7 +81,7 @@
 
             <h5 class="mb-4 ms-4 pt-3"><strong>Order Items</strong></h5>
 
-            <div class="table-responsive ms-4 me-4">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr class="text-center">
@@ -110,7 +110,11 @@
                                    }
                                 </td>
                                 <td>@item.Quantity
-                                    <br><small class="">1</small>
+                                     @foreach(var modifiers in item.Modifiers)
+                                    {
+                                        <div class="">@modifiers.Rate</div>
+                                    }
+                                    <small class="">1</small>
                                 </td>
                                 <td>@item.Rate
                                     @foreach(var modifiers in item.Modifiers)
@@ -133,10 +137,10 @@
 
             <div class="d-flex justify-content-end me-3">
 
-                <table class="">
+                <table class="table-responsive">
                     <tr class="d-flex justify-content-between gap-5">
                         <td>Subtotal</td>
-                        <td class="text-end">₹399.00</td>
+                        <td class="text-end">₹@Model.Subamount</td>
                     </tr>
                     @foreach (var tax in Model.Taxes)
                     {
@@ -145,30 +149,13 @@
                             <td class="text-end">₹@tax.Taxvalue</td>
                         </tr>
                     }
-                    <tr class="d-flex justify-content-between gap-5">
-                        <td>CGST</td>
-                        <td class="text-end">₹47.88</td>
-                    </tr>
-                    @* <tr class="d-flex justify-content-between gap-5">
-                        <td>SGST</td>
-                        <td class="text-end">₹150.00</td>
-                    </tr>
-                    <tr class="d-flex justify-content-between gap-5">
-                        <td>GST</td>
-                        <td class="text-end">₹77.98</td>
-                    </tr>
-                    <tr class="d-flex justify-content-between gap-5">
-                        <td>Other</td>
-                        <td class="text-end">₹19.95</td>
-                    </tr>
                     <tr class="d-flex justify-content-between gap-5 mb-3">
                         <td><strong>Total</strong></td>
-                        <td class="text-end"><strong>₹624.81</strong></td>
-                    </tr> *@
+                        <td class="text-end"><strong>₹@Model.Totalamount</strong></td>
+                    </tr> 
                 </table>
             </div>
         </div>
     </div>
 </div>
 
-</div>

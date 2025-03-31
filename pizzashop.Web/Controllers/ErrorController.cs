@@ -9,6 +9,7 @@ public class ErrorController :Controller
      [Microsoft.AspNetCore.Mvc.Route("Error/{statusCode}")]
     public IActionResult HttpStatusCodeHandler(int statusCode)
     {
+        var referer = Request.Headers["Referer"].ToString();
         // Set a proper error message based on the status code
         switch (statusCode)
         {
@@ -23,6 +24,12 @@ public class ErrorController :Controller
                 break;
         }
         // Render NotFound view
+
+        TempData["ErrorMessage"] = "This action is not accessible to this User.";
+        if(!string.IsNullOrEmpty(referer))
+        {
+            return Redirect(referer);
+        }
         return View("~/Views/Error/NotFound.cshtml");
     }
 

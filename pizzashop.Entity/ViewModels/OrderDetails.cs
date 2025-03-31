@@ -26,6 +26,13 @@ public class OrderDetails
 
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
-     public List<TaxTable> Taxes { get; set; } = new List<TaxTable>();
+    public List<TaxTable> Taxes { get; set; } = new List<TaxTable>();
+
+    public decimal Totalamount { get; set; }
+
+    public decimal? Subamount { get; set; }
+
+
+
 
 }

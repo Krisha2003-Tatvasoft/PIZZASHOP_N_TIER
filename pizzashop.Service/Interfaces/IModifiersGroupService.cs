@@ -15,5 +15,7 @@ public interface IModifiersGroupService
     Task<bool> EditMGPost(int loginId, AddModifierGroup viewmodel);
 
     Task<bool> DeleteMG(int id);
+
+    Task<bool> SaveOrderMG(List<int> orderIds);
     
 }

@@ -83,15 +83,46 @@ public class SectionService : ISectionService
 
    public async Task<bool> DeleteSection(int id)
    {
-       Section section = await _sectionRepository.SecByIdAsync(id);
+      Section section = await _sectionRepository.SecByIdAsync(id);
       await _sectionRepository.DeleteSection(section);
-      if(await _tableRepository.DeleteBySection(id))
+      if (await _tableRepository.DeleteBySection(id))
       {
          return true;
       }
-      else{
+      else
+      {
          return false;
       }
+   }
+
+
+   public async Task<bool> SaveOrderSection(List<int> orderIds)
+   {
+      var sections = await _sectionRepository.AllSectionsorder();
+
+      if (sections == null)
+      {
+         return false;
+      }
+      foreach (var item in orderIds)
+      {
+         var updatesortorder = sections.Where(u => u.Sectionid == item).FirstOrDefault();
+
+         if (updatesortorder != null)
+         {
+            try
+            {
+               updatesortorder.sortOrder = orderIds.IndexOf(item) + 1;
+               await _sectionRepository.UpdateSection(updatesortorder);
+            }
+            catch (Exception e)
+            {
+               Console.WriteLine(e.Message);
+               return false;
+            }
+         }
+      }
+      return true;
    }
 
 

@@ -4,6 +4,8 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Implementations;
 using pizzashop.Service.Interfaces;
 
+
+
 namespace pizzashop.Web.Controllers;
 
 public class OrdersController : Controller
@@ -12,10 +14,12 @@ public class OrdersController : Controller
 
     private readonly IOrderExportService _orderExportService;
 
+
     public OrdersController(IOrderService orderService, IOrderExportService orderExportService)
     {
         _orderService = orderService;
         _orderExportService = orderExportService;
+       
     }
 
     [HttpGet]
@@ -57,4 +61,19 @@ public class OrdersController : Controller
         return PartialView("_OrderDetails", await _orderService.OrderDetails(id));
     }
 
+
+
+    [HttpGet]
+    public async Task<IActionResult> orderInvoice(int id)
+    {
+       var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID
+    
+        return PartialView("_OrderInvoice", orderDetails);
+    }
+
+
 }
+
+
+
+

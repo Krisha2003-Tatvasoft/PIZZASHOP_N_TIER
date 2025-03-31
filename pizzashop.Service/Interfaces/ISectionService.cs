@@ -12,4 +12,6 @@ public interface ISectionService
     Task<bool> EditSectionPost(int loginId, VMSection viewmodel);
 
      Task<bool> DeleteSection(int id);
+
+     Task<bool> SaveOrderSection(List<int> orderIds);
 }

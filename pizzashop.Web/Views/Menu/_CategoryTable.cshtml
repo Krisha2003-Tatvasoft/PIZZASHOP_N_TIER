@@ -1,29 +1,61 @@
 @model List<pizzashop.Entity.ViewModels.Category>;
 
 <ul class="list-unstyled">
-    @foreach (var item in Model)
-    {
-        <li class="d-flex justify-content-between p-2 cat-list" tabindex="0">
-            <a href="#" class="cat-link  d-flex align-items-center gap-2" data-id="@item.Categoryid">
-                <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
-                <div>
-                    @item.Categoryname
+    <div id="sortable-list-category">
+        @foreach (var item in Model)
+        {
+            <li class="d-flex justify-content-between p-2 cat-list" tabindex="0" data-id="@item.Categoryid">
+                <a href="#" class="cat-link  d-flex align-items-center gap-2" data-id="@item.Categoryid">
+                    <img src="../images/menu_11809294.png" alt="" class="menu-svgs">
+                    <div>
+                        @item.Categoryname
+                    </div>
+                </a>
+                <div class="d-flex gap-1 edit-delet ">
+                    <a class="edit-link " data-catid="@item.Categoryid">
+                        <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory">
+                            <img class="icon d-none" src="../images/pencil.svg"></button>
+                    </a>
+
+                    <a class="delete-link " data-catid="@item.Categoryid">
+                        <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <img class="delete-icon icon  d-none" src="../images/trash.svg"></button>
+                    </a>
                 </div>
-            </a>
-            <div class="d-flex gap-1 edit-delet ">
-                <a class="edit-link " data-catid="@item.Categoryid">
-                    <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory">
-                        <img class="icon d-none"
-                            src="../images/pencil.svg"></button>
-                </a>
+            </li>
 
-                <a class="delete-link " data-catid="@item.Categoryid">
-                    <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                        <img class="delete-icon icon  d-none"
-                            src="../images/trash.svg"></button>
-                </a>
-            </div>
-        </li>
+        }
+    </div>
 
-    }
 </ul>
+
+
+<script>
+    var sortable = new Sortable(document.getElementById('sortable-list-category'), {
+        animation: 150,
+        onEnd: function (evt) {
+            var order = [];
+            $('#sortable-list-category li').each(function () {
+                order.push($(this).data('id'));
+            });
+            console.log(order, "after");
+            $.ajax({
+                type: "POST",
+                url: "/Menu/SaveOrderCategory",
+                data: JSON.stringify(order),
+                contentType: "application/json",
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success("Order saved successfully!");
+                    } else {
+                        toastr.error("Error saving order!");
+                    }
+                    console.log("Order saved successfully!");
+                },
+                error: function (error) {
+                    console.error("Error saving order:", error);
+                }
+            });
+        }
+    });
+</script>

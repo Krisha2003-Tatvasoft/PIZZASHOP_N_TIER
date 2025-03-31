@@ -17,6 +17,12 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
     public async Task<List<Modifiergroup>> AllModifiersGroup()
     {
         return await _context.Modifiergroups
+        .Where(c => c.Isdeleted == false).OrderBy(c => c.sortOrder).ToListAsync();
+    }
+
+     public async Task<List<Modifiergroup>> AllModifiersGroupOrder()
+    {
+        return await _context.Modifiergroups
         .Where(c => c.Isdeleted == false).OrderBy(c => c.Modifiergroupid).ToListAsync();
     }
 

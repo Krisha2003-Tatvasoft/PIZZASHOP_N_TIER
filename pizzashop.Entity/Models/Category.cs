@@ -21,5 +21,7 @@ public partial class Category
 
     public int Modifiedby { get; set; }
 
+    public int? sortOrder { get; set; }
+
     public virtual ICollection<Item> Items { get; set; } = new List<Item>();
 }

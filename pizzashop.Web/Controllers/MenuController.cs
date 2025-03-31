@@ -48,10 +48,10 @@ public class MenuController : Controller
         VMCategory model = MenuVM.category;
         CookieData user = SessionUtils.GetUser(HttpContext);
 
-        if(await _categoryService.AddCategoryAsync(model, user.Userid))
+        if (await _categoryService.AddCategoryAsync(model, user.Userid))
         {
 
-        return Json(new { success = true, message = "Category Added sucessfully" });
+            return Json(new { success = true, message = "Category Added sucessfully" });
         }
         else
         {
@@ -154,7 +154,7 @@ public class MenuController : Controller
         }
         else
         {
-             return Json(new { success = false, message = "category not Added." });
+            return Json(new { success = false, message = "category not Added." });
         }
     }
 
@@ -242,12 +242,12 @@ public class MenuController : Controller
     public async Task<IActionResult> EditModifier(int id)
     {
         var data = await _modifierService.EditModifier(id);
-         string partialViewHtml = await RenderPartialViewToString("_EditModifier",data );
-         return Json(new
-            {
-                selectedMGIds= data.SelectedMGIds,
-                html = partialViewHtml   // Return the rendered partial view
-            });
+        string partialViewHtml = await RenderPartialViewToString("_EditModifier", data);
+        return Json(new
+        {
+            selectedMGIds = data.SelectedMGIds,
+            html = partialViewHtml   // Return the rendered partial view
+        });
     }
 
     [HttpPost]
@@ -265,9 +265,9 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteModifier(int id , int MGId)
+    public async Task<IActionResult> DeleteModifier(int id, int MGId)
     {
-        if (await _modifierService.DeleteModifier(id,MGId))
+        if (await _modifierService.DeleteModifier(id, MGId))
         {
             return Json(new { sucess = true, message = "Item deleted Sucessfully." });
         }
@@ -278,11 +278,11 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteSelectedModifiers(List<int> selectedIds , int MGId)
+    public async Task<IActionResult> DeleteSelectedModifiers(List<int> selectedIds, int MGId)
     {
 
 
-        if (await _modifierService.DeleteSelectedModifier(selectedIds,MGId))
+        if (await _modifierService.DeleteSelectedModifier(selectedIds, MGId))
         {
             return Json(new { sucess = true, message = "Item deleted Sucessfully." });
         }
@@ -335,7 +335,7 @@ public class MenuController : Controller
         }
         else
         {
-              return Json(new { success = false, message = "modifiergroup not added." });
+            return Json(new { success = false, message = "modifiergroup not added." });
         }
     }
 
@@ -362,14 +362,14 @@ public class MenuController : Controller
     [HttpGet]
     public async Task<IActionResult> EditMG(int id)
     {
-        var data =await _modifierGroupService.EditMG(id);
-          string partialViewHtml = await RenderPartialViewToString("_EditModifierGroup",data );
+        var data = await _modifierGroupService.EditMG(id);
+        string partialViewHtml = await RenderPartialViewToString("_EditModifierGroup", data);
 
-            return Json(new
-            {
-                selectedModifiers= data.SelectedModifiers,
-                html = partialViewHtml   // Return the rendered partial view
-            });
+        return Json(new
+        {
+            selectedModifiers = data.SelectedModifiers,
+            html = partialViewHtml   // Return the rendered partial view
+        });
     }
 
     [HttpPost]
@@ -382,7 +382,7 @@ public class MenuController : Controller
         }
         else
         {
-           return Json(new { success = false, message = "modifiergroup not edited." });
+            return Json(new { success = false, message = "modifiergroup not edited." });
         }
     }
 
@@ -412,5 +412,51 @@ public class MenuController : Controller
 
         return PartialView("_SelectExistingModifier", Exmodifiers);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> SaveOrderCategory([FromBody] List<int> order)
+    {
+        if (order == null || !order.Any())
+        {
+            return BadRequest("Invalid order data.");
+        }
+
+        bool isSuccess = await _categoryService.SaveOrderCategory(order);
+       
+
+        if (isSuccess)
+        {
+            return Json(new { success = true, message = "category ordered Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "category not ordered." });
+        }
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SaveOrderMg([FromBody] List<int> order)
+    {
+        if (order == null || !order.Any())
+        {
+            return BadRequest("Invalid order data.");
+        }
+
+        bool isSuccess = await _modifierGroupService.SaveOrderMG(order);
+      
+
+        if (isSuccess)
+        {
+            return Json(new { success = true, message = "ModifierGroup ordered Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "ModifierGroup not ordered."});
+        }
+
+    }
+
+
 
 }

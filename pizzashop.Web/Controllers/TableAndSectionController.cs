@@ -37,7 +37,7 @@ public class TableAndSectionController : Controller
     public async Task<IActionResult> TablesList(int id, int page = 1, int pageSize = 5, string search = "")
     {
 
-        var (tables, totalTables) =  await _tableService.GetTableBySec(id, page, pageSize, search);
+        var (tables, totalTables) = await _tableService.GetTableBySec(id, page, pageSize, search);
 
         ViewBag.CurrentPage = page;
         ViewBag.PageSize = pageSize;
@@ -135,7 +135,7 @@ public class TableAndSectionController : Controller
     public async Task<IActionResult> EditTablePost(AddTable model)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _tableService.EditTablePost(user.Userid,model))
+        if (await _tableService.EditTablePost(user.Userid, model))
         {
             return Json(new { success = true, message = "Table Updated Sucessfully." });
         }
@@ -145,7 +145,7 @@ public class TableAndSectionController : Controller
         }
     }
 
-   [HttpPost]
+    [HttpPost]
     public async Task<IActionResult> DeleteTable(int id)
     {
         if (await _tableService.DeleteTable(id))
@@ -173,5 +173,32 @@ public class TableAndSectionController : Controller
         }
 
     }
+
+
+    [HttpPost]
+    public async Task<IActionResult> SaveOrderSection([FromBody] List<int> order)
+    {
+        if (order == null || !order.Any())
+        {
+            return BadRequest("Invalid order data.");
+        }
+
+        bool isSuccess = await _sectionService.SaveOrderSection(order);
+
+
+        if (isSuccess)
+        {
+            return Json(new { success = true, message = "Section ordered Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "Section not ordered." });
+        }
+
+    }
+
+   
+
+
 
 }
