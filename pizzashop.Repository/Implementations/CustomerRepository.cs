@@ -17,6 +17,7 @@ public class CustomerRepository : ICustomerRepository
     public async Task<IQueryable<Customer>> CustomerTable(string search, string SortColumn, string SortOrder, DateTime? fromDate, DateTime? toDate)
     {
         string lowerSearch = search.ToLower();
+        
         var custList = _context.Customers
         .Include(o => o.Orders)
         .Where(o =>  (!fromDate.HasValue || o.Createdat >= fromDate) &&

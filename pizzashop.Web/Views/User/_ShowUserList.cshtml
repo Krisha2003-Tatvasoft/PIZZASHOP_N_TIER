@@ -46,9 +46,11 @@
 
         <thead>
             <tr>
-                <th style="min-width: 7rem;" class="ps-3">Name
+                <th style="min-width: 7rem;" class="ps-3">
                     <a href="#" class="sort" data-column="Firstname" data-order=@(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                        <i class="bi bi-arrow-up"></i><i class="bi bi-arrow-down"></i>
+                        Name
+                        <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
                     @* <a href="#" class="sort" data-column="Firstname" data-order="desc">
                         
@@ -56,9 +58,11 @@
                 </th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th style="min-width: 7rem;">Role
+                <th style="min-width: 7rem;">
                     <a href="#" class="sort" data-column="Rolename" data-order=@(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                        <i class="bi bi-arrow-up"></i><i class="bi bi-arrow-down"></i>
+                        Role
+                        <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i>
+                        <i class="bi bi-arrow-down  @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
                     @* <a href="#" class="sort" data-column="Rolename" data-order="desc">
                         <i class="bi bi-arrow-down"></i>

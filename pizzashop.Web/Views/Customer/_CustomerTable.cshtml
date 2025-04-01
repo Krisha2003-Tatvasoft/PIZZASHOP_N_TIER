@@ -44,33 +44,36 @@
 
         <thead>
             <tr>
-                <th>Name
-                    <a href="#" class="sort" data-column="CustomerName" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;" class="ps-3">
+                    <a href="#" class="sort" data-column="CustomerName" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                       Name <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="CustomerName" data-order="desc">
+                    @* <a href="#" class="sort" data-column="CustomerName" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
                 <th>Email
                 </th>
                 <th>Phone Number
                 </th>
-                <th>Date
-                     <a href="#" class="sort" data-column="OrderDate" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;">
+                     <a href="#" class="sort" data-column="OrderDate" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                        Date<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="OrderDate" data-order="desc">
+                    @* <a href="#" class="sort" data-column="OrderDate" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
-                <th>Total Order
-                    <a href="#" class="sort" data-column="TotalOrder" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th>
+                    <a href="#" class="sort" data-column="TotalOrder" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                       Total Order<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="TotalOrder" data-order="desc">
+                    @* <a href="#" class="sort" data-column="TotalOrder" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
             </tr>
         </thead>
@@ -78,7 +81,7 @@
             @foreach (var order in Model)
             {
                 <tr>
-                    <td>
+                    <td class="ps-3">
                        @order.Customername
                     </td>
                     <td>@order.Email</td>

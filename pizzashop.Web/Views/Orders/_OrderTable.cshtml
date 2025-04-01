@@ -45,40 +45,44 @@
 
         <thead>
             <tr>
-                <th>#Order
-                    <a href="#" class="sort" data-column="OrderId" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;" class="ps-3">
+                    <a href="#" class="sort" data-column="OrderId" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                        #Order  <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="OrderId" data-order="desc">
+                    @* <a href="#" class="sort" data-column="OrderId" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
-                <th>Date
-                    <a href="#" class="sort" data-column="OrderDate" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;">
+                    <a href="#" class="sort" data-column="OrderDate" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                         Date<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="OrderDate" data-order="desc">
+                    @* <a href="#" class="sort" data-column="OrderDate" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
-                <th>Customer
-                    <a href="#" class="sort" data-column="CustomerName" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;">
+                    <a href="#" class="sort" data-column="CustomerName" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                       Customer<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="CustomerName" data-order="desc">
+                    @* <a href="#" class="sort" data-column="CustomerName" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
                 <th>Status</th>
                 <th>Payment Mode</th>
                 <th>Rating</th>
-                <th>Total Amount
-                    <a href="#" class="sort" data-column="TotalAmount" data-order="asc">
-                        <i class="bi bi-arrow-up"></i>
+                <th style="min-width: 7rem;">
+                    <a href="#" class="sort" data-column="TotalAmount"  data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
+                        Total Amount<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    <a href="#" class="sort" data-column="TotalAmount" data-order="desc">
+                    @* <a href="#" class="sort" data-column="TotalAmount" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
-                    </a>
+                    </a> *@
                 </th>
                 <th>Action</th>
             </tr>
@@ -87,7 +91,7 @@
             @foreach (var order in Model)
             {
                 <tr>
-                    <td>
+                    <td class="ps-3">
                         #@order.Orderid
                     </td>
                     <td>@order.Orderdate</td>
