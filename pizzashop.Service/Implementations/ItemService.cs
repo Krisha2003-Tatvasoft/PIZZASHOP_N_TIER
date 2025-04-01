@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Http;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -21,10 +21,13 @@ public class ItemService : IItemService
 
   private readonly IFileService _fileService;
 
+  private readonly IHttpContextAccessor _httpContextAccessor;
+
 
   public ItemService(IItemRepository itemRepository, ICategoryRepository categoryRepository
   , IUnitRepository unitRepository, IModifiersGroupRepository modifiersGropRepository
-  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository, IModifierRepository modifierRepository, IFileService fileService)
+  , IItemmodifiergroupmapRepository itemmodifiergroupmapRepository, IHttpContextAccessor httpContextAccessor,
+   IModifierRepository modifierRepository, IFileService fileService)
   {
     _itemRepository = itemRepository;
     _categoryRepository = categoryRepository;
@@ -33,6 +36,7 @@ public class ItemService : IItemService
     _itemmodifiergroupmapRepository = itemmodifiergroupmapRepository;
     _modifierRepository = modifierRepository;
     _fileService = fileService;
+    _httpContextAccessor = httpContextAccessor;
   }
 
   public async Task<(List<ItemTable>, int totalitem)> GetItemTable(int id, int page, int pageSize, string search)
@@ -53,7 +57,10 @@ public class ItemService : IItemService
       Quantity = i.Quantity,
       Unitname = i.Unit.Unitname,
       itemtype = i.itemtype,
-      Isavailable = i.Isavailable
+      Isavailable = i.Isavailable,
+      Itemimg = i.Itemimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{i.Itemimg}"
+            : null
     }
     ).ToList();
 
@@ -62,6 +69,7 @@ public class ItemService : IItemService
 
   public async Task<AddItem> Additem()
   {
+
     AddItem model = new AddItem
     {
       Categories = await _categoryRepository.GetAllCatyAsync(),
@@ -73,6 +81,12 @@ public class ItemService : IItemService
 
   public async Task<bool> AddItemPost(int loginId, AddItem viewmodel)
   {
+    string uniqueFileName = null;
+    if (viewmodel.ItemPicture != null)
+    {
+      uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
+    }
+
     if (await _itemRepository.ItemExistAsync(viewmodel.Itemname))
     {
       return false;
@@ -96,7 +110,8 @@ public class ItemService : IItemService
       Shortcode = viewmodel.Shortcode,
       Description = viewmodel.Description,
       itemtype = viewmodel.itemtype,
-      Createdby = loginId
+      Createdby = loginId,
+      Itemimg = uniqueFileName
     };
 
     await _itemRepository.AddNewItemAsync(item);
@@ -163,25 +178,36 @@ public class ItemService : IItemService
       Units = await _unitRpository.GetAllUnitAsync(),
       MGList = await _modifiersGropRepository.GetAllMGAsync(),
       ModifierGroups = ModifierGroups,
-      selectedMGList = selectedMG.Select(m => m.Modifiergroupid).ToList()
+      selectedMGList = selectedMG.Select(m => m.Modifiergroupid).ToList(),
+      Itemimg = item.Itemimg != null
+            ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{item.Itemimg}"
+            : null,
     };
     return viewmodel;
   }
 
   public async Task<bool> EditItemPost(int loginid, AddItem viewmodel)
   {
+    Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
     string uniqueFileName = null;
     if (viewmodel.ItemPicture != null)
     {
+      if (!string.IsNullOrEmpty(item.Itemimg))
+      {
+        _fileService.DeleteFile(item.Itemimg);
+      }
       uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
     }
-
+    else
+    {
+   
+      uniqueFileName = item.Itemimg;
+    }
     if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
     {
       return false;
     }
 
-    Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
 
     item.Itemname = viewmodel.Itemname;
     item.Categoryid = viewmodel.Categoryid;

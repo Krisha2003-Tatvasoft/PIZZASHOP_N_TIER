@@ -19,20 +19,16 @@
         </tr>
         </thead>
         <tbody>
-             <input type="hidden" id="MGid" value="@(Model.FirstOrDefault()?.Modifiergroupid ?? 0)"> 
+            <input type="hidden" id="MGid" value="@(Model.FirstOrDefault()?.Modifiergroupid ?? 0)">
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
-                        <input class="form-check-input modifier-checkbox" name="SModifier"  type="checkbox" value="@item.Modifierid">
+                        <input class="form-check-input modifier-checkbox" name="SModifier" type="checkbox"
+                            value="@item.Modifierid">
                     </td>
                     <td>
-
-                        <div class="d-flex gap-3 align-items-center">
-                            <img class="dining-menu-img" src="../images/dining-menu.png" />
-                            <div>@item.Modifiername</div>
-                        </div>
-
+                        <div>@item.Modifiername</div>
                     </td>
                     <td>@item.Unitname</td>
                     <td>@item.Rate</td>
@@ -78,8 +74,8 @@ Showing 1-5 of 5
         <span class="d-none d-sm-inline px-1">
             Showing @(ViewBag.totalMoidifier > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
             - @(ViewBag.totalitem > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
-              ViewBag.totalMoidifier) :
-              0)
+                        ViewBag.totalMoidifier) :
+                        0)
             of @ViewBag.totalMoidifier
         </span>
         <nav class="mt-3">

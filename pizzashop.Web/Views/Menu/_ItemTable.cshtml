@@ -31,9 +31,12 @@
                     <td class="w-25">
 
                         <div class="d-flex gap-3 align-items-center">
-                            <img class="dining-menu-img" src="../images/dining-menu.png" />
+                            <img class="dining-menu-img"
+                                src="@(string.IsNullOrEmpty(item.Itemimg) ? "../images/dining-menu.png" : item.Itemimg)"
+                                style="border-radius: 50%;" />
                             <div>@item.Itemname</div>
                         </div>
+
 
 
                     </td>

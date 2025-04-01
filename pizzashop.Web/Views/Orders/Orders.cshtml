@@ -1,6 +1,6 @@
 @using static pizzashop.Entity.Models.Enums
 @{
-    ViewData["Title"] = "User page";
+    ViewData["Title"] = "Order page";
 }
 
 <link rel="stylesheet" href="~/css/Order.css" />
@@ -270,6 +270,11 @@
                 fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
                 toDate = toDate ? toDate.toISOString().split("T")[0] : null;
 
+                if (fromDate != GFromDate || toDate != GToDate) {
+                    fromDate = GFromDate;
+                    toDate = GToDate;
+                }
+
                 let url = `/Orders/ExportOrders?search=${searchQuery}&status=${status}&fromDate=${fromDate}&toDate=${toDate}`;
 
                 window.location.href = url; // Triggers file download
@@ -310,40 +315,68 @@
         @* invoice download *@
             $(document).on("click", ".download-invoice", function () {
                 var orderId = $(this).data("orderid");
+                 GeneratePdf(orderId);
+            });
 
-                $.ajax({
+
+            @* export invoice *@
+
+              $(document).on("click", "#exportpdf", function () {
+                var orderId = $(this).data("orderid");
+                 GeneratePdf(orderId);
+            });
+
+            function GeneratePdf(orderId)
+            {
+                  $.ajax({
                     url: "/Orders/orderInvoice",
                     type: "GET",
                     data: { id: orderId },
                     success: function (response) {
-                        console.log(response);
-                        var hiddenDiv = document.createElement('div');
-                        hiddenDiv.style.width = "800px";
-                        hiddenDiv.style.position = "absolute";
-                        hiddenDiv.style.left = '-9999px';
-                        hiddenDiv.innerHTML = response;
-                        document.body.appendChild(hiddenDiv);
-                        html2canvas(hiddenDiv, { scale: 2 }).then(canvas => {
-                            const imgData = canvas.toDataURL('image/png');
-                            const { jsPDF } = window.jspdf;
-                            const doc = new jsPDF('p', 'mm', 'a4');
-                            const pageWidth = 210;
-                            const pageHeight = 297;
-                            const imgWidth = pageWidth;
-                            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                            let heightLeft = imgHeight;
-                            let position = 0;
-                            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                            heightLeft -= pageHeight;
-                            while (heightLeft > 0) {
-                                position -= pageHeight;
-                                doc.addPage();
+
+
+                      
+                        var iframe = document.createElement('iframe');
+                        iframe.style.position = 'absolute';
+                        iframe.style.left = '-9999px';
+                        iframe.style.width = '800px';
+                        iframe.style.height = 'auto';
+                        document.body.appendChild(iframe);
+
+                        // Write the response HTML into the iframe
+                        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        iframeDoc.open();
+                        iframeDoc.write(response);
+                        iframeDoc.close();
+
+                        iframe.onload = function () {
+                            html2canvas(iframe.contentWindow.document.body, { scale: 2 }).then(canvas => {
+                                const imgData = canvas.toDataURL('image/png');
+                                const { jsPDF } = window.jspdf;
+                                const doc = new jsPDF('p', 'mm', 'a4');
+                                const pageWidth = 210;
+                                const pageHeight = 297;
+                                const imgWidth = pageWidth;
+                                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                                let heightLeft = imgHeight;
+                                let position = 0;
+
                                 doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                                 heightLeft -= pageHeight;
-                            }
-                            doc.save(`invoice_${orderId}.pdf`);
-                            document.body.removeChild(hiddenDiv);
-                        });
+
+                                while (heightLeft > 0) {
+                                    position -= pageHeight;
+                                    doc.addPage();
+                                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                                    heightLeft -= pageHeight;
+                                }
+
+                                doc.save(`invoice_${orderId}.pdf`);
+
+                                // Remove the iframe after generating the PDF
+                                document.body.removeChild(iframe);
+                            });
+                        };
 
                     },
                     error: function () {
@@ -351,7 +384,8 @@
                     }
                 });
 
-            });
+
+            }
 
 
     });

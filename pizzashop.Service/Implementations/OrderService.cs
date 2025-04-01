@@ -87,6 +87,9 @@ public class OrderService : IOrderService
         decimal subTotal = order.Ordereditems.Sum
             (oi => (oi.Item.Rate + oi.Ordereditemmodifers.Sum(mod => mod.Modifiers.Rate)) * oi.Quantity);
 
+        decimal TotalAmount = subTotal + order.Ordertaxmappings.Sum(t => decimal.TryParse(t.Tax.Taxvalue, out var taxValue) ? taxValue : 0);
+
+
         List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
         {
             Taxid = t.Taxid,
@@ -107,8 +110,9 @@ public class OrderService : IOrderService
            Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
            Items=items,
            Taxes=taxes,
-           Totalamount=order.Totalamount,
-           Subamount= subTotal
+           Totalamount=TotalAmount,
+           Subamount= subTotal,
+           paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
        };
      return model;
         
