@@ -9,13 +9,6 @@ a.sort
     color: grey;
 }
 
-.heading-back-button{
-display: flex;
-align-items: center;
-justify-content: space-between;
-/* padding: 5px; */
-}
-
 
 .heading-back-button .back-to-button button{
     color:white;
@@ -92,16 +85,20 @@ justify-content: space-between;
     color:grey;
 } 
 
+.heading-back-button .back-to-button input{
+   height: 41px;
+ }
+ 
+
 
 @media screen and (max-width:540px)  {
 
     .heading-back-button .back-to-button button{
-        font-size: 10px;
-        height: 30px;
+        height: 35px;
      }
 
      .heading-back-button .back-to-button input{
-        width: 90px;
+        width: 200px;
      }
      
     

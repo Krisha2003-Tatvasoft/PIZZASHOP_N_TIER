@@ -4,6 +4,12 @@
 <div class="table-responsive">
     <table class="table mb-0">
         <caption class="bg-white">
+            @if(Model.Count()==0)
+{
+     <h1 class="d-flex align-items-center justify-content-center">No data Found.</h1>
+}
+else
+{
             <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
                 <div class="d-flex align-items-center">
                     <span class="d-none d-sm-inline px-1">Items Per page:</span>
@@ -41,11 +47,13 @@
                 </div>
             </div>
 
+            }
+
         </caption>
 
         <thead>
             <tr>
-                <th>Name</th>
+                <th class="ps-3">Name</th>
                 <th>Type</th>
                 <th>IsEnabled</th>
                 <th>Default</th>
@@ -57,7 +65,7 @@
             @foreach (var tax in Model)
             {
                 <tr>
-                    <td>
+                    <td class="ps-3">
                         @tax.Taxname
                     </td>
                     <td>@tax.taxtype</td>

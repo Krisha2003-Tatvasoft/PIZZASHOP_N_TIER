@@ -4,6 +4,12 @@
 <div class="table-responsive">
     <table class="table mb-0">
         <caption class="bg-white">
+            @if(Model.Count()==0)
+{
+     <h1 class="d-flex align-items-center justify-content-center">No data Found.</h1>
+}
+else
+{
             <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
                 <div class="d-flex align-items-center">
                     <span class="d-none d-sm-inline px-1">Items Per page:</span>
@@ -40,6 +46,7 @@
                     </nav>
                 </div>
             </div>
+            }
 
         </caption>
 
@@ -50,9 +57,7 @@
                         #Order  <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
-                    @* <a href="#" class="sort" data-column="OrderId" data-order="desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> *@
+                    
                 </th>
                 <th style="min-width: 7rem;">
                     <a href="#" class="sort" data-column="OrderDate" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>

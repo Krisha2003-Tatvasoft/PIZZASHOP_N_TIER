@@ -75,9 +75,10 @@
                         </div>
                         <div class="button-input mb-2 me-3">
 
-                            <div class="search-field">
+                            <div class="search-field position-relative">
                                 <input class="search form-control me-2 border-0" id="searchInput" type="search"
                                     placeholder="Search" aria-label="Search">
+                                <i class="bi bi-search custom-icon"></i>
                             </div>
 
 
@@ -87,7 +88,7 @@
                             </button>
 
                             <button class="new-item-btn button openModel">
-                                + New Item
+                                <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Item</span>
                             </button>
 
                         </div>
@@ -144,9 +145,10 @@
 
                         <div class="button-input mb-2 me-3">
 
-                            <div class="search-field">
+                            <div class="search-field position-relative">
                                 <input class="search form-control me-2 border-0" type="search" id="searchModifier"
                                     placeholder="Search" aria-label="Search">
+                                <i class="bi bi-search custom-icon"></i>
                             </div>
 
 
@@ -156,7 +158,7 @@
                             </button>
 
                             <button class=" button new-Modifiers-btn openModifierModel">
-                                + New Modifier
+                                <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Modifier</span>
                             </button>
 
                         </div>
@@ -327,6 +329,7 @@
 <div class="modal-addNewMG"></div>
 
 <div class="modal-selectExisting">
+
     <!-- select existing modifiers -->
     <div class="modal fade modal-delete" id="selectExistingModifiers" tabindex="-1" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
@@ -338,9 +341,10 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="search-field w-50">
+                    <div class="search-field position-relative w-50">
                         <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
                             aria-label="Search">
+                             <i class="bi bi-search custom-icon"></i>
                     </div>
                     <div class="existing-modifier-data"></div>
 
@@ -409,6 +413,8 @@
             let searchTimer;
         $("#searchInput").on("input", function () {
             var categoryId = $("#catid").val();
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 if (categoryId !== '0') {
@@ -419,6 +425,7 @@
                 }
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+            searchcross();
         });
 
 
@@ -445,6 +452,8 @@
             let searchTimer1;
         $("#searchModifier").on("input", function () {
             var MGid = $("#MGid").val();
+             var element = $(".custom-icon");
+                element.addClass("d-none");
             clearTimeout(searchTimer1);
             searchTimer = setTimeout(function () {
                 if (MGid !== '0') {
@@ -455,6 +464,7 @@
                 }
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+         searchcrossForModifier();
         });
 
         @* add item model *@
@@ -785,7 +795,7 @@
             $(document).on("click", "#add-item", function (e) {
                 e.preventDefault();
                 var formData = new FormData($("#add-item-form")[0]);
-              
+
                 var categoryId = $("#Categoryid").val();
 
 
@@ -1208,10 +1218,13 @@
 
         let searchTimer3;
         $("#searchExModifier").on("input", function () {
+           var element = $(".custom-icon");
+                element.addClass("d-none");
             clearTimeout(searchTimer3);
             searchTimer3 = setTimeout(function () {
                 loadExistingModifier(1);  // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+            searchcrossForEXM();
         });
 
         $(document).on("click", ".add-ex-modifier", function (e) {
@@ -1266,14 +1279,14 @@
                     dataType: 'json',
                     success: function (response) {
                         if (response.success) {
-                             $("#add-MG-form")[0].reset();
+                            $("#add-MG-form")[0].reset();
                             $("#addModifiersGroup").modal("hide");
-                           MGList();
+                            MGList();
                         }
                         else {
                             toastr.error("This Modifiergroup is already exist.");
                         }
-                       
+
                     },
                     error: function (error) {
                         console.error("Error in add Modifiergroup", error);
@@ -1343,15 +1356,15 @@
                     dataType: 'json',
                     success: function (response) {
 
-                         if (response.success) {
+                        if (response.success) {
                             $("#updateModifiersGroup").modal("hide");
-                           MGList();
+                            MGList();
                         }
                         else {
                             toastr.error("This Modifiergroup is already exist.");
                         }
-                       
-                     
+
+
                     },
                     error: function (error) {
                         console.error("Error updating modifierGroup:", error);
@@ -1485,6 +1498,32 @@
             $("#ExMmasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
 
         }
+
+        function searchcross() {
+            let search = $("#searchInput").val();
+            if (search === "") {
+                var element = $(".custom-icon");
+                element.removeClass("d-none");
+            }
+        }
+
+        function searchcrossForModifier() {
+            let search = $("#searchModifier").val();
+            if (search === "") {
+                var element = $(".custom-icon");
+                element.removeClass("d-none");
+            }
+        }
+
+        function searchcrossForEXM() {
+            let search = $("#searchExModifier").val();
+            if (search === "") {
+                var element = $(".custom-icon");
+                element.removeClass("d-none");
+            }
+        }
+
+
 
 
     });

@@ -19,7 +19,7 @@
                         <table class="table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Role</th>
+                                    <th class="ps-3">Role</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -27,7 +27,7 @@
                                 @foreach (var role in Model)
                                 {
                                    <tr>
-                                    <td>@role.Rolename</td>
+                                    <td class="ps-3">@role.Rolename</td>
                                     <td><div class="edit-button"><button>
                                         <a  class="edit-btn"  data-id="@role.Roleid" ><img src="../images/pencil.svg"></a></button></td>
                                    </tr>

@@ -12,7 +12,7 @@
         <div class="heading-text">
             <h1><b>User</b></h1>
         </div>
-        <div class="back-to-button d-flex gap-3 align-items-center">
+        <div class="back-to-button d-flex gap-1 gap-sm-3 align-items-center">
             <div class="position-relative">
                 <input class="search form-control me-2 border-0" id="searchInput" type="search" placeholder="Search"
                     aria-label="Search">
@@ -20,7 +20,7 @@
             </div>
             <a clas="" asp-controller="User" asp-action="AddNewUser">
                 <button class="back-button">
-                    <span>+<span class="d-none d-md-inline"> Add User</span></span>
+                    <span>+<span class="d-none d-sm-inline"> Add User</span></span>
                 </button>
             </a>
         </div>
@@ -92,7 +92,6 @@
 
             function searchcross() {
                 let search = $("#searchInput").val();
-                console.log(search);
                 if (search === "") {
                     var element = $(".custom-icon");
                     element.removeClass("d-none");

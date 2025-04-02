@@ -18,7 +18,7 @@
 
               
                 <div class="position-relative " id="searchCustomerContainer">
-                    <input class="filter Search form-control me-2 border-0" id="searchCustomer" type="text"
+                    <input class="filter Search form-control me-2 border-0" id="searchCustomer" type="search"
                         placeholder="Search" aria-label="Search">
                     <i class="bi bi-search custom-icon"></i>
                 </div>
@@ -169,10 +169,13 @@
 
             let searchTimer;
         $("#searchCustomer").on("input", function () {
+             var element = $(".custom-icon");
+                element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 loadCustomerTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+           searchcross();
         });
 
 
@@ -232,6 +235,16 @@
             GCToDate = $("#ToDate").val();
             loadCustomerTable(1);
         });
+
+        
+
+         function searchcross() {
+            let search = $("#searchCustomer").val();
+            if (search === "") {
+                var element = $(".custom-icon");
+                element.removeClass("d-none");
+            }
+        }
 
 
 

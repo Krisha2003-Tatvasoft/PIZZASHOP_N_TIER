@@ -9,16 +9,20 @@
     height: auto;
 }
 
+.search-field .custom-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--bs-secondary-color);
+    padding-right: 3px;
+}
+
 
 .slider-heading-text {
     font-size: 20px;
     color: #087cc4;
-}
-
-
-.plus-img {
-    width: 25px;
-    height: 25px;
 }
 
 .plus-button {
@@ -93,7 +97,7 @@
 }
 
 .button-input .new-table-btn {
-    width: 100px;
+    /* width: 100px; */
     height: 40px;
     border: none;
     border-radius: 5px;
@@ -167,8 +171,6 @@
 
 @media screen and (max-width: 1200px) {
 
-
-
     .parent .main-content .tables {
         position: relative;
     }
@@ -213,11 +215,9 @@
         height: 30px;
     }
 
-
-    .button-input .new-table-btn {
-        font-size: 12px;
-        width: 60px;
-
+    .search-field .custom-icon {
+       display: none;
     }
+    
 }
 

@@ -52,9 +52,10 @@
 
             <div class="button-input mb-2 me-3">
 
-                <div class="search-field">
+                <div class="search-field position-relative">
                     <input class="search form-control me-2 border-0" type="search" placeholder="Search"
                         id="searchInTable" aria-label="Search">
+                         <i class="bi bi-search custom-icon"></i>
                 </div>
 
 
@@ -63,7 +64,7 @@
                 </button>
 
                 <button class="new-table-btn button openAddTableModel">
-                    + New Table
+                    <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Table</span> 
                 </button>
 
             </div>
@@ -145,11 +146,14 @@
 
             let searchTimer4;
         $("#searchInTable").on("input", function () {
+              var element = $(".custom-icon");
+                element.addClass("d-none");
             clearTimeout(searchTimer4);
             searchTimer4 = setTimeout(function () {
                 loadTablesBySec(globalSectionId, 1);
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+        searchcross();
         });
 
 
@@ -491,6 +495,15 @@
             $("#TablemasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
             $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
         }
+
+         function searchcross() {
+                let search = $("#searchInTable").val();
+                if (search === "") {
+                    var element = $(".custom-icon");
+                    element.removeClass("d-none");
+                }
+            }
+
 
 
     });

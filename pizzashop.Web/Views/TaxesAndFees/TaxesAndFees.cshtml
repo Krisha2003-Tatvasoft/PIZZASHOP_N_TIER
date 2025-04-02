@@ -4,23 +4,24 @@
 
 <link rel="stylesheet" href="~/css/TaxesAndFees.css" />
 
+
 <div class="w-100 main-content px-lg-5 px-sm-4 px-4" id="tax-table">
 
     <!-- heading text -->
 
-    <div class="w-100 heading-back-button p-2">
+    <div class="w-100 heading-back-button d-block d-md-flex align-items-center justify-content-md-between p-2">
         <div class="heading-text">
             <h1><b>Taxes/Fees</b></h1>
         </div>
-        <div class="back-to-button d-flex gap-3 align-items-center">
+        <div class="back-to-button d-flex gap-1 gap-sm-3 align-items-center justify-content-end">
             <div class="position-relative">
-                <input class="search form-control me-2 border-0" id="searchTax" type="text" placeholder="Search"
+                <input class="search form-control me-2 border-0" id="searchTax" type="search" placeholder="Search"
                     aria-label="Search">
-                <i class="bi bi-search custom-icon"></i>
+               <i class="bi bi-search custom-icon"></i>
             </div>
             <a class="add-tax">
                 <button class="back-button">
-                    <span>+ Add Tax</span>
+                    <span><i class="bi bi-plus"></i><span class="d-none d-sm-inline">Add Tax</span></span>
                 </button>
             </a>
         </div>
@@ -78,10 +79,13 @@
 
         let searchTimer;
         $("#searchTax").on("input", function () {
+              var element = $(".custom-icon");
+                element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 loadUserTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
+          searchcross();
         });
 
 
@@ -183,6 +187,15 @@
                 });
 
             });
+
+             function searchcross() {
+                let search = $("#searchTax").val();
+                if (search === "") {
+                    var element = $(".custom-icon");
+                    element.removeClass("d-none");
+                }
+            }
+
 
 
 
