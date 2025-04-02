@@ -1,0 +1,102 @@
+@model pizzashop.Entity.ViewModels.CustomerTable;
+
+<div class="modal fade modal-delete deleteModal" id="CustomerHistory" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content" Width="800px" style="background-color: #f0f0f0;">
+            <form id="date-range">
+                <input type="hidden" id="customerId">
+                <div class="modal-header ">
+                    <h5 class="modal-title">Customer History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="border p-1">
+                        <div class="row ">
+                            <div class="col-md-6 pb-2">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Name</span>
+                                    <span><b>@Model.Customername</b></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pb-2">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Average Bill</span>
+                                    <span><b>@Model.AvgBill</b></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row ">
+                            <div class="col-md-6 pb-2 ">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Mobile Number</span>
+                                    <span><b>@Model.Phoneno</b></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pb-2">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Coming Since</span>
+                                    <span><b>@Model.Cominng_Since</b></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-md-6 pb-2">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Max Order</span>
+                                    <span><b>@Model.MaxOrder</b></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pb-2">
+                                <div class="d-flex align-item-center justify-content-between bg-white p-2 border">
+                                    <span>Visits</span>
+                                    <span><b>@Model.VisitCount</b></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="table-responsive content bg-white ">
+
+                        <table class="table itemlisttbl text-nowrap table-striped">
+                            <thead>
+                                <tr style="color:#5a5a5a">
+                                    <th>Order Date</th>
+                                    <th>Order Type</th>
+                                    <th>Payment</th>
+                                    <th>Items</th>
+                                    <th>Amount</th>
+
+                                </tr>
+                            </thead>
+                            <tbody class="">
+                               @foreach(var Order in Model.orders)
+                               {
+                                <tr>
+                                    <td>@Order.Orderdate</td>
+                                    <td>@Order.orderType</td>
+                                    <td>@Order.paymentmode</td>
+                                    <td>@Order.Quantity</td>
+                                    <td>@Order.TotalAmount</td>
+                                </tr>
+                               }
+                            </tbody>
+                        </table> 
+
+
+                    </div>
+
+
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>

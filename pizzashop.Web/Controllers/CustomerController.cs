@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 
 namespace pizzashop.Web.Controllers;
@@ -7,11 +8,15 @@ public class CustomerController :Controller
 {
   private readonly ICustomerService _customerService;
 
+  public readonly ICustomerExportService _customerExportService;
 
-    public CustomerController(ICustomerService customerService)
+
+    public CustomerController(ICustomerService customerService, ICustomerExportService customerExportService)
     {
         _customerService = customerService;
+        _customerExportService = customerExportService;
     }
+   
   
 
    [HttpGet]
@@ -32,6 +37,26 @@ public class CustomerController :Controller
                   ? PartialView("_CustomerTable", CustomerList)
                   : View(CustomerList);
 
+    }
+
+    
+    [HttpGet]
+    public async Task<IActionResult> ExportCustomer(string search = "", DateTime? fromDate = null, DateTime? toDate = null)
+    {
+        // Fetch orders based on filters
+        List<CustomerTable> customers = await _customerService.GetExcelCustomer(search, fromDate, toDate);
+
+        // Generate Excel file
+        var fileContent = _customerExportService.ExportCustomerToExcel(customers, search, fromDate, toDate);
+
+        // Return as downloadable file
+        return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
+    }
+
+      [HttpGet]
+    public async Task<IActionResult> CustomerHistory(int id)
+    {
+       return PartialView("_CustomerHistory", await _customerService.CustomerHistory(id));
     }
 
 

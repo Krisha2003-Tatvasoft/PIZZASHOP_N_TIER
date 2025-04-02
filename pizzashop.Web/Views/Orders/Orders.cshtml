@@ -10,61 +10,76 @@
     <!-- heading text -->
 
     <div id="orderTablePartial">
-        <div class="w-100 heading-back-button p-2 mt-2">
-            <div class="heading-text">
+
+        <div
+            class="w-100 heading-back-button d-block d-xxl-flex  align-items-md-center justify-content-xxl-between flex-row  p-2 mt-2">
+            <div class="heading-text" style="margin-right:200px">
                 <h1><b>Orders</b></h1>
             </div>
-            <div class="back-to-button d-flex gap-3 align-items-center">
+            <div class="back-to-button d-flex flex-column flex-grow-1 flex-lg-row gap-3 align-items-lg-center  ">
+
+                <div class="d-flex flex-column flex-sm-row gap-3 align-items-center x1">
+                    <div class="position-relative w-sm-50 w-100" id="searchCustomerContainer">
+                        <input class="filter form-control me-2 border-0" id="searchOrders" type="text"
+                            placeholder="Search" aria-label="Search">
+                        <i class="bi bi-search custom-icon"></i>
+                    </div>
+                    <div class="w-sm-50 w-100">
+                        <select class="form-select filter w-100" asp-items="Html.GetEnumSelectList<orderstatus>()"
+                            id="orderStatus" aria-label="Default select example">
+                            <option selected value="">All Status</option>
+                        </select>
+                    </div>
 
 
-                <div class="position-relative">
-                    <input class="filter form-control me-2 border-0" id="searchOrders" type="text" placeholder="Search"
-                        aria-label="Search">
-                    <i class="bi bi-search custom-icon"></i>
                 </div>
 
-                <select class="form-select filter" asp-items="Html.GetEnumSelectList<orderstatus>()" id="orderStatus"
-                    aria-label="Default select example">
-                    <option selected value="">All Status</option>
-                </select>
+                <div class="d-flex flex-column flex-sm-row gap-3 align-items-center x2">
+                    <select class="form-select filter x4" id="searchTimeWise" aria-label="Default select example">
+                        <option selected value="all">All Time</option>
+                        <option value="7">Last 7 Days</option>
+                        <option value="30">Last 30 Days</option>
+                        <option value="currentMonth">Current Month</option>
+                    </select>
 
-                <select class="form-select filter" id="searchTimeWise" aria-label="Default select example">
-                    <option selected value="all">All Time</option>
-                    <option value="7">Last 7 Days</option>
-                    <option value="30">Last 30 Days</option>
-                    <option value="currentMonth">Current Month</option>
-                </select>
+                    <a class="x3">
+                        <button class="back-button w-100" id="exportOrdersBtn">
+                            <span><img src="~/images/export.svg" class="me-2 mb-1"><span>Export</span></span>
+                        </button>
+                    </a>
 
-                <a clas="">
-                    <button class="back-button" id="exportOrdersBtn">
-                        <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px">Export</span>
-                    </button>
-                </a>
+                </div>
+
 
             </div>
         </div>
 
-        <div class=" d-flex justify-content-end gap-3 align-items-center mb-4">
+        <div class=" d-flex flex-column flex-xl-row justify-content-end gap-3 align-items-center mb-4">
 
-            <div class="form-floating filter">
-                <input type="date" class="form-control" id="FromDate" placeholder="fromDate">
-                <label for="fromDate">From Date</label>
+            <div class="d-flex flex-column flex-sm-row gap-3 align-items-center ">
+                <div class="form-floating filter">
+                    <input type="date" class="form-control" id="FromDate" placeholder="fromDate">
+                    <label for="fromDate">From Date</label>
+                </div>
+
+                <div class="form-floating filter">
+                    <input type="date" class="form-control" id="ToDate" placeholder="ToDate">
+                    <label for="ToDate">To Date</label>
+                </div>
             </div>
 
-            <div class="form-floating filter">
-                <input type="date" class="form-control" id="ToDate" placeholder="ToDate">
-                <label for="ToDate">To Date</label>
+
+            <div class="d-flex gap-3 align-items-center">
+
+                <button class="search-btn " id="serachDate">
+                    <span>Search</span>
+                </button>
+
+
+                <button class="clear-btn" id="clearbtn">
+                    <span>Clear</span>
+                </button>
             </div>
-
-
-            <button class="search-btn" id="serachDate">
-                <span>Search</span>
-            </button>
-
-
-            <button class="clear-btn" id="clearbtn">
-                <span>Clear</span>
-            </button>
 
         </div>
 
@@ -315,77 +330,76 @@
         @* invoice download *@
             $(document).on("click", ".download-invoice", function () {
                 var orderId = $(this).data("orderid");
-                 GeneratePdf(orderId);
+                GeneratePdf(orderId);
             });
 
 
-            @* export invoice *@
+        @* export invoice *@
 
-              $(document).on("click", "#exportpdf", function () {
+            $(document).on("click", "#exportpdf", function () {
                 var orderId = $(this).data("orderid");
-                 GeneratePdf(orderId);
+                GeneratePdf(orderId);
             });
 
-            function GeneratePdf(orderId)
-            {
-                  $.ajax({
-                    url: "/Orders/orderInvoice",
-                    type: "GET",
-                    data: { id: orderId },
-                    success: function (response) {
+        function GeneratePdf(orderId) {
+            $.ajax({
+                url: "/Orders/orderInvoice",
+                type: "GET",
+                data: { id: orderId },
+                success: function (response) {
 
 
-                      
-                        var iframe = document.createElement('iframe');
-                        iframe.style.position = 'absolute';
-                        iframe.style.left = '-9999px';
-                        iframe.style.width = '800px';
-                        iframe.style.height = 'auto';
-                        document.body.appendChild(iframe);
 
-                        // Write the response HTML into the iframe
-                        var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        iframeDoc.open();
-                        iframeDoc.write(response);
-                        iframeDoc.close();
+                    var iframe = document.createElement('iframe');
+                    iframe.style.position = 'absolute';
+                    iframe.style.left = '-9999px';
+                    iframe.style.width = '800px';
+                    iframe.style.height = 'auto';
+                    document.body.appendChild(iframe);
 
-                        iframe.onload = function () {
-                            html2canvas(iframe.contentWindow.document.body, { scale: 2 }).then(canvas => {
-                                const imgData = canvas.toDataURL('image/png');
-                                const { jsPDF } = window.jspdf;
-                                const doc = new jsPDF('p', 'mm', 'a4');
-                                const pageWidth = 210;
-                                const pageHeight = 297;
-                                const imgWidth = pageWidth;
-                                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                                let heightLeft = imgHeight;
-                                let position = 0;
+                    // Write the response HTML into the iframe
+                    var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    iframeDoc.open();
+                    iframeDoc.write(response);
+                    iframeDoc.close();
 
+                    iframe.onload = function () {
+                        html2canvas(iframe.contentWindow.document.body, { scale: 2 }).then(canvas => {
+                            const imgData = canvas.toDataURL('image/png');
+                            const { jsPDF } = window.jspdf;
+                            const doc = new jsPDF('p', 'mm', 'a4');
+                            const pageWidth = 210;
+                            const pageHeight = 297;
+                            const imgWidth = pageWidth;
+                            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                            let heightLeft = imgHeight;
+                            let position = 0;
+
+                            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+
+                            while (heightLeft > 0) {
+                                position -= pageHeight;
+                                doc.addPage();
                                 doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                                 heightLeft -= pageHeight;
+                            }
 
-                                while (heightLeft > 0) {
-                                    position -= pageHeight;
-                                    doc.addPage();
-                                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                                    heightLeft -= pageHeight;
-                                }
+                            doc.save(`invoice_${orderId}.pdf`);
 
-                                doc.save(`invoice_${orderId}.pdf`);
+                            // Remove the iframe after generating the PDF
+                            document.body.removeChild(iframe);
+                        });
+                    };
 
-                                // Remove the iframe after generating the PDF
-                                document.body.removeChild(iframe);
-                            });
-                        };
-
-                    },
-                    error: function () {
-                        alert("Failed to load invoice.");
-                    }
-                });
+                },
+                error: function () {
+                    alert("Failed to load invoice.");
+                }
+            });
 
 
-            }
+        }
 
 
     });

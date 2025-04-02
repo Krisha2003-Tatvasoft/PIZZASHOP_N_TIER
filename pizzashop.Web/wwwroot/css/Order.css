@@ -7,13 +7,6 @@ a.sort {
     color: grey;
 }
 
-.heading-back-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    /* padding: 5px; */
-}
-
 
 .heading-back-button .back-to-button button {
     color: #087cc4;
@@ -21,7 +14,7 @@ a.sort {
     border: 1px solid #087cc4;
     height: 40px;
     background-color: white;
-    font-size: 18px;
+    /* font-size: 18px; */
 }
 
 
@@ -31,7 +24,7 @@ a.sort {
     border: 1px solid #087cc4;
     height: 50px;
     background-color: #087cc4;
-    font-size: 18px;
+    /* font-size: 18px; */
 }
 
 .o-details button {
@@ -66,7 +59,7 @@ a.sort {
 }
 
 .filter {
-    width: 300px;
+    /* width: 250px; */
     height: 50px;
     border-radius: 5px;
 }
@@ -111,6 +104,7 @@ a.sort {
 
 
 
+
 @media screen and (max-width:540px) {
 
     .heading-back-button .back-to-button button {
@@ -131,4 +125,48 @@ a.sort {
         padding-left: 0px;
     }
 
+}
+
+
+@media (min-width:993px) {
+   
+  
+    .x1 {
+      width: 60% !important;
+    }
+    .x2 {
+        width: 40% !important;
+      }
+  
+    .x3 {
+      width: 40% !important;
+    }
+
+    .x4{
+        width:60%!important;
+    }
+  
+   
+  }
+
+  
+
+@media (max-width:993px) {
+    .x3 {
+        width: 50% !important;
+      }
+  
+      .x4{
+          width:50%!important;
+      }
+}
+
+@media (max-width:576px) {
+    .x3 {
+        width: 100% !important;
+      }
+  
+      .x4{
+          width:100%!important;
+      }
 }

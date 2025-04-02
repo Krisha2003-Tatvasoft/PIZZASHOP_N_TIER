@@ -17,11 +17,11 @@ public class CustomerRepository : ICustomerRepository
     public async Task<IQueryable<Customer>> CustomerTable(string search, string SortColumn, string SortOrder, DateTime? fromDate, DateTime? toDate)
     {
         string lowerSearch = search.ToLower();
-        
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         var custList = _context.Customers
         .Include(o => o.Orders)
-        .Where(o =>  (!fromDate.HasValue || o.Createdat >= fromDate) &&
-            (!toDate.HasValue || o.Createdat <= toDate) )
+        .Where(o => (!fromDate.HasValue || o.Createdat >= fromDate) &&
+            (!toDate.HasValue || o.Createdat <= toDate))
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Customername.ToLower().Contains(lowerSearch) ||
                             u.Email.ToLower().Contains(lowerSearch) ||
@@ -39,5 +39,34 @@ public class CustomerRepository : ICustomerRepository
         };
         return custList;
     }
+
+
+    public async Task<IQueryable<Customer>> CustomerExcel(string search, DateTime? fromDate, DateTime? toDate)
+    {
+        string lowerSearch = search.ToLower();
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
+        var custList = _context.Customers
+        .Include(o => o.Orders)
+        .Where(o => (!fromDate.HasValue || o.Createdat >= fromDate) &&
+            (!toDate.HasValue || o.Createdat <= toDate))
+        .Where(u => string.IsNullOrEmpty(lowerSearch) ||
+                            u.Customername.ToLower().Contains(lowerSearch) ||
+                            u.Email.ToLower().Contains(lowerSearch) ||
+                            u.Phoneno.ToLower().Contains(lowerSearch) ||
+                            u.Createdat.ToString().ToLower().Contains(lowerSearch) ||
+                            u.Totalorder.ToString().ToLower().Contains(lowerSearch));
+
+        return custList;
+    }
+
+
+   public async Task<Customer> CustomerHistory(int id)
+   {
+         return await _context.Customers
+            .Include(o => o.Orders).ThenInclude(o =>o.Ordereditems)
+             .FirstOrDefaultAsync(o => o.Customerid == id);
+   }
+    
 
 }

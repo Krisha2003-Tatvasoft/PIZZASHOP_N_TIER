@@ -15,6 +15,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IQueryable<Order>> OrderTable(string search, string SortColumn, string SortOrder, string status, DateTime? fromDate, DateTime? toDate)
     {
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         string lowerSearch = search.ToLower();
         var orderList = _context.Orders
         .Include(o => o.Customer)
@@ -41,6 +42,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IQueryable<Order>> OrderExcelTable(string search, string status, DateTime? fromDate, DateTime? toDate)
     {
+           toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         string lowerSearch = search.ToLower();
         var orderList = _context.Orders
         .Include(o => o.Customer)
