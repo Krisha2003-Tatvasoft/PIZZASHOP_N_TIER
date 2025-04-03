@@ -153,7 +153,7 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { error = true, message = "error in delete category" });
+            return Json(new { success = false, message = "error in delete category" });
         }
     }
 
@@ -228,7 +228,7 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { error = true, message = "Item not deleted." });
+            return Json(new { success = false, message = "Item not deleted." });
         }
     }
 
@@ -239,11 +239,11 @@ public class MenuController : Controller
 
         if (await _itemService.DeleteSelectedItem(selectedIds))
         {
-            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+            return Json(new { success = true, message = "Item deleted Sucessfully." });
         }
         else
         {
-            return Json(new { error = true, message = "Item not deleted." });
+            return Json(new { success = false, message = "Item not deleted." });
         }
 
     }
@@ -332,11 +332,11 @@ public class MenuController : Controller
     {
         if (await _modifierService.DeleteModifier(id, MGId))
         {
-            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+            return Json(new { success = true, message = "Item deleted Sucessfully." });
         }
         else
         {
-            return Json(new { error = true, message = "Item not deleted." });
+            return Json(new { success = false, message = "Item not deleted." });
         }
     }
 
@@ -347,11 +347,11 @@ public class MenuController : Controller
 
         if (await _modifierService.DeleteSelectedModifier(selectedIds, MGId))
         {
-            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+            return Json(new { success = true, message = "Item deleted Sucessfully." });
         }
         else
         {
-            return Json(new { error = true, message = "Item not deleted." });
+            return Json(new { success = false, message = "Item not deleted." });
         }
 
     }
@@ -482,7 +482,7 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { error = true, message = "ModifierGroup not deleted." });
+            return Json(new { success = false, message = "ModifierGroup not deleted." });
         }
     }
 

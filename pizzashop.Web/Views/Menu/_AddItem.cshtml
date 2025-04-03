@@ -200,6 +200,7 @@
                             <select class="form-select" id="MGid" asp-items="Model.MGList">
                                 <option selected val="">Select Modifiers Groups(s)</option>
                             </select>
+                            
 
                             <div id="modifierContainer" class="mt-3 ">
                             </div>
@@ -242,6 +243,8 @@
                        
 
                         var currentIndex = modifierIndex++;
+                         var modifierCount = data.length;  // Get the number of modifiers
+
 
 
                         var modifierList = `<div id="group_${groupId}" class="modifier-group">
@@ -258,18 +261,12 @@
                        <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
                        <div class="flex-fill">
                         <select class="form-select min-selection" id="min_${groupId}"  name="ModifierGroups[${currentIndex}].Minselectionrequired" style="border-radius:25px;">
-                            <option value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
+                             ${generateOptions(modifierCount)} 
                         </select>
                        </div>
                        <div class="flex-fill">
                         <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" name="ModifierGroups[${currentIndex}].Maxselectionallowed">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="5">5</option>
+                              ${generateOptions(modifierCount)}  
                         </select>
                        </div>
                        </div>
@@ -293,6 +290,7 @@
                         // Append to container
                         $("#modifierContainer").append(modifierList);
                         updateModifierGroupIndexes();
+                        adjustSelectionLimits(groupId, modifierCount); 
                     },
                     error: function (xhr) {
                         alert(xhr.responseJSON.message || "Failed to load modifiers.");
@@ -303,14 +301,7 @@
 
       
    
-      
-        // Remove Selected Modifier Group
-        $(document).on("click", ".delete-group", function () {
-            var groupId = $(this).data("group");
-            $(`#group_${groupId}`).remove(); // Remove from UI
-            updateModifierGroupIndexes();
-        });
-
+    
         function updateModifierGroupIndexes() {
             $(".modifier-group").each(function (index) {
                 $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
@@ -318,6 +309,81 @@
                 $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
             });
         }
+
+
+        // Function to generate the options dynamically from 1 to the modifierCount
+    function generateOptions(modifierCount) {
+        let options = '';
+        for (let i = 1; i <= modifierCount; i++) {
+            options += `<option value="${i}">${i}</option>`;
+        }
+        return options;
+    }
+
+        // Adjust selection limits (min and max values) based on the number of modifiers
+    function adjustSelectionLimits(groupIndex, modifierCount) {
+       
+    const minSelect = $(`#min_${groupIndex}`);
+    const maxSelect = $(`#max_${groupIndex}`);
+
+    // Generate options dynamically
+    function generateOptions(modifierCount) {
+        let options = '';
+        for (let i = 1; i <= modifierCount; i++) {
+            options += `<option value="${i}">${i}</option>`;
+        }
+        return options;
+    }
+
+       // Initial population of max selection options
+    const minValue = parseInt(minSelect.val()) || 1; // Default to 1 if invalid
+    maxSelect.empty();
+    maxSelect.append(generateOptions(modifierCount)); // Populate maxSelect with all options initially
+
+    // Ensure max value is at least equal to min value
+    const maxValue = parseInt(maxSelect.val()) || minValue;
+    if (maxValue < minValue) {
+        maxSelect.val(minValue); // Ensure max is at least equal to min
+    }
+
+      // Update max options when min selection changes
+    minSelect.on('change', function () {
+       
+        const newMinValue = parseInt($(this).val()) || 1;
+        maxSelect.empty(); // Clear the current max options
+        maxSelect.append(generateOptions(modifierCount)); // Re-populate max options based on modifierCount
+        
+        // Remove options that are less than the new min value
+        maxSelect.find('option').each(function () {
+            if (parseInt($(this).val()) < newMinValue) {
+                $(this).remove(); // Remove options smaller than min value
+            }
+        });
+
+        const selectedMaxValue = parseInt(maxSelect.val());
+        if (selectedMaxValue < newMinValue) {
+            maxSelect.val(newMinValue); // Adjust max to not be less than min
+        }
+    });
+
+
+         // Update min selection when max value is changed
+     maxSelect.on('change', function () {
+        const selectedMinValue = parseInt(minSelect.val()) || 1;
+        const selectedMaxValue = parseInt($(this).val()) || selectedMinValue;
+        if (selectedMaxValue < selectedMinValue) {
+            $(this).val(selectedMinValue); // Ensure max is at least equal to min
+        }
+    });
+
+    }
+     
+        // Remove Selected Modifier Group
+        $(document).on("click", ".delete-group", function () {
+            var groupId = $(this).data("group");
+            $(`#group_${groupId}`).remove(); // Remove from UI
+            updateModifierGroupIndexes();
+        });
     });
 
 </script>

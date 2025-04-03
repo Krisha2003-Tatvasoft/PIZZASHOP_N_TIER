@@ -9358,19 +9358,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pci44\\.nuget\\packages\\": {}
+    "C:\\Users\\admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
+      "projectUniqueName": "D:\\pizzashop_nTier\\pizzashop.Web\\pizzashop.Web.csproj",
       "projectName": "pizzashop.Web",
-      "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
-      "packagesPath": "C:\\Users\\pci44\\.nuget\\packages\\",
-      "outputPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\obj\\",
+      "projectPath": "D:\\pizzashop_nTier\\pizzashop.Web\\pizzashop.Web.csproj",
+      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+      "outputPath": "D:\\pizzashop_nTier\\pizzashop.Web\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pci44\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -9382,11 +9382,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj": {
-              "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Repository\\pizzashop.Repository.csproj"
+            "D:\\pizzashop_nTier\\pizzashop.Repository\\pizzashop.Repository.csproj": {
+              "projectPath": "D:\\pizzashop_nTier\\pizzashop.Repository\\pizzashop.Repository.csproj"
             },
-            "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj": {
-              "projectPath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Service\\pizzashop.Service.csproj"
+            "D:\\pizzashop_nTier\\pizzashop.Service\\pizzashop.Service.csproj": {
+              "projectPath": "D:\\pizzashop_nTier\\pizzashop.Service\\pizzashop.Service.csproj"
             }
           }
         }

@@ -118,7 +118,7 @@ public class ItemService : IItemService
 
     foreach (var group in viewmodel.ModifierGroups)
     {
-
+     
       var newMapping = new Itemmodifiergroupmap
       {
 
@@ -145,7 +145,7 @@ public class ItemService : IItemService
     foreach (var img in selectedMG)
     {
       var modifiers = await _modifierRepository.GetModifierList(img.Modifiergroupid);
-
+    
       ModifierGroups.Add(new IMGMviewmodel
       {
         Itemmodifiergroupid = img.Itemmodifiergroupid,

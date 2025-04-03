@@ -135,6 +135,7 @@
                                     $("#add-tax-form")[0].reset();
                                     $("#addNewTax").modal("hide");
                                     loadUserTable(1);
+                                     toastr.success("Tax Added Succesfully.");
                                 }
                                 else {
                                     toastr.error("This Tax name is already exist.");
@@ -175,6 +176,7 @@
                                 if (response.success) {
                                     $("#editTax").modal("hide");
                                     loadUserTable(1);
+                                     toastr.success("Tax Updated Succesfully.");
                                 }
                                 else {
                                     toastr.error("This Tax name is already exist.");
@@ -200,6 +202,7 @@
                     data: { id: taxid },
                     success: function (response) {
                         loadUserTable(1);
+                         toastr.success("Tax Deleted Succesfully.");
                     },
                     error: function (error) {
                         console.error("Error in delete tax:", error);

@@ -228,12 +228,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
-                
+
                 <form id="editCat">
                     <input type="hidden" id="categoryid" name="categoryid">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="Categoryname" placeholder="Category name"
-                        asp-for="Categoryname" name="Categoryname" required>
+                            asp-for="Categoryname" name="Categoryname" required>
                         <label for="categoryname">Name*</label>
                         <span class="text-danger" asp-validation-for="Categoryname"></span>
                     </div>
@@ -721,7 +721,7 @@
                             if (response.success) {
                                 $("#editNewCategory").modal("hide");
                                 catList();
-                                 toastr.success("Category Updated Succesfully.");
+                                toastr.success("Category Updated Succesfully.");
                             }
                             else {
                                 toastr.error("This Category is already exist.");
@@ -754,6 +754,7 @@
                 data: { id: categoryId },
                 success: function (response) {
                     catList();
+                    toastr.success("Category Deleted Succesfully.");
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);
@@ -793,6 +794,7 @@
                             if (response.success) {
                                 $("#updateItem").modal("hide");
                                 loadItemTable(categoryId, 1);
+                                toastr.success("Item Updated Succesfully.");
                             }
                             else {
                                 toastr.error("This Item is already exist.");
@@ -828,7 +830,7 @@
                                 $("#add-item-form")[0].reset();
                                 $("#addItem").modal("hide");
                                 loadItemTable(categoryId, 1);
-                                 toastr.success("Item Added Succesfully.");
+                                toastr.success("Item Added Succesfully.");
                             }
                             else {
                                 toastr.error("This Item is already exist.");
@@ -854,6 +856,7 @@
                     data: { id: itemId },
                     success: function (response) {
                         loadItemTable(Categoryid, 1);
+                        toastr.success("Item Deleted Succesfully.");
                     },
                     error: function (error) {
                         console.error("Error updating permissions:", error);
@@ -898,6 +901,7 @@
                 success: function (response) {
                     selectedIds = [];
                     loadItemTable(1);
+                    toastr.success("Selected Item Deleted Succesfully.");
                 },
                 error: function (error) {
                     console.error("Error updating permissions:", error);
@@ -952,11 +956,11 @@
                                 contentType: false,
                                 dataType: 'json',
                                 success: function (response) {
-
                                     if (response.success) {
                                         $("#addNewModifier").modal("hide");
                                         $("#add-modifier-form")[0].reset();
                                         loadModifierTable(selectedMG[0], 1);
+                                        toastr.success("Modifier Added Succesfully.");
                                     }
                                     else {
                                         toastr.error("This Modifier is already exist.");
@@ -1071,6 +1075,7 @@
                                     if (response.success) {
                                         $("#updateNewModifier").modal("hide");
                                         loadModifierTable(selectedMG[0], 1);
+                                        toastr.success("Modifier Updated Succesfully.");
                                     }
                                     else {
                                         toastr.error("This Modifier is already exist.");
@@ -1098,6 +1103,7 @@
                     data: { id: ModifierId, MGid: MGId },
                     success: function (response) {
                         loadModifierTable(MGId);
+                        toastr.success("Modifier Deleted Succesfully.");
                     },
                     error: function (error) {
                         console.error("Error in delete Modifier:", error);
@@ -1152,6 +1158,7 @@
                 success: function (response) {
                     selectedModifierIds = [];
                     loadModifierTable(1);
+                    toastr.success("Selected Modifiers Deleted Succesfully.");
                 },
                 error: function (error) {
                     console.error("Error in delete Modifiers", error);
@@ -1324,6 +1331,7 @@
                                 $("#add-MG-form")[0].reset();
                                 $("#addModifiersGroup").modal("hide");
                                 MGList();
+                                toastr.success("ModifierGroup Added Succesfully.");
                             }
                             else {
                                 toastr.error("This Modifiergroup is already exist.");
@@ -1404,11 +1412,11 @@
                             if (response.success) {
                                 $("#updateModifiersGroup").modal("hide");
                                 MGList();
+                                toastr.success("ModifierGroup Updated Succesfully.");
                             }
                             else {
                                 toastr.error("This Modifiergroup is already exist.");
                             }
-
 
                         },
                         error: function (error) {
@@ -1430,6 +1438,7 @@
                     data: { id: MGId },
                     success: function (response) {
                         MGList();
+                        toastr.success("ModifierGroup Deleted Succesfully.");
                     },
                     error: function (error) {
                         console.error("Error in delete Modifier group:", error);

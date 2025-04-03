@@ -31,8 +31,11 @@ public class ModifierRepository : IModifierRepository
 
     public async Task<List<Modifier>> GetModifierList(int id)
     {
-        return await _context.Modifiers
-        .Where(c => c.Modifiergroupid == id && c.Isdeleted == false).ToListAsync();
+        return await _context.ModifierGroupModifiers
+        .Include(m => m.Modifier)
+        .Where(c => c.ModifierGroupId == id && c.Modifier.Isdeleted == false)
+        .Select(c => c.Modifier)
+        .ToListAsync();
     }
 
     public async Task AddNewModifier(Modifier modifier)
