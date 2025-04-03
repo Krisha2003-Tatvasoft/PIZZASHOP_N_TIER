@@ -59,6 +59,7 @@ public class ModifierService : IModifierService
     {
       Modifierid = i.Modifierid,
       Modifiername = i.Modifiername,
+      Rate = i.Rate
     }
     ).ToList();
 

@@ -17,6 +17,7 @@
                                 <input type="text" class="form-control" id="Taxname" placeholder="Taxname"
                                     required asp-for=Taxname>
                                 <label for="Taxname">Name*</label>
+                                     <span class="text-danger" asp-validation-for="Taxname"></span>
                             </div>
                         </div>
                     </div>
@@ -29,6 +30,7 @@
                                     <option value="">Tax Type</option>
                                 </select>
                                 <label for="floatingInput">Status*</label>
+                                   <span class="text-danger" asp-validation-for="taxtype"></span>
                             </div>
 
                         </div>
@@ -38,6 +40,8 @@
                                 <input type="text" class="form-control" id="Taxvalue" placeholder="" value="0"
                                     asp-for=Taxvalue required>
                                 <label for="Taxvalue">Tax Amount*</label>
+                                   <span class="text-danger" asp-validation-for="Taxvalue"></span>
+                                    <span class="tex-value text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -63,3 +67,6 @@
         </div>
     </div>
 </div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

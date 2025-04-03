@@ -43,19 +43,28 @@ public class MenuController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> addCategory(MenuViewModels MenuVM)
+    public async Task<IActionResult> addCategory(VMCategory category)
     {
-        VMCategory model = MenuVM.category;
-        CookieData user = SessionUtils.GetUser(HttpContext);
-
-        if (await _categoryService.AddCategoryAsync(model, user.Userid))
+        if (ModelState.IsValid)
         {
+            VMCategory model = category;
+            CookieData user = SessionUtils.GetUser(HttpContext);
 
-            return Json(new { success = true, message = "Category Added sucessfully" });
+            if (await _categoryService.AddCategoryAsync(model, user.Userid))
+            {
+                return Json(new { success = true, message = "Category Added sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "category not Added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "category not Added." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
 
     }
@@ -112,15 +121,25 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditCat([FromBody] Category model)
+    public async Task<IActionResult> EditCat([FromBody] VMCategory model)
     {
-        if (await _categoryService.UpdateCat(model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "category edited succesfully" });
+            if (await _categoryService.UpdateCat(model))
+            {
+                return Json(new { success = true, message = "category edited succesfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "category not edited." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "category not Added." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
     }
 
@@ -147,15 +166,26 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> addItemPost(AddItem model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _itemService.AddItemPost(user.Userid, model) == true)
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Item Added Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _itemService.AddItemPost(user.Userid, model) == true)
+            {
+                return Json(new { success = true, message = "Item Added Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "category not Added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "category not Added." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
     [HttpGet]
@@ -167,14 +197,24 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> EditItemPost(AddItem model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _itemService.EditItemPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Item Added Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _itemService.EditItemPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Item Added Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "item not edited." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "item not edited." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
     }
 
@@ -227,15 +267,26 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> addModifierPost(AddModifier model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierService.AddModifierPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Modifier Added Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _modifierService.AddModifierPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Modifier Added Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "modifier not added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "modifier not added." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
     [HttpGet]
@@ -253,15 +304,27 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> EditModifietrPost(AddModifier model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierService.EditModifierPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Modifier Updated Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _modifierService.EditModifierPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Modifier Updated Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "modifier not edited." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "modifier not edited." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
+
     }
 
     [HttpPost]
@@ -328,15 +391,26 @@ public class MenuController : Controller
     [HttpPost]
     public async Task<IActionResult> AddMGPost(AddModifierGroup model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierGroupService.AddMGPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "ModifierGroup Added Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _modifierGroupService.AddMGPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "ModifierGroup Added Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "modifiergroup not added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "modifiergroup not added." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
     private async Task<string> RenderPartialViewToString(string viewName, object model)
@@ -370,20 +444,33 @@ public class MenuController : Controller
             selectedModifiers = data.SelectedModifiers,
             html = partialViewHtml   // Return the rendered partial view
         });
+
+
     }
 
     [HttpPost]
     public async Task<IActionResult> EditMGPost(AddModifierGroup model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _modifierGroupService.EditMGPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _modifierGroupService.EditMGPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "Modifier Group Updated Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "modifiergroup not edited." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "modifiergroup not edited." });
+
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
+
     }
 
     [HttpPost]
@@ -422,7 +509,7 @@ public class MenuController : Controller
         }
 
         bool isSuccess = await _categoryService.SaveOrderCategory(order);
-       
+
 
         if (isSuccess)
         {
@@ -444,7 +531,7 @@ public class MenuController : Controller
         }
 
         bool isSuccess = await _modifierGroupService.SaveOrderMG(order);
-      
+
 
         if (isSuccess)
         {
@@ -452,9 +539,23 @@ public class MenuController : Controller
         }
         else
         {
-            return Json(new { success = false, message = "ModifierGroup not ordered."});
+            return Json(new { success = false, message = "ModifierGroup not ordered." });
         }
 
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateItemAvailble(int id, bool available)
+    {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _itemService.UpdateAvailable(user.Userid, id, available))
+        {
+            return Json(new { success = true, message = "Available item Updated Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "Available item not Updated." });
+        }
     }
 
 

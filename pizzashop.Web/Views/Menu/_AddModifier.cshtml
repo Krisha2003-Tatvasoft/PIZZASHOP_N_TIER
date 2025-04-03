@@ -40,6 +40,7 @@
                 }
             </ul>
         </div>
+              <span class="text-danger" id="requaired-mg" ></span>
         @* <label  for="modifierDropdown">Modifier</label> *@
     </div>
 
@@ -49,6 +50,7 @@
                                     <input type="text" class="form-control" id="floatingInput" placeholder="Name" asp-for="Modifiername"
                                         required>
                                     <label for="floatingInput">Name*</label>
+                                      <span class="text-danger" asp-validation-for="Modifiername"></span>
                                 </div>
                             </div>
                         </div>
@@ -62,6 +64,7 @@
                                 <input type="text" class="form-control" id="floatingInput" placeholder="Rate" required
                                     value="0" asp-for="Rate">
                                 <label for="floatingInput">Rate*</label>
+                                  <span class="text-danger" asp-validation-for="Rate"></span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12">
@@ -69,6 +72,7 @@
                                 <input type="text" class="form-control" id="floatingInput" placeholder="Quantity"
                                     required value="0" asp-for="Quantity">
                                 <label for="floatingInput">Quantity*</label>
+                                  <span class="text-danger" asp-validation-for="Quantity"></span>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 doted-border">
@@ -78,6 +82,7 @@
                                             <option value="">Select Unit</option>
                                         </select>
                                 <label for="floatingSelect">Unit*</label>
+                                  <span class="text-danger" asp-validation-for="Unitid"></span>
                             </div>
                         </div>
                     </div>
@@ -89,6 +94,7 @@
                     <textarea class="form-control" placeholder="Give Description of this Modifier"
                         id="description" asp-for="Description"></textarea>
                     <label for="description">Description</label>
+                      <span class="text-danger" asp-validation-for="Description"></span>
                 </div>
 
 
@@ -139,3 +145,6 @@ $(document).ready(function () {
 
 
 </script> *@
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

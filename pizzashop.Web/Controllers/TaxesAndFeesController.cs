@@ -40,14 +40,24 @@ public class TaxesAndFeesController : Controller
     [HttpPost]
     public async Task<IActionResult> AddTaxPost(AddTax model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _taxesService.AddTaxPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "tax added Sucessfully." });
+
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _taxesService.AddTaxPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "tax added Sucessfully." });
+            }
+            else
+            {
+                return Json(new { success = false, message = "tax not added." });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "tax not added." });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
     }
 
@@ -60,14 +70,24 @@ public class TaxesAndFeesController : Controller
     [HttpPost]
     public async Task<IActionResult> EditTaxPost(AddTax model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _taxesService.EditTaxPost(user.Userid, model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "tax Updated Sucessfully" });
+
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            if (await _taxesService.EditTaxPost(user.Userid, model))
+            {
+                return Json(new { success = true, message = "tax Updated Sucessfully" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Error in update tax" });
+            }
         }
         else
         {
-            return Json(new { success = false, message = "Error in update tax" });
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
     }
 
@@ -85,6 +105,19 @@ public class TaxesAndFeesController : Controller
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> UpdateEnable(int id, bool enable)
+    {
+       CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _taxesService.UpdateEnable(user.Userid, id ,enable ))
+        {
+            return Json(new { success = true, message = "Enable Updated Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "Enable Tax not Updated." });
+        }
+    }
 
 
 

@@ -76,21 +76,21 @@ public class TaxesService : ITaxesService
         return model;
     }
 
-     public async Task<bool> EditTaxPost(int loginId, AddTax viewmodel)
+    public async Task<bool> EditTaxPost(int loginId, AddTax viewmodel)
     {
-        if (await _taxesRepository.TaxNameExistInEdit(viewmodel.Taxname,viewmodel.Taxid))
+        if (await _taxesRepository.TaxNameExistInEdit(viewmodel.Taxname, viewmodel.Taxid))
         {
             return false;
         }
         else
         {
-         Taxis tax = await _taxesRepository.TaxByIdAsync(viewmodel.Taxid);
+            Taxis tax = await _taxesRepository.TaxByIdAsync(viewmodel.Taxid);
 
-            tax.Taxname=viewmodel.Taxname;
-            tax.Taxtype=(int)viewmodel.taxtype;
-            tax.Isdefault=viewmodel.Isdefault;
-            tax.Isenabled=viewmodel.Isenabled;
-            tax.Taxvalue=viewmodel.Taxvalue;
+            tax.Taxname = viewmodel.Taxname;
+            tax.Taxtype = (int)viewmodel.taxtype;
+            tax.Isdefault = viewmodel.Isdefault;
+            tax.Isenabled = viewmodel.Isenabled;
+            tax.Taxvalue = viewmodel.Taxvalue;
             tax.Modifiedby = loginId;
 
             await _taxesRepository.UpdateTax(tax);
@@ -98,7 +98,7 @@ public class TaxesService : ITaxesService
         }
     }
 
-     public async Task<bool> DeleteTax(int id)
+    public async Task<bool> DeleteTax(int id)
     {
         Taxis tax = await _taxesRepository.TaxByIdAsync(id);
         if (tax == null)
@@ -113,5 +113,22 @@ public class TaxesService : ITaxesService
 
     }
 
+    public async Task<bool> UpdateEnable(int loginId, int id ,bool enable)
+    {
+        if (loginId == null)
+        {
+            return false;
+        }
+        else
+        {
+            Taxis tax = await _taxesRepository.TaxByIdAsync(id);
+
+            tax.Isenabled = enable;
+            tax.Modifiedby = loginId;
+
+            await _taxesRepository.UpdateTax(tax);
+            return true;
+        }
+    }
 
 }

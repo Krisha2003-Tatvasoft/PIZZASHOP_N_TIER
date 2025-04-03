@@ -17,7 +17,7 @@
             <div class="position-relative">
                 <input class="search form-control me-2 border-0" id="searchTax" type="search" placeholder="Search"
                     aria-label="Search">
-               <i class="bi bi-search custom-icon"></i>
+                <i class="bi bi-search custom-icon"></i>
             </div>
             <a class="add-tax">
                 <button class="back-button">
@@ -79,13 +79,13 @@
 
         let searchTimer;
         $("#searchTax").on("input", function () {
-              var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 loadUserTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-          searchcross();
+            searchcross();
         });
 
 
@@ -112,30 +112,40 @@
         @* add new tax post *@
             $(document).on("click", "#add-tax", function (e) {
                 e.preventDefault();
-                var formData = new FormData($("#add-tax-form")[0]);
 
+                if ($("#add-tax-form").valid()) {
+                    var formData = new FormData($("#add-tax-form")[0]);
 
-                $.ajax({
-                    url: "/TaxesAndFees/AddTaxPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#add-tax-form")[0].reset();
-                            $("#addNewTax").modal("hide");
-                            loadUserTable(1);
-                        }
-                        else {
-                            toastr.error("This Tax name is already exist.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error in add Section", error);
+                    var taxtype = formData.get("taxtype");
+                    var taxValue = parseInt(formData.get("Taxvalue"));
+                    if (taxtype === "0" && (taxValue <= 0 || taxValue > 100)) {
+                        $(".tex-value").text("Percentage tax value must be between 0 and 100")
                     }
-                });
+                    else {
+
+                        $.ajax({
+                            url: "/TaxesAndFees/AddTaxPost",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#add-tax-form")[0].reset();
+                                    $("#addNewTax").modal("hide");
+                                    loadUserTable(1);
+                                }
+                                else {
+                                    toastr.error("This Tax name is already exist.");
+                                }
+                            },
+                            error: function (error) {
+                                console.error("Error in add Section", error);
+                            }
+                        });
+                    }
+                }
             });
 
         @* edit tax post *@
@@ -143,33 +153,43 @@
             $(document).on("click", "#edit-tax-yes", function (e) {
                 e.preventDefault();
 
+                if ($("#edit-tax-form").valid()) {
 
-                var formData = new FormData($("#edit-tax-form")[0]);
+                    var formData = new FormData($("#edit-tax-form")[0]);
 
-                $.ajax({
-                    url: "/TaxesAndFees/EditTaxPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#editTax").modal("hide");
-                           loadUserTable(1);
-                        }
-                        else {
-                            toastr.error("This Tax name is already exist.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error updating tax:", error);
+                    var taxtype = formData.get("taxtype");
+                    var taxValue = parseInt(formData.get("Taxvalue"));
+                    if (taxtype === "0" && (taxValue <= 0 || taxValue > 100)) {
+                        $(".tex-value").text("Percentage tax value must be between 0 and 100")
                     }
-                });
+                    else {
+
+                        $.ajax({
+                            url: "/TaxesAndFees/EditTaxPost",
+                            type: "POST",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#editTax").modal("hide");
+                                    loadUserTable(1);
+                                }
+                                else {
+                                    toastr.error("This Tax name is already exist.");
+                                }
+                            },
+                            error: function (error) {
+                                console.error("Error updating tax:", error);
+                            }
+                        });
+                    }
+                }
 
             });
 
-             @* Delete tax *@
+        @* Delete tax *@
 
             $(document).on("click", ".delete-tax", function (e) {
                 var taxid = $("#hidden").val();
@@ -179,7 +199,7 @@
                     type: "POST",
                     data: { id: taxid },
                     success: function (response) {
-                       loadUserTable(1);
+                        loadUserTable(1);
                     },
                     error: function (error) {
                         console.error("Error in delete tax:", error);
@@ -188,7 +208,8 @@
 
             });
 
-             function searchcross() {
+        @* cross in search *@
+            function searchcross() {
                 let search = $("#searchTax").val();
                 if (search === "") {
                     var element = $(".custom-icon");
@@ -196,7 +217,28 @@
                 }
             }
 
+        @* enable button update *@
 
+            $(document).on("click", ".enable-switch", function (e) {
+                var taxid = $(this).data("taxid")
+
+                var enable = $(this).is(":checked");
+
+                $.ajax({
+                    url: "/TaxesAndFees/UpdateEnable",
+                    type: "POST",
+                    data: { id: taxid, enable: enable },
+                    success: function (response) {
+                        if (response.success)
+                            toastr.success("Tax Enable Updated Succesfully.")
+                        loadUserTable(1);
+                    },
+                    error: function (error) {
+                        console.error("Error in delete tax:", error);
+                    }
+                });
+
+            });
 
 
     });

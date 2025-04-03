@@ -16,12 +16,14 @@
                         <input type="text" class="form-control" id="MGname" placeholder="Category name"
                             asp-for="Modifiergroupname" required>
                         <label for="MGname">Name*</label>
+                           <span class="text-danger" asp-validation-for="Modifiergroupname"></span>
                     </div>
 
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="Add a Description of Xategory" id="description"
                             asp-for="Description"></textarea>
                         <label for="description">Description</label>
+                          <span class="text-danger" asp-validation-for="Description"></span>
                     </div>
 
                     @* <a href="" data-bs-toggle="modal" data-bs-target="#selectExistingModifiers">+ Add Existing
@@ -48,3 +50,6 @@
         </div>
     </div>
 </div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

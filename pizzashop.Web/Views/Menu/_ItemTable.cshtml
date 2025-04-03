@@ -53,7 +53,8 @@
                     </td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable? "checked" : "")>
+                            <input class="form-check-input available-switch"  data-itemid="@item.Itemid"
+                             type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable? "checked" : "")>
 
                         </div>
                     </td>

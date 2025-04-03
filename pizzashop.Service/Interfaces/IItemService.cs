@@ -19,5 +19,7 @@ public interface IItemService
 
   Task<bool> DeleteSelectedItem(List<int> selectedIds);
 
+   Task<bool> UpdateAvailable(int loginId, int id ,bool available);
+
 
 }

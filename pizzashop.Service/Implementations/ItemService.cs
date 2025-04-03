@@ -311,4 +311,23 @@ public class ItemService : IItemService
     return true;
   }
 
+    public async Task<bool> UpdateAvailable(int loginId, int id ,bool available)
+    {
+        if (loginId == null)
+        {
+            return false;
+        }
+        else
+        {
+            Item item = await _itemRepository.ItemByIdAsync(id);
+
+            item.Isavailable = available;
+            item.Modifiedby= loginId;
+
+            await _itemRepository.UpdateItem(item);
+            return true;
+        }
+    }
+
+
 }

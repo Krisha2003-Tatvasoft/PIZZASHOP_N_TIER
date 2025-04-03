@@ -15,12 +15,14 @@
                         <input type="text" class="form-control" asp-for="Modifiergroupname" id="MGname"
                             placeholder="Category name" required>
                         <label for="MGname">Name*</label>
+                        <span class="text-danger" asp-validation-for="Modifiergroupname"></span>
                     </div>
 
                     <div class="form-floating mb-3">
                         <textarea class="form-control" asp-for="Description" placeholder="Add a Description of Xategory"
                             id="Description"></textarea>
                         <label for="Description">Description</label>
+                        <span class="text-danger" asp-validation-for="Description"></span>
                     </div>
 
                     <a href="" class="select-existing">+ Add Existing
@@ -30,8 +32,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button submit" class="btn btn-primary sav-btn" id="add-MG"
-                        >Save</button>
+                    <button type="button" class="btn btn-primary sav-btn" id="add-MG">Save</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                 </div>
 
@@ -40,3 +41,7 @@
         </div>
     </div>
 </div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

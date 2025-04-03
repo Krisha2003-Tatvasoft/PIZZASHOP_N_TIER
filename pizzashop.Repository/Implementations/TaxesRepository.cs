@@ -17,13 +17,14 @@ public class TaxesRepository : ITaxesRepository
         string lowerSearch = search.ToLower();
         return await _context.Taxes
         .Where(u => u.Isdeleted == false)
+        .OrderBy(u =>u.Taxid)
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Taxname.ToLower().Contains(lowerSearch)).ToListAsync();
     }
 
     public async Task<bool> TaxesNameExist(string taxname)
     {
-        return await _context.Taxes.AnyAsync(s => s.Isdeleted == false && s.Taxname.ToLower() == taxname.ToLower());
+        return await _context.Taxes.AnyAsync(s =>  s.Taxname.ToLower() == taxname.ToLower());
     }
 
     public async Task AddNewTax(Taxis tax)
@@ -34,7 +35,7 @@ public class TaxesRepository : ITaxesRepository
 
     public async Task<bool> TaxNameExistInEdit(string taxname, int taxid)
     {
-        return await _context.Taxes.AnyAsync(s => s.Isdeleted == false && s.Taxname.ToLower() == taxname.ToLower()
+        return await _context.Taxes.AnyAsync(s => s.Taxname.ToLower() == taxname.ToLower()
         && s.Taxid != taxid);
     }
 

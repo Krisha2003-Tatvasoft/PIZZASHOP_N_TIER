@@ -6,4 +6,7 @@ public class ModifierList
 
     public string Modifiername { get; set; } = null!;
 
+    public decimal Rate { get; set; }
+
+
 }

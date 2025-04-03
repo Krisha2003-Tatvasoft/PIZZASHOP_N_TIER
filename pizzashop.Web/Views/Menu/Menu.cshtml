@@ -1,8 +1,8 @@
 @{
-    ViewData["Title"] = "Add User Page";
+    ViewData["Title"] = "Menu Page";
 }
 
-@model pizzashop.Entity.ViewModels.MenuViewModels;
+@model pizzashop.Entity.ViewModels.Category;
 
 <link rel="stylesheet" href="~/css/Menu.css" />
 
@@ -193,14 +193,16 @@
 
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingInput" placeholder="Category name"
-                            asp-for="category.Categoryname" required>
+                            asp-for="Categoryname" required>
                         <label for="floatingInput">Name*</label>
+                        <span class="text-danger" asp-validation-for="Categoryname"></span>
                     </div>
 
                     <div class="form-floating">
                         <textarea class="form-control" placeholder="Add a Description of Xategory" id="floatingTextarea"
-                            asp-for="category.Description"></textarea>
+                            asp-for="Description"></textarea>
                         <label for="floatingTextarea">Description</label>
+                        <span class="text-danger" asp-validation-for="Description"></span>
                     </div>
 
                 </div>
@@ -226,24 +228,27 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body ">
+                
                 <form id="editCat">
                     <input type="hidden" id="categoryid" name="categoryid">
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="categoryname" placeholder="Category name"
-                            name="categoryname" required>
+                        <input type="text" class="form-control" id="Categoryname" placeholder="Category name"
+                        asp-for="Categoryname" name="Categoryname" required>
                         <label for="categoryname">Name*</label>
+                        <span class="text-danger" asp-validation-for="Categoryname"></span>
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control" id="description" placeholder="Add a Description of Xategory"
-                            name="description"></textarea>
+                        <textarea class="form-control" id="Description" placeholder="Add a Description of Category"
+                            name="Description" asp-for="Description"></textarea>
                         <label for="description">Description</label>
+                        <span class="text-danger" asp-validation-for="Description"></span>
                     </div>
                     <div class="modal-footer ">
                         <a id="save-edit-cat">
                             <button type="button" class="btn btn-primary">Save</button>
                         </a>
-                        <button type="button" class="btn btn-danger">Cancel</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -344,7 +349,7 @@
                     <div class="search-field position-relative w-50">
                         <input class="search form-control me-2 border-0" id="searchExModifier" type="search"
                             aria-label="Search">
-                             <i class="bi bi-search custom-icon"></i>
+                        <i class="bi bi-search custom-icon"></i>
                     </div>
                     <div class="existing-modifier-data"></div>
 
@@ -360,7 +365,8 @@
 
 
 
-
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 <script src="../js/bootstarp.bundle.min.js"></script>
 <script src="../js/bootstarp.bundle.min.js"></script>
@@ -452,8 +458,8 @@
             let searchTimer1;
         $("#searchModifier").on("input", function () {
             var MGid = $("#MGid").val();
-             var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer1);
             searchTimer = setTimeout(function () {
                 if (MGid !== '0') {
@@ -464,7 +470,7 @@
                 }
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-         searchcrossForModifier();
+            searchcrossForModifier();
         });
 
         @* add item model *@
@@ -503,27 +509,33 @@
 
         $("#save-cat").click(function (e) {
             e.preventDefault();
-            var formData = $("#addCat").serialize();
 
-            $.ajax({
-                url: "/Menu/addCategory",
-                type: "POST",
-                data: formData,
-                dataType: 'json',
-                success: function (response) {
-                    if (response.success) {
-                        $("#addCat")[0].reset();
-                        $("#addNewCategory").modal("hide");
-                        catList();
+            console.log($("#addCat").valid());
+
+            if ($("#addCat").valid()) {
+                var formData = $("#addCat").serialize();
+
+                $.ajax({
+                    url: "/Menu/addCategory",
+                    type: "POST",
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            $("#addCat")[0].reset();
+                            $("#addNewCategory").modal("hide");
+                            catList();
+                            toastr.success("Category Added Succesfully.");
+                        }
+                        else {
+                            toastr.error("This Category is already exist.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error adding Item:", error);
                     }
-                    else {
-                        toastr.error("This Category is already exist.");
-                    }
-                },
-                error: function (error) {
-                    console.error("Error updating permissions:", error);
-                }
-            });
+                });
+            }
         });
 
 
@@ -679,9 +691,9 @@
                 type: "GET",
                 data: { id: categoryId },
                 success: function (data) {
-                    $("#categoryname").val(data.categoryname);
-                    $("#description").val(data.description);
-                    $("#categoryid").val(categoryId)
+                    $("#Categoryname").val(data.categoryname);
+                    $("#Description").val(data.description);
+                    $("#categoryid").val(categoryId);
                 },
                 error: function () {
                     alert("error in responce");
@@ -691,33 +703,36 @@
 
         @* Update category *@
             $("#save-edit-cat").click(function (e) {
-                e.preventDefault();
-                var formData = {
-                    categoryid: $("#categoryid").val(),
-                    categoryname: $("#categoryname").val(),
-                    description: $("#description").val()
-                };
+                if ($("#editCat").valid()) {
+                    e.preventDefault();
+                    var formData = {
+                        categoryid: $("#categoryid").val(),
+                        categoryname: $("#Categoryname").val(),
+                        description: $("#Description").val()
+                    };
 
-                $.ajax({
-                    url: "/Menu/EditCat",
-                    type: "POST",
-                    contentType: "application/json",
-                    data: JSON.stringify(formData),
-                    success: function (response) {
+                    $.ajax({
+                        url: "/Menu/EditCat",
+                        type: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(formData),
+                        success: function (response) {
 
-                        if (response.success) {
-                            $("#editNewCategory").modal("hide");
-                            catList();
+                            if (response.success) {
+                                $("#editNewCategory").modal("hide");
+                                catList();
+                                 toastr.success("Category Updated Succesfully.");
+                            }
+                            else {
+                                toastr.error("This Category is already exist.");
+                            }
+
+                        },
+                        error: function (error) {
+                            console.error("Error updating permissions:", error);
                         }
-                        else {
-                            toastr.error("This Category is already exist.");
-                        }
-
-                    },
-                    error: function (error) {
-                        console.error("Error updating permissions:", error);
-                    }
-                });
+                    });
+                }
             });
 
         @* delete Category *@
@@ -762,31 +777,32 @@
 
                 e.preventDefault();
                 updateModifierGroupIndexes();
-                var formData = new FormData($("#edit-item-form")[0]);
-                var categoryId = formData.get("Categoryid");
+                if ($("#edit-item-form").valid()) {
+                    var formData = new FormData($("#edit-item-form")[0]);
+                    var categoryId = formData.get("Categoryid");
 
 
-
-                $.ajax({
-                    url: "/Menu/EditItemPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#updateItem").modal("hide");
-                            loadItemTable(categoryId, 1);
+                    $.ajax({
+                        url: "/Menu/EditItemPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#updateItem").modal("hide");
+                                loadItemTable(categoryId, 1);
+                            }
+                            else {
+                                toastr.error("This Item is already exist.");
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error updating permissions:", error);
                         }
-                        else {
-                            toastr.error("This Item is already exist.");
-                        }
-                    },
-                    error: function (error) {
-                        console.error("Error updating permissions:", error);
-                    }
-                });
+                    });
+                }
 
             });
 
@@ -794,33 +810,36 @@
 
             $(document).on("click", "#add-item", function (e) {
                 e.preventDefault();
-                var formData = new FormData($("#add-item-form")[0]);
 
-                var categoryId = $("#Categoryid").val();
+                if ($("#add-item-form").valid()) {
+                    var formData = new FormData($("#add-item-form")[0]);
 
+                    var categoryId = $("#Categoryid").val();
 
-                $.ajax({
-                    url: "/Menu/addItemPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#add-item-form")[0].reset();
-                            $("#addItem").modal("hide");
-                            loadItemTable(categoryId, 1);
+                    $.ajax({
+                        url: "/Menu/addItemPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#add-item-form")[0].reset();
+                                $("#addItem").modal("hide");
+                                loadItemTable(categoryId, 1);
+                                 toastr.success("Item Added Succesfully.");
+                            }
+                            else {
+                                toastr.error("This Item is already exist.");
+                            }
+
+                        },
+                        error: function (error) {
+                            console.error("Error in Add Modifier:", error);
                         }
-                        else {
-                            toastr.error("This Item is already exist.");
-                        }
-
-                    },
-                    error: function (error) {
-                        console.error("Error in Add Modifier:", error);
-                    }
-                });
+                    });
+                }
             });
 
         @* Delete Item *@
@@ -906,43 +925,51 @@
 
             $(document).on("click", "#add-modifier", function (e) {
                 e.preventDefault();
-
                 let selectedMG = [];
                 $(".modifier-checkbox:checked").each(function () {
                     selectedMG.push($(this).val());
                 });
 
 
-                var formData = new FormData($("#add-modifier-form")[0]);
-                formData.append("ModifierGroupIds", JSON.stringify(selectedMG));
+                if (selectedMG.length === 0) {
+                    $("#requaired-mg").text("At least one modifier group ID is required").show();
+                }
+                else {
+                    if ($("#add-modifier-form").valid()) {
+                        $("#requaired-mg").hide();
+                        var formData = new FormData($("#add-modifier-form")[0]);
+                        formData.append("ModifierGroupIds", JSON.stringify(selectedMG));
 
 
-                @* var Modifiergroupid = $("#Modifiergroupid").val(); *@
+                        @* var Modifiergroupid = $("#Modifiergroupid").val(); *@
 
 
-                    $.ajax({
-                        url: "/Menu/addModifierPost",
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'json',
-                        success: function (response) {
+                            $.ajax({
+                                url: "/Menu/addModifierPost",
+                                type: "POST",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'json',
+                                success: function (response) {
 
-                            if (response.success) {
-                                $("#addNewModifier").modal("hide");
-                                $("#add-modifier-form")[0].reset();
-                                loadModifierTable(1, 1);
-                            }
-                            else {
-                                toastr.error("This Modifier is already exist.");
-                            }
+                                    if (response.success) {
+                                        $("#addNewModifier").modal("hide");
+                                        $("#add-modifier-form")[0].reset();
+                                        loadModifierTable(selectedMG[0], 1);
+                                    }
+                                    else {
+                                        toastr.error("This Modifier is already exist.");
+                                    }
 
-                        },
-                        error: function (error) {
-                            console.error("Error in Add Modifier:", error);
-                        }
-                    });
+                                },
+                                error: function (error) {
+                                    console.error("Error in Add Modifier:", error);
+                                }
+                            });
+
+                    }
+                }
             });
 
 
@@ -973,6 +1000,13 @@
         // ✅ Call function on checkbox change
         $(document).on("change", ".modifier-checkbox", function (e) {
             updateModifierDropdown();
+            if ($(this).val().length > 0) {
+                $("#requaired-mg").hide();
+            }
+            else {
+                $("#requaired-mg").text("At least one modifier group ID is required").show();
+            }
+
         });
 
 
@@ -1015,33 +1049,40 @@
                     selectedMG.push($(this).val());
                 });
 
-                var formData = new FormData($("#edit-modifier-form")[0]);
-                formData.append("ModifierGroupIds", JSON.stringify(selectedMG));
-                @* var Modifiergroupid = $("#MGid").val(); *@
+                if (selectedMG.length === 0) {
+                    $("#requaired-mg").text("At least one modifier group ID is required").show();
+                }
+                else {
+                    if ($("#edit-modifier-form").valid()) {
+                        $("#requaired-mg").hide();
+                        var formData = new FormData($("#edit-modifier-form")[0]);
+                        formData.append("ModifierGroupIds", JSON.stringify(selectedMG));
+                        @* var Modifiergroupid = $("#MGid").val();  *@
 
 
-                    $.ajax({
-                        url: "/Menu/EditModifietrPost",
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'json',
-                        success: function (response) {
-                            if (response.success) {
-                                $("#updateNewModifier").modal("hide");
-                                loadModifierTable(1, 1);
-                            }
-                            else {
-                                toastr.error("This Modifier is already exist.");
-                            }
+                            $.ajax({
+                                url: "/Menu/EditModifietrPost",
+                                type: "POST",
+                                data: formData,
+                                processData: false,
+                                contentType: false,
+                                dataType: 'json',
+                                success: function (response) {
+                                    if (response.success) {
+                                        $("#updateNewModifier").modal("hide");
+                                        loadModifierTable(selectedMG[0], 1);
+                                    }
+                                    else {
+                                        toastr.error("This Modifier is already exist.");
+                                    }
 
-                        },
-                        error: function (error) {
-                            console.error("Error updating modifier:", error);
-                        }
-                    });
-
+                                },
+                                error: function (error) {
+                                    console.error("Error updating modifier:", error);
+                                }
+                            });
+                    }
+                }
             });
 
 
@@ -1218,8 +1259,8 @@
 
         let searchTimer3;
         $("#searchExModifier").on("input", function () {
-           var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer3);
             searchTimer3 = setTimeout(function () {
                 loadExistingModifier(1);  // Reset to page 1 when searching
@@ -1267,31 +1308,33 @@
             $(document).on("click", "#add-MG", function (e) {
                 e.preventDefault();
 
-                var formData = new FormData($("#add-MG-form")[0]);
-                formData.append("selectedModifier", JSON.stringify(selectExModifier));
+                if ($("#add-MG-form").valid()) {
+                    var formData = new FormData($("#add-MG-form")[0]);
+                    formData.append("selectedModifier", JSON.stringify(selectExModifier));
 
-                $.ajax({
-                    url: "/Menu/AddMGPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.success) {
-                            $("#add-MG-form")[0].reset();
-                            $("#addModifiersGroup").modal("hide");
-                            MGList();
-                        }
-                        else {
-                            toastr.error("This Modifiergroup is already exist.");
-                        }
+                    $.ajax({
+                        url: "/Menu/AddMGPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#add-MG-form")[0].reset();
+                                $("#addModifiersGroup").modal("hide");
+                                MGList();
+                            }
+                            else {
+                                toastr.error("This Modifiergroup is already exist.");
+                            }
 
-                    },
-                    error: function (error) {
-                        console.error("Error in add Modifiergroup", error);
-                    }
-                });
+                        },
+                        error: function (error) {
+                            console.error("Error in add Modifiergroup", error);
+                        }
+                    });
+                }
 
             });
 
@@ -1300,6 +1343,8 @@
             $(document).on("click", ".edit-MG", function (e) {
 
                 e.preventDefault();
+
+
                 var MGId = $(this).data("modifiergroupid");
 
 
@@ -1343,33 +1388,34 @@
             $(document).on("click", "#edit-MG-Yes", function (e) {
                 e.preventDefault();
 
+                if ($("#edit-MG-form").valid()) {
+                    var formData = new FormData($("#edit-MG-form")[0]);
+                    formData.append("selectedModifier", JSON.stringify(selectExModifier));
 
-                var formData = new FormData($("#edit-MG-form")[0]);
-                formData.append("selectedModifier", JSON.stringify(selectExModifier));
+                    $.ajax({
+                        url: "/Menu/EditMGPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
 
-                $.ajax({
-                    url: "/Menu/EditMGPost",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    dataType: 'json',
-                    success: function (response) {
+                            if (response.success) {
+                                $("#updateModifiersGroup").modal("hide");
+                                MGList();
+                            }
+                            else {
+                                toastr.error("This Modifiergroup is already exist.");
+                            }
 
-                        if (response.success) {
-                            $("#updateModifiersGroup").modal("hide");
-                            MGList();
+
+                        },
+                        error: function (error) {
+                            console.error("Error updating modifierGroup:", error);
                         }
-                        else {
-                            toastr.error("This Modifiergroup is already exist.");
-                        }
-
-
-                    },
-                    error: function (error) {
-                        console.error("Error updating modifierGroup:", error);
-                    }
-                });
+                    });
+                }
 
             });
 
@@ -1515,13 +1561,39 @@
             }
         }
 
-        function searchcrossForEXM() {
-            let search = $("#searchExModifier").val();
-            if (search === "") {
-                var element = $(".custom-icon");
-                element.removeClass("d-none");
+        @* cross in search field. *@
+            function searchcrossForEXM() {
+                let search = $("#searchExModifier").val();
+                if (search === "") {
+                    var element = $(".custom-icon");
+                    element.removeClass("d-none");
+                }
             }
-        }
+
+        @* Available button update *@
+
+            $(document).on("click", ".available-switch", function (e) {
+                var itemid = $(this).data("itemid");
+
+
+
+                var available = $(this).is(":checked");
+
+                $.ajax({
+                    url: "/Menu/UpdateItemAvailble",
+                    type: "POST",
+                    data: { id: itemid, available: available },
+                    success: function (response) {
+                        if (response.success)
+                            toastr.success("Item Available Updated Succesfully.")
+                        loadItemTable(globalCat, 1);
+                    },
+                    error: function (error) {
+                        console.error("Error in update item:", error);
+                    }
+                });
+
+            });
 
 
 

@@ -27,6 +27,7 @@
                                                 <option value="">Select Category</option>
                                             </select>
                                             <label for="Categoryid">Category</label>
+                                            <span class="text-danger" asp-validation-for="Categoryid"></span>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -34,6 +35,7 @@
                                             <input type="text" class="form-control" id="floatingInput"
                                                 placeholder="Name" asp-for=Itemname required>
                                             <label for="floatingInput">Name*</label>
+                                            <span class="text-danger" asp-validation-for="Itemname"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -51,6 +53,7 @@
                                             <option value="">Select a type</option>
                                         </select>
                                         <label for="floatingInput">Item Type*</label>
+                                        <span class="text-danger" asp-validation-for="itemtype"></span>
                                     </div>
                                 </div>
 
@@ -59,6 +62,7 @@
                                         <input type="text" class="form-control" id="floatingInput" placeholder="Rate"
                                             required asp-for=Rate>
                                         <label for="floatingInput">Rate*</label>
+                                        <span class="text-danger" asp-validation-for="Rate"></span>
                                     </div>
                                 </div>
 
@@ -67,6 +71,7 @@
                                         <input type="text" class="form-control" id="floatingInput"
                                             placeholder="Quantity" required value="0" asp-for=Quantity>
                                         <label for="floatingInput">Quantity*</label>
+                                        <span class="text-danger" asp-validation-for="Quantity"></span>
                                     </div>
                                 </div>
 
@@ -77,6 +82,7 @@
                                             <option value="">Select Unit</option>
                                         </select>
                                         <label for="Unitid">Unit</label>
+                                        <span class="text-danger" asp-validation-for="Unitid"></span>
                                     </div>
 
                                 </div>
@@ -112,6 +118,7 @@
                                         <input type="text" class="form-control" id="floatingInput"
                                             placeholder="Tax Percentage" asp-for=Taxpercentage>
                                         <label for="floatingInput">Tax Percentage</label>
+                                        <span class="text-danger" asp-validation-for="Taxpercentage"></span>
                                     </div>
                                 </div>
 
@@ -120,6 +127,7 @@
                                         <input type="text" class="form-control" id="floatingInput"
                                             placeholder="Short Code" asp-for=Shortcode>
                                         <label for="floatingInput">Short Code</label>
+                                        <span class="text-danger" asp-validation-for="Shortcode"></span>
                                     </div>
                                 </div>
 
@@ -131,6 +139,7 @@
                             <textarea class="form-control" placeholder="Give Description of this Item"
                                 id="floatingTextarea2" style="height: 100px" asp-for=Description></textarea>
                             <label for="floatingTextarea2">Description</label>
+                            <span class="text-danger" asp-validation-for="Description"></span>
                         </div>
 
 
@@ -230,6 +239,7 @@
                     type: "GET",
                     data: { id: groupId },
                     success: function (data) {
+                       
 
                         var currentIndex = modifierIndex++;
 
@@ -267,9 +277,15 @@
                         
                         <ul>`;
 
+                       
+                         
                         // Append all modifiers inside the group
                         data.forEach(modifier => {
-                            modifierList += `<li>${modifier.modifiername}</li>`;
+                            modifierList += `<li><div class="d-flex align-items-center justify-content-between">
+                            <div>${modifier.modifiername}</div>
+                            <div>${modifier.rate}</div>
+                            </div>
+                            </li>`;
                         });
 
                         modifierList += "</ul></div>";
@@ -351,3 +367,6 @@
     }
 
 </script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

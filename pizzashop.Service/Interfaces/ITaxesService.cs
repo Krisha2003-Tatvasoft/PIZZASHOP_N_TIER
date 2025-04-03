@@ -13,5 +13,7 @@ public interface ITaxesService
     Task<bool> EditTaxPost(int loginId, AddTax viewmodel);
 
     Task<bool> DeleteTax(int id);
+
+     Task<bool> UpdateEnable(int loginId, int id ,bool enable);
     
 }
