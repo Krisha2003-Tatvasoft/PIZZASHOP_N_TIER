@@ -232,9 +232,9 @@
                                         <!-- Min & Max Selection -->
                                         <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
                                             <div class="flex-fill">
-                                                <select class="form-select min-selection" id="min_@group.Modifiergroupid" asp-for="@group.Minselectionrequired">
+                                                <select class="form-select min-selection ex-min" id="min_@group.Modifiergroupid" asp-for="@group.Minselectionrequired">
         
-                                                   @foreach (var i in Enumerable.Range(0, @group.modifiers.Count() + 1)) {
+                                                   @foreach (var i in Enumerable.Range(1, @group.modifiers.Count() + 1)) {
                                                     <option value="@i" selected="@(i == @group.Minselectionrequired ? "selected" : null)">@i</option>
                                                        }
 
@@ -242,13 +242,14 @@
                                                 
                                             </div>
                                             <div class="flex-fill">
-                                                <select class="form-select max-selection" id="max_@group.Modifiergroupid" asp-for="@group.Maxselectionallowed"
-                                                    >
-                                                      @foreach (var i in Enumerable.Range(0, @group.modifiers.Count() + 1)) {
-                                                    <option value="@i" selected="@(i == @group.Maxselectionallowed ? "selected" : null)">@i</option>
-                                                       }
-
-                                                </select>
+                                                <select class="form-select max-selection" id="max_@group.Modifiergroupid" asp-for="@group.Maxselectionallowed">
+        @foreach (var i in Enumerable.Range(
+            @group.Maxselectionallowed.HasValue ? (int)@group.Maxselectionallowed.Value : 1, 
+            @group.modifiers.Count() - (@group.Maxselectionallowed.HasValue ? (int)@group.Maxselectionallowed.Value : 1) + 1))
+        {
+            <option value="@i" selected="@(i == @group.Maxselectionallowed ? "selected" : null)">@i</option>
+        }
+    </select>
                                             </div>
                                         </div>
 
@@ -362,7 +363,7 @@
             }
         });
 
-         function generateOptions(modifierCount) {
+        function generateOptions(modifierCount) {
         let options = '';
         for (let i = 1; i <= modifierCount; i++) {
             options += `<option value="${i}">${i}</option>`;
@@ -370,11 +371,12 @@
         return options;
     }
 
-        // Adjust selection limits (min and max values) based on the number of modifiers
+       // Adjust selection limits (min and max values) based on the number of modifiers
     function adjustSelectionLimits(groupIndex, modifierCount) {
        
-         const minSelect = $(`#min_${groupIndex}`);
+    const minSelect = $(`#min_${groupIndex}`);
     const maxSelect = $(`#max_${groupIndex}`);
+
 
     // Generate options dynamically
     function generateOptions(modifierCount) {
@@ -387,6 +389,7 @@
 
        // Initial population of max selection options
     const minValue = parseInt(minSelect.val()) || 1; // Default to 1 if invalid
+    
     maxSelect.empty();
     maxSelect.append(generateOptions(modifierCount)); // Populate maxSelect with all options initially
 
@@ -396,8 +399,16 @@
         maxSelect.val(minValue); // Ensure max is at least equal to min
     }
 
+       maxSelect.find('option').each(function () {
+            if (parseInt($(this).val()) < minValue) {
+                $(this).remove(); // Remove options smaller than min value
+            }
+        });
+        
+
       // Update max options when min selection changes
-       minSelect.on('change', function () {
+    minSelect.on('change', function () {
+
         const newMinValue = parseInt($(this).val()) || 1;
         maxSelect.empty(); // Clear the current max options
         maxSelect.append(generateOptions(modifierCount)); // Re-populate max options based on modifierCount
@@ -417,25 +428,30 @@
 
 
          // Update min selection when max value is changed
-    maxSelect.on('change', function () {
+     maxSelect.on('change', function () {
         const selectedMinValue = parseInt(minSelect.val()) || 1;
         const selectedMaxValue = parseInt($(this).val()) || selectedMinValue;
         if (selectedMaxValue < selectedMinValue) {
             $(this).val(selectedMinValue); // Ensure max is at least equal to min
         }
     });
+
     }
-     
+         // Update max options when min selection changes
+       $(".ex-min").on('change', function () {
+        const groupId = $(this).closest('.modifier-group').find('.modifier-group-id').val();
+        const modifierCount = $(this).closest('.modifier-group').find('ul li').length;
+        adjustSelectionLimits(groupId, modifierCount); // Call the function to adjust limits
+    });
 
+    
 
-      
-   
-      
         // Remove Selected Modifier Group
         $(document).on("click", ".delete-group", function () {
             var groupId = $(this).data("group");
             $(`#group_${groupId}`).remove(); // Remove from UI
         });
+
 
 
       

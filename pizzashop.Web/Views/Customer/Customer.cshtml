@@ -8,43 +8,45 @@
 
     <!-- heading text -->
 
-  
-        <div class="w-100 heading-back-button d-block d-xl-flex  align-items-center justify-content-between  p-xl-2 mt-2">
-            <div class="heading-text">
-                <h1><b>Customers</b></h1>
-            </div>
-            <div class="back-to-button d-flex flex-column flex-sm-row gap-3 align-items-center   justify-content-sm-end  pb-2 pb-xl-0">
 
-
-              
-                <div class="position-relative " id="searchCustomerContainer">
-                    <input class="filter Search form-control me-2 border-0" id="searchCustomer" type="search"
-                        placeholder="Search" aria-label="Search">
-                    <i class="bi bi-search custom-icon"></i>
-                </div>
-
-
-                <select class="form-select filter" id="searchTimeWise" aria-label="Default select example">
-                    <option selected value="all">All Time</option>
-                    <option value="today">Today</option>
-                    <option value="7">Last 7 Days</option>
-                    <option value="30">Last 30 Days</option>
-                    <option value="currentMonth">Current Month</option>
-                    <option value="customdate">Custom Date</option>
-                </select>
-
-                <a clas="">
-                    <button class="back-button" id="exportCustomersBtn">
-                        <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px"><span class="d-inline d-sm-none d-md-inline">Export</span></span>
-                    </button>
-                </a>
-
-            </div>
+    <div class="w-100 heading-back-button d-block d-xl-flex  align-items-center justify-content-between  p-xl-2 mt-2">
+        <div class="heading-text">
+            <h1><b>Customers</b></h1>
         </div>
+        <div
+            class="back-to-button d-flex flex-column flex-sm-row gap-3 align-items-center   justify-content-sm-end  pb-2 pb-xl-0">
 
-        <div id="table-container"></div>
 
-  
+
+            <div class="position-relative " id="searchCustomerContainer">
+                <input class="filter Search form-control me-2 border-0" id="searchCustomer" type="search"
+                    placeholder="Search" aria-label="Search">
+                <i class="bi bi-search custom-icon"></i>
+            </div>
+
+
+            <select class="form-select filter" id="searchTimeWise" aria-label="Default select example">
+                <option selected value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="currentMonth">Current Month</option>
+                <option value="customdate">Custom Date</option>
+            </select>
+
+            <a clas="">
+                <button class="back-button" id="exportCustomersBtn">
+                    <span><img src="~/images/export.svg" class="me-2 mb-1" width="30px"><span
+                            class="d-inline d-sm-none d-md-inline">Export</span></span>
+                </button>
+            </a>
+
+        </div>
+    </div>
+
+    <div id="table-container"></div>
+
+
 
 </div>
 
@@ -70,7 +72,7 @@
 
             <div class="modal-footer d-flex justify-content-center gap-2">
                 <a id="serachDate">
-                    <button type="button" class="search-btn" data-bs-dismiss="modal">Submit</button>
+                    <button type="button" class="search-btn">Submit</button>
                 </a>
                 <button type="button" class="clear-btn" data-bs-dismiss="modal">Cancel</button>
             </div>
@@ -169,13 +171,13 @@
 
             let searchTimer;
         $("#searchCustomer").on("input", function () {
-             var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 loadCustomerTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-           searchcross();
+            searchcross();
         });
 
 
@@ -231,14 +233,21 @@
             });
 
         $("#serachDate").on("click", function () {
-            GCFromDate = $("#FromDate").val();
-            GCToDate = $("#ToDate").val();
-            loadCustomerTable(1);
+            if ($("#FromDate").val() > $("#ToDate").val()) {
+                toastr.error("To date should be greater than from date");
+                return;
+            }
+            else {
+                GCFromDate = $("#FromDate").val();
+                GCToDate = $("#ToDate").val();
+                loadCustomerTable(1);
+                $("#customDateModal").modal("hide");
+            }
         });
 
-        
 
-         function searchcross() {
+
+        function searchcross() {
             let search = $("#searchCustomer").val();
             if (search === "") {
                 var element = $(".custom-icon");
@@ -281,11 +290,24 @@
                 fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
                 toDate = toDate ? toDate.toISOString().split("T")[0] : null;
 
-
-
                 let url = `/Customer/ExportCustomer?search=${searchQuery}&fromDate=${fromDate}&toDate=${toDate}`;
 
-                window.location.href = url; // Triggers file download
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (response) {
+                        if (typeof response === 'object' && response.success === false) {
+                            toastr.error(response.message);
+                        } else {
+                            window.location.href = url; // Triggers file download
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Error exporting data");
+                    }
+                });
+
+
             });
 
 
@@ -298,7 +320,7 @@
                     url: "/Customer/CustomerHistory",
                     type: "GET",
                     data: {
-                       id: custId
+                        id: custId
                     },
                     success: function (data) {
                         $(".modal-customer-history").html(data);

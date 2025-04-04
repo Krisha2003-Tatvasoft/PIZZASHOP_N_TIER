@@ -947,7 +947,6 @@
 
                         @* var Modifiergroupid = $("#Modifiergroupid").val(); *@
 
-
                             $.ajax({
                                 url: "/Menu/addModifierPost",
                                 type: "POST",
@@ -974,6 +973,7 @@
 
                     }
                 }
+
             });
 
 
@@ -1001,10 +1001,11 @@
             }
 
 
-        // ✅ Call function on checkbox change
+        //  Call function on checkbox change
         $(document).on("change", ".modifier-checkbox", function (e) {
             updateModifierDropdown();
-            if ($(this).val().length > 0) {
+            let checkbox = $('.modifier-checkbox:checked');
+            if (checkbox.length > 0) {
                 $("#requaired-mg").hide();
             }
             else {
@@ -1178,6 +1179,9 @@
                     success: function (response) {
                         $(".modal-addNewMG").html(response);
                         $("#addModifiersGroup").modal("show");
+                        selectExModifier.length = 0; // Clear old data
+                        selectedModifiername.clear();
+
                     },
                     error: function (error) {
                         console.error("Error in delete Modifi9", error);
@@ -1279,6 +1283,7 @@
             e.preventDefault();
             displaySelectedModifiers();
         });
+
 
         @* display list of selected modifier *@
 

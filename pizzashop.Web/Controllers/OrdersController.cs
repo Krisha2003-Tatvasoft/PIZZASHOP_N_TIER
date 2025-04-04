@@ -51,6 +51,11 @@ public class OrdersController : Controller
         // Fetch orders based on filters
         List<OrderTable> orders = await _orderService.GetExcelOrderTable(search, status, fromDate, toDate);
 
+         if(orders == null || !orders.Any())
+        {
+           return Json(new { success = false, message = "No data to export" });
+        }
+
         // Generate Excel file
         var fileContent = _orderExportService.ExportOrdersToExcel(orders, search, status, fromDate, toDate);
 

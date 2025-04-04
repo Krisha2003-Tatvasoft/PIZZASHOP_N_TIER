@@ -382,6 +382,7 @@
         $(document).on("click", ".delete-group", function () {
             var groupId = $(this).data("group");
             $(`#group_${groupId}`).remove(); // Remove from UI
+            $("#MGid").val(""); // Reset the select box
             updateModifierGroupIndexes();
         });
     });

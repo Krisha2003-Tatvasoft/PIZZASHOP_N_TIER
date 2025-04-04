@@ -184,13 +184,13 @@
 
             let searchTimer;
         $("#searchOrders").on("input", function () {
-             var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer);
             searchTimer = setTimeout(function () {
                 loadOrderTable(1); // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-         searchcross();
+            searchcross();
         });
 
         function searchcross() {
@@ -210,9 +210,15 @@
         @* search button *@
 
             $("#serachDate").on("click", function () {
-                GFromDate = $("#FromDate").val();
-                GToDate = $("#ToDate").val();
-                loadOrderTable(1);
+                if ($("#FromDate").val() > $("#ToDate").val()) {
+                    toastr.error("To date should be greater than from date");
+                    return;
+                }
+                else {
+                    GFromDate = $("#FromDate").val();
+                    GToDate = $("#ToDate").val();
+                    loadOrderTable(1);
+                }
             });
 
         @* Days filter *@
@@ -307,7 +313,21 @@
 
                 let url = `/Orders/ExportOrders?search=${searchQuery}&status=${status}&fromDate=${fromDate}&toDate=${toDate}`;
 
-                window.location.href = url; // Triggers file download
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (response) {
+                        if (typeof response === 'object' && response.success === false) {
+                            toastr.error(response.message);
+                        } else {
+                            window.location.href = url; // Triggers file download
+                        }
+                    },
+                    error: function () {
+                        toastr.error("Error exporting data");
+                    }
+                });
+                
             });
 
 

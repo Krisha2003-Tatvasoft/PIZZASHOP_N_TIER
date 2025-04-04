@@ -46,6 +46,10 @@ public class CustomerController :Controller
         // Fetch orders based on filters
         List<CustomerTable> customers = await _customerService.GetExcelCustomer(search, fromDate, toDate);
 
+        if(customers == null || !customers.Any())
+        {
+           return Json(new { success = false, message = "No data to export" });
+        }
         // Generate Excel file
         var fileContent = _customerExportService.ExportCustomerToExcel(customers, search, fromDate, toDate);
 

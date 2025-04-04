@@ -20,8 +20,15 @@ public class CustomerRepository : ICustomerRepository
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         var custList = _context.Customers
         .Include(o => o.Orders)
-        .Where(o => (!fromDate.HasValue || o.Createdat >= fromDate) &&
-            (!toDate.HasValue || o.Createdat <= toDate))
+       .Where(o =>
+    // Check if the customer has orders and filter by Orderdate
+      (o.Orders.Any() &&
+        (!fromDate.HasValue || o.Orders.Any(order => order.Orderdate >= fromDate)) &&
+        (!toDate.HasValue || o.Orders.Any(order => order.Orderdate <= toDate))) ||
+    // If no orders exist, fallback to filtering by Createdat
+        (!o.Orders.Any() &&
+        (!fromDate.HasValue || o.Createdat >= fromDate) &&
+         (!toDate.HasValue || o.Createdat <= toDate)))
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Customername.ToLower().Contains(lowerSearch) ||
                             u.Email.ToLower().Contains(lowerSearch) ||
@@ -43,13 +50,14 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<IQueryable<Customer>> CustomerExcel(string search, DateTime? fromDate, DateTime? toDate)
     {
+
         string lowerSearch = search.ToLower();
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         var custList = _context.Customers
         .Include(o => o.Orders)
-        .Where(o => (!fromDate.HasValue || o.Createdat >= fromDate) &&
-            (!toDate.HasValue || o.Createdat <= toDate))
+        .Where(o => (!fromDate.HasValue || o.Orders.Any(o => o.Orderdate >= fromDate)) &&
+            (!toDate.HasValue || o.Orders.Any(o => o.Orderdate <= toDate)))
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Customername.ToLower().Contains(lowerSearch) ||
                             u.Email.ToLower().Contains(lowerSearch) ||
@@ -61,12 +69,12 @@ public class CustomerRepository : ICustomerRepository
     }
 
 
-   public async Task<Customer> CustomerHistory(int id)
-   {
-         return await _context.Customers
-            .Include(o => o.Orders).ThenInclude(o =>o.Ordereditems)
-             .FirstOrDefaultAsync(o => o.Customerid == id);
-   }
-    
+    public async Task<Customer> CustomerHistory(int id)
+    {
+        return await _context.Customers
+           .Include(o => o.Orders).ThenInclude(o => o.Ordereditems)
+            .FirstOrDefaultAsync(o => o.Customerid == id);
+    }
+
 
 }
