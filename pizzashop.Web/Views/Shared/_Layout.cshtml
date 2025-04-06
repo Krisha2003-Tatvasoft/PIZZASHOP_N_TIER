@@ -1,4 +1,5 @@
 ﻿@using System.Security.Claims
+@using Newtonsoft.Json
 @using pizzashop.Entity.ViewModels
 @using pizzashop.Service.Utils
 @inject IHttpContextAccessor HttpContextAccessor
@@ -24,6 +25,25 @@
     var Profileimg = user?.Image;
     var defaultImg = Url.Content("../images/Default_pfp.svg.png");
     var profileImageUrl = !string.IsNullOrEmpty(Profileimg) ? Url.Content("~/uploads/" + Profileimg) : defaultImg;
+
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+    var userPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 7);
+    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 6);
+
+    var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
+
+    var tablePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 4);
+
+    var taxPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
+
+    var orderPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 2);
+
+    var customerPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 1);
+
 }
 
 <body>
@@ -45,44 +65,71 @@
                                 data-default-img="@Url.Content("~/images/dashboard-default.png")"
                                 data-active-img="@Url.Content("~/images/dashboard-active.png")">
                             Dashboard</a></li>
-                    <li><a class="" asp-controller="User" asp-action="UserList"><img
-                                src="@Url.Content("~/images/users-default.png")" alt="Users" class="svgs"
-                                data-default-img="@Url.Content("~/images/users-default.png")"
-                                data-active-img="@Url.Content("~/images/users-active.png")">Users</a>
-                    </li>
-                    <li><a class="" asp-controller="RolePermission" asp-action="Role"> <img
-                                src="@Url.Content("~/images/roles-default.png")" alt="Role and Permission" class="svgs"
-                                data-default-img="@Url.Content("~/images/roles-default.png")"
-                                data-active-img="@Url.Content("~/images/roles-active.png")">Role and
-                            Permission</a>
-                    </li>
-                    <li><a class="" asp-controller="Menu" asp-action="Menu"> <img
-                                src="@Url.Content("~/images/menu-default.png")" alt="Menu" class="svgs"
-                                data-default-img="@Url.Content("~/images/menu-default.png")"
-                                data-active-img="@Url.Content("~/images/menu-active.png")">Menu</a>
-                    </li>
-                    <li><a class="" asp-controller="TableAndSection" asp-action="TableAndSection"> <img
-                                src="@Url.Content("~/images/table-default.png")" alt="Menu" class="svgs"
-                                data-default-img="@Url.Content("~/images/table-default.png")"
-                                data-active-img="@Url.Content("~/images/table-active.png")"> Table And
-                            Section </a>
-                    </li>
-                    <li><a class="" asp-controller="TaxesAndFees" asp-action="TaxesAndFees"> <img
-                                src="@Url.Content("~/images/taxes-default.png")" alt="Taxes And Fees" class="svgs"
-                                data-default-img="@Url.Content("~/images/taxes-default.png")"
-                                data-active-img="@Url.Content("~/images/taxes-active.png")">Taxes And
-                            Fees</a>
-                    </li>
-                    <li><a class="" asp-controller="Orders" asp-action="Orders"><img
-                                src="@Url.Content("~/images/orders-default.png")" alt="Orders" class="svgs"
-                                data-default-img="@Url.Content("~/images/orders-default.png")"
-                                data-active-img="@Url.Content("~/images/orders-active.png")">Orders</a>
-                    </li>
-                    <li><a class="" asp-controller="Customer" asp-action="Customer"> <img
-                                src="@Url.Content("~/images/customers-default.png")" alt="Customers" class="svgs"
-                                data-default-img="@Url.Content("~/images/customers-default.png")"
-                                data-active-img="@Url.Content("~/images/customers-active.png")">Customers</a>
-                    </li>
+                    @if (userPermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="User" asp-action="UserList"><img
+                                    src="@Url.Content("~/images/users-default.png")" alt="Users" class="svgs"
+                                    data-default-img="@Url.Content("~/images/users-default.png")"
+                                    data-active-img="@Url.Content("~/images/users-active.png")">Users</a>
+                        </li>
+                    }
+                    @if (rolePermission.Canview == true)
+                    {
+                        <li><a class="" asp-controller="RolePermission" asp-action="Role"> <img
+                                    src="@Url.Content("~/images/roles-default.png")" alt="Role and Permission" class="svgs"
+                                    data-default-img="@Url.Content("~/images/roles-default.png")"
+                                    data-active-img="@Url.Content("~/images/roles-active.png")">Role and
+                                Permission</a>
+                        </li>
+                    }
+                    @if (menuPermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="Menu" asp-action="Menu"> <img
+                                    src="@Url.Content("~/images/menu-default.png")" alt="Menu" class="svgs"
+                                    data-default-img="@Url.Content("~/images/menu-default.png")"
+                                    data-active-img="@Url.Content("~/images/menu-active.png")">Menu</a>
+                        </li>
+                    }
+                    @if (tablePermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="TableAndSection" asp-action="TableAndSection"> <img
+                                    src="@Url.Content("~/images/table-default.png")" alt="Menu" class="svgs"
+                                    data-default-img="@Url.Content("~/images/table-default.png")"
+                                    data-active-img="@Url.Content("~/images/table-active.png")"> Table And
+                                Section </a>
+                        </li>
+                    }
+                    @if (taxPermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="TaxesAndFees" asp-action="TaxesAndFees"> <img
+                                    src="@Url.Content("~/images/taxes-default.png")" alt="Taxes And Fees" class="svgs"
+                                    data-default-img="@Url.Content("~/images/taxes-default.png")"
+                                    data-active-img="@Url.Content("~/images/taxes-active.png")">Taxes And
+                                Fees</a>
+                        </li>
+                    }
+                    @if (orderPermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="Orders" asp-action="Orders"><img
+                                    src="@Url.Content("~/images/orders-default.png")" alt="Orders" class="svgs"
+                                    data-default-img="@Url.Content("~/images/orders-default.png")"
+                                    data-active-img="@Url.Content("~/images/orders-active.png")">Orders</a>
+                        </li>
+                    }
+                    @if (customerPermission.Canview == true)
+                    {
+
+                        <li><a class="" asp-controller="Customer" asp-action="Customer"> <img
+                                    src="@Url.Content("~/images/customers-default.png")" alt="Customers" class="svgs"
+                                    data-default-img="@Url.Content("~/images/customers-default.png")"
+                                    data-active-img="@Url.Content("~/images/customers-active.png")">Customers</a>
+                        </li>
+                    }
                 </ul>
 
             </div>

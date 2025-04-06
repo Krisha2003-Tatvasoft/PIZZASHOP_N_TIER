@@ -12,4 +12,6 @@ public interface IPermissionRepository
     Task UpdateAsync();
 
      Task<Permission?> GetRolePermissionAsync(string role, string module);
+
+     Task<List<Permission>> GetPermissionByName(string role);
 }

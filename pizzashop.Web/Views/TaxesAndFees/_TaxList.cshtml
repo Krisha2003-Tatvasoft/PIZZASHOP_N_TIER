@@ -1,5 +1,16 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.TaxTable>
+
+@{
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+    var taxPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
+}
 
 <div class="table-responsive">
     <table class="table mb-0">
@@ -58,7 +69,10 @@ else
                 <th>IsEnabled</th>
                 @* <th>Default</th> *@
                 <th>TaxValue</th>
+                 @if (taxPermission.Canaddedit == true || taxPermission.Candelete == true)
+                               {
                 <th>Action</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -72,7 +86,7 @@ else
                     <td>
                         <div class="form-check form-switch">
                             <input class="form-check-input enable-switch" type="checkbox" id="flexSwitchCheckChecked" @(tax.Isenabled?
-                                "checked" : "") data-taxid="@tax.Taxid">
+                                "checked" : "") @(taxPermission.Canaddedit == false ? "disabled" : "") data-taxid="@tax.Taxid">
                         </div>
                     </td>
                     @* <td>
@@ -84,13 +98,24 @@ else
                     </td> *@
                     <td>@tax.Taxvalue@(tax.taxtype == taxtype.Percentage ? "%" : "₹")
                     </td>
+                      @if (taxPermission.Canaddedit == true || taxPermission.Candelete == true)
+                               {
                     <td>
-                        <div class="d-flex gap-3 edit-delet"><button><a class="edit-tax" data-taxid="@tax.Taxid"><img
-                                        src="../images/pencil.svg"></a></button><button class="button delete delete-tax-link"
+                        <div class="d-flex gap-3 edit-delet">
+                             @if (taxPermission.Canaddedit == true)
+                               {
+                            <button><a class="edit-tax" data-taxid="@tax.Taxid"><img
+                                        src="../images/pencil.svg"></a></button>
+                               }
+                            @if (taxPermission.Candelete == true)
+                               {       
+                                        <button class="button delete delete-tax-link"
                                 data-bs-toggle="modal" data-bs-target="#deleteTaxModal" data-taxid="@tax.Taxid"><img
                                     class="delete-icon" src="../images/trash.svg"></button>
+                                }
                         </div>
                     </td>
+                    }
                 </tr>
                         }
 

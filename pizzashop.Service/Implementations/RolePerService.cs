@@ -31,7 +31,7 @@ public class RolePerService : IRolePerService
     {
         foreach (var updatedPermission in updatedPermissions)
         {
-            var existingPermission = await _permissionRepository.GetPerByIdAsync(updatedPermission.Permissionid); 
+            var existingPermission = await _permissionRepository.GetPerByIdAsync(updatedPermission.Permissionid);
             if (existingPermission != null)
             {
                 existingPermission.Canview = updatedPermission.Canview;
@@ -39,12 +39,12 @@ public class RolePerService : IRolePerService
                 existingPermission.Candelete = updatedPermission.Candelete;
             }
         }
-        await  _permissionRepository.UpdateAsync();
+        await _permissionRepository.UpdateAsync();
         return true;
 
     }
 
-      public async Task<bool> HasPermissionAsync(string role, string module, string permission)
+    public async Task<bool> HasPermissionAsync(string role, string module, string permission)
     {
         var rolePermission = await _permissionRepository.GetRolePermissionAsync(role, module);
 
@@ -58,5 +58,21 @@ public class RolePerService : IRolePerService
             "Delete" => rolePermission.Candelete,
             _ => false
         };
+    }
+
+    public async Task<List<Permission>> GetPermissionById(string role)
+    {
+        if (!string.IsNullOrEmpty(role))
+        {
+            var rolePermission = await _permissionRepository.GetPermissionByName(role);
+
+            return rolePermission;
+        }
+        else
+        {
+            return new List<Permission>();
+        }
+
+
     }
 }

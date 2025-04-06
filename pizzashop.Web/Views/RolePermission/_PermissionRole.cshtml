@@ -159,6 +159,7 @@
                 success: function (response) {
                     $('#permissionpartial').hide();
                     $('#roletable').show();
+                     location.reload();
                     toastr.success("Permission Updated sucessfully.");
                     console.success("Permission updated sucessfully", sucess);
                 },

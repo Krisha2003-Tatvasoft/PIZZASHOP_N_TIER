@@ -1,6 +1,17 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @{
     ViewData["Title"] = "TableAndSection Page";
 }
+@{
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+    var tablePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 4);
+}
+
 
 <link rel="stylesheet" href="~/css/TableAndSection.css" />
 
@@ -58,14 +69,19 @@
                          <i class="bi bi-search custom-icon"></i>
                 </div>
 
-
+                 @if (tablePermission.Candelete == true)
+                                {
                 <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedTables" class="delet-btn">
                     <image class="delet-icon" src="../images/trash.svg" />
                 </button>
+                }
 
+                @if (tablePermission.Canaddedit == true)
+                                {
                 <button class="new-table-btn button openAddTableModel">
                     <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Table</span> 
                 </button>
+                }
 
             </div>
 

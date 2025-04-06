@@ -53,4 +53,11 @@ public class PermissionRepository : IPermissionRepository
            .FirstOrDefaultAsync(u => u.Role.Rolename == role && u.Module.Modulename == module);
     }
 
+    public async Task<List<Permission>> GetPermissionByName(string role)
+    {
+        return await _context.Permissions
+           .Include(u => u.Module)
+           .Include(u => u.Role).Where(i => i.Role.Rolename.ToLower() == role.ToLower()).ToListAsync();
+    }
+
 }

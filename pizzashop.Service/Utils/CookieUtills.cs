@@ -38,14 +38,15 @@ namespace pizzashop.Service.Utils
         /// Save User data to Cookies
         public static void SaveUserData(HttpResponse response, Userslogin user)
         {
-       
-               CookieData userdata= new CookieData{
-                Email=user.Email,
-                Userid=user.Userid,
-                Rolename=user.Role.Rolename,
-                Username=user.Username,
+
+            CookieData userdata = new CookieData
+            {
+                Email = user.Email,
+                Userid = user.Userid,
+                Rolename = user.Role.Rolename,
+                Username = user.Username,
                 Image = user.User.Profileimg
-               };
+            };
 
             string userData = JsonSerializer.Serialize(userdata);
 
@@ -66,6 +67,22 @@ namespace pizzashop.Service.Utils
             httpContext.Response.Cookies.Delete("UserData");
         }
 
-        
+        public static void SavePermissionData(HttpResponse response, List<RolePermission> permissionData)
+        {
+            var model = new PermissionRequest { Permissions = permissionData };
+            var options = new CookieOptions
+            {
+                Expires = DateTime.UtcNow.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true
+            };
+
+            var json = JsonSerializer.Serialize(model);
+            response.Cookies.Append("PermissionData", json, options);
+        }
+
+
+
     }
 }

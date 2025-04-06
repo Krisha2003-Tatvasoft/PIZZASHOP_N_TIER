@@ -1,4 +1,18 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @model List<pizzashop.Entity.ViewModels.Category>;
+
+    @{
+         var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+      var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
+
+    }
+
+    
 
 <ul class="list-unstyled">
     <div id="sortable-list-category">
@@ -12,15 +26,20 @@
                     </div>
                 </a>
                 <div class="d-flex gap-1 edit-delet ">
+                @if (menuPermission.Canaddedit == true)
+                    {
                     <a class="edit-link " data-catid="@item.Categoryid">
                         <button class="button" data-bs-toggle="modal" data-bs-target="#editNewCategory">
                             <img class="icon d-none" src="../images/pencil.svg"></button>
                     </a>
-
+                }
+                  @if (menuPermission.Candelete == true)
+                    {
                     <a class="delete-link " data-catid="@item.Categoryid">
                         <button class="button" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <img class="delete-icon icon  d-none" src="../images/trash.svg"></button>
                     </a>
+                    }
                 </div>
             </li>
 

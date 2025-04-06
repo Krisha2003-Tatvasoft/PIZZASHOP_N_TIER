@@ -11,4 +11,6 @@ public interface IRolePerService
     Task<bool> UpdatePerAsync(List<RolePermission> updatedPermissions);
 
     Task<bool> HasPermissionAsync(string role, string module, string permission);
+
+     Task<List<Permission>> GetPermissionById(string role);
 }

@@ -1,5 +1,14 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @model List<pizzashop.Entity.ViewModels.ModifierTable>;
+@{
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
 
+    var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
+}
 
 
 <div class="table-responsive" id="modifier-table">
@@ -15,7 +24,10 @@
             <th>Unit</th>
             <th>Rate</th>
             <th>Quantity</th>
-            <th>Action</th>
+             @if (menuPermission.Canaddedit == true || menuPermission.Candelete == true)
+                {
+                    <th>Action</th>
+                }
         </tr>
         </thead>
         <tbody>
@@ -33,16 +45,25 @@
                     <td>@item.Unitname</td>
                     <td>@item.Rate</td>
                     <td>@item.Quantity</td>
+                     @if (menuPermission.Canaddedit == true || menuPermission.Candelete == true)
+                    {
                     <td>
                         <div class="d-flex gap-3 edit-delet">
+                              @if (menuPermission.Canaddedit == true)
+                                {
                             <button class="button edit-modifier" data-modifierid="@item.Modifierid"><img
                                     src="../images/pencil.svg"></button>
+                                    }
+                                     @if (menuPermission.Candelete == true)
+                                {
                             <button class="button delete-modifier-link" data-bs-toggle="modal"
                                 data-bs-target="#deleteModifier" data-modifierid="@item.Modifierid"
                                 data-modifiergroupid="@item.Modifiergroupid">
                                 <img class="delete-icon" src="../images/trash.svg"></button>
+                                }
                         </div>
                     </td>
+                    }
                 </tr>
             }
         </tbody>

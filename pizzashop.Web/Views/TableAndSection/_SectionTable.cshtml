@@ -1,5 +1,14 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @model List<pizzashop.Entity.ViewModels.Section>;
+@{
+     var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
 
+    var tablePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 4);
+}
 
 <ul class="list-unstyled">
     <div id="sortable-list-section">
@@ -13,11 +22,18 @@
                         @item.Sectionname
                     </div>
                 </a>
+                
                 <div class="d-flex gap-1 edit-delet">
+                    @if (tablePermission.Canaddedit == true)
+                    {
                     <button class="button edit-section" data-sectionid="@item.Sectionid"><img class="d-none"
                             src="../images/pencil.svg"></button>
+                            }
+                    @if (tablePermission.Candelete == true)
+                    {
                     <button class="button delete-section-link" data-bs-toggle="modal" data-bs-target="#deleteSection"
                         data-sectionid="@item.Sectionid"><img class="delete-icon d-none" src="../images/trash.svg"></button>
+                    }
                 </div>
             </li>
         }

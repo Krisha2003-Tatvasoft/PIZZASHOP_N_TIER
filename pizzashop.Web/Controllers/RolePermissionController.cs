@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
+using System.Security.Claims;
+using pizzashop.Service.Utils;
 
 namespace pizzashop.Web.Controllers;
 
@@ -48,6 +50,22 @@ public class RolePermissionController : Controller
 
         if (await _rolePerService.UpdatePerAsync(updatedPermissions))
         {
+             var rolename = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            var allPermissions = await _rolePerService.GetPermissionById(rolename);
+
+            var Permissions = allPermissions.Select(p => new RolePermission
+            {
+               Moduleid = p.Module.Moduleid,
+                Canview = p.Canview,
+                Canaddedit = p.Canaddedit,
+                Candelete = p.Candelete,
+                Rolename = p.Role.Rolename
+            }).ToList();
+
+            Response.Cookies.Delete("PermissionData");
+            CookieUtils.SavePermissionData(Response, Permissions);
+
             return Ok("Permissions updated successfully");
         }
         else
@@ -56,6 +74,6 @@ public class RolePermissionController : Controller
         }
            
     }
-    
+
 
 }

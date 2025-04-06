@@ -16,6 +16,8 @@ public partial class RolePermission
     public bool Candelete { get; set; }
 
     public bool CanPermission { get; set; }
-
+ 
+      public int Moduleid { get; set; }
+   
 
 }

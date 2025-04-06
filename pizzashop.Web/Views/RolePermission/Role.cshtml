@@ -1,8 +1,18 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @{
     ViewData["Title"] = "User page";
 }
 <link rel="stylesheet" href="~/css/role.css" />
+@{
+     var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
 
+    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 6);
+
+}
   
 <div class="w-100 main-content px-lg-5 px-sm-4 px-4">
      <div id="roletable">
@@ -20,7 +30,10 @@
                             <thead>
                                 <tr>
                                     <th class="ps-3">Role</th>
+                                       @if (rolePermission.Canaddedit == true)
+                                      {
                                     <th>Action</th>
+                                    }
                                 </tr>
                             </thead>
                             <tbody>
@@ -28,10 +41,14 @@
                                 {
                                    <tr>
                                     <td class="ps-3">@role.Rolename</td>
-                                    <td><div class="edit-button"><button>
+                                     @if (rolePermission.Canaddedit == true)
+                                      {
+                                    <td>
+                                   <div class="edit-button"><button>
                                         <a  class="edit-btn"  data-id="@role.Roleid" ><img src="../images/pencil.svg"></a></button></td>
+                                          }
                                    </tr>
-                                }
+                                 }
                             </tbody>
                         </table>
                     </div>
@@ -71,7 +88,6 @@
 
   function updateSwitchStates() {
            $("table tbody tr").each(function () {
-            console.log("hiii");
             let row = $(this);
             let rowCheckbox = row.find(".row-checkbox");
 

@@ -26,14 +26,17 @@ public class AuthController : Controller
 
     private readonly IUserService _userService;
 
-    public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService, 
-    IWebHostEnvironment webHostEnvironment, IUserService userService)
+    private readonly IRolePerService _rolePerService ;
+
+    public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService,
+    IWebHostEnvironment webHostEnvironment, IUserService userService, IRolePerService rolePerService)
     {
         _authService = authService;
         _jwtService = jwtService;
         _emailService = emailService;
         _webHostEnvironment = webHostEnvironment;
         _userService = userService;
+        _rolePerService = rolePerService;
     }
 
     [AllowAnonymous]
@@ -81,6 +84,20 @@ public class AuthController : Controller
 
             SessionUtils.SetUser(HttpContext, user);
 
+            var allPermissions = await _rolePerService.GetPermissionById(user.Role.Rolename);
+
+            var Permissions = allPermissions.Select(p => new RolePermission
+            {
+                Moduleid = p.Module.Moduleid,
+                Canview = p.Canview,
+                Canaddedit = p.Canaddedit,
+                Candelete = p.Candelete,
+                Rolename = p.Role.Rolename
+            }).ToList();
+
+
+            CookieUtils.SavePermissionData(Response, Permissions);
+
             return RedirectToAction("Index", "Home");
         }
         return View(model);
@@ -105,7 +122,7 @@ public class AuthController : Controller
     }
 
 
-     [CustomAuthorize]
+    [CustomAuthorize]
     [HttpGet]
     public IActionResult Forget()
     {
@@ -234,11 +251,11 @@ public class AuthController : Controller
             TempData["ErrorMessage"] = "User Not Found";
             return View();
         }
-        
+
         var user = await _userService.GetUserLoginByEmail(email);
-        if(user.FirstLogin == true)
+        if (user.FirstLogin == true)
         {
-             TempData["SuccessMessage"] = "You are First Time login. Reset Your Password.";
+            TempData["SuccessMessage"] = "You are First Time login. Reset Your Password.";
         }
 
         // You can now use the email, e.g., check if it exists in the database
@@ -292,9 +309,9 @@ public class AuthController : Controller
 
         var user = await _userService.GetUserLoginByEmail(model.Email);
         TempData["SuccessMessage"] = "Password Reset Sucessfully";
-        if(user.FirstLogin == true)
+        if (user.FirstLogin == true)
         {
-            user.FirstLogin =false;
+            user.FirstLogin = false;
         }
         await _userService.UpdateUserLogin(user);
         return RedirectToAction("Login", "Auth");

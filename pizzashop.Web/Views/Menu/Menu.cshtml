@@ -1,5 +1,16 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @{
     ViewData["Title"] = "Menu Page";
+}
+
+@{
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+    var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
 }
 
 @model pizzashop.Entity.ViewModels.Category;
@@ -45,6 +56,7 @@
                             <div class="slider-heading-text">
                                 <b>Category</b>
                             </div>
+
                             <button class="plus-button button" data-bs-toggle="modal" data-bs-target="#addNewCategory"
                                 class="delet-btn">
                                 <img class="plus-img" src="../images/plus-lg.svg" alt="" class="">
@@ -82,14 +94,20 @@
                             </div>
 
 
+                              @if (menuPermission.Candelete == true)
+                                {
                             <button id="delete-selected-item" class="button" data-bs-toggle="modal"
                                 data-bs-target="#deleteSelectedItem" class="delet-btn">
                                 <image class="delet-icon" src="../images/trash.svg" />
                             </button>
+                            }
 
+                              @if (menuPermission.Canaddedit == true)
+                                {
                             <button class="new-item-btn button openModel">
                                 <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Item</span>
                             </button>
+                            }
 
                         </div>
 
@@ -151,15 +169,20 @@
                                 <i class="bi bi-search custom-icon"></i>
                             </div>
 
-
+                              @if (menuPermission.Candelete == true)
+                                {
                             <button id="delete-selected-modifiers" data-bs-toggle="modal"
                                 data-bs-target="#deleteSelectedModifier" class=" button delet-btn ">
                                 <image class="delet-icon " src="../images/trash.svg" />
                             </button>
-
+                            }
+ 
+                              @if(menuPermission.Canaddedit == true)
+                                {
                             <button class=" button new-Modifiers-btn openModifierModel">
                                 <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Modifier</span>
                             </button>
+                            }
 
                         </div>
 

@@ -1,5 +1,15 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @{
     ViewData["Title"] = "User page";
+}
+@{
+    var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+    var taxPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
 }
 
 <link rel="stylesheet" href="~/css/TaxesAndFees.css" />
@@ -19,11 +29,15 @@
                     aria-label="Search">
                 <i class="bi bi-search custom-icon"></i>
             </div>
+             @if (taxPermission.Canaddedit == true)
+                    {
+
             <a class="add-tax">
                 <button class="back-button">
                     <span><i class="bi bi-plus"></i><span class="d-none d-sm-inline">Add Tax</span></span>
                 </button>
             </a>
+            }
         </div>
     </div>
 

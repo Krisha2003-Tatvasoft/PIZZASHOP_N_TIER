@@ -1,4 +1,15 @@
+@using Newtonsoft.Json
+@using pizzashop.Entity.ViewModels
 @model List<pizzashop.Entity.ViewModels.ModifiersGroup>;
+
+     @{
+         var permissionCookie = Context.Request.Cookies["PermissionData"];
+    var permissionModel = string.IsNullOrEmpty(permissionCookie)
+    ? new PermissionRequest()
+    : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
+
+      var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
+    }
 
 <ul class="list-unstyled">
     <div id="sortable-list-mg">
@@ -12,12 +23,18 @@
                     </div>
                 </a>
                 <div class="d-flex gap-1 edit-delet">
+                     @if (menuPermission.Canaddedit == true)
+                    {
                     <button class="button edit-MG" data-modifiergroupid="@item.Modifiergroupid">
                         <img class="icon d-none" src="../images/pencil.svg">
                     </button>
+                    }
+                      @if (menuPermission.Candelete == true)
+                    {
                     <button class="button delete-MG-link" data-bs-toggle="modal" data-bs-target="#deleteModifiersGrop"
                         data-modifiergroupid="@item.Modifiergroupid">
                         <img class="delete-icon icon  d-none" src="../images/trash.svg"></button>
+                        }
                 </div>
             </li>
         }
