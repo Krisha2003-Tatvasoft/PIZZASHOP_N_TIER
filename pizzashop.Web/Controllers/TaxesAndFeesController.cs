@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
 
+[CustomAuthorize]
 public class TaxesAndFeesController : Controller
 {
     private readonly ITaxesService _taxesService;
@@ -16,6 +18,7 @@ public class TaxesAndFeesController : Controller
 
 
     [HttpGet]
+     [CustomAuthorize("TaxAndFee", "View")]
     public async Task<IActionResult> TaxesAndFees(int page = 1, int pageSize = 5, string search = "")
     {
         var (taxList, totalTaxes) = await _taxesService.GetTaxTable(page, pageSize, search);
@@ -32,12 +35,14 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("TaxAndFee", "AddEdit")]
     public async Task<IActionResult> AddTax()
     {
         return PartialView("_AddTax");
     }
 
     [HttpPost]
+     [CustomAuthorize("TaxAndFee", "AddEdit")]
     public async Task<IActionResult> AddTaxPost(AddTax model)
     {
         if (ModelState.IsValid)
@@ -62,12 +67,14 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("TaxAndFee", "AddEdit")]
     public async Task<IActionResult> EditTax(int id)
     {
         return PartialView("_EditTax", await _taxesService.EditTax(id));
     }
 
     [HttpPost]
+    [CustomAuthorize("TaxAndFee", "AddEdit")]
     public async Task<IActionResult> EditTaxPost(AddTax model)
     {
         if (ModelState.IsValid)
@@ -93,6 +100,7 @@ public class TaxesAndFeesController : Controller
 
 
     [HttpPost]
+     [CustomAuthorize("TaxAndFee", "Delete")]
     public async Task<IActionResult> DeleteTax(int id)
     {
         if (await _taxesService.DeleteTax(id))
@@ -106,6 +114,7 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("TaxAndFee", "AddEdit")]
     public async Task<IActionResult> UpdateEnable(int id, bool enable)
     {
        CookieData user = SessionUtils.GetUser(HttpContext);

@@ -77,12 +77,12 @@ public class ItemRepository : IItemRepository
 
     public async Task<bool> ItemExistAsync(string Itemname)
     {
-        return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower());
+        return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower() && c.Isdeleted == false);
     }
 
     public async Task<bool> ItemNameExistAtEditAsync(string Itemname, int id)
     {
-        return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower() && c.Itemid != id);
+        return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower() && c.Itemid != id && c.Isdeleted == false);
     }
 
 

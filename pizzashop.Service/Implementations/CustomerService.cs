@@ -17,7 +17,6 @@ public class CustomerService : ICustomerService
     public async Task<(List<CustomerTable>, int totalCustomer)> GetCustomerTable(int page, int pageSize, string search,
    string SortColumn, string SortOrder, DateTime? fromDate, DateTime? toDate)
     {
-          toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         var custList = await _customerRepository.CustomerTable(search, SortColumn, SortOrder, fromDate, toDate);
 
         int totalCustomer = await custList.CountAsync();
@@ -31,8 +30,14 @@ public class CustomerService : ICustomerService
             Customername = o.Customername,
             Email = o.Email,
             Phoneno = o.Phoneno,
-            Orderdate = o.Orders.Max(order => order.Orderdate) ??
-            o.Createdat,
+            Orderdate = o.Orders
+          .Where(order =>
+        (!fromDate.HasValue || order.Orderdate >= fromDate) &&
+        (!toDate.HasValue || order.Orderdate <= toDate.Value.Date.AddDays(1).AddMilliseconds(-1))
+    )
+    .Select(order => order.Orderdate)
+    .DefaultIfEmpty()
+    .Max() ?? o.Createdat,
             Totalorder = o.Totalorder
         })
         .ToListAsync();
@@ -52,14 +57,14 @@ public class CustomerService : ICustomerService
             Customername = o.Customername,
             Email = o.Email,
             Phoneno = o.Phoneno,
-            Orderdate = o.Orders.Max(order => order.Orderdate) ??
-            o.Createdat,
-            // Orderdate = o.Orders
-            // .Where(order => order.Orderdate != null)
-            // .Where(order => (fromDate == null || order.Orderdate >= fromDate) && (toDate == null || order.Orderdate <= toDate))
-            // .Select(order => order.Orderdate)
-            // .DefaultIfEmpty(o.Orders.Max(order => order.Orderdate)) // Fallback to the maximum date from the entire dataset
-            // .Max() ?? o.Createdat,
+           Orderdate = o.Orders
+          .Where(order =>
+        (!fromDate.HasValue || order.Orderdate >= fromDate) &&
+        (!toDate.HasValue || order.Orderdate <= toDate.Value.Date.AddDays(1).AddMilliseconds(-1))
+    )
+    .Select(order => order.Orderdate)
+    .DefaultIfEmpty()
+    .Max() ?? o.Createdat,
             Totalorder = o.Totalorder
         })
         .ToListAsync();

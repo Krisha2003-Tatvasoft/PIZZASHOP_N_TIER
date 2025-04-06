@@ -41,8 +41,9 @@ public class MenuController : Controller
         return View();
     }
 
-
+    
     [HttpPost]
+     [CustomAuthorize("Menu", "AddEdit")] 
     public async Task<IActionResult> addCategory(VMCategory category)
     {
         if (ModelState.IsValid)
@@ -70,6 +71,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> CategoryList()
     {
         List<VMCategory> categories = await _categoryService.GetCategoryList();
@@ -77,6 +79,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> itemTable(int id, int page = 1, int pageSize = 5, string search = "")
     {
         var (items, totalitem) = await _itemService.GetItemTable(id, page, pageSize, search);
@@ -90,8 +93,8 @@ public class MenuController : Controller
         return PartialView("_ItemTable", items);
     }
 
-
     [HttpGet]
+     [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> ModiGroupList()
     {
         List<ModifiersGroup> modifiersGrops = await _modifierGroupService.GetMGList();
@@ -99,6 +102,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+     [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> modifierTable(int id, int page = 1, int pageSize = 5, string search = "")
     {
         var (modifiers, totalMoidifier) = await _modifierService.GetModifiersTable(id, page, pageSize, search);
@@ -113,6 +117,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditCat(int id)
     {
 
@@ -121,6 +126,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditCat([FromBody] VMCategory model)
     {
         if (ModelState.IsValid)
@@ -145,6 +151,7 @@ public class MenuController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteCat(int id)
     {
         if (await _categoryService.DeleteCat(id))
@@ -158,12 +165,14 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> AddItem()
     {
         return PartialView("_Additem", await _itemService.Additem());
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> addItemPost(AddItem model)
     {
         if (ModelState.IsValid)
@@ -189,12 +198,14 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditItem(int id)
     {
         return PartialView("_Edititem", await _itemService.EditItem(id));
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditItemPost(AddItem model)
     {
         if (ModelState.IsValid)
@@ -220,6 +231,7 @@ public class MenuController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteItem(int id)
     {
         if (await _itemService.DeleteItem(id))
@@ -233,6 +245,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteSelectedItem(List<int> selectedIds)
     {
 
@@ -250,6 +263,7 @@ public class MenuController : Controller
 
 
     [HttpGet]
+     [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> modifierList(int id)
     {
         List<ModifierList> modifiers = await _modifierService.GetModifiersList(id);
@@ -259,12 +273,14 @@ public class MenuController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> AddModifier()
     {
         return PartialView("_AddModifier", await _modifierService.AddModifier());
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> addModifierPost(AddModifier model)
     {
         if (ModelState.IsValid)
@@ -290,6 +306,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditModifier(int id)
     {
         var data = await _modifierService.EditModifier(id);
@@ -302,6 +319,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditModifietrPost(AddModifier model)
     {
         if (ModelState.IsValid)
@@ -328,6 +346,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteModifier(int id, int MGId)
     {
         if (await _modifierService.DeleteModifier(id, MGId))
@@ -341,6 +360,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteSelectedModifiers(List<int> selectedIds, int MGId)
     {
 
@@ -357,6 +377,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+     [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> FirstMGId()
     {
         List<ModifiersGroup> modifiersGrops = await _modifierGroupService.GetMGList();
@@ -369,6 +390,8 @@ public class MenuController : Controller
     }
 
 
+     [HttpGet]
+     [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> FirstCatId()
     {
         List<VMCategory> categories = await _categoryService.GetCategoryList();
@@ -382,6 +405,7 @@ public class MenuController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> AddMG()
     {
         return PartialView("_AddModifierGroup");
@@ -389,6 +413,7 @@ public class MenuController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> AddMGPost(AddModifierGroup model)
     {
         if (ModelState.IsValid)
@@ -434,6 +459,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditMG(int id)
     {
         var data = await _modifierGroupService.EditMG(id);
@@ -449,6 +475,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> EditMGPost(AddModifierGroup model)
     {
         if (ModelState.IsValid)
@@ -474,6 +501,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "Delete")]
     public async Task<IActionResult> DeleteMG(int id)
     {
         if (await _modifierGroupService.DeleteMG(id))
@@ -485,8 +513,10 @@ public class MenuController : Controller
             return Json(new { success = false, message = "ModifierGroup not deleted." });
         }
     }
+    
 
     [HttpGet]
+      [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> SelectExModifier(int page = 1, int pageSize = 5, string search = "")
     {
         var (Exmodifiers, totalExMoidifier) = await _modifierService.GetAllModifier(page, pageSize, search);
@@ -501,6 +531,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> SaveOrderCategory([FromBody] List<int> order)
     {
         if (order == null || !order.Any())
@@ -523,6 +554,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> SaveOrderMg([FromBody] List<int> order)
     {
         if (order == null || !order.Any())
@@ -545,6 +577,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
+     [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> UpdateItemAvailble(int id, bool available)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);

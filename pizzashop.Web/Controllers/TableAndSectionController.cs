@@ -28,12 +28,14 @@ public class TableAndSectionController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "View")]
     public async Task<IActionResult> SectionList()
     {
         return PartialView("_SectionTable", await _sectionService.GetSectionList());
     }
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "View")]
     public async Task<IActionResult> TablesList(int id, int page = 1, int pageSize = 5, string search = "")
     {
 
@@ -49,6 +51,7 @@ public class TableAndSectionController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> AddSectionGet()
     {
         return PartialView("_AddSection");
@@ -56,6 +59,7 @@ public class TableAndSectionController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> AddSectionPost(VMSection model)
     {
         if (ModelState.IsValid)
@@ -78,16 +82,17 @@ public class TableAndSectionController : Controller
             // return PartialView("_AddTable", model);
         }
 
-
     }
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> EditSection(int id)
     {
         return PartialView("_EditSection", await _sectionService.EditSection(id));
     }
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> EditSectionPost(VMSection model)
     {
 
@@ -113,6 +118,7 @@ public class TableAndSectionController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "Delete")]
     public async Task<IActionResult> DeleteSection(int id)
     {
         if (await _sectionService.DeleteSection(id))
@@ -127,12 +133,14 @@ public class TableAndSectionController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> AddTable()
     {
         return PartialView("_AddTable", await _tableService.AddTable());
     }
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> AddTablePost(AddTable model)
     {
         if (ModelState.IsValid)
@@ -158,6 +166,7 @@ public class TableAndSectionController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> EditTable(int id)
     {
         return PartialView("_EditTable", await _tableService.EditTable(id));
@@ -165,6 +174,7 @@ public class TableAndSectionController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "AddEdit")]
     public async Task<IActionResult> EditTablePost(AddTable model)
     {
         if (ModelState.IsValid)
@@ -187,6 +197,7 @@ public class TableAndSectionController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "Delete")]
     public async Task<IActionResult> DeleteTable(int id)
     {
         if (await _tableService.DeleteTable(id))
@@ -200,6 +211,7 @@ public class TableAndSectionController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "Delete")]
     public async Task<IActionResult> DeleteSelectedTables(List<int> selectedTableIds)
     {
 
@@ -217,6 +229,7 @@ public class TableAndSectionController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("TableAndSection", "View")]
     public async Task<IActionResult> SaveOrderSection([FromBody] List<int> order)
     {
         if (order == null || !order.Any())

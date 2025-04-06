@@ -19,6 +19,7 @@ public class RolePermissionController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("RoleAndPermission", "View")]
     public async Task<IActionResult> Role(int id)
     {
         // if (id == 0)
@@ -35,7 +36,9 @@ public class RolePermissionController : Controller
                   : View(await _rolePerService.GetAllRoleAsync());
     }
 
+
     [HttpPost]
+    [CustomAuthorize("RoleAndPermission", "AddEdit")]
     public async Task<IActionResult> UpdatePermissions([FromBody] List<RolePermission> updatedPermissions)
     {
         if (updatedPermissions == null || !updatedPermissions.Any())
@@ -53,5 +56,6 @@ public class RolePermissionController : Controller
         }
            
     }
+    
 
 }

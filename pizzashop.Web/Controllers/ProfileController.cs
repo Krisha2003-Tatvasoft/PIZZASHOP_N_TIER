@@ -73,6 +73,7 @@ public class ProfileController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize]
     public async Task<IActionResult> UserProfile()
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
@@ -88,6 +89,7 @@ public class ProfileController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize]
     public async Task<IActionResult> UserProfile(UserProfile viewmodel)
     {
         if (ModelState.IsValid)
@@ -115,8 +117,6 @@ public class ProfileController : Controller
         }
 
     }
-
-
 
 
 }

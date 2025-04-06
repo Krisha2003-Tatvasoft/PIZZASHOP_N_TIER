@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
+using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
 
+[CustomAuthorize]
 public class CustomerController :Controller
 {
   private readonly ICustomerService _customerService;
@@ -18,7 +20,7 @@ public class CustomerController :Controller
     }
    
   
-
+   [CustomAuthorize("Customers", "View")]
    [HttpGet]
     public async Task<IActionResult> Customer(int page = 1, int pageSize = 5, string search = "", string SortColumn = "",
      string SortOrder = "", DateTime? fromDate = null, DateTime? toDate = null)
@@ -40,6 +42,7 @@ public class CustomerController :Controller
     }
 
     
+    [CustomAuthorize("Customers", "View")]
     [HttpGet]
     public async Task<IActionResult> ExportCustomer(string search = "", DateTime? fromDate = null, DateTime? toDate = null)
     {
@@ -56,8 +59,10 @@ public class CustomerController :Controller
         // Return as downloadable file
         return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer.xlsx");
     }
+ 
 
-      [HttpGet]
+    [CustomAuthorize("Customers", "View")]
+    [HttpGet]
     public async Task<IActionResult> CustomerHistory(int id)
     {
        return PartialView("_CustomerHistory", await _customerService.CustomerHistory(id));

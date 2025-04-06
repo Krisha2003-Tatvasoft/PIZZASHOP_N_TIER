@@ -20,12 +20,10 @@ public class CustomerRepository : ICustomerRepository
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         var custList = _context.Customers
         .Include(o => o.Orders)
-       .Where(o =>
-    // Check if the customer has orders and filter by Orderdate
-      (o.Orders.Any() &&
+        .Where(o =>
+        (o.Orders.Any() &&
         (!fromDate.HasValue || o.Orders.Any(order => order.Orderdate >= fromDate)) &&
         (!toDate.HasValue || o.Orders.Any(order => order.Orderdate <= toDate))) ||
-    // If no orders exist, fallback to filtering by Createdat
         (!o.Orders.Any() &&
         (!fromDate.HasValue || o.Createdat >= fromDate) &&
          (!toDate.HasValue || o.Createdat <= toDate)))
@@ -53,11 +51,16 @@ public class CustomerRepository : ICustomerRepository
 
         string lowerSearch = search.ToLower();
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
-        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
+       
         var custList = _context.Customers
         .Include(o => o.Orders)
-        .Where(o => (!fromDate.HasValue || o.Orders.Any(o => o.Orderdate >= fromDate)) &&
-            (!toDate.HasValue || o.Orders.Any(o => o.Orderdate <= toDate)))
+       .Where(o =>
+        (o.Orders.Any() &&
+        (!fromDate.HasValue || o.Orders.Any(order => order.Orderdate >= fromDate)) &&
+        (!toDate.HasValue || o.Orders.Any(order => order.Orderdate <= toDate))) ||
+        (!o.Orders.Any() &&
+        (!fromDate.HasValue || o.Createdat >= fromDate) &&
+         (!toDate.HasValue || o.Createdat <= toDate)))
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Customername.ToLower().Contains(lowerSearch) ||
                             u.Email.ToLower().Contains(lowerSearch) ||

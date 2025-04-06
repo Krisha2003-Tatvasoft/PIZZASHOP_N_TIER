@@ -21,17 +21,17 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UserExistsAsync(string email)
     {
-        return await _context.Userslogins.AnyAsync(u => u.Email == email);
+        return await _context.Userslogins.AnyAsync(u => u.Email == email && u.User.Isdeleted == false);
     }
 
     public async Task<bool> UsernameExistsAsync(string Username)
     {
-        return await _context.Userslogins.AnyAsync(u => u.Username == Username);
+        return await _context.Userslogins.AnyAsync(u => u.Username == Username && u.User.Isdeleted == false);
     }
 
      public async Task<bool> UsernameExistsEditAsync(string Username,int userid)
     {
-        return await _context.Userslogins.AnyAsync(u => u.Username == Username && u.Userid!=userid);
+        return await _context.Userslogins.AnyAsync(u => u.Username == Username && u.Userid!=userid && u.User.Isdeleted == false);
     }
 
 

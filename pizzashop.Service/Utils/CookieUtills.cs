@@ -65,5 +65,7 @@ namespace pizzashop.Service.Utils
             httpContext.Response.Cookies.Delete("SuperSecretAuthToken");
             httpContext.Response.Cookies.Delete("UserData");
         }
+
+        
     }
 }

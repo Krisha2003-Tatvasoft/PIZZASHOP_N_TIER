@@ -4,11 +4,13 @@ using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Implementations;
 using pizzashop.Service.Interfaces;
+using pizzashop.web.Attributes;
 
 
 
 namespace pizzashop.Web.Controllers;
 
+[CustomAuthorize]
 public class OrdersController : Controller
 {
     private readonly IOrderService _orderService;
@@ -24,6 +26,7 @@ public class OrdersController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> Orders(int page = 1, int pageSize = 5, string search = "", string SortColumn = "",
      string SortOrder = "", string status = "", DateTime? fromDate = null, DateTime? toDate = null)
     {
@@ -46,6 +49,7 @@ public class OrdersController : Controller
     }
 
     [HttpGet]
+     [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> ExportOrders(string search = "", string status = "", DateTime? fromDate = null, DateTime? toDate = null)
     {
         // Fetch orders based on filters
@@ -64,6 +68,7 @@ public class OrdersController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> OrdersDetails(int id)
     {
         return PartialView("_OrderDetails", await _orderService.OrderDetails(id));
@@ -72,6 +77,7 @@ public class OrdersController : Controller
 
 
     [HttpGet]
+     [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> orderInvoice(int id)
     {
        var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID

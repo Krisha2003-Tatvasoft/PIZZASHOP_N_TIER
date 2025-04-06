@@ -24,7 +24,7 @@ public class TaxesRepository : ITaxesRepository
 
     public async Task<bool> TaxesNameExist(string taxname)
     {
-        return await _context.Taxes.AnyAsync(s =>  s.Taxname.ToLower() == taxname.ToLower());
+        return await _context.Taxes.AnyAsync(s =>  s.Taxname.ToLower() == taxname.ToLower() && s.Isdeleted == false);
     }
 
     public async Task AddNewTax(Taxis tax)
@@ -36,7 +36,7 @@ public class TaxesRepository : ITaxesRepository
     public async Task<bool> TaxNameExistInEdit(string taxname, int taxid)
     {
         return await _context.Taxes.AnyAsync(s => s.Taxname.ToLower() == taxname.ToLower()
-        && s.Taxid != taxid);
+        && s.Taxid != taxid && s.Isdeleted == false);
     }
 
     public async Task UpdateTax(Taxis tax)

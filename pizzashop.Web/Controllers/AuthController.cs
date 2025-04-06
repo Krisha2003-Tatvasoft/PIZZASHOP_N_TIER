@@ -50,6 +50,7 @@ public class AuthController : Controller
         }
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Login(VMLogin model)
     {
@@ -104,6 +105,7 @@ public class AuthController : Controller
     }
 
 
+     [CustomAuthorize]
     [HttpGet]
     public IActionResult Forget()
     {
@@ -116,6 +118,7 @@ public class AuthController : Controller
     }
 
 
+    [CustomAuthorize]
     [HttpPost]
     public async Task<IActionResult> Forget(Forget viewmodal)
     {
@@ -246,6 +249,7 @@ public class AuthController : Controller
         // Return the ResetPassword view
         return View();
     }
+
 
     [HttpPost]
     public async Task<IActionResult> ResetPassword(ResetPassword model)
