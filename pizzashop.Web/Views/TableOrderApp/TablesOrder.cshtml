@@ -1,0 +1,55 @@
+@{
+
+  Layout = "~/Views/Shared/_OrderAppLayout.cshtml";
+}
+
+
+<div class="px-3 px-sm-5 py-4 main-container">
+
+  <!-- Header with Legend -->
+  <div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
+    <h1 class="" style="color: #087cc4;">Table View</h1>
+
+    <div class="d-flex gap-3 justify-content-center flex-sm-nowrap flex-wrap">
+      <div class="d-flex flex-row  align-items-center">
+        <span class="dot me-2" style="background-color: #bbb;border-color: #bbb;"></span>
+        <span>Available</span>
+      </div>
+      <div class="d-flex flex-row align-items-center">
+        <span class="dot me-2" style="background-color: #ffffff;border:4px solid #78ff7f "></span>
+        <span>Selected</span>
+      </div>
+      <div class="d-flex flex-row align-items-center">
+        <span class="dot me-2" style="background-color: #48fc11;border-color: #78ff7f;"></span>
+        <span>Assign</span>
+      </div>
+      <div class="d-flex flex-row align-items-center">
+        <span class="dot me-2" style="background-color: #3ab0d4;border-color: #3ab0d4;"></span>
+        <span>Running</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="table-section-partial"></div>
+
+
+</div>
+
+<script>
+  $(document).ready(function () {
+
+    $.ajax({
+
+      url: "/TableOrderApp/TablesOrder",
+      type: "GET",
+      success: function (data) {
+        $('#table-section-partial').html(data);
+      },
+      error: function () {
+
+      }
+    });
+
+  });
+</script>

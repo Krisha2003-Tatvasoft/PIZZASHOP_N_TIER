@@ -24,4 +24,6 @@ public interface ISectionRepository
      Task<List<SelectListItem>> SectionDDAsync();
 
      Task<List<Section>> AllSectionsorder();
+
+     Task<List<Section>> GetSectionWithTables();
 }

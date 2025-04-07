@@ -31,18 +31,18 @@
     ? new PermissionRequest()
     : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
 
-    var userPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 7);
-    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 6);
+    var userPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 1);
+    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 2);
 
-    var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
+    var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
 
     var tablePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 4);
 
-    var taxPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
+    var taxPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 5);
 
-    var orderPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 2);
+    var orderPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 6);
 
-    var customerPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 1);
+    var customerPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 7);
 
 }
 
@@ -148,6 +148,12 @@
                 </div>
 
                 <div class="dropdown me-2 profile-dropdown">
+                    @if (user.Rolename == "Account Manager")
+                    {
+                        <a asp-controller="TableOrderApp" asp-action="TablesOrder" target="_blank">
+                            <i class="bi bi-phone text-white h3 align-middle"></i>
+                        </a>
+                    }
                     <img class="profile-img dropdown-toggle" data-bs-toggle="dropdown" id="dropdownMenuButton1"
                         src="@profileImageUrl" aria-expanded="false" style="border-radius:50%" />
 

@@ -18,7 +18,7 @@ public class TaxesAndFeesController : Controller
 
 
     [HttpGet]
-     [CustomAuthorize("TaxAndFee", "View")]
+     [CustomAuthorize("TaxAndFees", "View")]
     public async Task<IActionResult> TaxesAndFees(int page = 1, int pageSize = 5, string search = "")
     {
         var (taxList, totalTaxes) = await _taxesService.GetTaxTable(page, pageSize, search);
@@ -35,14 +35,14 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpGet]
-    [CustomAuthorize("TaxAndFee", "AddEdit")]
+    [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> AddTax()
     {
         return PartialView("_AddTax");
     }
 
     [HttpPost]
-     [CustomAuthorize("TaxAndFee", "AddEdit")]
+     [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> AddTaxPost(AddTax model)
     {
         if (ModelState.IsValid)
@@ -67,14 +67,14 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpGet]
-    [CustomAuthorize("TaxAndFee", "AddEdit")]
+    [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> EditTax(int id)
     {
         return PartialView("_EditTax", await _taxesService.EditTax(id));
     }
 
     [HttpPost]
-    [CustomAuthorize("TaxAndFee", "AddEdit")]
+    [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> EditTaxPost(AddTax model)
     {
         if (ModelState.IsValid)
@@ -100,7 +100,7 @@ public class TaxesAndFeesController : Controller
 
 
     [HttpPost]
-     [CustomAuthorize("TaxAndFee", "Delete")]
+     [CustomAuthorize("TaxAndFees", "Delete")]
     public async Task<IActionResult> DeleteTax(int id)
     {
         if (await _taxesService.DeleteTax(id))
@@ -114,7 +114,7 @@ public class TaxesAndFeesController : Controller
     }
 
     [HttpPost]
-    [CustomAuthorize("TaxAndFee", "AddEdit")]
+    [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> UpdateEnable(int id, bool enable)
     {
        CookieData user = SessionUtils.GetUser(HttpContext);

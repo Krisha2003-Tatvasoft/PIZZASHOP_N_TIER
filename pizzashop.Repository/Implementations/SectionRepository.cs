@@ -2,7 +2,9 @@ using System.Data.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
+using VMTableView =  pizzashop.Entity.ViewModels.OrderTableView;
 using pizzashop.Repository.Interfaces;
+
 
 namespace pizzashop.Repository.Implementations;
 
@@ -71,6 +73,13 @@ public class SectionRepository : ISectionRepository
       (c => new SelectListItem
       { Value = c.Sectionid.ToString(), Text = c.Sectionname })
       .ToListAsync();
+
+
+    public async Task<List<Section>> GetSectionWithTables()
+    {
+        return await _context.Sections.Where(s => s.Isdeleted == false).
+        Include(s => s.Tables.Where(t => t.Isdeleted == false)).ToListAsync();
+    }
 
 
 }

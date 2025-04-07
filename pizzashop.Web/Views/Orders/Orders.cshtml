@@ -347,7 +347,7 @@
                 url: "/Orders/OrdersDetails",
                 type: "GET",
                 data: { id: Orderid },
-                success: function (data) {
+                success: function (data)    {
                     $('#orderTablePartial').hide();
                     $('#orderDetailspartial').html(data).show();
                 },

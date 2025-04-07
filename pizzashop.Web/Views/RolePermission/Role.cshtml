@@ -10,7 +10,7 @@
     ? new PermissionRequest()
     : JsonConvert.DeserializeObject<PermissionRequest>(permissionCookie);
 
-    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 6);
+    var rolePermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 2);
 
 }
   

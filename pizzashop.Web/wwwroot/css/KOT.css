@@ -1,0 +1,45 @@
+.nav-link {
+    margin-right: 30px !important;
+    padding: 8px !important;
+}
+
+
+.nav-tabs .nav-link {
+    border: none !important;
+    color: gray !important;
+    font-weight: bold !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: #087cc4 !important;
+    border: none !important;
+    border-bottom: 3px solid #087cc4 !important;
+}
+
+.tab-content {
+    margin-top: 20px !important;
+    display: block;
+}
+
+.tab-svg {
+    width: 25px;
+    height: 25px;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.tab-name {
+    font-size: 18px;
+}
+
+
+.menu-category {
+    height: 46px;
+    background-color: white;
+}
+
+

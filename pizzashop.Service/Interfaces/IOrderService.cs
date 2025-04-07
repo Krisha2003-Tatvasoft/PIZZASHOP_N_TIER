@@ -1,5 +1,6 @@
 using pizzashop.Entity.ViewModels;
 
+
 namespace pizzashop.Service.Interfaces;
 
 public interface IOrderService
@@ -12,5 +13,7 @@ public interface IOrderService
         string status, DateTime? fromDate, DateTime? toDate);
 
     Task<OrderDetails> OrderDetails(int id);
+
+    
 
 }

@@ -1,5 +1,6 @@
 namespace pizzashop.Service.Interfaces;
 using VMSection = pizzashop.Entity.ViewModels.Section;
+using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 
 public interface ISectionService
 {
@@ -14,4 +15,6 @@ public interface ISectionService
      Task<bool> DeleteSection(int id);
 
      Task<bool> SaveOrderSection(List<int> orderIds);
+
+    Task<List<VMOrderTableView>> OrderTableViews();
 }

@@ -77,7 +77,7 @@ public class OrdersController : Controller
 
 
     [HttpGet]
-     [CustomAuthorize("Order", "View")]
+    [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> orderInvoice(int id)
     {
        var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID

@@ -2,6 +2,8 @@ using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
 using VMSection = pizzashop.Entity.ViewModels.Section;
+using VMTable = pizzashop.Entity.ViewModels.Table;
+using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 namespace pizzashop.Service.Implementations;
 
 public class SectionService : ISectionService
@@ -124,6 +126,26 @@ public class SectionService : ISectionService
       }
       return true;
    }
+
+
+   public async Task<List<VMOrderTableView>> OrderTableViews()
+   {
+      List<Section> sections = await _sectionRepository.GetSectionWithTables();
+      var orderTableViews = sections.Select(s => new VMOrderTableView
+      {
+         Sectionid = s.Sectionid,
+         Sectionname = s.Sectionname,
+         Tables = s.Tables.Select(t => new VMTable
+         {
+            Tableid = t.Tableid,
+            Tablename = t.Tablename,
+            Capacity = t.Capacity
+         }).ToList(),
+      }).ToList();
+
+      return orderTableViews;
+   }
+
 
 
 
