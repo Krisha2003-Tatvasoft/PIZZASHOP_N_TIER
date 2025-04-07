@@ -86,3 +86,35 @@
   box-shadow: 0 0 0 .25rem rgba(173, 206, 255, 0.25);
 }
   
+
+.class-available
+{
+  background-color: lightgrey;
+  border: 1px solid grey;
+}
+
+.class-assign
+{
+  background-color:#F0F7DA;
+  border:1px solid green ;
+}
+
+.class-running
+{
+  background-color: #F0F8FF;
+  border: 1px solid #4B9CD3;
+}
+
+.class-available{
+  cursor: pointer;
+}
+
+.selected-table {
+  border: 2px solid green;
+}
+
+/* @keyframes parrot-border {
+  0% { border-color: green; }
+  50% { border-color: limegreen; }
+  100% { border-color: green; }
+} */

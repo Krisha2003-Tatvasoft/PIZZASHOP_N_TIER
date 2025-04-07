@@ -77,8 +77,9 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<Section>> GetSectionWithTables()
     {
-        return await _context.Sections.Where(s => s.Isdeleted == false).
-        Include(s => s.Tables.Where(t => t.Isdeleted == false)).ToListAsync();
+        return await _context.Sections.Where(s => s.Isdeleted == false)
+        .Include(s => s.Tables.Where(t => t.Isdeleted == false)).ThenInclude(t => t.Ordertables).ThenInclude(s=> s.Order)
+        .ToListAsync();
     }
 
 

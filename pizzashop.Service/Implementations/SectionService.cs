@@ -127,24 +127,62 @@ public class SectionService : ISectionService
       return true;
    }
 
+      private static Dictionary<int, DateTime> _orderStartTimes = new();
 
-   public async Task<List<VMOrderTableView>> OrderTableViews()
-   {
-      List<Section> sections = await _sectionRepository.GetSectionWithTables();
-      var orderTableViews = sections.Select(s => new VMOrderTableView
-      {
-         Sectionid = s.Sectionid,
-         Sectionname = s.Sectionname,
-         Tables = s.Tables.Select(t => new VMTable
-         {
-            Tableid = t.Tableid,
-            Tablename = t.Tablename,
-            Capacity = t.Capacity
-         }).ToList(),
-      }).ToList();
+  public async Task<List<VMOrderTableView>> OrderTableViews()
+{
+    List<Section> sections = await _sectionRepository.GetSectionWithTables();
 
-      return orderTableViews;
-   }
+    var orderTableViews = sections.Select(s => new VMOrderTableView
+    {
+        Sectionid = s.Sectionid,
+        Sectionname = s.Sectionname,
+        Tables = s.Tables.Select(t =>
+        {
+            var orderTable = t.Ordertables?
+            .OrderByDescending(ot => ot.Order.Orderid) 
+            .FirstOrDefault();
+            var order = orderTable?.Order;
+            var status = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
+
+            string? runningSince = null;
+
+            if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served)
+            {
+                if (!_orderStartTimes.ContainsKey(t.Tableid))
+                {
+                    _orderStartTimes[t.Tableid] = DateTime.Now;
+                }
+
+                var duration = DateTime.Now - _orderStartTimes[t.Tableid];
+               runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
+                   $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
+                   $"{duration.Minutes} min {duration.Seconds} sec";
+            }
+            else
+            {
+                if (_orderStartTimes.ContainsKey(t.Tableid))
+                {
+                    _orderStartTimes.Remove(t.Tableid);
+                }
+            }
+
+            return new VMTable
+            {
+                Tableid = t.Tableid,
+                Tablename = t.Tablename,
+                Capacity = order?.Noofperson ?? t.Capacity,
+                tablestatus = t.tablestatus,
+                orderstatus = status,
+                Totalamount = order?.Totalamount ?? 0,
+                RunningSince = runningSince
+            };
+        }).ToList()
+    }).ToList();
+
+    return orderTableViews;
+}
+
 
 
 
