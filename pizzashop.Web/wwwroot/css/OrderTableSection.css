@@ -144,3 +144,24 @@
 .modal-content  {
   color:grey;
 } 
+
+/* .offcanvas-header 
+{
+  padding-top: 5px!important;
+  padding-bottom: 0px!;
+} */
+
+
+.table>:not(caption)>*>* {
+  padding: .5rem .5rem;
+  color: grey!important;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: var(--bs-border-width);
+  box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)))
+}
+
+.cancle {
+  background-color: white !important;
+  color: #087cc4 !important;
+  border-color: #087cc4 !important;
+}
