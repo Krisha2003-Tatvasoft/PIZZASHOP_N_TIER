@@ -137,7 +137,7 @@ public class SectionService : ISectionService
     {
         Sectionid = s.Sectionid,
         Sectionname = s.Sectionname,
-        Tables = s.Tables.Select(t =>
+        Tables = s.Tables.Select(static t =>
         {
             var orderTable = t.Ordertables?
             .OrderByDescending(ot => ot.Order.Orderid) 
@@ -151,10 +151,10 @@ public class SectionService : ISectionService
             {
                 if (!_orderStartTimes.ContainsKey(t.Tableid))
                 {
-                    _orderStartTimes[t.Tableid] = DateTime.Now;
+                  _orderStartTimes[t.Tableid] = order?.Orderdate ?? DateTime.Now;
                 }
 
-                var duration = DateTime.Now - _orderStartTimes[t.Tableid];
+               var duration = DateTime.Now - _orderStartTimes[t.Tableid];
                runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
                    $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
                    $"{duration.Minutes} min {duration.Seconds} sec";

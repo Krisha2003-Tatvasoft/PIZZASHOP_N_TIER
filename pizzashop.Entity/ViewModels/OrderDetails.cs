@@ -32,7 +32,7 @@ public class OrderDetails
 
     public decimal? Subamount { get; set; }
 
-      public paymentmode paymentmode { get; set; }
+    public paymentmode paymentmode { get; set; }
 
 
 

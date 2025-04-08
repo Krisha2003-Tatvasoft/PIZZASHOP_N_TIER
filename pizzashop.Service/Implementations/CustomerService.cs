@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
@@ -107,5 +108,11 @@ public class CustomerService : ICustomerService
 
         return customerHistory;
     }
+
+    public async Task<Customer?> GetCustomerByEmail (string email)
+    {
+        return await _customerRepository.GetCustomerByEmail(email);
+    }
+ 
 
 }

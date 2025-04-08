@@ -122,7 +122,7 @@ public class AuthController : Controller
     }
 
 
-    [CustomAuthorize]
+ 
     [HttpGet]
     public IActionResult Forget()
     {
@@ -135,7 +135,7 @@ public class AuthController : Controller
     }
 
 
-    [CustomAuthorize]
+   
     [HttpPost]
     public async Task<IActionResult> Forget(Forget viewmodal)
     {

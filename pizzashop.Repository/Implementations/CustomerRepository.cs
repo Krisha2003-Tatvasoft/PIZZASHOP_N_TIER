@@ -51,7 +51,7 @@ public class CustomerRepository : ICustomerRepository
 
         string lowerSearch = search.ToLower();
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
-       
+
         var custList = _context.Customers
         .Include(o => o.Orders)
        .Where(o =>
@@ -78,6 +78,26 @@ public class CustomerRepository : ICustomerRepository
            .Include(o => o.Orders).ThenInclude(o => o.Ordereditems)
             .FirstOrDefaultAsync(o => o.Customerid == id);
     }
+
+    public async Task<Customer> GetCustomerByEmail(string email)
+    {
+        return await _context.Customers.FirstOrDefaultAsync(o => o.Email == email);
+    }
+
+
+    public async Task AddNewCustomer(Customer customer)
+    {
+        _context.Customers.Add(customer);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateCustomer(Customer customer)
+    {
+        _context.Customers.Update(customer);
+        await _context.SaveChangesAsync();
+    }
+
+
 
 
 }

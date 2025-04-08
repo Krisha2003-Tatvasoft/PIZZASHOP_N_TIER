@@ -1,3 +1,4 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @using pizzashop.Entity.Models
 @model List<pizzashop.Entity.ViewModels.OrderTableView>;
 
@@ -6,14 +7,14 @@
   int AvailableCount = 0;
   int AssignedCount =0;
   int RunningCount = 0;
-
+  int index =0;
 }  
 
 @foreach (var tableSection in Model)
 {
-   AvailableCount = 0;
-   AssignedCount =0;
-   RunningCount = 0;
+    AvailableCount = 0;
+     AssignedCount =0;
+     RunningCount = 0;
      @foreach(var tables in tableSection.Tables)
      {
          if(tables.tablestatus == Enums.tablestatus.Available)
@@ -30,15 +31,15 @@
          }
      }
 
-
-
     <!-- Floor: Ground -->
     <div class="accordion-item mb-3">
       <div class="d-block d-md-flex align-items-center justify-content-between gap-1 px-1 py-1">
         <div class="d-flex flex-row align-items-center">
           <h4 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#@tableSection.Sectionid"
-              aria-expanded="true" aria-controls="collapseGround">
+            <button class="accordion-button @(index == 0 ? "" : "collapsed")" type="button" 
+            data-bs-toggle="collapse" 
+             data-bs-target="#collapse-@tableSection.Sectionid"
+              aria-expanded= "@(index == 0 ? "true": "false")"  aria-controls ="#collapse-@tableSection.Sectionid">
             </button>
           </h4>
           <h3 style="color: #087cc4;">@tableSection.Sectionname</h3>
@@ -57,21 +58,23 @@
             <span class="dot me-2" style="background-color: #3ab0d4;border-color: #3ab0d4;"></span>
             <span>@RunningCount</span>
           </div>
-          <button class="btn d-flex align-items-center" style="color: #087cc4; backgroung-color: #ffffff; border: 1px solid #087cc4;">
-          <i class="bi bi-plus fs-5 me-1"></i><span class="">Waiting Token</span>
+          <button class="btn d-flex align-items-center waiting-token-btn" style="color: #087cc4; 
+          backgroung-color: #ffffff; border: 1px solid #087cc4;" data-section-id="@tableSection.Sectionid">
+          <i class="bi bi-plus fs-5 me-1"></i><span>Waiting Token</span>
           </button>
         </div>
       </div>
 
-      <div id="@tableSection.Sectionid" class="accordion-collapse collapse show" aria-labelledby="headingGround"
-        data-bs-parent="#floorAccordion">
+      <div id="collapse-@tableSection.Sectionid" class="accordion-collapse collapse @(index == 0 ? "show" : "")" 
+        data-bs-parent="#accordionPanelsStayOpenExample">
         <div class="accordion-body">
           <div class="d-flex flex-wrap w-100 gap-3">
             @foreach(var tables in tableSection.Tables)
             {
-            <div class="card p-3 d-flex justify-content-center  @(tables.tablestatus == Enums.tablestatus.Available ? "class-available" :"") 
+            <div class="card p-3 d-flex justify-content-center 
+            @(tables.tablestatus == Enums.tablestatus.Available ? "class-available" :"") 
             @(tables.orderstatus == Enums.orderstatus.Pending &&  tables.tablestatus != Enums.tablestatus.Available ? "class-assign" :"")
-            @(tables.orderstatus == Enums.orderstatus.InProgress || tables.orderstatus == Enums.orderstatus.Served ? "class-running" :"") " 
+            @(tables.orderstatus == Enums.orderstatus.InProgress || tables.orderstatus == Enums.orderstatus.Served ? "class-running" :"") " data-table-id = @tables.Tableid
              
             style="height:150px;width:290px; cursor: pointer;"
              onclick="toggleTableSelection(this)">
@@ -106,23 +109,161 @@
 
           <!-- Status and Buttons -->
           <div class="d-flex justify-content-end align-items-center mt-1">
-            <button class="btn btn-primary btn-sm me-2">Assign</button>
+            <button class="btn btn-primary btn-sm me-2 assign-btn" disabled  
+            data-section-id="@tableSection.Sectionid" >Assign</button>
           </div>
 
         </div>
       </div>
     </div>
-
+    index ++;
 }
 
+<div id="Waiting-token-modal"></div>
 
   </div>
 
-  <script>
+
+  
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script>
+
+$(document).ready(function () {
   function toggleTableSelection(elem) {
-    // Only allow toggle if it's marked as available
-    if (elem.classList.contains('class-available')) {
-      elem.classList.toggle('selected-table');
+   var $elem = $(elem);
+   if ($elem.hasClass('class-available')) {
+  var $currentSectionBody = $elem.closest('.accordion-body');
+
+   // Deselect tables in all other sections
+  $('.accordion-body').each(function () {
+   if (!$(this).is($currentSectionBody)) {
+   $(this).find('.selected-table').removeClass('selected-table');
+
+   // Disable assign button in other sections
+   var $otherAssignBtn = $(this).find('.assign-btn');
+   if ($otherAssignBtn.length) {
+  $otherAssignBtn.prop('disabled', true);
     }
+   }
+});
+
+// Toggle current clicked table
+$elem.toggleClass('selected-table');
+
+// Enable/disable assign button
+var $assignBtn = $currentSectionBody.find('.assign-btn');
+var selectedCount = $currentSectionBody.find('.selected-table').length;
+$assignBtn.prop('disabled', selectedCount === 0);
+     }
   }
+
+// Assign button click handler
+$('.assign-btn').on('click', function () {
+var sectionId = $(this).data('section-id');
+var selectedTables = $(this).closest('.accordion-body').find('.selected-table');
+var tableIds = [];
+
+selectedTables.each(function () {
+var tableId = $(this).data('table-id');
+if (tableId) {
+tableIds.push(tableId);
+}
+});
+
+if (tableIds.length > 0) {
+console.log("Section ID:", sectionId);
+console.log("Selected Table IDs:", tableIds);
+}
+});
+
+         // Attach toggleTableSelection function globally
+     window.toggleTableSelection = toggleTableSelection;
+
+        $(document).on("click", ".waiting-token-btn", function (e) {
+          e.preventDefault();
+            var sectionId = $(this).data("section-id");
+  
+
+                $.ajax({
+                    url: "/TableOrderApp/AddWaitingToken",
+                    type: "GET",
+                    data: {
+                        id: sectionId,
+                    },
+                    success: function (data) {
+                        $('#Waiting-token-modal').html(data);
+                         $("#addNewWaitingToken").modal("show");
+                    },
+                    error: function () {
+                    }
+                }); 
+           
+        });
+
+
+   $(document).on("blur", "#Email", function (e)  {
+         var email = $(this).val();
+ 
+        if (email) {
+           $.ajax({
+            url: '/TableOrderApp/GetCustomerByEmail',
+            type: 'GET',
+            data: { email: email },
+            success: function (data) {
+                if (data.success == true) {
+                    $('#Name').val(data.customerName);
+                    $('#Mobile_Number').val(data.phoneNo);
+                }
+                else{
+                    $('#Name').val('');
+                    $('#Mobile_Number').val('');
+                }
+            },
+            error: function () {
+                console.error('Failed to fetch customer');
+            }
+        });
+        }
+   });
+
+
+
+        $(document).on("click", "#add-WT-Yes", function (e) {
+                e.preventDefault();
+
+                // Trigger the client-side validation first
+               if ($("#add-WT").valid()) { 
+                    var formData = new FormData($("#add-WT")[0]);
+
+                    $.ajax({
+                        url: "/TableOrderApp/AddWTPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                // Reset the form and close the modal if successful
+                                $("#add-WT")[0].reset();
+                                $("#addNewWaitingToken").modal("hide");
+                                toastr.success("Waiting Token Created Successfully.");
+                            } 
+                        },
+                        error: function (error) {
+                            console.error("Error in Create Token.", error);
+                            toastr.error("Internal server error");
+                        }
+                    });
+                } 
+
+            });
+
+
+});
+
+
 </script>
