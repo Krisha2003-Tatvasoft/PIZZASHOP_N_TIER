@@ -1,0 +1,32 @@
+@model List<pizzashop.Entity.ViewModels.WaitingListTable>
+
+<div class="table-responsive">
+<table class="table table-responsive">
+     <thead>
+    <tr>
+      <th scope="col"></th>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">No. of Persons</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach(var wt in Model)
+    {
+    <tr>
+      <td scope="row"><div class="form-check">
+      <input class="form-check-input waiting-list-radio" type="radio" name="flexRadioDefault" id="wT-btn" value="@wt.Waitingtokenid">
+  </div>
+  </td>
+      <td>@wt.Waitingtokenid</td>
+      <td>@wt.Customername</td>
+      <td>@wt.Noofperson</td>
+    </tr>
+    }
+  </tbody>
+</table>
+@if (Model.Count() == 0)
+{
+    <h6 class="d-flex align-items-center justify-content-center mb-2" style="color:lightgrey;">No Waiting Token For this Section.</h6>
+}
+</div>

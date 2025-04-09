@@ -10,4 +10,6 @@ public interface IOrderRepository
     Task<IQueryable<Order>> OrderExcelTable(string search, string status, DateTime? fromDate, DateTime? toDate);
 
     Task<Order> OrderDetailsByIdAsync(int id);
+
+    Task AddNewOrder(Order order);
 }

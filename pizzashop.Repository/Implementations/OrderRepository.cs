@@ -42,7 +42,7 @@ public class OrderRepository : IOrderRepository
 
     public async Task<IQueryable<Order>> OrderExcelTable(string search, string status, DateTime? fromDate, DateTime? toDate)
     {
-           toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
         string lowerSearch = search.ToLower();
         var orderList = _context.Orders
         .Include(o => o.Customer)
@@ -54,7 +54,7 @@ public class OrderRepository : IOrderRepository
                             u.Orderid.ToString().ToLower().Contains(lowerSearch) ||
                             u.Orderdate.ToString().ToLower().Contains(lowerSearch) ||
                             u.Totalamount.ToString().ToLower().Contains(lowerSearch));
-                            
+
 
         return orderList;
 
@@ -67,11 +67,18 @@ public class OrderRepository : IOrderRepository
         .Include(o => o.Invoices)
         .Include(o => o.Ordertables)
           .ThenInclude(t => t.Table)
-          .ThenInclude(s=> s.Section)
-        .Include(o => o.Ordereditems).ThenInclude(i =>i.Item)   
+          .ThenInclude(s => s.Section)
+        .Include(o => o.Ordereditems).ThenInclude(i => i.Item)
         .Include(o => o.Ordereditems).ThenInclude(i => i.Ordereditemmodifers).ThenInclude(m => m.Modifiers)
-        .Include(o =>o.Ordertaxmappings).ThenInclude(t => t.Tax)
+        .Include(o => o.Ordertaxmappings).ThenInclude(t => t.Tax)
         .FirstOrDefaultAsync(o => o.Orderid == id);
+    }
+
+
+    public async Task AddNewOrder(Order order)
+    {
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync();
     }
 
 

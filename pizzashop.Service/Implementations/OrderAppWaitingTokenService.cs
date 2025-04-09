@@ -77,4 +77,39 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         }
         return true;
     }
+
+    public async Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId)
+    {
+        var waiting  = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
+
+        var waitingList = waiting
+        .Select(w => new WaitingListTable
+        {
+            Waitingtokenid = w.Waitingtokenid,
+            Customername = w.Customer.Customername,
+            Noofperson = (short)w.Noofpeople
+        }
+        ).ToList();
+
+        return waitingList;
+    }
+
+    public async Task<AssignTable> DetailsFromWT(int id)
+    {
+         var wt  = await _waitingTokenRepository.WTByIdAsync(id);
+         var AssignTable = new AssignTable
+         {
+           Customername = wt.Customer.Customername,
+           Email = wt.Customer.Email,
+           Phoneno = wt.Customer.Phoneno,
+           Noofperson = (short)wt.Noofpeople,
+           Sectionid = wt.Sectionid,
+           Waitingtokenid = wt.Waitingtokenid,
+         };
+         return AssignTable;
+
+    }
+
+
+
 }

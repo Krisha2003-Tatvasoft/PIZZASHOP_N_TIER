@@ -12,16 +12,19 @@ public class TableOrderAppController : Controller
 
     private readonly ISectionService _SectionService;
 
-    private readonly ICustomerRepository _customerRepository;
+    private readonly ICustomerService _cutomerService;
 
     private readonly IOrderAppWaitingTokenService _orderAppWaitingTokenService;
 
+    private readonly IOrderAppTableService _orderAppTableService;
+
     public TableOrderAppController(ISectionService sectionService, IOrderAppWaitingTokenService orderAppWaitingTokenService
-    , ICustomerRepository customerRepository)
+    , ICustomerService customerService, IOrderAppTableService orderAppTableService)
     {
         _SectionService = sectionService;
         _orderAppWaitingTokenService = orderAppWaitingTokenService;
-        _customerRepository = customerRepository;
+        _cutomerService = customerService;
+        _orderAppTableService = orderAppTableService;
     }
 
 
@@ -43,7 +46,7 @@ public class TableOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetCustomerByEmail(string email)
     {
-        var customers = await _customerRepository.GetCustomerByEmail(email);
+        var customers = await _cutomerService.GetCustomerByEmail(email);
 
         if (customers == null)
         {
@@ -57,7 +60,7 @@ public class TableOrderAppController : Controller
             phoneNo = customers.Phoneno
         });
 
-       
+
     }
 
 
@@ -84,6 +87,61 @@ public class TableOrderAppController : Controller
         }
 
     }
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetWaitingListParial(int id)
+    {
+        return PartialView("_WaitingList", await _orderAppWaitingTokenService.WaitingListBySectionId(id));
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> AssignTable(int id)
+    {
+        return PartialView("_AssignTable", await _orderAppTableService.AssignTable(id));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetCustomerByWaitingToken(int Id)
+    {
+
+        var wt = await _orderAppWaitingTokenService.DetailsFromWT(Id);
+
+        if (wt == null)
+        {
+            return Json(new { success = false });
+        }
+
+        return Json(new
+        {
+            success = true,
+            customerName = wt.Customername,
+            email = wt.Email,
+            phoneNo = wt.Phoneno,
+            noofperson = wt.Noofperson,
+            waitingtokenid = wt.Waitingtokenid,
+        });
+
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> assignTablePost(AssignTable model)
+    {
+        CookieData user = SessionUtils.GetUser(HttpContext);
+        if (await _orderAppTableService.AssignTablePost(user.Userid , model))
+        {
+            return Json(new { success = true, message = "Waiting Token Added Successfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "Waiting Token  not Added." });
+        }
+
+
+    }
+
 
 
 }
