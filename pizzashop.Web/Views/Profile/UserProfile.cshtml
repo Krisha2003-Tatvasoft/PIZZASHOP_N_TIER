@@ -1,6 +1,12 @@
 @{
     ViewData["Title"] = "User Profile page";
 }
+@{
+   Layout = (ViewBag.UseOrderLayout == true) ? "_OrderAppLayout" : "_Layout";
+   var backAction = ViewBag.UseOrderLayout == true ? "TablesOrder" : "Index";
+   var backController = ViewBag.UseOrderLayout == true ? "TableOrderApp" : "Home";
+   var fromval = @ViewBag.UseOrderLayout == true ? "Order" : "";
+}
 @model pizzashop.Entity.ViewModels.UserProfile;
 
 
@@ -51,13 +57,13 @@
 
     <form class="form w-100" asp-controller="Profile" asp-action="UserProfile" method="post"
         enctype="multipart/form-data">
+        <input type="hidden" name="from" value="@fromval">
         <input type="hidden" asp-for="Email">
         <input type="hidden" asp-for="Userid">
         <input type="hidden" asp-for="Rolename">
         <!-- first row -->
         <div>
             <div class="container-fluid">
-
                 <input type="hidden" asp-for="Profileimg" asp-validation-for="Profileimg">
                 <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
                     aria-describedby="fileNameDisplay" asp-for="ProfilePicture"  onchange="validateFile(this)";>
@@ -170,7 +176,7 @@
             <button class="create-button" type="submit">
                 Update
             </button>
-            <a class="" asp-controller="Home" asp-action="Index">
+             <a class="" asp-controller=@backController asp-action=@backAction>
                 <button class="cancel-button" type="button">
                     Cancel
                 </button>

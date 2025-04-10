@@ -52,8 +52,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/Home/KOT/KOT.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxLT1RcS09ULmNzaHRtbA==
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/KOT/KOT.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS09UXEtPVC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.web/Views/MenuOrderApp/MenuOrders.cshtml]
@@ -242,6 +242,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/PIZZASHOP_N_TIER/pizzashop.web/Views/WaitingList/WaitingList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FpdGluZ0xpc3RcV2FpdGluZ0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/WaitingList/_WaitingSectionList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FpdGluZ0xpc3RcX1dhaXRpbmdTZWN0aW9uTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP_N_TIER/pizzashop.web/Views/WaitingList/_WaitingTableList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2FpdGluZ0xpc3RcX1dhaXRpbmdUYWJsZUxpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP_N_TIER/pizzashop.web/Views/_ViewImports.cshtml]

@@ -74,12 +74,21 @@ public class ProfileController : Controller
 
     [HttpGet]
     [CustomAuthorize]
-    public async Task<IActionResult> UserProfile()
+    public async Task<IActionResult> UserProfile(string from)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
         if (user != null)
         {
-            return View(await _ProfileService.UserProfile(user.Email));
+            if(from == "Order")
+            {
+                ViewBag.UseOrderLayout = true;
+            }
+            else
+            {
+                ViewBag.UseOrderLayout = false;
+            }
+            
+            return  View(await _ProfileService.UserProfile(user.Email));
         }
         else
         {
@@ -90,8 +99,18 @@ public class ProfileController : Controller
 
     [HttpPost]
     [CustomAuthorize]
-    public async Task<IActionResult> UserProfile(UserProfile viewmodel)
+    public async Task<IActionResult> UserProfile(UserProfile viewmodel, [FromForm(Name = "from")] string? from)
     {
+        if (from == "Order")
+        {
+            ViewBag.UseOrderLayout = true;
+             ViewBag.From = from;
+        }
+        else
+        {
+            ViewBag.UseOrderLayout = false;
+            ViewBag.From = "master";
+        }
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
@@ -106,7 +125,7 @@ public class ProfileController : Controller
                 return View(viewmodel);
             }
             TempData["SuccessMessage"] = "Profile Updated Sucessfully";
-            return RedirectToAction("UserProfile", "Profile");
+            return RedirectToAction("UserProfile", "Profile", new { from = from });
         }
         else
         {

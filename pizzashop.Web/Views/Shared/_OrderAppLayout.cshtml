@@ -19,6 +19,15 @@
 
 @await Html.PartialAsync("_Toast")
 
+@{
+
+   CookieData user = SessionUtils.GetUser(HttpContextAccessor.HttpContext);
+    var Username = user?.Username;
+    var Profileimg = user?.Image;
+    var defaultImg = Url.Content("../images/Default_pfp.svg.png");
+    var profileImageUrl = !string.IsNullOrEmpty(Profileimg) ? Url.Content("~/uploads/" + Profileimg) : defaultImg;
+}
+
 
 <body>
     <div class="">
@@ -46,16 +55,54 @@
                     <span class="badge badge-pill "><img src="~/images/Menu-active.png" width="20px" height="100%"
                             class="me-1"><span class="d-none d-md-inline">Menu</span></span>
                 </a>
-                <img src="~/images/Default_pfp.svg.png" alt="profile" width="40px" height="40px">
+                <img class="profile-img dropdown-toggle" data-bs-toggle="dropdown" id="dropdownMenuButton1"
+                        src="@profileImageUrl" aria-expanded="false" style="border-radius:50%"/>
+
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item border-bottom"> <img src="@profileImageUrl" class="me-2"
+                                    width="40px" height="40px" style="border-radius:50%">@Username</a></li>
+                        <li><a class="dropdown-item" asp-controller="Profile" asp-action="UserProfile" asp-route-from="Order" > <i
+                                    class="bi bi-person-circle me-3"></i>My profile</a></li>
+                        <li><a class="dropdown-item" asp-controller="Profile" asp-action="ChagePassword"><i
+                                    class="bi bi-arrow-clockwise me-3"></i>Change
+                                Password</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal"><i
+                                    class="bi bi-box-arrow-right me-3"></i>Logout</a></li>
+                    </ul>
             </div>
 
         </nav>
         <div>
+            <div class="px-3 px-sm-5 py-4 main-container">
             @RenderBody()
+            </div>
         </div>
 
+    </div>
 
-
+    
+    <!-- modal -->
+    <div class="modal fade modal-delete" id="logoutModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                    <img src="../images/warning-icon.svg" alt="" width="40px" height="40px"><br>
+                    <span>Are you sure you want to Logout?</span>
+                </div>
+                <div class="modal-footer d-flex justify-content-center gap-2">
+                    <form method="post">
+                        <button type="submit" asp-controller="Auth" asp-action="Logout" class="btn btn-primary"
+                            data-bs-dismiss="modal">YES</button>
+                        <button type="button" class="btn btn-danger">NO</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
 

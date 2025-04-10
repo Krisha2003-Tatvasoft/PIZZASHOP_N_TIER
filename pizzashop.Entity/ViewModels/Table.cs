@@ -22,5 +22,7 @@ public class Table
 
    public string? RunningSince { get; set; }
 
+   public int? Orderid {get; set;}
+
 
 }

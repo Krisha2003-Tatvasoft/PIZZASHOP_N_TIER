@@ -77,6 +77,7 @@
             @(tables.orderstatus == Enums.orderstatus.Pending &&  tables.tablestatus != Enums.tablestatus.Available ? "class-assign" :"")
             @(tables.orderstatus == Enums.orderstatus.InProgress || tables.orderstatus == Enums.orderstatus.Served ? "class-running" :"")" 
             data-table-id = @tables.Tableid
+            data-orderid="@tables.Orderid"
             style="height:150px;width:290px; cursor: pointer;"
              onclick="toggleTableSelection(this)">
               <div class="d-flex justify-content-between align-items-center pb-3">
@@ -118,7 +119,7 @@
         </div>
       </div>
     </div>
-    index ++;
+    index++;
 }
 
 <div id="Waiting-token-modal"></div>
@@ -177,6 +178,10 @@ $(document).ready(function () {
 var $assignBtn = $currentSectionBody.find('.assign-btn');
 var selectedCount = $currentSectionBody.find('.selected-table').length;
 $assignBtn.prop('disabled', selectedCount === 0);
+     }
+     else
+     {
+        redirectToMenuOrders($elem.data('orderid'));
      }
   }
 
@@ -251,7 +256,7 @@ $assignBtn.prop('disabled', selectedCount === 0);
         });
 
 
-   $(document).on("blur", "#Email", function (e)  {
+   $(document).on("blur", ".Email", function (e)  {
          var email = $(this).val();
  
         if (email) {
@@ -261,12 +266,12 @@ $assignBtn.prop('disabled', selectedCount === 0);
             data: { email: email },
             success: function (data) {
                 if (data.success == true) {
-                    $('#Name').val(data.customerName);
-                    $('#Mobile_Number').val(data.phoneNo);
+                    $('.Name').val(data.customerName);
+                    $('.Mobile_Number').val(data.phoneNo);
                 }
                 else{
-                    $('#Name').val('');
-                    $('#Mobile_Number').val('');
+                    $('.Name').val('');
+                    $('.Mobile_Number').val('');
                 }
             },
             error: function () {
@@ -321,20 +326,20 @@ $assignBtn.prop('disabled', selectedCount === 0);
             data: { Id: wT },
             success: function (data) {
                 if (data.success == true) {
-                    $('#Name').val(data.customerName);
-                     $('#Mobile_Number').val(data.phoneNo);
-                      $('#Email').val(data.email);
-                         $('#noOfPersons').val(data.noofperson);
-                           $('#waitingListId').val(data.waitingtokenid);
+                    $('.Name').val(data.customerName);
+                     $('.Mobile_Number').val(data.phoneNo);
+                      $('.Email').val(data.email);
+                         $('.noOfPersons').val(data.noofperson);
+                           $('.waitingListId').val(data.waitingtokenid);
                           
                 }
                 else{
 
-                     $('#Name').val('');
-                     $('#Mobile_Number').val('');
-                     $('#Email').val('');
-                     $('#noOfPersons').val('');
-                     $('#waitingListId').val('');
+                     $('.Name').val('');
+                     $('.Mobile_Number').val('');
+                     $('.Email').val('');
+                     $('.noOfPersons').val('');
+                     $('.waitingListId').val('');
                 }
             },
             error: function () {
@@ -345,8 +350,17 @@ $assignBtn.prop('disabled', selectedCount === 0);
    });
 
 
+   function redirectToMenuOrders(orderId) {
+        window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
+}
+
+window.redirectToMenuOrders = redirectToMenuOrders;
+
+
+
        $(document).on("click", ".Assign-customer-yes", function (e)  {
            e.preventDefault();
+            if ($("#assign-table-form").valid()) { 
             var formData = new FormData($("#assign-table-form")[0]);
            formData.append("TableIds", JSON.stringify(tableIds));
 
@@ -359,23 +373,34 @@ $assignBtn.prop('disabled', selectedCount === 0);
                                 dataType: 'json',
                                 success: function (response) {
                                     if (response.success) {
-                                        $("#assign-table-form")[0].reset();
-                                        toastr.success("Modifier Added Succesfully.");
-                                    }
-                                    else {
-                                        toastr.error("This Modifier is already exist.");
-                                    }
+                                     var $offcanvasEl = $('#AssignTable');
+                                      var offcanvasInstance = bootstrap.Offcanvas.getInstance($offcanvasEl[0]);
+                                      if (offcanvasInstance) {
+                                         offcanvasInstance.hide();
+                                          }
+                                          redirectToMenuOrders(response.orderid);
+                                        }
+                                       else {
+                                        toastr.error("error in assign table");
+                                      }
 
                                 },
                                 error: function (error) {
-                                    console.error("Error in Add Modifier:", error);
+                                    console.error("Error in assign table:", error);
                                 }
                             });
-
+                     }
     
-   });
+                });
             
-            
+            $('#AssignTable').on('hidden.bs.offcanvas', function () {
+            $('.form-control').val('');
+            tableIds = [];
+            $('.assign-btn').prop('disabled', true);
+            $('.card')
+                .removeClass('selected-table')
+                .addClass('class-available');
+            });
 
 
 });

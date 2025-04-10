@@ -11,4 +11,6 @@ public interface IWaitingTokenRepository
       Task<Waitingtoken> WTByIdAsync(int? id);
 
        Task UpdateWaitingToken(Waitingtoken waitingToken);
+
+        Task<List<Waitingtoken>> GetWaitingList();
 }

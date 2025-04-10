@@ -1,0 +1,22 @@
+@model List<pizzashop.Entity.ViewModels.Section>
+
+<button class="nav-link " id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#waiting-tab" type="button"
+    role="tab" aria-controls="tab1" aria-selected="true" style="flex:  0 0 auto;">
+    <div class="tab">
+        <span class="tab-name">
+           All</span>
+    </div>
+</button>
+
+@foreach (var sec in Model)
+{
+
+    <button class="nav-link " id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#waiting-tab" type="button"
+        role="tab" aria-controls="tab1" aria-selected="true" style="flex:  0 0 auto;">
+        <div class="tab">
+            <span class="tab-name">
+                @sec.Sectionname</span>
+        </div>
+    </button>
+
+}

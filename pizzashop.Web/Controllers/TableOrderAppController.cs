@@ -129,19 +129,25 @@ public class TableOrderAppController : Controller
     [HttpPost]
     public async Task<IActionResult> assignTablePost(AssignTable model)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        if (await _orderAppTableService.AssignTablePost(user.Userid , model))
+        if (ModelState.IsValid)
         {
-            return Json(new { success = true, message = "Waiting Token Added Successfully." });
+            CookieData user = SessionUtils.GetUser(HttpContext);
+            int? Orderid = await _orderAppTableService.AssignTablePost(user.Userid, model);
+
+            return Json(new
+            {
+                success = true,
+                orderid = Orderid,
+            });
         }
         else
         {
-            return Json(new { success = false, message = "Waiting Token  not Added." });
+            
+            // If model is invalid, return the same view with validation messages
+            return Json(new { message = "Validation Error." });
+            // return PartialView("_AddTable", model);
         }
 
-
     }
-
-
 
 }

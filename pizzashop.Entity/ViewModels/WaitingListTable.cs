@@ -8,4 +8,14 @@ public class WaitingListTable
 
     public int Waitingtokenid { get; set; }
 
+    public DateTime? Createdat { get; set; }
+
+    public DateTime? WaitingTime { get; set; }
+
+    public string Phoneno { get; set; } = null!;
+
+    public string? Email { get; set; }
+
+
+
 }

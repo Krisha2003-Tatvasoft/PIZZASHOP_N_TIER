@@ -3,4 +3,68 @@
     Layout = "~/Views/Shared/_OrderAppLayout.cshtml";
 }
 
-<h1> Waiting List</h1>
+<link rel="stylesheet" href="~/css/WaitingList.css" />
+
+<div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
+    <h1 class="" style="color: #087cc4;">Waiting Token</h1>
+
+    <button class="btn d-flex align-items-center waiting-token-btn" style="color: #087cc4; 
+          background-color: #ffffff; border: 1px solid #087cc4;">
+        <i class="bi bi-plus fs-6 me-1"></i><span>Waiting Token</span>
+    </button>
+</div>
+
+<div class="menu-category">
+    <nav>
+        <div class="nav nav-tabs px-4 waiting-section-partial flex-nowrap overflow-x-auto" id="nav-tab" role="tablist">
+        </div>
+    </nav>
+
+    <div class="tab-content w-100 waiting-table-partial" id="nav-tabContent">
+
+
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        function loadsectionList() {
+            $.ajax({
+
+                url: "/WaitingList/WaitingSectionList",
+                type: "GET",
+                success: function (data) {
+                    $('.waiting-section-partial').html(data);
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        loadsectionList();
+
+        function loadTableList(sectionid) {
+             console.log("hiiiiii");
+            $.ajax({
+                
+                url: "/WaitingList/WaitingTableList",
+                type: "GET",
+                data: { sectionid: sectionid }
+                success: function (data) {
+                    $('.waiting-table-partial').html(data);
+                },
+                error: function () {
+                }
+            });
+        }
+
+        loadTableList(0);
+
+
+    });
+</script>

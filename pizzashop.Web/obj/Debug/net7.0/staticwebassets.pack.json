@@ -61,6 +61,10 @@
       "PackagePath": "staticwebassets\\css\\Users.css"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\css\\WaitingList.css",
+      "PackagePath": "staticwebassets\\css\\WaitingList.css"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\css\\forgotPassword.css",
       "PackagePath": "staticwebassets\\css\\forgotPassword.css"
     },

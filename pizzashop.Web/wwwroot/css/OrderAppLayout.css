@@ -1,3 +1,10 @@
+.main-container
+{
+    background-color: #e5e7eb;
+    min-height: 100vh;
+    margin-top: 50px;
+}
+
 
 .orderapp-navbar
 {
@@ -22,3 +29,25 @@
     background-color:#4B9CD3!important;
 }
 
+.orderapp-navbar .profile-img {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+}
+
+
+.orderapp-navbar .profile-dropdown .dropdown-menu {
+    .dropdown-item {
+
+        &:hover,
+        &:focus {
+            background-color: #f0f0f0; 
+        }
+
+        &:active,
+        &.active {
+            background-color: #e0e0e0 !important; 
+            color: #000 !important; 
+        }
+    }
+}

@@ -6,7 +6,7 @@ namespace pizzashop.Repository.Implementations;
 
 public class WaitingTokenRepository : IWaitingTokenRepository
 {
-    
+
     private readonly PizzashopContext _context;
 
     public WaitingTokenRepository(PizzashopContext context)
@@ -14,22 +14,32 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         _context = context;
     }
 
-   public async Task AddNewWaitingToken(Waitingtoken token)
+    public async Task AddNewWaitingToken(Waitingtoken token)
     {
         _context.Waitingtokens.Add(token);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<Waitingtoken>> GetWaitingList()
+    {
+        return await _context.Waitingtokens
+            .Include(w => w.Customer)
+            .Include(w => w.Section)
+            .Where(w => w.Isassigned == false)
+            .ToListAsync();
+    }
+
 
     public async Task<List<Waitingtoken>> WaitingListBySectionId(int sectionId)
     {
         return await _context.Waitingtokens
             .Include(w => w.Customer)
             .Include(w => w.Section)
-            .Where(w => w.Sectionid == sectionId  && w.Isassigned == false)
+            .Where(w => w.Sectionid == sectionId && w.Isassigned == false)
             .ToListAsync();
     }
 
-     public async Task<Waitingtoken> WTByIdAsync(int? id)
+    public async Task<Waitingtoken> WTByIdAsync(int? id)
     {
         return await _context.Waitingtokens
         .Include(w => w.Customer)
@@ -42,6 +52,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         _context.Waitingtokens.Update(waitingToken);
         await _context.SaveChangesAsync();
     }
+
 
 
 }

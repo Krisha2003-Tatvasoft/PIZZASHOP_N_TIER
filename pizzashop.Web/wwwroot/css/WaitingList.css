@@ -1,0 +1,63 @@
+.nav-link {
+    margin-right: 30px !important;
+    padding: 8px !important;
+}
+
+
+.nav-tabs .nav-link {
+    border: none !important;
+    color: gray !important;
+    font-weight: bold !important;
+}
+
+.nav-tabs .nav-link.active {
+    color: #087cc4 !important;
+    border: none !important;
+    border-bottom: 3px solid #087cc4 !important;
+}
+
+.tab-content {
+    margin-top: 20px !important;
+    display: block;
+}
+
+
+.tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 27px!important;
+}
+
+.tab-name {
+    font-size: 20px;
+}
+
+
+.menu-category {
+    height: 46px;
+    background-color: white;
+}
+
+
+.table>:not(caption)>*>* {
+    padding: .5rem .5rem;
+    color: grey !important;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: var(--bs-border-width);
+    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
+}
+
+.button-input .delet-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid grey;
+    border-radius: 5px;
+}
+
+
+ .edit-delet button {
+    border: none;
+    background: none;
+    justify-content: space-between;
+}

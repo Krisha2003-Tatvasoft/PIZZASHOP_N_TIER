@@ -11,4 +11,6 @@ public interface IOrderAppWaitingTokenService
     Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId);
 
     Task<AssignTable> DetailsFromWT(int id);
+
+    Task<List<WaitingListTable>> WaitingList(int sectionId);
 }

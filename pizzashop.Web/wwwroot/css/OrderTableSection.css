@@ -1,14 +1,5 @@
 
-
-.main-container
-{
-    background-color: #e5e7eb;
-    min-height: 100vh;
-    margin-top: 50px;
-}
-
-
-.order-main-inner{
+/* .order-main-inner{
   padding:90px 40px 10px 40px;
 }
 
@@ -22,7 +13,7 @@
   background: rgba(228, 228, 228, 0.5);
   color: #fff;
   border-color: #ebe8e8;
-}
+} */
 
 
 .dot {
@@ -145,11 +136,7 @@
   color:grey;
 } 
 
-/* .offcanvas-header 
-{
-  padding-top: 5px!important;
-  padding-bottom: 0px!;
-} */
+
 
 
 .table>:not(caption)>*>* {

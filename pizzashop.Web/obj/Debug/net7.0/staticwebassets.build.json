@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ga1vDCMoJGYnL6oDroM3pKcCEaMjzdizvzj5I4sGpZM=",
+  "Hash": "tW15esrwdizQfUb+BJ+2P1BI79OGcHXEhHqfAul4nLI=",
   "Source": "pizzashop.Web",
   "BasePath": "_content/pizzashop.Web",
   "Mode": "Default",
@@ -406,6 +406,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\Users.css"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\css\\WaitingList.css",
+      "SourceId": "pizzashop.Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\",
+      "BasePath": "_content/pizzashop.Web",
+      "RelativePath": "css/WaitingList.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\WaitingList.css"
     },
     {
       "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\favicon.ico",

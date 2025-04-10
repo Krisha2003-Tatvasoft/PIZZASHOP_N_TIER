@@ -80,7 +80,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     public async Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId)
     {
-        var waiting  = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
+        var waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
 
         var waitingList = waiting
         .Select(w => new WaitingListTable
@@ -96,19 +96,49 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     public async Task<AssignTable> DetailsFromWT(int id)
     {
-         var wt  = await _waitingTokenRepository.WTByIdAsync(id);
-         var AssignTable = new AssignTable
-         {
-           Customername = wt.Customer.Customername,
-           Email = wt.Customer.Email,
-           Phoneno = wt.Customer.Phoneno,
-           Noofperson = (short)wt.Noofpeople,
-           Sectionid = wt.Sectionid,
-           Waitingtokenid = wt.Waitingtokenid,
-         };
-         return AssignTable;
+        var wt = await _waitingTokenRepository.WTByIdAsync(id);
+        var AssignTable = new AssignTable
+        {
+            Customername = wt.Customer.Customername,
+            Email = wt.Customer.Email,
+            Phoneno = wt.Customer.Phoneno,
+            Noofperson = (short)wt.Noofpeople,
+            Sectionid = wt.Sectionid,
+            Waitingtokenid = wt.Waitingtokenid,
+        };
+        return AssignTable;
 
     }
+
+    public async Task<List<WaitingListTable>> WaitingList(int sectionId)
+    {
+        List<Waitingtoken> waiting = null;
+
+        if (sectionId == 0)
+        {
+          waiting = await _waitingTokenRepository.GetWaitingList();
+        }
+        else
+        {
+            waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
+        }
+
+        var waitingList = waiting
+        .Select(static w => new WaitingListTable
+        {
+            Waitingtokenid = w.Waitingtokenid,
+            Createdat = w.Createdat,
+            WaitingTime =DateTime.Now,
+            Customername = w.Customer.Customername,
+            Noofperson = (short)w.Noofpeople,
+            Phoneno = w.Customer.Phoneno,
+            Email = w.Customer.Email
+        }
+        ).ToList();
+
+        return waitingList;
+    }
+
 
 
 

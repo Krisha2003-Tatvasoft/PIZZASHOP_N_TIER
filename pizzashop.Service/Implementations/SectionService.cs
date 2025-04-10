@@ -144,6 +144,7 @@ public class SectionService : ISectionService
             .FirstOrDefault();
             var order = orderTable?.Order;
             var status = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
+            var Orderid = order?.Orderid;
 
             string? runningSince = null;
 
@@ -175,13 +176,16 @@ public class SectionService : ISectionService
                 tablestatus = t.tablestatus,
                 orderstatus = status,
                 Totalamount = order?.Totalamount ?? 0,
-                RunningSince = runningSince
+                RunningSince = runningSince,
+                Orderid = Orderid
             };
         }).ToList()
     }).ToList();
 
     return orderTableViews;
 }
+
+
 
 
 

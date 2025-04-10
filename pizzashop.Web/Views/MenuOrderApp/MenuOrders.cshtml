@@ -2,6 +2,11 @@
 @{
 
     Layout = "~/Views/Shared/_OrderAppLayout.cshtml";
+    var orderId = Context.Request.Query["orderId"];
 }
 
 <h1> Menu OrderApp</h1>
+@if(!string.IsNullOrEmpty(orderId))
+{
+    <div><h1>OrderApp align-items-center Details</h1></div>
+}

@@ -1,0 +1,48 @@
+@model List<pizzashop.Entity.ViewModels.WaitingListTable>
+<div class="tab-pane fade show active " id="waiting-tab" role="tabpanel" aria-labelledby="nav-waiting-tab">
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#TokenNo</th>
+                    <th>Created At</th>
+                    <th>Waiting Time</th>
+                    <th>Name</th>
+                    <th>No. of Persons</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var table in Model)
+                {
+                    <tr>
+                        <td>@table.Waitingtokenid</td>
+                        <td>@table.Createdat</td>
+                        <td>@table.WaitingTime</td>
+                        <td>@table.Customername</td>
+                        <td>@table.Noofperson</td>
+                        <td>@table.Phoneno</td>
+                        <td>@table.Email</td>
+                        <td>
+                            <div class="d-flex gap-3 edit-delet">
+
+                                <button class="button edit-table"><img src="../images/pencil.svg"></button>
+
+                                <button class="button delete-table-link" data-bs-toggle="modal"
+                                    data-bs-target="#deleteTable"><img class="delete-icon"
+                                        src="../images/trash.svg"></button>
+
+                                <button> <i class="bi bi-person-check"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

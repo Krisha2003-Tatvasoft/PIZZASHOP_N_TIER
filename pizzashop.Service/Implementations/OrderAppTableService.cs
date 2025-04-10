@@ -42,11 +42,11 @@ public class OrderAppTableService : IOrderAppTableService
         return model;
     }
 
-    public async Task<bool> AssignTablePost(int loginid, AssignTable model)
+    public async Task<int?> AssignTablePost(int loginid, AssignTable model)
     {
         if (loginid == null)
         {
-            return false;
+            return null;
         }
         else
         {
@@ -107,12 +107,8 @@ public class OrderAppTableService : IOrderAppTableService
                 await _orderTableMappingRepository.AddNewOrderMapping(ordertable);
             }
 
-            return true;
+            return order.Orderid;
         }
     }
 
-    private Enums.tablestatus IntParse(Enums.tablestatus occupied)
-    {
-        throw new NotImplementedException();
-    }
 }
