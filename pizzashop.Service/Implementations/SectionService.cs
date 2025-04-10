@@ -4,6 +4,7 @@ using pizzashop.Service.Interfaces;
 using VMSection = pizzashop.Entity.ViewModels.Section;
 using VMTable = pizzashop.Entity.ViewModels.Table;
 using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
+using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
 namespace pizzashop.Service.Implementations;
 
 public class SectionService : ISectionService
@@ -12,10 +13,14 @@ public class SectionService : ISectionService
 
    private readonly ITableRepository _tableRepository;
 
-   public SectionService(ISectionRepository sectionRepository, ITableRepository tableRepository)
+   private readonly IWaitingTokenRepository _waitingTokenRepository;
+
+
+   public SectionService(ISectionRepository sectionRepository, ITableRepository tableRepository, IWaitingTokenRepository waitingTokenRepository)
    {
       _sectionRepository = sectionRepository;
       _tableRepository = tableRepository;
+      _waitingTokenRepository = waitingTokenRepository;
    }
 
    public async Task<List<VMSection>> GetSectionList()
@@ -127,21 +132,21 @@ public class SectionService : ISectionService
       return true;
    }
 
-      private static Dictionary<int, DateTime> _orderStartTimes = new();
+   private static Dictionary<int, DateTime> _orderStartTimes = new();
 
-  public async Task<List<VMOrderTableView>> OrderTableViews()
-{
-    List<Section> sections = await _sectionRepository.GetSectionWithTables();
+   public async Task<List<VMOrderTableView>> OrderTableViews()
+   {
+      List<Section> sections = await _sectionRepository.GetSectionWithTables();
 
-    var orderTableViews = sections.Select(s => new VMOrderTableView
-    {
-        Sectionid = s.Sectionid,
-        Sectionname = s.Sectionname,
-        Tables = s.Tables.Select(static t =>
-        {
+      var orderTableViews = sections.Select(s => new VMOrderTableView
+      {
+         Sectionid = s.Sectionid,
+         Sectionname = s.Sectionname,
+         Tables = s.Tables.Select(static t =>
+         {
             var orderTable = t.Ordertables?
-            .OrderByDescending(ot => ot.Order.Orderid) 
-            .FirstOrDefault();
+           .OrderByDescending(ot => ot.Order.Orderid)
+           .FirstOrDefault();
             var order = orderTable?.Order;
             var status = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
             var Orderid = order?.Orderid;
@@ -150,41 +155,67 @@ public class SectionService : ISectionService
 
             if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served)
             {
-                if (!_orderStartTimes.ContainsKey(t.Tableid))
-                {
+               if (!_orderStartTimes.ContainsKey(t.Tableid))
+               {
                   _orderStartTimes[t.Tableid] = order?.Orderdate ?? DateTime.Now;
-                }
+               }
 
                var duration = DateTime.Now - _orderStartTimes[t.Tableid];
                runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
-                   $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
-                   $"{duration.Minutes} min {duration.Seconds} sec";
+                  $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
+                  $"{duration.Minutes} min {duration.Seconds} sec";
             }
             else
             {
-                if (_orderStartTimes.ContainsKey(t.Tableid))
-                {
-                    _orderStartTimes.Remove(t.Tableid);
-                }
+               if (_orderStartTimes.ContainsKey(t.Tableid))
+               {
+                  _orderStartTimes.Remove(t.Tableid);
+               }
             }
 
             return new VMTable
             {
-                Tableid = t.Tableid,
-                Tablename = t.Tablename,
-                Capacity = order?.Noofperson ?? t.Capacity,
-                tablestatus = t.tablestatus,
-                orderstatus = status,
-                Totalamount = order?.Totalamount ?? 0,
-                RunningSince = runningSince,
-                Orderid = Orderid
+               Tableid = t.Tableid,
+               Tablename = t.Tablename,
+               Capacity = order?.Noofperson ?? t.Capacity,
+               tablestatus = t.tablestatus,
+               orderstatus = status,
+               Totalamount = order?.Totalamount ?? 0,
+               RunningSince = runningSince,
+               Orderid = Orderid
             };
-        }).ToList()
-    }).ToList();
+         }).ToList()
+      }).ToList();
 
-    return orderTableViews;
-}
+      return orderTableViews;
+   }
 
+
+   public async Task<List<VMSectionWIthCount>> GetSectionWithCount()
+   {
+      var sectionList = await _sectionRepository.AllSections();
+      var alltokens = await _waitingTokenRepository.GetWaitingList();
+
+      var sections = sectionList.Select(c => new VMSectionWIthCount
+      {
+         Sectionid = c.Sectionid,
+         Sectionname = c.Sectionname,
+         TokenCount = alltokens.Count(t => t.Sectionid == c.Sectionid)
+
+      }).ToList();
+
+      var sectionWithCountList = sections.ToList();
+      sectionWithCountList.Insert(0, new VMSectionWIthCount
+      {
+         Sectionid = 0,
+         Sectionname = "All",
+         TokenCount = alltokens.Count()
+      });
+      sections = sectionWithCountList;
+
+
+      return sections;
+   }
 
 
 

@@ -49,21 +49,26 @@
         loadsectionList();
 
         function loadTableList(sectionid) {
-             console.log("hiiiiii");
-            $.ajax({
+           
+              $.ajax({
                 
                 url: "/WaitingList/WaitingTableList",
                 type: "GET",
-                data: { sectionid: sectionid }
+                data: { sectionid: sectionid },
                 success: function (data) {
                     $('.waiting-table-partial').html(data);
                 },
                 error: function () {
                 }
-            });
+            }); 
         }
 
         loadTableList(0);
+
+         $(document).on("click", ".sec-class", function (e) {
+             var sectionid = $(this).data("sectionid");
+               loadTableList(sectionid);
+            });
 
 
     });

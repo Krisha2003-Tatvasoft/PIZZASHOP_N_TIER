@@ -24,7 +24,7 @@ public class WaitingListController : Controller
 
    public async Task<IActionResult> WaitingSectionList()
    {
-      var sectionList = await _sectionService.GetSectionList();
+      var sectionList = await _sectionService.GetSectionWithCount();
 
       return PartialView("_WaitingSectionList", sectionList);
    }

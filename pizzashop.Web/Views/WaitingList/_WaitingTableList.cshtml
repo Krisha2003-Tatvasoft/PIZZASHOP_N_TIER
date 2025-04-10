@@ -1,11 +1,11 @@
 @model List<pizzashop.Entity.ViewModels.WaitingListTable>
-<div class="tab-pane fade show active " id="waiting-tab" role="tabpanel" aria-labelledby="nav-waiting-tab">
+<div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
     <div class="table-responsive">
         <table class="table">
             <thead>
                 <tr>
-                    <th>#TokenNo</th>
+                    <th class="ps-3">#TokenNo</th>
                     <th>Created At</th>
                     <th>Waiting Time</th>
                     <th>Name</th>
@@ -19,9 +19,10 @@
                 @foreach (var table in Model)
                 {
                     <tr>
-                        <td>@table.Waitingtokenid</td>
-                        <td>@table.Createdat</td>
-                        <td>@table.WaitingTime</td>
+                        <td class="ps-3">#@table.Waitingtokenid</td>
+                        <td>@table.Createdat?.ToString("MMM dd, yyyy hh:mm tt")</td>
+                        <td> <span class="waiting-time" data-time="@table.Createdat?.ToString("o")"></span>
+                        </td>
                         <td>@table.Customername</td>
                         <td>@table.Noofperson</td>
                         <td>@table.Phoneno</td>
@@ -46,3 +47,38 @@
         </table>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+
+        function formatTimeDiff(createdTime) {
+            const now = new Date();
+            const diffMs = now - createdTime;
+
+            if (diffMs < 0) return ''; // in case of future date
+
+            const totalMinutes = Math.floor(diffMs / 60000);
+            const hrs = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+
+            return `${hrs} hrs ${mins} min`;
+        }
+
+        function updateWaitingTimes() {
+            $('.waiting-time').each(function () {
+                const timeStr = $(this).data('time');
+                if (timeStr) {
+                    const createdAt = new Date(timeStr);
+                    const formatted = formatTimeDiff(createdAt);
+                    $(this).text(formatted);
+                }
+            });
+        }
+
+        // Initial run
+        updateWaitingTimes();
+
+        // Update every second
+        setInterval(updateWaitingTimes, 1000);
+    });
+</script>

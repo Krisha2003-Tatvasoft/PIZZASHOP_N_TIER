@@ -128,11 +128,11 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         {
             Waitingtokenid = w.Waitingtokenid,
             Createdat = w.Createdat,
-            WaitingTime =DateTime.Now,
             Customername = w.Customer.Customername,
             Noofperson = (short)w.Noofpeople,
             Phoneno = w.Customer.Phoneno,
-            Email = w.Customer.Email
+            Email = w.Customer.Email,
+            Sectionid = w.Sectionid
         }
         ).ToList();
 

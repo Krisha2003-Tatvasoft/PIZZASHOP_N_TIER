@@ -1,22 +1,21 @@
-@model List<pizzashop.Entity.ViewModels.Section>
-
-<button class="nav-link " id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#waiting-tab" type="button"
-    role="tab" aria-controls="tab1" aria-selected="true" style="flex:  0 0 auto;">
-    <div class="tab">
-        <span class="tab-name">
-           All</span>
-    </div>
-</button>
+@model List<pizzashop.Entity.ViewModels.SectionWithCount>
 
 @foreach (var sec in Model)
 {
 
-    <button class="nav-link " id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#waiting-tab" type="button"
-        role="tab" aria-controls="tab1" aria-selected="true" style="flex:  0 0 auto;">
+    <button class="nav-link sec-class @(sec.Sectionid == 0 ? "active" : "") d-flex align-items-center gap-1" 
+     id="nav-waiting-tab" data-bs-toggle="tab"
+        data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1"
+        aria-selected="@(sec.Sectionid == 0 ? "true" : "false")" style="flex: 0 0 auto;" data-sectionid="@sec.Sectionid">
         <div class="tab">
-            <span class="tab-name">
-                @sec.Sectionname</span>
+         <span>@sec.Sectionname</span>
+        <span class="d-inline-flex justify-content-center align-items-center mt-1 bg-secondary text-white"
+          style="width: 20px; height: 20px; border-radius: 50%; font-size: 0.8rem;">
+          @sec.TokenCount</span>
         </div>
     </button>
 
 }
+
+
+
