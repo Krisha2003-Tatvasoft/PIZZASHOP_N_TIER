@@ -14,4 +14,6 @@ public interface ICustomerRepository
 
     Task AddNewCustomer(Customer customer);
      Task UpdateCustomer(Customer customer);
+
+     Task<Customer> GetCustomerById(int? id);
 }

@@ -10,13 +10,14 @@
 
     <button class="btn d-flex align-items-center waiting-token-btn" style="color: #087cc4; 
           background-color: #ffffff; border: 1px solid #087cc4;">
-        <i class="bi bi-plus fs-6 me-1"></i><span>Waiting Token</span>
+        <i class="bi bi-plus fs-6 me-1 "></i><span>Waiting Token</span>
     </button>
 </div>
 
 <div class="menu-category">
     <nav>
-        <div class="nav nav-tabs px-4 waiting-section-partial flex-nowrap overflow-x-auto" id="nav-tab" role="tablist">
+        <div class="nav nav-tabs px-4 waiting-section-partial flex-nowrap overflow-x-auto overflow-y-hidden"
+            id="nav-tab" role="tablist">
         </div>
     </nav>
 
@@ -28,9 +29,13 @@
 
 </div>
 
+<div id="Waiting-token-modal"></div>
+
 
 <script>
     $(document).ready(function () {
+
+        let currentSectionId = 0;
 
         function loadsectionList() {
             $.ajax({
@@ -39,6 +44,8 @@
                 type: "GET",
                 success: function (data) {
                     $('.waiting-section-partial').html(data);
+                    $(`.sec-class`).removeClass('active').attr('aria-selected', 'false');
+                    $(`.sec-class[data-sectionid="${currentSectionId}"]`).addClass('active').attr('aria-selected', 'true');
                 },
                 error: function () {
 
@@ -49,26 +56,203 @@
         loadsectionList();
 
         function loadTableList(sectionid) {
-           
-              $.ajax({
-                
+            currentSectionId = sectionid;
+
+            $.ajax({
+
                 url: "/WaitingList/WaitingTableList",
                 type: "GET",
                 data: { sectionid: sectionid },
                 success: function (data) {
                     $('.waiting-table-partial').html(data);
+
                 },
                 error: function () {
                 }
-            }); 
+            });
         }
 
         loadTableList(0);
 
-         $(document).on("click", ".sec-class", function (e) {
-             var sectionid = $(this).data("sectionid");
-               loadTableList(sectionid);
+        $(document).on("click", ".sec-class", function (e) {
+            var sectionid = $(this).data("sectionid");
+            loadTableList(sectionid);
+        });
+
+
+        @* edit tax post  *@
+
+            $(document).on("click", "#edit-wt-yes", function (e) {
+                e.preventDefault();
+
+                if ($("#edit-wt-form").valid()) {
+
+                    var formData = new FormData($("#edit-wt-form")[0]);
+
+                    var Sectionid = formData.get("Sectionid");
+
+
+                    $.ajax({
+                        url: "/WaitingList/EditWTPost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#editWT").modal("hide");
+                                loadTableList(Sectionid);
+                                loadsectionList();
+                                toastr.success("WaitingToken Updated Succesfully.");
+                            }
+
+                        },
+                        error: function (error) {
+                            console.error("Error updating WaitingToken:", error);
+                        }
+                    });
+
+                }
+
             });
+
+
+        @* email-exists *@
+
+            $(document).on("blur", ".edit-Email", function (e) {
+                var email = $(this).val();
+                var customId = $("#customer-id").val();
+                console.log(customId);
+
+                if (email) {
+                    $.ajax({
+                        url: '/WaitingList/EmailExist',
+                        type: 'GET',
+                        data: { email: email, customId: customId },
+                        success: function (data) {
+                            if (data.success == true) {
+                                $(".email-exist").text("email already exist.")
+                            }
+                            else {
+                            }
+                        },
+                        error: function () {
+                            console.error('Failed to fetch customer');
+                        }
+                    });
+                }
+            });
+
+
+
+        @* Delete Table *@
+
+            $(document).on("click", ".delete-wt", function (e) {
+                var tokenId = $("#hidden").val();
+                var sectionid = $("#sectionid").val();
+
+                $.ajax({
+                    url: "/WaitingList/DeleteWT",
+                    type: "POST",
+                    data: { id: tokenId },
+                    success: function (response) {
+                        loadTableList(sectionid);
+                        loadsectionList();
+                        toastr.success("WaitingToken Deleted Succesfully.");
+                    },
+                    error: function (error) {
+                        console.error("Error in delete delete WaitingToken:", error);
+                    }
+                });
+
+            });
+
+        @* Add Waiting Token *@
+
+            $(document).on("click", ".waiting-token-btn", function (e) {
+                e.preventDefault();
+
+
+                $.ajax({
+                    url: "/WaitingList/AddWaitingToken",
+                    type: "GET",
+                    success: function (data) {
+                        $('#Waiting-token-modal').html(data);
+                        $("#addNewWaitingToken").modal("show");
+                    },
+                    error: function () {
+                    }
+                });
+
+            });
+
+
+        $(document).on("click", "#add-WT-Yes", function (e) {
+            e.preventDefault();
+
+            // Trigger the client-side validation first
+            if ($("#add-WT").valid()) {
+                var formData = new FormData($("#add-WT")[0]);
+
+                var Sectionid = formData.get("Sectionid");
+
+                $.ajax({
+                    url: "/TableOrderApp/AddWTPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            // Reset the form and close the modal if successful
+                            $("#add-WT")[0].reset();
+                            $("#addNewWaitingToken").modal("hide");
+                            loadTableList(Sectionid);
+                            loadsectionList();
+                            toastr.success("Waiting Token Created Successfully.");
+                        }
+                    },
+                    error: function (error) {
+                        console.error("Error in Create Token.", error);
+                        toastr.error("Internal server error");
+                    }
+                });
+            }
+
+        });
+
+
+        @* autofill by email *@
+
+            $(document).on("blur", ".Email", function (e) {
+                var email = $(this).val();
+
+                if (email) {
+                    $.ajax({
+                        url: '/TableOrderApp/GetCustomerByEmail',
+                        type: 'GET',
+                        data: { email: email },
+                        success: function (data) {
+                            if (data.success == true) {
+                                $('.Name').val(data.customerName);
+                                $('.Mobile_Number').val(data.phoneNo);
+                            }
+                            else {
+                                $('.Name').val('');
+                                $('.Mobile_Number').val('');
+                            }
+                        },
+                        error: function () {
+                            console.error('Failed to fetch customer');
+                        }
+                    });
+                }
+            });
+
+
+
 
 
     });

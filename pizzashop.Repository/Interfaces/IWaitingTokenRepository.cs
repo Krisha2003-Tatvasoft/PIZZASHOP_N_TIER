@@ -13,4 +13,6 @@ public interface IWaitingTokenRepository
        Task UpdateWaitingToken(Waitingtoken waitingToken);
 
         Task<List<Waitingtoken>> GetWaitingList();
+
+        Task Delete(Waitingtoken waitingToken);
 }

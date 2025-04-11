@@ -104,7 +104,7 @@ public class ProfileController : Controller
         if (from == "Order")
         {
             ViewBag.UseOrderLayout = true;
-             ViewBag.From = from;
+            ViewBag.From = from;
         }
         else
         {

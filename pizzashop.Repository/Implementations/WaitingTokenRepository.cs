@@ -53,6 +53,12 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task Delete(Waitingtoken waitingToken)
+    {
+        _context.Waitingtokens.Remove(waitingToken);
+        await _context.SaveChangesAsync();
+    }
+
 
 
 }

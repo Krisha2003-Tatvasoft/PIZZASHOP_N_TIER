@@ -5,7 +5,7 @@
 
     <button class="nav-link sec-class @(sec.Sectionid == 0 ? "active" : "") d-flex align-items-center gap-1" 
      id="nav-waiting-tab" data-bs-toggle="tab"
-        data-bs-target="#tab1" type="button" role="tab" aria-controls="tab1"
+        data-bs-target="#@sec.Sectionid" type="button" role="tab" aria-controls="@sec.Sectionid"
         aria-selected="@(sec.Sectionid == 0 ? "true" : "false")" style="flex: 0 0 auto;" data-sectionid="@sec.Sectionid">
         <div class="tab">
          <span>@sec.Sectionname</span>

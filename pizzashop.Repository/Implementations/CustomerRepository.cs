@@ -84,6 +84,11 @@ public class CustomerRepository : ICustomerRepository
         return await _context.Customers.FirstOrDefaultAsync(o => o.Email == email);
     }
 
+      public async Task<Customer> GetCustomerById(int? id)
+    {
+        return await _context.Customers.FirstOrDefaultAsync(o => o.Customerid == id);
+    }
+
 
     public async Task AddNewCustomer(Customer customer)
     {

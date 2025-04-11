@@ -1,0 +1,30 @@
+<div class="modal fade modal-delete" id="AssignTable" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <input type="hidden" id="hidden" value="">
+        <input type="hidden" id="sectionid" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTable">Assign Table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3">
+                <div class="form-floating mb-2 w-100 ">
+                    <select class="form-select Sectionid" id="Sectionid">
+                        <option value="">Select Section</option>
+                    </select>
+                    <label for="Sectionid">Section*</label>
+                </div>
+                <div class="form-floating w-100">
+                    <select class="form-select Sectionid" id="Sectionid">
+                        <option value="">Select Section</option>
+                    </select>
+                    <label for="Sectionid">Section*</label>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-center justify-content-sm-end  gap-2">
+                <button type="button" class="btn btn-primary delete-wt" data-bs-dismiss="modal">Assign</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

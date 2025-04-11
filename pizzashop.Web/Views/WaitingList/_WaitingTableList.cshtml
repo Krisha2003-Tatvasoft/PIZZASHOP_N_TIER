@@ -1,5 +1,6 @@
+@using Microsoft.AspNetCore.Mvc.ViewEngines
 @model List<pizzashop.Entity.ViewModels.WaitingListTable>
-<div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="nav-waiting-tab">
+<div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
     <div class="table-responsive">
         <table class="table">
@@ -30,13 +31,15 @@
                         <td>
                             <div class="d-flex gap-3 edit-delet">
 
-                                <button class="button edit-table"><img src="../images/pencil.svg"></button>
+                                <button class="button edit-wt" data-wt-id=@table.Waitingtokenid><img
+                                        src="../images/pencil.svg"></button>
 
-                                <button class="button delete-table-link" data-bs-toggle="modal"
-                                    data-bs-target="#deleteTable"><img class="delete-icon"
-                                        src="../images/trash.svg"></button>
+                                <button class="button delete-WT-link" data-bs-toggle="modal" data-bs-target="#deleteWT"
+                                    data-wt-id=@table.Waitingtokenid data-sectioid="@table.Sectionid"><img
+                                        class="delete-icon" src="../images/trash.svg"></button>
 
-                                <button> <i class="bi bi-person-check"></i></button>
+                                <button class="assign-table-link" data-sectionid="@table.Sectionid"> <i
+                                        class="bi bi-person-check"></i></button>
                             </div>
                         </td>
                     </tr>
@@ -47,6 +50,31 @@
         </table>
     </div>
 </div>
+
+<div class="modal-editWT"></div>
+
+<div class="modal fade modal-delete" id="deleteWT" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <input type="hidden" id="hidden" value="">
+        <input type="hidden" id="sectionid" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteTable">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete this WaitingToken?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-wt" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="aasign-model"></div>
 
 <script>
     $(document).ready(function () {
@@ -80,5 +108,59 @@
 
         // Update every second
         setInterval(updateWaitingTimes, 1000);
+
+        $(".edit-wt").click(function (e) {
+            e.preventDefault();
+            var WTid = $(this).data("wt-id");
+
+
+            $.ajax({
+                url: "/WaitingList/EditWT",
+                type: "GET",
+                data: { id: WTid },
+                success: function (data) {
+                    $(".modal-editWT").html(data);
+                    $("#editWT").modal("show");
+                },
+                error: function () {
+                    alert("failed to reload modal");
+                }
+            });
+
+        });
+
+        $(document).on("click", ".delete-WT-link", function (e) {
+            var Waitingtokenid = $(this).data("wt-id");
+            var sectioid = $(this).data("sectioid");
+
+            $("#hidden").val(Waitingtokenid);
+            $("#sectionid").val(sectioid);
+
+            console.log(Waitingtokenid);
+            console.log(sectioid);
+        });
+
+
+        @* assign table *@
+            $(".assign-table-link").click(function (e) {
+                e.preventDefault();
+                var sectionid = $(this).data("sectionid");
+
+
+                $.ajax({
+                    url: "/WaitingList/AssignTable",
+                    type: "GET",
+                    data: { id: sectionid },
+                    success: function (data) {
+                        $("#aasign-model").html(data);
+                        $("#AssignTable").modal("show");
+                    },
+                    error: function () {
+                        alert("failed to reload modal");
+                    }
+                });
+            });
+
+
     });
 </script>

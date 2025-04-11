@@ -5,6 +5,11 @@ namespace pizzashop.Entity.ViewModels;
 
 public class AddWaitingToken
 {
+    public int? Waitingtokenid { get; set; }
+
+    public int? customerId { get; set; }
+
+
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid Email format")]
     public string? Email { get; set; }

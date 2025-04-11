@@ -116,7 +116,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
         if (sectionId == 0)
         {
-          waiting = await _waitingTokenRepository.GetWaitingList();
+            waiting = await _waitingTokenRepository.GetWaitingList();
         }
         else
         {
@@ -139,6 +139,85 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         return waitingList;
     }
 
+    public async Task<AddWaitingToken> EditGetWT(int id)
+    {
+        Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(id);
+        AddWaitingToken model = new AddWaitingToken
+        {
+            Email = waitingtoken.Customer.Email,
+            Customername = waitingtoken.Customer.Customername,
+            Phoneno = waitingtoken.Customer.Phoneno,
+            Noofperson = (short)waitingtoken.Noofpeople,
+            Sectionid = waitingtoken.Sectionid,
+            Waitingtokenid = waitingtoken.Waitingtokenid,
+            customerId = waitingtoken.Customer.Customerid,
+            SectionList = await _sectionRepository.SectionDDAsync()
+        };
+        return model;
+    }
+
+
+    public async Task<bool> EmailExistsWithId(string email, int id)
+    {
+        var customer = await _customerRepository.GetCustomerByEmail(email);
+        if (customer == null)
+        {
+            return false;
+        }
+        else
+        {
+            if (customer.Customerid != id)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    public async Task<bool> EditPosttWT(int loginId, AddWaitingToken model)
+    {
+        if (model == null)
+        {
+            return false;
+        }
+
+        Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(model.Waitingtokenid);
+        waitingtoken.Noofpeople = (short)model.Noofperson;
+        waitingtoken.Sectionid = model.Sectionid;
+        waitingtoken.Modifiedby = loginId;
+
+        await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
+
+        Customer customer = await _customerRepository.GetCustomerById(model.customerId);
+        customer.Email = model.Email;
+        customer.Customername = model.Customername;
+        customer.Phoneno = model.Phoneno;
+        customer.Modifiedby = loginId;
+
+        await _customerRepository.UpdateCustomer(customer);
+
+        return true;
+    }
+
+
+
+    public async Task<bool> DeleteWT(int id)
+    {
+        Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(id);
+        if (waitingtoken == null)
+        {
+            return false;
+        }
+        else
+        {
+            await _waitingTokenRepository.Delete(waitingtoken);
+            return true;
+        }
+
+    }
 
 
 

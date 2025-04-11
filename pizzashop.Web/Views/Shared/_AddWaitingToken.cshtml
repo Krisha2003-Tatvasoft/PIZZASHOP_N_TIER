@@ -1,0 +1,68 @@
+@model pizzashop.Entity.ViewModels.AddWaitingToken;
+<div class="modal fade modal-addNewCategory" id="addNewWaitingToken" tabindex="-1" aria-labelledby="addNewTable"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addNewTable">Waiting Token Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <form id="add-WT">
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control Email"  placeholder="Email" asp-for="Email" required>
+                        <label for="Email">Email*</label>
+                         <span class="text-danger" asp-validation-for="Email"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control Name" placeholder="Name" asp-for="Customername" required>
+                        <label for="Name">Name*</label>
+                        <span class="text-danger" asp-validation-for="Customername"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control Mobile_Number" placeholder="Mobile_Number" asp-for="Phoneno" required>
+                        <label for="Mobile_Number">Mobile Number*</label>
+                        <span class="text-danger" asp-validation-for="Phoneno"></span>
+                    </div>
+
+
+                    <div class="row">
+                        <div class=" col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control noOfPersons"  placeholder="noOfPersons"
+                                    value="0" asp-for="Noofperson" required>
+                                <label for="noOfPersons">No of Person(s)*</label>
+                                <span class="text-danger" asp-validation-for="Noofperson"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
+                            <div class="form-floating mb-3">
+                                <select class="form-select Sectionid" asp-for="Sectionid" id="Sectionid"
+                                    asp-items="Model.SectionList">
+                                    <option value="">Select Section</option>
+                                </select>
+                                <label for="Sectionid">Section*</label>
+                                 <span class="text-danger" asp-validation-for="Sectionid"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer ">
+                <button type="button" class="btn btn-primary sav-btn" id="add-WT-Yes">Save</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
