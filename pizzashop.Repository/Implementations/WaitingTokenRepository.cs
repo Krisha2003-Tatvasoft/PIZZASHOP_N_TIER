@@ -38,6 +38,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
             .Where(w => w.Sectionid == sectionId && w.Isassigned == false)
             .ToListAsync();
     }
+    
 
     public async Task<Waitingtoken> WTByIdAsync(int? id)
     {

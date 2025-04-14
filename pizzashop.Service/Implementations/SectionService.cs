@@ -5,6 +5,7 @@ using VMSection = pizzashop.Entity.ViewModels.Section;
 using VMTable = pizzashop.Entity.ViewModels.Table;
 using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
+using Microsoft.AspNetCore.Mvc.Rendering;
 namespace pizzashop.Service.Implementations;
 
 public class SectionService : ISectionService
@@ -217,7 +218,10 @@ public class SectionService : ISectionService
       return sections;
    }
 
-
+   public async Task<List<SelectListItem>> GetSectionListDD()
+   {
+      return await _sectionRepository.SectionDDAsync();
+   }
 
 
 

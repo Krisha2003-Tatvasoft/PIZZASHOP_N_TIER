@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
@@ -60,7 +61,7 @@ public class TableRepository : ITableRepository
 
     public async Task<bool> TableNameExistInEdit(int? sectionId, string tableName, int tableId)
     {
-        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower() 
+        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower()
         && s.Tableid != tableId && s.Isdeleted == false);
     }
 
@@ -86,6 +87,13 @@ public class TableRepository : ITableRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<List<SelectListItem>> TableDDAsync(int sectionId) =>
+    await _context.Tables
+    .Where(c => c.Isdeleted == false && c.Sectionid == sectionId && c.tablestatus == Enums.tablestatus.Available).Select
+    (c => new SelectListItem
+    { Value = c.Tableid.ToString(), Text = c.Tablename })
+    .ToListAsync();
 
 
 }

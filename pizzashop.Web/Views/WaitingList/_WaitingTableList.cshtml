@@ -1,5 +1,52 @@
 @using Microsoft.AspNetCore.Mvc.ViewEngines
 @model List<pizzashop.Entity.ViewModels.WaitingListTable>
+<style>
+    .custom-select-dropdown {
+        width: 100%;
+        height: calc(3.5rem + 2px);
+        /* Similar height as .form-select */
+        padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        text-align: left;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='none' stroke='%23666' stroke-width='.75' d='M0 0l2 2 2-2'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px 12px;
+        appearance: none;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .custom-select-dropdown:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+
+    /* Pill-style appearance for the first selected item */
+    .selected-item-pill {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background-color: #f8f9fa;
+        border: 0.5px solid #ced4da;
+        border-radius: 999px;
+        /* large enough to create a pill */
+        font-size: 0.5rem;
+        color: #495057;
+    }
+
+    /* Style for the "+X selected" text */
+    .others-count {
+        font-size: 0.2rem;
+        color: #495057;
+        margin-left: 0.1rem;
+    }
+</style>
 <div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
     <div class="table-responsive">
@@ -38,7 +85,8 @@
                                     data-wt-id=@table.Waitingtokenid data-sectioid="@table.Sectionid"><img
                                         class="delete-icon" src="../images/trash.svg"></button>
 
-                                <button class="assign-table-link" data-sectionid="@table.Sectionid"> <i
+                                <button class="assign-table-link" 
+                                    data-sectionid="@table.Sectionid" data-wt-id=@table.Waitingtokenid> <i
                                         class="bi bi-person-check"></i></button>
                             </div>
                         </td>
@@ -74,7 +122,8 @@
     </div>
 </div>
 
-<div id="aasign-model"></div>
+<div id="assign-table-model"></div>
+
 
 <script>
     $(document).ready(function () {
@@ -136,31 +185,178 @@
             $("#hidden").val(Waitingtokenid);
             $("#sectionid").val(sectioid);
 
-            console.log(Waitingtokenid);
-            console.log(sectioid);
         });
 
 
         @* assign table *@
+
             $(".assign-table-link").click(function (e) {
                 e.preventDefault();
                 var sectionid = $(this).data("sectionid");
-
-
+                var Waitingtokenid = $(this).data("wt-id");
+               
                 $.ajax({
                     url: "/WaitingList/AssignTable",
                     type: "GET",
-                    data: { id: sectionid },
                     success: function (data) {
-                        $("#aasign-model").html(data);
+                        $("#assign-table-model").html(data);
                         $("#AssignTable").modal("show");
+                $(".waitingToken").val(Waitingtokenid);
                     },
                     error: function () {
                         alert("failed to reload modal");
                     }
                 });
+
+
+                // Clear section dropdown first
+                $("#Sectionid").empty();
+                $("#Sectionid").append('<option selected disabled value="">Select Section</option>');
+
+                $("#tableDropdownMenu").empty();
+                $("#tableDropdownBtn").html("Select Tables");
+
+                selectedTables = [];
+
+
+                // Fetch and repopulate section options
+                $.get("/WaitingList/GetSection", function (data) {
+                    $.each(data, function (index, section) {
+                        $("#Sectionid").append('<option value="' + section.value + '">' + section.text + '</option>');
+                    });
+
+                     if (sectionid) {
+                  $("#Sectionid").val(sectionid);
+                       }
+
+                     if (sectionid) {
+                  $.get("/WaitingList/GetTable?sectioid=" + sectionid, function (data) {
+                    $("#tableDropdownMenu").empty();
+                    $.each(data, function (index, table) {
+                        $("#tableDropdownMenu").append(`
+                    <li>
+                      <div class="form-check mx-2">
+                        <input class="form-check-input table-checkbox" type="checkbox" value="${table.value}" id="table_${table.value}">
+                        <label class="form-check-label" for="table_${table.value}">${table.text}</label>
+                      </div>
+                    </li>
+                `);
+                    });
+                });
+            } else {
+                $("#tableDropdownMenu").empty();
+            }
+
+
+                });
             });
 
+        let selectedTables = [];
+
+        // Handle Section change and repopulate the table checkboxes
+        $(document).on("change", "#Sectionid", function (e) {
+            var sectioid = $(this).val();
+            selectedTables = []; // Clear previous selections
+            $("#tableDropdownBtn").html("Select Tables"); // reset button text
+            if (sectioid) {
+                $.get("/WaitingList/GetTable?sectioid=" + sectioid, function (data) {
+                    $("#tableDropdownMenu").empty();
+                    $.each(data, function (index, table) {
+                        $("#tableDropdownMenu").append(`
+                    <li>
+                      <div class="form-check mx-2">
+                        <input class="form-check-input table-checkbox" type="checkbox" value="${table.value}" id="table_${table.value}">
+                        <label class="form-check-label" for="table_${table.value}">${table.text}</label>
+                      </div>
+                    </li>
+                `);
+                    });
+                });
+            } else {
+                $("#tableDropdownMenu").empty();
+            }
+        });
+
+        // Handle checkbox selection/deselection and update dropdown content
+        $(document).on("change", ".table-checkbox", function () {
+            const value = $(this).val();
+            const label = $(this).next("label").text();
+            if ($(this).is(":checked")) {
+                selectedTables.push({ id: value, label: label });
+            } else {
+                selectedTables = selectedTables.filter(table => table.id !== value);
+            }
+            updateDropdownText();
+        });
+
+        function updateDropdownText() {
+            if (selectedTables.length === 0) {
+                $("#tableDropdownBtn").html("Select Tables");
+                 $(".table-list").text("Select At least 1 table.")
+            } else if (selectedTables.length === 1) {
+                $("#tableDropdownBtn").html(`<span class=" selected-item-pill">${selectedTables[0].label}</span>`);
+                 $(".table-list").text("");
+            } else {
+                $("#tableDropdownBtn").html(
+                    `<span class=" selected-item-pill">${selectedTables[0].label}</span>` +
+                    `<span class=" others-count">+${selectedTables.length - 1} selected</span>`
+                );
+                 $(".table-list").text("");
+            }
+        }
+
+           function redirectToMenuOrders(orderId) {
+        window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
+                   }
+
+        $(document).on("click", ".Assign-tables-yes", function (){
+
+            let tableIds = selectedTables.map(t => t.id);
+            console.log(tableIds.length)
+            if(tableIds.length <= 0)
+            {
+            $(".table-list").text("Select At least 1 table.")
+             }
+             else
+             { 
+            let sectionId = $("#Sectionid").val();
+            if ($("#assignTable-form").valid()) { 
+             var formData = new FormData($("#assignTable-form")[0]);
+              formData.append("TableIds", JSON.stringify(tableIds));
+              console.log(formData.get("Waitingtokenid"));
+
+                                    $.ajax({
+                                    url: "/WaitingList/AssignTablePost",
+                                    type: "POST",
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false,
+                                    dataType: 'json',
+                                    success: function (response) {
+                                        if (response.success) {
+                                           $("#assignTable-form")[0].reset();
+                                           $("#AssignTable").modal("hide");
+                                          redirectToMenuOrders(response.orderid);
+                                            }
+                                        else {
+                                            toastr.error("error in assign table");
+                                        }
+
+                                    },
+                                    error: function (error) {
+                                        console.error("Error in assign table:", error);
+                                    }
+                                });
+
+
+            // Now you can use `tableIds` array to send in your request
+            console.log("Selected Table IDs:", tableIds);
+            console.log("Section ID:", sectionId);
+
+        }    
+        }             
+        });
+        
 
     });
 </script>

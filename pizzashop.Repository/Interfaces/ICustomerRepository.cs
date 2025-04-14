@@ -16,4 +16,6 @@ public interface ICustomerRepository
      Task UpdateCustomer(Customer customer);
 
      Task<Customer> GetCustomerById(int? id);
+
+     Task Delete(Customer customer);
 }

@@ -2,6 +2,7 @@ namespace pizzashop.Service.Interfaces;
 using VMSection = pizzashop.Entity.ViewModels.Section;
 using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public interface ISectionService
 {
@@ -20,4 +21,6 @@ public interface ISectionService
     Task<List<VMOrderTableView>> OrderTableViews();
 
     Task<List<VMSectionWIthCount>> GetSectionWithCount();
+
+    Task<List<SelectListItem>> GetSectionListDD();
 }

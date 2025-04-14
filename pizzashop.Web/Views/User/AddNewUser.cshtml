@@ -348,41 +348,6 @@
     });
 </script>
 
-@* <script>
-    function validateFile(input) {
-        const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-        const fileName = input.files.length > 0 ? input.files[0].name : '';
-  
-        const fileExtension = fileName.split('.').pop().toLowerCase();
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-
-        if (input.files.length > 0) {
-            if (!allowedExtensions.includes(fileExtension)) {
-                fileNameDisplay.textContent = "Invalid file selected!";
-                fileNameDisplay.classList.add('text-danger');
-                input.value = ''; 
-            } else {
-                fileNameDisplay.textContent = fileName;
-                fileNameDisplay.classList.remove('text-danger');
-            }
-        } else {
-            fileNameDisplay.textContent = "No file selected";
-        }
-    }
-</script> *@
-
-@* <script>
-    document.getElementById('inputGroupFile01').addEventListener('change', function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById('profileImage').src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-</script> *@
 
 <script>
 

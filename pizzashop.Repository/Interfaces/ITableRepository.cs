@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.Rendering;
 using pizzashop.Entity.Models;
 
 namespace pizzashop.Repository.Interfaces;
@@ -21,5 +22,7 @@ public interface ITableRepository
       Task DeleteTable(Table table);
 
       Task DeleteSelected(List<int> SelectedIds);
+
+      Task<List<SelectListItem>> TableDDAsync(int sectionId);
 
 }

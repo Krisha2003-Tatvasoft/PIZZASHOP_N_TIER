@@ -3,6 +3,7 @@ using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
 using VMTable = pizzashop.Entity.ViewModels.Table;
 using VMAddTable = pizzashop.Entity.ViewModels.AddTable;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace pizzashop.Service.Implementations;
 
@@ -135,6 +136,8 @@ public class TableService : ITableService
     }
 
 
-
-
+    public async Task<List<SelectListItem>> GetTablesListDD(int sectionId)
+    {
+        return await _tableRepository.TableDDAsync(sectionId);
+    }
 }

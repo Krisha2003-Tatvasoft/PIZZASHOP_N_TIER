@@ -28,4 +28,5 @@ public partial class Waitingtoken
     public virtual Section Section { get; set; } = null!;
 
     public virtual ICollection<Waitingtablemapping> Waitingtablemappings { get; set; } = new List<Waitingtablemapping>();
+   
 }

@@ -1,4 +1,5 @@
 using DocumentFormat.OpenXml.Wordprocessing;
+using Newtonsoft.Json;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -14,12 +15,24 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     private readonly IWaitingTokenRepository _waitingTokenRepository;
 
+     private readonly IOrderRepository _orderRepository;
+
+    private readonly IOrderTableMappingRepository _orderTableMappingRepository;
+
+    private readonly ITableRepository _tableRepository;
+
+
+
     public OrderAppWaitingTokenService(ISectionRepository sectionRepository, ICustomerRepository customerRepository
-    , IWaitingTokenRepository waitingTokenRepository)
+    , IWaitingTokenRepository waitingTokenRepository,IOrderRepository orderRepository, IOrderTableMappingRepository orderTableMappingRepository
+    ,ITableRepository tableRepository)
     {
         _sectionRepository = sectionRepository;
         _customerRepository = customerRepository;
         _waitingTokenRepository = waitingTokenRepository;
+          _orderRepository = orderRepository;
+        _orderTableMappingRepository = orderTableMappingRepository;
+        _tableRepository = tableRepository;
     }
 
     public async Task<AddWaitingToken> AddWaitingToken(int id)
@@ -41,6 +54,15 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         var customer = await _customerRepository.GetCustomerByEmail(model.Email);
         if (customer != null)
         {
+            var waitingList = await _waitingTokenRepository.GetWaitingList();
+            foreach(var waiting in waitingList)
+            {
+                if(waiting.Customerid == customer.Customerid && customer.Createdat == DateTime.UtcNow)
+                {
+                    return false;
+                }
+            }
+            
             customer.Customername = model.Customername;
             customer.Phoneno = model.Phoneno;
             await _customerRepository.UpdateCustomer(customer);
@@ -157,47 +179,59 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
     }
 
 
-    public async Task<bool> EmailExistsWithId(string email, int id)
-    {
-        var customer = await _customerRepository.GetCustomerByEmail(email);
-        if (customer == null)
-        {
-            return false;
-        }
-        else
-        {
-            if (customer.Customerid != id)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
+    // public async Task<bool> EmailExistsWithId(string email, int id)
+    // {
+    //     var customer = await _customerRepository.GetCustomerByEmail(email);
+    //     if (customer == null)
+    //     {
+    //         return false;
+    //     }
+    //     else
+    //     {
+    //         if (customer.Customerid != id)
+    //         {
+    //             return true;
+    //         }
+    //         else
+    //         {
+    //             return false;
+    //         }
+    //     }
+    // }
 
     public async Task<bool> EditPosttWT(int loginId, AddWaitingToken model)
     {
+        Customer oldcustomer = null;
         if (model == null)
         {
             return false;
         }
 
         Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(model.Waitingtokenid);
+
         waitingtoken.Noofpeople = (short)model.Noofperson;
         waitingtoken.Sectionid = model.Sectionid;
         waitingtoken.Modifiedby = loginId;
+        var existcustomer = await _customerRepository.GetCustomerByEmail(model.Email);
+        if (existcustomer != null && existcustomer.Customerid != waitingtoken.Customer.Customerid)
+        {
+            oldcustomer = await _customerRepository.GetCustomerByEmail(waitingtoken.Customer.Email);
+            waitingtoken.Customerid = existcustomer.Customerid;
+        }
 
         await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
 
-        Customer customer = await _customerRepository.GetCustomerById(model.customerId);
+        Customer customer = await _customerRepository.GetCustomerById(waitingtoken.Customerid);
         customer.Email = model.Email;
         customer.Customername = model.Customername;
         customer.Phoneno = model.Phoneno;
         customer.Modifiedby = loginId;
 
         await _customerRepository.UpdateCustomer(customer);
+        if (oldcustomer.Visitcount == 0)
+        {
+            await _customerRepository.Delete(oldcustomer);
+        }
 
         return true;
     }
@@ -218,6 +252,57 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         }
 
     }
+
+    public async Task<int?> AssignTablePost(int loginid, WaitingListAssignTable model)
+    {
+
+        if (loginid == null)
+        {
+            return null;
+        }
+        else
+        {
+             List<int> tableids = JsonConvert.DeserializeObject<List<int>>(model.TableIds);
+            var waitingtoken = await _waitingTokenRepository.WTByIdAsync(model.Waitingtokenid);
+
+            if (waitingtoken != null)
+            {
+                waitingtoken.Isassigned = true;
+                waitingtoken.Sectionid = model.Sectionid;
+                await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
+            }
+
+            var customer = await _customerRepository.GetCustomerByEmail(waitingtoken?.Customer.Email);
+            if (customer != null)
+            {
+
+                customer.Visitcount = (short?)(customer.Visitcount + 1);
+                await _customerRepository.UpdateCustomer(customer);
+            }
+
+            Order order = new Order{
+               Customerid = customer.Customerid,
+               status = (int)Entity.Models.Enums.orderstatus.Pending,
+               Noofperson = (short)waitingtoken.Noofpeople
+            };
+            await _orderRepository.AddNewOrder(order);
+              foreach(var table in tableids)
+            {
+                Ordertable ordertable = new Ordertable
+                {
+                    Orderid = order.Orderid,
+                    Tableid = table
+                };
+                var tabledata = await _tableRepository.TableByIdAsync(table);
+                tabledata.tablestatus = Enums.tablestatus.Occupied;
+                await _tableRepository.UpdateTable(tabledata);
+                await _orderTableMappingRepository.AddNewOrderMapping(ordertable);
+            }
+             return order.Orderid;
+
+        }
+    }
+
 
 
 

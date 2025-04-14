@@ -16,9 +16,11 @@ public interface IOrderAppWaitingTokenService
 
     Task<AddWaitingToken> EditGetWT(int id);
 
-    Task<bool> EmailExistsWithId(string email , int id);
+    // Task<bool> EmailExistsWithId(string email , int id);
 
     Task<bool> EditPosttWT(int loginId,AddWaitingToken model);
 
     Task<bool> DeleteWT(int id);
+
+   Task<int?> AssignTablePost(int loginid, WaitingListAssignTable model);
 }
