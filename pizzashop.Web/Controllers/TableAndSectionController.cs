@@ -202,11 +202,11 @@ public class TableAndSectionController : Controller
     {
         if (await _tableService.DeleteTable(id))
         {
-            return Json(new { sucess = true, message = "Table deleted Sucessfully." });
+            return Json(new { success = true, message = "Table deleted Sucessfully." });
         }
         else
         {
-            return Json(new { success = false, message = "Table not deleted." });
+            return Json(new { success = false, message = "Table is Currenty Occupied You can't delete that." });
         }
     }
 

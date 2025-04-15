@@ -119,6 +119,31 @@
     </div>
 </div>
 
+<div class="modal-editsection"></div>
+
+<!-- delete Section modal -->
+<div class="modal fade modal-delete" id="deleteSection" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <input type="hidden" id="hidden" value="">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+                <span>Are you sure you want to delete this Section?</span>
+            </div>
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <button type="button" class="btn btn-primary delete-section" data-bs-dismiss="modal">YES</button>
+                <button type="button" class="btn btn-danger">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <script src="../js/bootstarp.bundle.min.js"></script>
 <script src="../js/bootstarp.bundle.min.js"></script>
@@ -355,7 +380,9 @@
 
                 // Trigger the client-side validation first
                 if ($("#add-table-form").valid()) {
+                     $("#orderstatus").prop("disabled",false);
                     var formData = new FormData($("#add-table-form")[0]);
+                    var sectionid = formData.get("Sectionid");
 
                     $.ajax({
                         url: "/TableAndSection/AddTablePost",
@@ -369,10 +396,11 @@
                                 // Reset the form and close the modal if successful
                                 $("#add-table-form")[0].reset();
                                 $("#addNewTable").modal("hide");
-                                loadTablesBySec($("#Sectionid").val(), 1);
+                                loadTablesBySec(sectionid, 1);
                                 toastr.success("Table Added Successfully.");
                             } else {
                                 // Show error message if the table name is taken
+                                 $("#orderstatus").prop("disabled",true);
                                 toastr.error("This Table name is already taken in this section.");
                             }
                         },
@@ -392,9 +420,11 @@
                 var sectionId = $("#Sectionid").val();
                 e.preventDefault();
 
+
                 if ($("#edit-table-form").valid()) {
                     var formData = new FormData($("#edit-table-form")[0]);
 
+                $("#orderstatus").prop("disabled",false);
 
                     $.ajax({
                         url: "/TableAndSection/EditTablePost",
@@ -410,6 +440,7 @@
                                  toastr.success("Table Updated Succesfully.");
                             }
                             else {
+                                  $("#orderstatus").prop("disabled",true);
                                 toastr.error("This table name is already exists in this section.");
                             }
                         },
@@ -431,8 +462,14 @@
                     type: "POST",
                     data: { id: tableId },
                     success: function (response) {
+                        if(response.success)
+                        {
                         loadTablesBySec(sectionid, 1);
-                         toastr.success("Table Deleted Succesfully.");
+                         toastr.success(response.message);
+                        }
+                        else{
+                            toastr.error(response.message);
+                        }
                     },
                     error: function (error) {
                         console.error("Error in delete delete group:", error);
@@ -446,7 +483,7 @@
     
       var selectedTableIds = [];
 
-        $(document).on("change", "input[name='Stable']", function (e) {
+        $(document).on("change", "input[name='Stable']:not(:disabled)", function (e) {
             let value = $(this).val();
 
             if ($(this).is(":checked")) {
@@ -460,7 +497,7 @@
         });
 
         function restoreCheckedState() {
-            $("input[name='Stable']").each(function () {
+            $("input[name='Stable']:not(:disabled)").each(function () {
                 let value = $(this).val();
                 $(this).prop("checked", selectedTableIds.includes(value));
             });
@@ -490,7 +527,7 @@
                 let isChecked = $(this).is(":checked");
 
                 // Select only checkboxes **visible on the current page**
-                $("input[name='Stable']").each(function () {
+                $("input[name='Stable']:not(:disabled)").each(function () {
 
                     let value = $(this).val();
 
@@ -506,13 +543,13 @@
                 });
 
                 // Check/uncheck only the checkboxes on the current page
-                $("input[name='Stable']").prop("checked", isChecked);
+                $("input[name='Stable']:not(:disabled)").prop("checked", isChecked);
             });
 
 
         function updateTableMasterCheckbox() {
-            let totalCheckboxes = $("input[name='Stable']").length;
-            let checkedCheckboxes = $("input[name='Stable']:checked").length;
+            let totalCheckboxes = $("input[name='Stable']:not(:disabled)").length;
+            let checkedCheckboxes = $("input[name='Stable']:not(:disabled):checked").length;
 
             $("#TablemasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
             $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);

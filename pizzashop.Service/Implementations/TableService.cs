@@ -108,11 +108,10 @@ public class TableService : ITableService
         }
     }
 
-
     public async Task<bool> DeleteTable(int id)
     {
         Table table = await _tableRepository.TableByIdAsync(id);
-        if (table == null)
+        if (table.tablestatus  == Enums.tablestatus.Occupied)
         {
             return false;
         }
@@ -121,7 +120,6 @@ public class TableService : ITableService
             await _tableRepository.DeleteTable(table);
             return true;
         }
-
     }
 
     public async Task<bool> DeleteSelectedTable(List<int> selectedIds)

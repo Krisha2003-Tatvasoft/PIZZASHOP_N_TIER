@@ -326,7 +326,7 @@
             if ($("#assignTable-form").valid()) { 
              var formData = new FormData($("#assignTable-form")[0]);
               formData.append("TableIds", JSON.stringify(tableIds));
-              console.log(formData.get("Waitingtokenid"));
+            
 
                                     $.ajax({
                                     url: "/WaitingList/AssignTablePost",
@@ -339,10 +339,10 @@
                                         if (response.success) {
                                            $("#assignTable-form")[0].reset();
                                            $("#AssignTable").modal("hide");
-                                          redirectToMenuOrders(response.orderid);
+                                            redirectToMenuOrders(response.orderid);
                                             }
                                         else {
-                                            toastr.error("error in assign table");
+                                            toastr.error(response.message);
                                         }
 
                                     },

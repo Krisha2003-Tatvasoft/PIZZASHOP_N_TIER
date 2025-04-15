@@ -15,7 +15,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     private readonly IWaitingTokenRepository _waitingTokenRepository;
 
-     private readonly IOrderRepository _orderRepository;
+    private readonly IOrderRepository _orderRepository;
 
     private readonly IOrderTableMappingRepository _orderTableMappingRepository;
 
@@ -24,13 +24,13 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
 
     public OrderAppWaitingTokenService(ISectionRepository sectionRepository, ICustomerRepository customerRepository
-    , IWaitingTokenRepository waitingTokenRepository,IOrderRepository orderRepository, IOrderTableMappingRepository orderTableMappingRepository
-    ,ITableRepository tableRepository)
+    , IWaitingTokenRepository waitingTokenRepository, IOrderRepository orderRepository, IOrderTableMappingRepository orderTableMappingRepository
+    , ITableRepository tableRepository)
     {
         _sectionRepository = sectionRepository;
         _customerRepository = customerRepository;
         _waitingTokenRepository = waitingTokenRepository;
-          _orderRepository = orderRepository;
+        _orderRepository = orderRepository;
         _orderTableMappingRepository = orderTableMappingRepository;
         _tableRepository = tableRepository;
     }
@@ -45,25 +45,41 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         return model;
     }
 
-    public async Task<(bool Success, string Message)>  AddWaitingTokenPost(int loginId, AddWaitingToken model)
+    public async Task<(bool Success, string Message)> AddWaitingTokenPost(int loginId, AddWaitingToken model)
     {
         if (model == null)
         {
             return (false, "no data given");
         }
         var customer = await _customerRepository.GetCustomerByEmail(model.Email);
+
         if (customer != null)
         {
             var waitingList = await _waitingTokenRepository.GetWaitingList();
-            foreach(var waiting in waitingList)
+
+            foreach (var waiting in waitingList)
             {
-                if(waiting.Customerid == customer.Customerid && 
-                waiting.Createdat.HasValue )
+                if (waiting.Customerid == customer.Customerid &&
+                waiting.Createdat.HasValue && waiting.Createdat.Value.Date == DateTime.UtcNow.Date)
                 {
                     return (false, "This Customer is Already Present in WaitingToken.");
                 }
             }
-            
+
+
+            var orders = customer.Orders?.ToList(); // Ensure it's not null
+
+
+            if (orders != null && orders.Any())
+            {
+                var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
+
+                if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+                {
+                    return (false, "This customer already has an active or recent table assignment.");
+                }
+            }
+
             customer.Customername = model.Customername;
             customer.Phoneno = model.Phoneno;
             await _customerRepository.UpdateCustomer(customer);
@@ -229,7 +245,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         customer.Modifiedby = loginId;
 
         await _customerRepository.UpdateCustomer(customer);
-        if (oldcustomer !=null && oldcustomer.Visitcount == 0)
+        if (oldcustomer != null && oldcustomer.Visitcount == 0)
         {
             await _customerRepository.Delete(oldcustomer);
         }
@@ -254,17 +270,28 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     }
 
-    public async Task<int?> AssignTablePost(int loginid, WaitingListAssignTable model)
+    public async Task<(int? orderid, string Message)> AssignTablePost(int loginid, WaitingListAssignTable model)
     {
 
         if (loginid == null)
         {
-            return null;
+            return (null, "loginId is null.");
         }
         else
         {
-             List<int> tableids = JsonConvert.DeserializeObject<List<int>>(model.TableIds);
+            List<int> tableids = JsonConvert.DeserializeObject<List<int>>(model.TableIds);
             var waitingtoken = await _waitingTokenRepository.WTByIdAsync(model.Waitingtokenid);
+            var totalCapacity = 0;
+            foreach (var id in tableids)
+            {
+                var table = await _tableRepository.TableByIdAsync(id);
+                totalCapacity += (int)table.Capacity;
+            }
+            
+            if (totalCapacity < waitingtoken.Noofpeople)
+            {
+                return (null, "No. of Person Is more Then the Table Capacity.");
+            }
 
             if (waitingtoken != null)
             {
@@ -276,18 +303,28 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             var customer = await _customerRepository.GetCustomerByEmail(waitingtoken?.Customer.Email);
             if (customer != null)
             {
+                var orders = customer.Orders?.ToList(); // Ensure it's not null
+                if (orders != null && orders.Any())
+                {
+                    var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
 
+                    if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+                    {
+                        return (null, "This customer already has an active or recent table assignment.");
+                    }
+                }
                 customer.Visitcount = (short?)(customer.Visitcount + 1);
                 await _customerRepository.UpdateCustomer(customer);
             }
 
-            Order order = new Order{
-               Customerid = customer.Customerid,
-               status = (int)Entity.Models.Enums.orderstatus.Pending,
-               Noofperson = (short)waitingtoken.Noofpeople
+            Order order = new Order
+            {
+                Customerid = customer.Customerid,
+                status = (int)Entity.Models.Enums.orderstatus.Pending,
+                Noofperson = (short)waitingtoken.Noofpeople
             };
             await _orderRepository.AddNewOrder(order);
-              foreach(var table in tableids)
+            foreach (var table in tableids)
             {
                 Ordertable ordertable = new Ordertable
                 {
@@ -299,7 +336,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
                 await _tableRepository.UpdateTable(tabledata);
                 await _orderTableMappingRepository.AddNewOrderMapping(ordertable);
             }
-             return order.Orderid;
+            return (order.Orderid, "Table Assign Sucessfully.");
 
         }
     }

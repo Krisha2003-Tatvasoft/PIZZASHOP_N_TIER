@@ -6,5 +6,5 @@ public interface IOrderAppTableService
 {
     Task<AssignTable> AssignTable(int id);
 
-    Task<int?> AssignTablePost(int loginid , AssignTable model);
+    Task<(int? orderid, string Message)> AssignTablePost(int loginid , AssignTable model);
 }

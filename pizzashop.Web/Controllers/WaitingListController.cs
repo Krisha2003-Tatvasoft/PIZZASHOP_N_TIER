@@ -12,13 +12,13 @@ public class WaitingListController : Controller
 
     private readonly IOrderAppWaitingTokenService _orderAppWaitingTokenService;
 
-      private readonly ITableService _tableService;
+    private readonly ITableService _tableService;
 
 
 
 
     public WaitingListController(ISectionService sectionService,
-    IOrderAppWaitingTokenService orderAppWaitingTokenService,ITableService tableService)
+    IOrderAppWaitingTokenService orderAppWaitingTokenService, ITableService tableService)
     {
         _sectionService = sectionService;
         _orderAppWaitingTokenService = orderAppWaitingTokenService;
@@ -72,8 +72,8 @@ public class WaitingListController : Controller
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            bool isthis= await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model);
-          
+            bool isthis = await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model);
+
             if (await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model))
             {
                 return Json(new { success = true, message = "token Updated Sucessfully" });
@@ -143,24 +143,36 @@ public class WaitingListController : Controller
         return PartialView("_AssignTableModel");
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> AssignTablePost(WaitingListAssignTable model)
     {
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            int? Orderid = await _orderAppWaitingTokenService.AssignTablePost(user.Userid, model);
+            var (Orderid, message) = await _orderAppWaitingTokenService.AssignTablePost(user.Userid, model);
 
-            return Json(new
+            if (Orderid != null)
             {
-                success = true,
-                orderid = Orderid,
-            });
+                return Json(new
+                {
+                    success = true,
+                    orderid = Orderid,
+                    message = message
+                });
+            }
+            else
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = message
+                });
+            }
         }
         else
         {
-            
+
             // If model is invalid, return the same view with validation messages
             return Json(new { message = "Validation Error." });
             // return PartialView("_AddTable", model);

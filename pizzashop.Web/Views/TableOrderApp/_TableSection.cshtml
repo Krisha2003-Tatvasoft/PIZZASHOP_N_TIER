@@ -308,13 +308,12 @@ $assignBtn.prop('disabled', selectedCount === 0);
                             } 
                             else
                             {
-                              console.log("in error part");
                               toastr.error(response.message);
                             }
                         },
                         error: function (error) {
                            console.log("in error part");
-                          toastr.error(response.message);
+                          toastr.error("Interval server Error.");
                         }
                     });
                 } 
@@ -333,11 +332,11 @@ $assignBtn.prop('disabled', selectedCount === 0);
             data: { Id: wT },
             success: function (data) {
                 if (data.success == true) {
-                    $('.Name').val(data.customerName);
-                     $('.Mobile_Number').val(data.phoneNo);
-                      $('.Email').val(data.email);
+                    $('.Name').val(data.customerName).prop("readonly" , true);
+                     $('.Mobile_Number').val(data.phoneNo).prop("readonly" , true);
+                      $('.Email').val(data.email).prop("readonly" , true);
                          $('.noOfPersons').val(data.noofperson);
-                           $('.waitingListId').val(data.waitingtokenid);
+                        $('.waitingListId').val(data.waitingtokenid);
                           
                 }
                 else{
@@ -388,7 +387,7 @@ window.redirectToMenuOrders = redirectToMenuOrders;
                                           redirectToMenuOrders(response.orderid);
                                         }
                                        else {
-                                        toastr.error("error in assign table");
+                                        toastr.error(response.message);
                                       }
 
                                 },

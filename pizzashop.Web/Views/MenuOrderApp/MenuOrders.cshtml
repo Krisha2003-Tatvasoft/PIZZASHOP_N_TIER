@@ -1,12 +1,112 @@
-
 @{
 
     Layout = "~/Views/Shared/_OrderAppLayout.cshtml";
     var orderId = Context.Request.Query["orderId"];
 }
 
-<h1> Menu OrderApp</h1>
-@if(!string.IsNullOrEmpty(orderId))
+<link rel="stylesheet" href="~/css/OrderMenu.css" />
+
+
+@if (!string.IsNullOrEmpty(orderId))
 {
-    <div><h1>OrderApp align-items-center Details</h1></div>
+    <div>
+        <h1>OrderApp align-items-center Details</h1>
+    </div>
 }
+<button class="btn fs-1 d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
+    aria-controls="categoryList">
+    <i class="bi bi-list"></i>
+</button>
+
+<div class="offcanvas-lg offcanvas-start" tabindex="-1" id="categoryList" aria-labelledby="categoryList">
+    <div class="categoryList">
+
+        <h5 class="fw-bold ps-3 mt-2">Category</h5>
+        <ul class="list-unstyled slider-content">
+
+            <li><a class="fw-bold active" asp-controller="" asp-action="">Dashboard</a></li>
+
+
+            <li><a class="fw-bold" asp-controller="" asp-action="">Users</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
+
+        <div class="search-field position-relative">
+            <input class="search form-control me-2 border-0" type="search" placeholder="Search" id="searchInTable"
+                aria-label="Search">
+            <i class="bi bi-search custom-icon"></i>
+        </div>
+
+        <div class="d-flex gap-3 justify-content-center flex-sm-nowrap flex-wrap">
+            <div class="d-flex flex-row  align-items-center">
+                <span class="dot me-2" style="background-color: green;border-color: green"></span>
+                <span>Vegetarian</span>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+                <span class="dot me-2" style="background-color: red;border:4px solid red "></span>
+                <span>Non-Vegetarian</span>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+                <span class="dot me-2" style="background-color: orange;border-color: orange;"></span>
+                <span>Vegan</span>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row g-3">
+    
+    <!-- Sample Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card shadow-sm position-relative">
+        <div class="corner-ribbon ribbon-green"></div>
+        <div class="card-body d-flex align-items-center">
+          
+          <!-- Image Container with Shadow -->
+          <div class="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center me-3" style="width: 56px; height: 56px;">
+            <img src="~/images/dining-menu.png" class="rounded-circle" width="56" height="56" alt="Food" />
+          </div>
+ 
+          <div class="flex-grow-1">
+            <h6 class="mb-1 fw-semibold">Grilled burger</h6>
+            <p class="mb-0 text-primary">₹70</p>
+          </div>
+          
+          <i class="bi bi-heart"></i>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Repeat the above card block for more items -->
+ 
+    <!-- Example Non-Veg Card -->
+    <div class="col-md-3 col-sm-6">
+      <div class="card shadow-sm position-relative">
+        <div class="corner-ribbon ribbon-red"></div>
+        <div class="card-body d-flex align-items-center">
+          <div class="item-img">
+            <img src="~/images/dining-menu.png" class="rounded-circle" width="40" height="40" alt="Food" />
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-1 fw-semibold">Chicken Sandwich</h6>
+            <p class="mb-0 text-primary">₹200</p>
+          </div>
+          <i class="bi bi-heart"></i>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Add more cards as needed -->
+ 
+  </div>
+   
+</div>
+
+
+

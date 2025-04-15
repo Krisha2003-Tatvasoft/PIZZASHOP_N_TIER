@@ -5,12 +5,12 @@
 
 <link rel="stylesheet" href="~/css/WaitingList.css" />
 
-<div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
+<div class="d-flex justify-content-between mb-3">
     <h1 class="" style="color: #087cc4;">Waiting Token</h1>
 
     <button class="btn d-flex align-items-center waiting-token-btn" style="color: #087cc4; 
           background-color: #ffffff; border: 1px solid #087cc4;">
-        <i class="bi bi-plus fs-6 me-1 "></i><span>Waiting Token</span>
+        <i class="bi bi-plus fs-4  me-1 "></i><span class="d-none d-sm-inline">Waiting Token</span>
     </button>
 </div>
 
@@ -148,7 +148,7 @@
 
 
 
-        @* Delete Table *@
+            @* Delete Table *@
 
             $(document).on("click", ".delete-wt", function (e) {
                 var tokenId = $("#hidden").val();
@@ -213,7 +213,10 @@
                             $("#addNewWaitingToken").modal("hide");
                             loadTableList(Sectionid);
                             loadsectionList();
-                            toastr.success("Waiting Token Created Successfully.");
+                            toastr.success(response.message);
+                        }
+                        else {
+                            toastr.error(response.message);
                         }
                     },
                     error: function (error) {

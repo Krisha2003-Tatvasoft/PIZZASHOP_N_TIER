@@ -81,7 +81,8 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<Customer> GetCustomerByEmail(string email)
     {
-        return await _context.Customers.FirstOrDefaultAsync(o => o.Email == email);
+        return await _context.Customers
+        .Include(c =>c.Orders).FirstOrDefaultAsync(o => o.Email == email);
     }
 
     public async Task<Customer> GetCustomerById(int? id)

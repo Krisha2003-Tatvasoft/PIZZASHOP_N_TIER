@@ -8,6 +8,13 @@
     padding: 8px;
     height: auto;
 }
+/* .search
+{
+   opacity: 0.5 !important;
+} */
+/* .search::placeholder{
+    z-index: 1 !important;
+} */
 
 .search-field .custom-icon {
     position: absolute;
@@ -40,7 +47,7 @@
 }
 
 .Section-slider ul {
-    height: 350px !important;
+    height: 330px !important;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -65,6 +72,7 @@
 .Tables-table {
     border-left: 2px solid #087cc4;
     background-color: white;
+    min-height: 420px;
 }
 
 .Tables-table-heading-text {
@@ -128,7 +136,7 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    /* z-index: 1500; */
+    z-index: 20;
     transition: opacity 0s;
 }
 
@@ -168,9 +176,14 @@
     display: block!important;
  }
  
+ 
+.tables {
+    height: 100%;
+}
 
 @media screen and (max-width: 1200px) {
 
+  
     .parent .main-content .tables {
         position: relative;
     }
@@ -182,7 +195,7 @@
         width: 220px;
         background-color: white;
         height: inherit;
-        z-index: 800;
+        z-index: 30;
     }
 
     .collapse.show {

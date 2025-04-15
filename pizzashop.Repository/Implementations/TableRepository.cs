@@ -83,6 +83,7 @@ public class TableRepository : ITableRepository
     {
         await _context.Tables
        .Where(i => SelectedIds.Contains(i.Tableid))
+       .Where( t => t.tablestatus != Enums.tablestatus.Occupied)
        .ExecuteUpdateAsync(s => s.SetProperty(i => i.Isdeleted, true));
 
         await _context.SaveChangesAsync();

@@ -22,5 +22,5 @@ public interface IOrderAppWaitingTokenService
 
     Task<bool> DeleteWT(int id);
 
-   Task<int?> AssignTablePost(int loginid, WaitingListAssignTable model);
+  Task<(int? orderid, string Message)> AssignTablePost(int loginid, WaitingListAssignTable model);
 }

@@ -1,3 +1,4 @@
+using DocumentFormat.OpenXml.Spreadsheet;
 using Newtonsoft.Json;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
@@ -21,8 +22,8 @@ public class OrderAppTableService : IOrderAppTableService
     private readonly ITableRepository _tableRepository;
 
     public OrderAppTableService(ISectionRepository sectionRepository, IWaitingTokenRepository waitingTokenRepository,
-    ICustomerRepository customerRepository ,IOrderRepository orderRepository, IOrderTableMappingRepository orderTableMappingRepository
-    ,ITableRepository tableRepository)
+    ICustomerRepository customerRepository, IOrderRepository orderRepository, IOrderTableMappingRepository orderTableMappingRepository
+    , ITableRepository tableRepository)
     {
         _sectionRepository = sectionRepository;
         _waitingTokenRepository = waitingTokenRepository;
@@ -42,59 +43,117 @@ public class OrderAppTableService : IOrderAppTableService
         return model;
     }
 
-    public async Task<int?> AssignTablePost(int loginid, AssignTable model)
+    public async Task<(int? orderid, string Message)> AssignTablePost(int loginid, AssignTable model)
     {
         if (loginid == null)
         {
-            return null;
+            return (null, "loginId is null.");
         }
         else
         {
             int? customerid = null;
             List<int> tableids = JsonConvert.DeserializeObject<List<int>>(model.TableIds);
+
+            var totalCapacity = 0;
+            foreach (var id in tableids)
+            {
+                var table = await _tableRepository.TableByIdAsync(id);
+                totalCapacity += (int)table.Capacity;
+            }
+            if (totalCapacity < model.Noofperson)
+            {
+                return (null, "No. of Person Is more Then the Table Capacity.");
+            }
+
             if (model.Waitingtokenid != null)
             {
                 var waitingtoken = await _waitingTokenRepository.WTByIdAsync(model.Waitingtokenid);
                 if (waitingtoken != null)
                 {
                     waitingtoken.Isassigned = true;
-                    waitingtoken.Sectionid = model.Sectionid;
                     waitingtoken.Noofpeople = (short)model.Noofperson;
-
                     await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
                 }
-            }
-            var customer = await _customerRepository.GetCustomerByEmail(model.Email);
-            if (customer != null)
-            {
-                Console.WriteLine("customer found");
-                customer.Customername = model.Customername;
-                customer.Phoneno = model.Phoneno;
-                customer.Visitcount = (short?)(customer.Visitcount + 1);
-                await _customerRepository.UpdateCustomer(customer);
-                customerid = customer.Customerid;
+                var customer = await _customerRepository.GetCustomerByEmail(waitingtoken.Customer.Email);
+                if (customer != null)
+                {
+                    var orders = customer.Orders?.ToList(); // Ensure it's not null
+                    if (orders != null && orders.Any())
+                    {
+                        var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
+
+                        if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+                        {
+                            return (null, "This customer already has an active or recent table assignment.");
+                        }
+                    }
+                    customer.Visitcount = (short?)(customer.Visitcount + 1);
+                    await _customerRepository.UpdateCustomer(customer);
+                    customerid = customer.Customerid;
+                }
             }
             else
             {
-               
-                customer = new Customer
+                var customer = await _customerRepository.GetCustomerByEmail(model.Email);
+                if (customer != null)
                 {
-                    Customername = model.Customername,
-                    Phoneno = model.Phoneno,
-                    Email = model.Email,
-                    Createdby = loginid,
-                    Visitcount = 1
-                };
-                await _customerRepository.AddNewCustomer(customer);
-                customerid = customer.Customerid;
+                    var orders = customer.Orders?.ToList(); // Ensure it's not null
+                    if (orders != null && orders.Any())
+                    {
+                        var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
+
+                        if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+                        {
+                            return (null, "This customer already has an active or recent table assignment.");
+                        }
+                    }
+
+                    customer.Customername = model.Customername;
+                    customer.Phoneno = model.Phoneno;
+                    customer.Visitcount = (short?)(customer.Visitcount + 1);
+
+                    if (model.Waitingtokenid == null)
+                    {
+                        var waitingList = await _waitingTokenRepository.GetWaitingList();
+
+                        foreach (var waiting in waitingList)
+                        {
+                            if (waiting.Customerid == customer.Customerid &&
+                            waiting.Createdat.HasValue && waiting.Createdat.Value.Date == DateTime.UtcNow.Date)
+                            {
+                                return (null, "This Customer is Already Present in WaitingToken Assign From there.");
+                            }
+                        }
+                    }
+
+                    await _customerRepository.UpdateCustomer(customer);
+                    customerid = customer.Customerid;
+                }
+                else
+                {
+                    customer = new Customer
+                    {
+                        Customername = model.Customername,
+                        Phoneno = model.Phoneno,
+                        Email = model.Email,
+                        Createdby = loginid,
+                        Visitcount = 1
+                    };
+                    await _customerRepository.AddNewCustomer(customer);
+                    customerid = customer.Customerid;
+                }
+
             }
-            Order order = new Order{
-               Customerid = (int)customerid,
-               status = (int)Entity.Models.Enums.orderstatus.Pending,
-               Noofperson = (short)model.Noofperson
+
+            Order order = new Order
+            {
+                Customerid = (int)customerid,
+                status = (int)Entity.Models.Enums.orderstatus.Pending,
+                Noofperson = (short)model.Noofperson
             };
             await _orderRepository.AddNewOrder(order);
-            foreach(var table in tableids)
+            
+            foreach (var table in tableids)
             {
                 Ordertable ordertable = new Ordertable
                 {
@@ -107,7 +166,9 @@ public class OrderAppTableService : IOrderAppTableService
                 await _orderTableMappingRepository.AddNewOrderMapping(ordertable);
             }
 
-            return order.Orderid;
+
+
+            return (order.Orderid, "Table Assign Sucessfully.");
         }
     }
 

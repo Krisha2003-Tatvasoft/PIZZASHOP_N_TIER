@@ -47,8 +47,8 @@
 
                         <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 mb-3">
                             <div class="form-floating mb-3">
-                                <select asp-for="tablestatus" asp-items="Html.GetEnumSelectList<tablestatus>()"
-                                    class="form-select">
+                                <select asp-for="tablestatus" asp-items="Html.GetEnumSelectList<tablestatus>()" id="orderstatus"
+                                    class="form-select" disabled>
                                     <option value="">Select a Status</option>
                                 </select>
                                 <label for="floatingInput">Status*</label>

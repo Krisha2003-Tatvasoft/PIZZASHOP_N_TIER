@@ -130,16 +130,27 @@ public class TableOrderAppController : Controller
     [HttpPost]
     public async Task<IActionResult> assignTablePost(AssignTable model)
     {
+        
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            int? Orderid = await _orderAppTableService.AssignTablePost(user.Userid, model);
-
+            var(Orderid , message) = await _orderAppTableService.AssignTablePost(user.Userid, model);
+            if(Orderid!=null)
+            {
             return Json(new
             {
                 success = true,
                 orderid = Orderid,
+                message = message
             });
+            }
+            else{
+                 return Json(new
+            {
+                success = false,
+                message = message
+            });
+            }
         }
         else
         {
