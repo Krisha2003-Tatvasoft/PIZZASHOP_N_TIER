@@ -45,11 +45,11 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         return model;
     }
 
-    public async Task<bool> AddWaitingTokenPost(int loginId, AddWaitingToken model)
+    public async Task<(bool Success, string Message)>  AddWaitingTokenPost(int loginId, AddWaitingToken model)
     {
         if (model == null)
         {
-            return false;
+            return (false, "no data given");
         }
         var customer = await _customerRepository.GetCustomerByEmail(model.Email);
         if (customer != null)
@@ -57,9 +57,10 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             var waitingList = await _waitingTokenRepository.GetWaitingList();
             foreach(var waiting in waitingList)
             {
-                if(waiting.Customerid == customer.Customerid && customer.Createdat == DateTime.UtcNow)
+                if(waiting.Customerid == customer.Customerid && 
+                waiting.Createdat.HasValue )
                 {
-                    return false;
+                    return (false, "This Customer is Already Present in WaitingToken.");
                 }
             }
             
@@ -97,7 +98,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             };
             await _waitingTokenRepository.AddNewWaitingToken(token);
         }
-        return true;
+        return (true, "WaitingToken Created Sucessfully.");
     }
 
     public async Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId)
@@ -228,7 +229,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         customer.Modifiedby = loginId;
 
         await _customerRepository.UpdateCustomer(customer);
-        if (oldcustomer.Visitcount == 0)
+        if (oldcustomer !=null && oldcustomer.Visitcount == 0)
         {
             await _customerRepository.Delete(oldcustomer);
         }

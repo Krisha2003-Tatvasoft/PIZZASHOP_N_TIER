@@ -76,7 +76,7 @@ public class OrderAppTableService : IOrderAppTableService
             }
             else
             {
-                Console.WriteLine("customer not found");
+               
                 customer = new Customer
                 {
                     Customername = model.Customername,

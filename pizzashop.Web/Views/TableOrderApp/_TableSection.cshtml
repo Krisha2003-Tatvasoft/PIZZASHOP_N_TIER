@@ -285,6 +285,7 @@ $assignBtn.prop('disabled', selectedCount === 0);
 
         $(document).on("click", "#add-WT-Yes", function (e) {
                 e.preventDefault();
+                  console.log("hiiii"); 
 
                 // Trigger the client-side validation first
                if ($("#add-WT").valid()) { 
@@ -298,16 +299,22 @@ $assignBtn.prop('disabled', selectedCount === 0);
                         contentType: false,
                         dataType: 'json',
                         success: function (response) {
+                           
                             if (response.success) {
                                 // Reset the form and close the modal if successful
                                 $("#add-WT")[0].reset();
                                 $("#addNewWaitingToken").modal("hide");
-                                toastr.success("Waiting Token Created Successfully.");
+                                toastr.success(response.message);
                             } 
+                            else
+                            {
+                              console.log("in error part");
+                              toastr.error(response.message);
+                            }
                         },
                         error: function (error) {
-                            console.error("Error in Create Token.", error);
-                            toastr.error("Internal server error");
+                           console.log("in error part");
+                          toastr.error(response.message);
                         }
                     });
                 } 

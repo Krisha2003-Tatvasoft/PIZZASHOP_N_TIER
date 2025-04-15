@@ -47,6 +47,8 @@
         margin-left: 0.1rem;
     }
 </style>
+@if (Model != null && Model.Count > 0)
+{
 <div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
     <div class="table-responsive">
@@ -98,6 +100,7 @@
         </table>
     </div>
 </div>
+}
 
 <div class="modal-editWT"></div>
 

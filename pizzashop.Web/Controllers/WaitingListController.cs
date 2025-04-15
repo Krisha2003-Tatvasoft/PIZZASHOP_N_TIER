@@ -72,6 +72,8 @@ public class WaitingListController : Controller
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
+            bool isthis= await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model);
+          
             if (await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model))
             {
                 return Json(new { success = true, message = "token Updated Sucessfully" });

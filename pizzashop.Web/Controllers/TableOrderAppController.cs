@@ -70,13 +70,14 @@ public class TableOrderAppController : Controller
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            if (await _orderAppWaitingTokenService.AddWaitingTokenPost(user.Userid, model))
+            var (success, message) = await _orderAppWaitingTokenService.AddWaitingTokenPost(user.Userid, model);
+            if (success == true)
             {
-                return Json(new { success = true, message = "Waiting Token Added Successfully." });
+                return Json(new { success = true, message = message});
             }
             else
             {
-                return Json(new { success = false, message = "Waiting Token  not Added." });
+                return Json(new { success = false, message = message });
             }
         }
         else
