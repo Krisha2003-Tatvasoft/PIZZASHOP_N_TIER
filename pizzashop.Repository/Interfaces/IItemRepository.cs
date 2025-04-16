@@ -21,4 +21,6 @@ public interface IItemRepository
    Task<bool> ItemExistAsync(string Itemname);
 
    Task<bool> ItemNameExistAtEditAsync(string Itemname, int id);
+
+    Task<List<Item>> GetMenuItem(string search);
 }

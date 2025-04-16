@@ -118,7 +118,7 @@ public class ItemService : IItemService
 
     foreach (var group in viewmodel.ModifierGroups)
     {
-     
+
       var newMapping = new Itemmodifiergroupmap
       {
 
@@ -145,7 +145,7 @@ public class ItemService : IItemService
     foreach (var img in selectedMG)
     {
       var modifiers = await _modifierRepository.GetModifierList(img.Modifiergroupid);
-    
+
       ModifierGroups.Add(new IMGMviewmodel
       {
         Itemmodifiergroupid = img.Itemmodifiergroupid,
@@ -200,7 +200,7 @@ public class ItemService : IItemService
     }
     else
     {
-   
+
       uniqueFileName = item.Itemimg;
     }
     if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
@@ -311,23 +311,86 @@ public class ItemService : IItemService
     return true;
   }
 
-    public async Task<bool> UpdateAvailable(int loginId, int id ,bool available)
+  public async Task<bool> UpdateAvailable(int loginId, int id, bool available)
+  {
+    if (loginId == null)
     {
-        if (loginId == null)
-        {
-            return false;
-        }
-        else
-        {
-            Item item = await _itemRepository.ItemByIdAsync(id);
-
-            item.Isavailable = available;
-            item.Modifiedby= loginId;
-
-            await _itemRepository.UpdateItem(item);
-            return true;
-        }
+      return false;
     }
+    else
+    {
+      Item item = await _itemRepository.ItemByIdAsync(id);
+      item.Isavailable = available;
+      item.Modifiedby = loginId;
+
+      await _itemRepository.UpdateItem(item);
+      return true;
+    }
+  }
+
+  public async Task<List<ItemTable>> GetMenuItem(int id, string search)
+  {
+    var itemList = await _itemRepository.GetMenuItem(search);
+    List<Item> items;
+    if (id == 0)
+    {
+      items = itemList;
+    }
+    else if (id == -1)
+    {
+      items = itemList.Where(i => i.Isfavourite == true).ToList();
+    }
+    else
+    {
+      items = itemList.Where(i => i.Categoryid == id).ToList();
+    }
+
+    var availableItem = items
+     .Select(i => new ItemTable
+     {
+       Categoryid = id,
+       Itemid = i.Itemid,
+       Itemname = i.Itemname,
+       Rate = i.Rate,
+       itemtype = i.itemtype,
+       Isfavourite = i.Isfavourite != null ? i.Isfavourite : false,
+       Itemimg = i.Itemimg != null
+       ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{i.Itemimg}"
+       : null
+     }).ToList();
+
+    return availableItem;
+  }
+
+  public async Task<bool> ToggleFavourite(int loginId, int id)
+  {
+    if (loginId == null)
+    {
+      return false;
+    }
+    else
+    {
+      Item item = await _itemRepository.ItemByIdAsync(id);
+      if (item.Isfavourite == true)
+      {
+        item.Isfavourite = false;
+        item.Modifiedby = loginId;
+       
+
+        await _itemRepository.UpdateItem(item);
+        return false;
+      }
+      else
+      {
+        item.Isfavourite = true;
+        item.Modifiedby = loginId;
+        await _itemRepository.UpdateItem(item);
+        return true;
+      }
+
+    }
+  }
+
 
 
 }

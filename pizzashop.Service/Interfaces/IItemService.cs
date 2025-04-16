@@ -21,5 +21,8 @@ public interface IItemService
 
    Task<bool> UpdateAvailable(int loginId, int id ,bool available);
 
+   Task<List<ItemTable>> GetMenuItem(int id, string search);
+
+   Task<bool> ToggleFavourite(int loginId, int id);
 
 }

@@ -161,6 +161,10 @@
       "PackagePath": "staticwebassets\\images\\non-veg-icon.svg"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\images\\order-table.png",
+      "PackagePath": "staticwebassets\\images\\order-table.png"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\images\\orders-active.png",
       "PackagePath": "staticwebassets\\images\\orders-active.png"
     },

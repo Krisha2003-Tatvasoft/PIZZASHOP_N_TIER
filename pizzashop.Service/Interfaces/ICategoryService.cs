@@ -16,6 +16,6 @@ public interface ICategoryService
 
      Task<bool> SaveOrderCategory(List<int> orderIds);
 
-     
+     Task<List<VMCategory>> GetMenuCategoryList();
 
 }

@@ -1,0 +1,28 @@
+@using static pizzashop.Entity.Models.Enums
+   @model List<pizzashop.Entity.ViewModels.ItemTable>
+
+   @foreach(var item in Model)
+   {
+
+   <div class="card d-flex flex-row bg-white" style="height: 90px;width:280px;border-radius: 0.5rem;">
+      <div class="d-flex justify-content-start pe-2">
+        <div class="item-img">
+          <img src="@(string.IsNullOrEmpty(item.Itemimg) ? "../images/dining-menu.png" : item.Itemimg)" alt="Item Image" style="height: 100%; width: 100%; object-fit: cover;" />
+        </div>
+      </div>
+      <div class="flex-column d-flex align-item-center gap-2 px-2 py-2 
+            justify-content-center w-100">
+        <div class="flex-row d-flex justify-content-between align-item-center">
+          <span>@item.Itemname</span>
+        </div>
+        <div class="flex-row d-flex justify-content-between align-item-center">
+          <span class="">@item.Rate</span>
+        </div>
+      </div>
+      <div class="flex-column d-flex justify-content-between">
+        <div class="all-type @(@item.itemtype == itemtype.Veg ? "type-color-green": (@item.itemtype == itemtype.NonVeg ? "type-color-red" : "type-color-vegan")) "></div>
+        <i class=" py-3 px-2 bi Favourite @(item.Isfavourite == true ? "bi-heart-fill text-danger" : "bi-heart")" data-itemid="@item.Itemid" ></i>
+      </div>
+
+    </div>
+   }

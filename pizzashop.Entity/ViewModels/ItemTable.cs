@@ -22,6 +22,6 @@ public class ItemTable
 
   public string? Itemimg { get; set; }
 
-
+  public bool? Isfavourite { get; set; }
 
 }

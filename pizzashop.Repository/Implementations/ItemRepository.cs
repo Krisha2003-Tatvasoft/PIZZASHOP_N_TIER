@@ -85,6 +85,18 @@ public class ItemRepository : IItemRepository
         return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower() && c.Itemid != id && c.Isdeleted == false);
     }
 
+      public async Task<List<Item>> GetMenuItem(string search)
+    {
+        string lowerSearch = search.ToLower();
+        return await _context.Items
+        .Include(u => u.Unit)
+        .Where(c => c.Isdeleted == false  && c.Isavailable == true)
+        .Where(c => string.IsNullOrEmpty(lowerSearch) ||
+         c.Itemname.ToLower().Contains(lowerSearch) ||
+          c.Quantity.ToString().ToLower().Contains(lowerSearch) ||
+           c.Rate.ToString().ToLower().Contains(lowerSearch))
+        .OrderBy(c => c.Itemid).ToListAsync();
+    }
 
 
 }

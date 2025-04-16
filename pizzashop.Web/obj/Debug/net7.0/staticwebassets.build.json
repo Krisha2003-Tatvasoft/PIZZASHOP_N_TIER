@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "aDH0IBcNFLr8Wpm3exEuaauCNP5EfWdBRAFpt0Qw9PY=",
+  "Hash": "hosSYj+xfiH8mtCzlFpc8mfjjD+irihPkwVX20GdHzU=",
   "Source": "pizzashop.Web",
   "BasePath": "_content/pizzashop.Web",
   "Mode": "Default",
@@ -712,6 +712,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\non-veg-icon.svg"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\images\\order-table.png",
+      "SourceId": "pizzashop.Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\",
+      "BasePath": "_content/pizzashop.Web",
+      "RelativePath": "images/order-table.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\order-table.png"
     },
     {
       "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\images\\orders-active.png",
