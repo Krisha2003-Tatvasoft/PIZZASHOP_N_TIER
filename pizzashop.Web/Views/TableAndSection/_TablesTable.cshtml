@@ -49,7 +49,8 @@
                         @item.Capacity
                     </td>
                     <td>
-                        @item.tablestatus
+                        <span class=" badge rounded-pill @(item.tablestatus == Enums.tablestatus.Occupied  ? "occuipiedstatus" : "availabletatus")">@item.tablestatus</span>
+                        
                     </td>
                     @if (tablePermission.Canaddedit == true || tablePermission.Candelete == true)
                     {

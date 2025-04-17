@@ -85,17 +85,30 @@ public class ItemRepository : IItemRepository
         return await _context.Items.AnyAsync(c => c.Itemname.ToLower() == Itemname.ToLower() && c.Itemid != id && c.Isdeleted == false);
     }
 
-      public async Task<List<Item>> GetMenuItem(string search)
+    public async Task<List<Item>> GetMenuItem(string search)
     {
         string lowerSearch = search.ToLower();
         return await _context.Items
         .Include(u => u.Unit)
-        .Where(c => c.Isdeleted == false  && c.Isavailable == true)
+        .Where(c => c.Isdeleted == false && c.Isavailable == true)
         .Where(c => string.IsNullOrEmpty(lowerSearch) ||
          c.Itemname.ToLower().Contains(lowerSearch) ||
           c.Quantity.ToString().ToLower().Contains(lowerSearch) ||
            c.Rate.ToString().ToLower().Contains(lowerSearch))
         .OrderBy(c => c.Itemid).ToListAsync();
+    }
+
+
+    public async Task<Item> ItemWithModifier(int id)
+    {
+     
+        return await _context.Items
+        .Include(i => i.Itemmodifiergroupmaps)
+        .ThenInclude(im => im.Modifiergroup)
+        .ThenInclude(mg => mg.ModifierGroupModifier)
+        .ThenInclude(m => m.Modifier)
+        .FirstOrDefaultAsync(i => i.Itemid == id);
+
     }
 
 

@@ -60,7 +60,7 @@ public class ModifiergroupModifierRepository : IModifiergroupModifierRepository
     }
 
 
-  public async Task<List<ModifierGroupModifier>> GetMappingsByMIdandMGId(int modifierId, int MGId)
+    public async Task<List<ModifierGroupModifier>> GetMappingsByMIdandMGId(int modifierId, int MGId)
     {
         return await _context.ModifierGroupModifiers
         .Where(mg => mg.ModifierId == modifierId && mg.ModifierGroupId == MGId)

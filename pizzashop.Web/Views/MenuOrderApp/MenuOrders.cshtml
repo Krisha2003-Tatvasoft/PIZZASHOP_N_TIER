@@ -7,9 +7,6 @@
 
 <link rel="stylesheet" href="~/css/OrderMenu.css" />
 
-
-
-
 <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="categoryList" aria-labelledby="categoryList">
   <div class="categoryList">
 
@@ -222,6 +219,7 @@
 
 </div>
 
+<div class="modifier-list"></div>
 
 <script>
   $(document).ready(function () {
@@ -270,6 +268,7 @@
 
     @* load items onlick *@
       $(document).on("click", ".category", function (e) {
+         e.preventDefault();
         var categoryId = $(this).data("catid");
         loadItemList(categoryId);
       });
@@ -297,6 +296,7 @@
 
     @* add into Favourite *@
       $(document).on("click", ".Favourite", function (e) {
+        e.stopPropagation();
         var itemId = $(this).data("itemid");
 
         $.ajax({
@@ -317,6 +317,29 @@
           }
         });
 
+
+
+      });
+
+     $(document).on("click", ".itemCard", function (e) {
+       e.preventDefault();
+
+      const orderId = new URLSearchParams(window.location.search).get('orderId');
+
+        var itemId = $(this).data("itemid");
+    
+          $.ajax({
+          url: `/MenuOrderApp/ModifierList?orderId=${orderId}`, 
+          type: "GET",
+          data: { id: itemId},
+          success: function (data) {
+            $('.modifier-list').html(data);
+            $("#modifierData").modal("show");
+          },
+          error: function () {
+            alert("error in load category.")
+          }
+        });
 
 
       });

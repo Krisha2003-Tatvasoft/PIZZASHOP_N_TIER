@@ -4,23 +4,25 @@ namespace pizzashop.Repository.Interfaces;
 
 public interface IItemRepository
 {
-   Task<List<Item>> GetItemByCat(int id, string search);
+    Task<List<Item>> GetItemByCat(int id, string search);
 
-   Task<bool> DeleteByCat(int id);
+    Task<bool> DeleteByCat(int id);
 
-   Task AddNewItemAsync(Item item);
+    Task AddNewItemAsync(Item item);
 
-   Task<Item> ItemByIdAsync(int id);
+    Task<Item> ItemByIdAsync(int id);
 
-   Task UpdateItem(Item item);
+    Task UpdateItem(Item item);
 
-   Task DeleteItem(Item item);
+    Task DeleteItem(Item item);
 
-   Task DeleteSelected(List<int> SelectedIds);
+    Task DeleteSelected(List<int> SelectedIds);
 
-   Task<bool> ItemExistAsync(string Itemname);
+    Task<bool> ItemExistAsync(string Itemname);
 
-   Task<bool> ItemNameExistAtEditAsync(string Itemname, int id);
+    Task<bool> ItemNameExistAtEditAsync(string Itemname, int id);
 
     Task<List<Item>> GetMenuItem(string search);
+
+    Task<Item> ItemWithModifier(int id);
 }

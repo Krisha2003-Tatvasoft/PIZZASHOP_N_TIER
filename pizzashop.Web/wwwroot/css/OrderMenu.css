@@ -102,8 +102,7 @@
   border-bottom-right-radius: 50px;
 }
 
-.bill-top-btn
-{
+.bill-top-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -113,12 +112,32 @@
   border-radius: 5px;
 }
 
-.bill-top-btn i
-{
+.bill-top-btn i {
   color: #087cc4;
 }
 
 
+.modal-header {
+  color: grey;
+}
+
+.btn-primary {
+  background-color: #087cc4 !important;
+  color: white !important;
+  width: 80px !important;
+}
+
+.btn-danger {
+  background-color: white !important;
+  color: #087cc4 !important;
+  border-color: #087cc4 !important;
+  width: 100px;
+}
+
+
+.modal-content {
+  color: grey;
+}
 
 @media screen and (max-width: 992px) {
   /* .offcanvas-lg {
@@ -149,16 +168,17 @@
 }
 
 .accordion-button.collapsed::after {
-  color: #087cc4!important;
-  transform: rotate(-90deg);  /* Arrow right */
+  color: #087cc4 !important;
+  transform: rotate(-90deg); /* Arrow right */
 }
 
- 
 .accordion-button:not(.collapsed) {
   box-shadow: none !important;
 }
 
 .accordion-button:not(.collapsed) {
   background-color: #ffffff;
-  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
 }
+
+

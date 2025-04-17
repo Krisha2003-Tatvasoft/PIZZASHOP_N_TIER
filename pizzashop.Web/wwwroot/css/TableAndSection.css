@@ -181,6 +181,16 @@
     height: 100%;
 }
 
+ .availabletatus{
+    background-color :#77ab59;
+ }
+
+ .occuipiedstatus
+ {
+    background-color:grey;
+ }
+
+
 @media screen and (max-width: 1200px) {
 
   

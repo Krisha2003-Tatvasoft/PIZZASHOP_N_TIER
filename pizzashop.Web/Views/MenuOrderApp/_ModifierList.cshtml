@@ -1,0 +1,81 @@
+@using Microsoft.Extensions.Primitives
+@using static pizzashop.Entity.Models.Enums
+@model List<pizzashop.Entity.ViewModels.IMGMviewmodel>
+@{
+    var Id = Context.Request.Query["orderId"];
+}
+
+
+<div class="modal fade modal-delete" id="modifierData" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <input type="hidden" id="hidden" value="">
+        
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modifierData">@((Model != null && Model.Any()) ? Model[0].Itemname : "Item")
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-2 ">
+
+                @if (Model != null && Model.Any())
+                {
+
+                    @foreach (var mg in Model)
+                    {
+                        <div class="row p-2 w-100">
+                            <div class="row pb-2">
+                                <span class="d-inline">
+                                    <h6 class="d-inline">@mg.Modifiergroupname</h6>
+                                    <p class="d-inline">(You can choose Minimum - @mg.Minselectionrequired & Maximum -
+                                        @mg.Maxselectionallowed
+                                        Options)</p>
+                                </span>
+                            </div>
+
+                            <div class="row pb-2 p-0 px-1 mx-1 gap-3">
+                                @if (mg.modifiers != null && mg.modifiers.Any())
+                                {
+
+                                    @foreach (var modifier in mg.modifiers)
+                                    {
+                                        <div class="card d-flex flex-row bg-white px-0"
+                                            style="height: 70px;width:200px; border-radius: 0.5rem;">
+                                            <div
+                                                class="flex-column d-flex align-item-center gap-2 px-3 py-2 justify-content-center w-100">
+                                                <span class="fs-6">@modifier.Modifiername</span>
+                                                <span class="fs-6"><i class="bi bi-currency-rupee"></i>@modifier.Rate</span>
+                                            </div>
+                                            <div
+                                                class="all-type @(mg != null ? (mg.itemtype == itemtype.Veg ? "type-color-green" : (mg.itemtype == itemtype.NonVeg ? "type-color-red" : "type-color-vegan")) : "")">
+                            </div>
+                        </div>
+                                                }
+
+                                }
+                                else
+                                {
+                                    <h3>No Modifier For this ModifierGroup.</h3>
+                                }
+                            </div>
+
+                        </div>
+                    }
+
+                }
+                else
+                {
+                    <h6>No ModifiersGroup For this item</h6>
+                }
+            </div>
+            <div class="modal-footer d-flex justify-content-end gap-2">
+                @if (Id != "null")
+                {
+                    <button type="button" class="btn btn-primary delete-section" data-bs-dismiss="modal">Add</button>
+                }
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
