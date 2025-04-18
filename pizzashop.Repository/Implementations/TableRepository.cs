@@ -83,7 +83,7 @@ public class TableRepository : ITableRepository
     {
         await _context.Tables
        .Where(i => SelectedIds.Contains(i.Tableid))
-       .Where( t => t.tablestatus != Enums.tablestatus.Occupied)
+       .Where(t => t.tablestatus != Enums.tablestatus.Occupied)
        .ExecuteUpdateAsync(s => s.SetProperty(i => i.Isdeleted, true));
 
         await _context.SaveChangesAsync();
@@ -95,6 +95,11 @@ public class TableRepository : ITableRepository
     (c => new SelectListItem
     { Value = c.Tableid.ToString(), Text = c.Tablename })
     .ToListAsync();
+
+    public async Task<List<Table>> tablesBysection(int id)
+    {
+        return await _context.Tables.Where(t => t.Sectionid == id && t.Isdeleted == false).ToListAsync();
+    }
 
 
 }

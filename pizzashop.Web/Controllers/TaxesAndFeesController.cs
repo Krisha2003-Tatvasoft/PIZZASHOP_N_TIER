@@ -38,7 +38,7 @@ public class TaxesAndFeesController : Controller
     [CustomAuthorize("TaxAndFees", "AddEdit")]
     public async Task<IActionResult> AddTax()
     {
-        return PartialView("_AddTax");
+        return PartialView("_AddTax" , await _taxesService.AddTaxget());
     }
 
     [HttpPost]

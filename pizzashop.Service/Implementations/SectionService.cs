@@ -89,17 +89,25 @@ public class SectionService : ISectionService
       }
    }
 
-   public async Task<bool> DeleteSection(int id)
+   public async Task<(bool sucess,string message)> DeleteSection(int id)
    {
       Section section = await _sectionRepository.SecByIdAsync(id);
+      List<Table> tables = await _tableRepository.tablesBysection(id);
+      foreach (var table in tables)
+      {
+         if (table.tablestatus == Enums.tablestatus.Occupied)
+         {
+            return (false, "This section has 1 or more occupied Table You can't delete this setion.");
+         }
+      }
       await _sectionRepository.DeleteSection(section);
       if (await _tableRepository.DeleteBySection(id))
       {
-         return true;
+         return (true, "Section Deleted Suceesfully.");
       }
       else
       {
-         return false;
+         return (false, "error in delete Section.");
       }
    }
 
@@ -154,7 +162,7 @@ public class SectionService : ISectionService
 
             string? runningSince = null;
 
-            if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served)
+            if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served || status == Enums.orderstatus.Pending)
             {
                if (!_orderStartTimes.ContainsKey(t.Tableid))
                {

@@ -59,7 +59,7 @@
         enctype="multipart/form-data">
         <input type="hidden" name="from" value="@fromval">
         <input type="hidden" asp-for="Email">
-        <input type="hidden" asp-for="Userid">
+        <input type="hidden" id="hidden" asp-for="Userid">
         <input type="hidden" asp-for="Rolename">
         <!-- first row -->
         <div>
@@ -99,18 +99,20 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                            <input type="text" class="form-control" id="username" placeholder="User Name"
                                 asp-for="Username">
-                            <label for="floatingInput">User Name</label>
+                            <label for="username">User Name</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
+                              <span class="text-danger usernameExist"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                            <input type="text" class="form-control" id="phone" placeholder="User Name"
                                 asp-for="Phone">
-                            <label for="floatingInput">Phone</label>
+                            <label for="phone">Phone</label>
                             <span asp-validation-for="Phone" class="text-danger"></span>
+                            <span class="text-danger phone-exist"></span>
                         </div>
                     </div>
                 </div>
@@ -288,4 +290,80 @@
             }
         }
     }
+
+var isvalid = true;
+    var isvalidphone = true;
+
+    function usernameexist() {
+       
+        var username = $("#username").val();
+        var id = $("#hidden").val();
+    
+        if (username) {
+            $.ajax({
+                url: '/User/usernameexist',
+                type: 'GET',
+                data: { id: id, username: username },
+                success: function (data) {
+                    if (data.success == true) {
+                        $(".usernameExist").text(data.message);
+                        isvalid= false;
+                    }
+                    else {
+                        isvalid = true;
+                        $(".usernameExist").text("")
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch customer');
+                }
+            });
+        }
+    }
+
+    function phoneexist() {
+       
+        var phone = $("#phone").val();
+        var id = $("#hidden").val();
+    
+        if (phone) {
+            $.ajax({
+                url: '/User/phoneExist',
+                type: 'GET',
+                data: { id: id, phone: phone },
+                success: function (data) {
+                    if (data.success == true) {
+                        $(".phone-exist").text(data.message);
+                        isvalidphone= false;
+                    }
+                    else {
+                        isvalidphone = true;
+                        $(".phone-exist").text("")
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch customer');
+                }
+            });
+        }
+    }
+
+    $(document).on("blur", "#phone", function (e) {
+        phoneexist();
+    });
+
+     $(document).on("blur", "#username", function (e) {
+        usernameexist();
+    });
+
+     $(document).on("click", ".create-button", function (e) {
+        usernameexist();
+         phoneexist();
+        if(isvalid === false || isvalidphone === false)
+        {
+        e.preventDefault();
+        }
+    });
+
+
 </script>

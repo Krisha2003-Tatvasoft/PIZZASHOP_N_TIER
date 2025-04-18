@@ -165,10 +165,6 @@ public class UserService : IUserService
       }
       uniqueFileName = await _fileService.UploadFileAsync(model.ProfilePicture, "uploads");
     }
-    else
-    {
-      uniqueFileName = user.User?.Profileimg;
-    }
     
     if (user == null)
     {

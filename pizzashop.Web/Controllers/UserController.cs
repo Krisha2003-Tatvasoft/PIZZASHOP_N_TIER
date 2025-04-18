@@ -12,7 +12,6 @@ using System.Text;
 namespace pizzashop.Web.Controllers;
 
 
-
 [CustomAuthorize]
 public class UserController : Controller
 {
@@ -21,16 +20,22 @@ public class UserController : Controller
 
     private readonly IProfileService _profileService;
 
+    private readonly IFileService _fileService;
 
     private readonly IWebHostEnvironment _webHostEnvironment;
 
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+
     public UserController(IUserService userService, IWebHostEnvironment webHostEnvironment, IEMailService eMailService,
-    IProfileService profileService)
+    IProfileService profileService, IFileService fileService, IHttpContextAccessor httpContextAccessor)
     {
         _userService = userService;
         _webHostEnvironment = webHostEnvironment;
         _emailService = eMailService;
         _profileService = profileService;
+        _fileService = fileService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     [CustomAuthorize("Users", "View")]
@@ -46,7 +51,6 @@ public class UserController : Controller
         ViewBag.TotalUsers = totalUsers;
         ViewBag.SortColumn = SortColumn;
         ViewBag.SortOrder = SortOrder;
-
 
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
 
@@ -179,6 +183,7 @@ public class UserController : Controller
         ModelState.Remove("password");
         if (ModelState.IsValid)
         {
+
             if (await _userService.usernameExistEdit(viewmodel.Username, viewmodel.Userid))
             {
                 TempData["ErrorMessage"] = "Username Already Exist.";
@@ -242,8 +247,80 @@ public class UserController : Controller
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> usernameexist(int id, string username)
+    {
 
+        if (await _userService.usernameExistEdit(username, id))
+        {
+
+            return Json(new
+            {
+                success = true,
+                message = "This Username already used."
+            });
+        }
+        else
+        {
+            return Json(new
+            {
+                success = false,
+                message = ""
+            });
+        }
+
+
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> phoneExist(int id, string phone)
+    {
+        if (await _userService.phoneExistEdit(phone, id))
+        {
+
+            return Json(new
+            {
+                success = true,
+                message = "This PhoneNumber is already used."
+            });
+        }
+        else
+        {
+            return Json(new
+            {
+                success = false,
+                message = ""
+            });
+        }
+
+    }
     
+    [HttpGet]
+    public async Task<IActionResult> emailExist(string email)
+    {
+        if (await _userService.emailExist(email))
+        {
+
+            return Json(new
+            {
+                success = true,
+                message = "This email is already used."
+            });
+        }
+        else
+        {
+            return Json(new
+            {
+                success = false,
+                message = ""
+            });
+        }
+
+    }
+
+
+
+
 
 }
 

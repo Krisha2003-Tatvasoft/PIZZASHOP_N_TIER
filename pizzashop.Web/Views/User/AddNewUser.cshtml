@@ -54,10 +54,11 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="floatingInput" placeholder="User Name"
+                            <input type="text" class="form-control" id="username" placeholder="User Name"
                                 asp-for="Username">
-                            <label for="floatingInput">User Name</label>
+                            <label for="username">User Name</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
+                              <span class="text-danger usernameExist"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -79,10 +80,11 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="floatingInput" placeholder="Email"
+                            <input type="email" class="form-control" id="email" placeholder="Email"
                                 asp-for="Email">
-                            <label for="floatingInput">Email</label>
+                            <label for="email">Email</label>
                             <span asp-validation-for="Email" class="text-danger"></span>
+                             <span class="text-danger emailExist"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3 password">
@@ -99,62 +101,6 @@
         </div>
 
 
-        @* <div>
-            <div class="container-fluid mb-3">
-                <div class="row  file-upload ms-1 me-1">
-                    <div class="col-lg-12 col-md-12 col-sm-12 mb-3"> *@
-
-                        @* <div class="input-group d-flex justify-content-center align-items-center">
-                        <!-- Button to trigger the file input -->
-                        <button type="button" class="btn" id="inputGroupFileAddon04"
-                        onclick="document.getElementById('inputGroupFile01').click();">
-                        <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
-                        <div class="d-flex justify-content-center align-items-center">
-                        Browes file
-                        </div>
-                        </button>
-
-                        <!-- Hidden file input -->
-                        <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                        aria-describedby="fileNameDisplay" asp-for="ProfilePicture"
-                        onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No
-                        file selected';">
-                        <span id="fileNameDisplay">No file selected</span>
-                        </div> *@
-
-
-
-                        @* <div class="input-group d-flex justify-content-center align-items-center">
-
-                            <img src="@(string.IsNullOrEmpty(Model.Profileimg) ? " ../images/Default_pfp.svg.png" : Model.Profileimg)"
-                                class="user-profile" id="profileImage" width="80px" height="80px"
-                                style="border-radius: 50%; ">
-
-
-                            <!-- Button to trigger the file input -->
-                            <button type="button" class="btn" id="inputGroupFileAddon04"
-                                onclick="document.getElementById('inputGroupFile01').click();">
-                                <img class="upload-icon" src="~/images/cloud-arrow-up.svg" alt="Upload" />
-                                <div class="d-flex justify-content-center align-items-center">
-                                    Browse File
-                                </div>
-                            </button>
-
-                            <!-- Hidden file input -->
-                            <input type="file" class="form-control" id="inputGroupFile01" style="display: none;"
-                                asp-for="ProfilePicture" onchange="validateFile(this);">
-
-                            <!-- Display selected file name -->
-                            <span id="fileNameDisplay" class="ms-2">No file selected</span>
-
-                            <!-- ASP.NET Core Model Validation (only works after form submit) -->
-                            <span asp-validation-for="ProfilePicture" class="text-danger"></span>
-                        </div> *@
-@* 
-                    </div>
-                </div>
-            </div>
-        </div> *@
 
  <div class="container-fluid mb-3">
         <div class="d-flex align-items-center justify-content-center p-3 rounded flex-column pb-3"
@@ -239,9 +185,10 @@
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
-                        <input type="tel" class="form-control" id="floatingInput" placeholder="Phone" asp-for="Phone">
-                        <label for="floatingInput">Phone</label>
+                        <input type="tel" class="form-control" id="phone" placeholder="Phone" asp-for="Phone">
+                        <label for="phone">Phone</label>
                         <span asp-validation-for="Phone" class="text-danger"></span>
+                         <span class="text-danger phone-exist"></span>
                     </div>
                 </div>
             </div>
@@ -350,7 +297,9 @@
 
 
 <script>
-
+  var isvalid = true;
+    var isvalidphone = true;
+    var isvalidemail= true;
 
     function previewFile(event) {
         const fileInput = document.getElementById('fileInput');
@@ -389,5 +338,110 @@
         imagePreview.style.display = "none"; // Hide image
         deleteFile.style.display = "none"; // Hide delete icon
     }
+
+
+    function usernameexist() {
+       
+        var username = $("#username").val();
+       
+        if (username) {
+            $.ajax({
+                url: '/User/usernameexist',
+                type: 'GET',
+                data: { id: 0, username: username },
+                success: function (data) {
+                    if (data.success == true) {
+                        $(".usernameExist").text(data.message);
+                        isvalid= false;
+                    }
+                    else {
+                        isvalid = true;
+                        $(".usernameExist").text("")
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch customer');
+                }
+            });
+        }
+    }
+
+      function phoneexist() {
+       
+        var phone = $("#phone").val();
+      
+    
+        if (phone) {
+            $.ajax({
+                url: '/User/phoneExist',
+                type: 'GET',
+                data: { id: 0, phone: phone },
+                success: function (data) {
+                    if (data.success == true) {
+                        $(".phone-exist").text(data.message);
+                        isvalidphone= false;
+                    }
+                    else {
+                        isvalidphone = true;
+                        $(".phone-exist").text("")
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch customer');
+                }
+            });
+        }
+    }
+
+      $(document).on("blur", "#phone", function (e) {
+        phoneexist();
+    });
+
+
+     function emailexist() {
+       
+        var email = $("#email").val();
+    
+        if (phone) {
+            $.ajax({
+                url: '/User/emailExist',
+                type: 'GET',
+                data: { email: email },
+                success: function (data) {
+                    if (data.success == true) {
+                        $(".emailExist").text(data.message);
+                        isvalidemail= false;
+                    }
+                    else {
+                        isvalidemail = true;
+                        $(".emailExist").text("")
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch customer');
+                }
+            });
+        }
+    }
+
+      $(document).on("blur", "#email", function (e) {
+       emailexist();
+    });
+
+
+ 
+   $(document).on("blur", "#username", function (e) {
+        usernameexist();
+    });
+
+    $(document).on("click", ".create-button", function (e) {
+        usernameexist();
+           phoneexist();
+           emailexist();
+        if(isvalid === false  || isvalidphone === false || isvalidemail === false)
+        {
+        e.preventDefault();
+        }
+    });
 
 </script>

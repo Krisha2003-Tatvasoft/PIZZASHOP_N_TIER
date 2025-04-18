@@ -76,6 +76,17 @@ public class TaxesService : ITaxesService
         return model;
     }
 
+    public async Task<AddTax> AddTaxget()
+    {
+
+        AddTax model = new AddTax
+        {
+            Isenabled = true
+        };
+        return model;
+    }
+
+
     public async Task<bool> EditTaxPost(int loginId, AddTax viewmodel)
     {
         if (await _taxesRepository.TaxNameExistInEdit(viewmodel.Taxname, viewmodel.Taxid))
@@ -113,7 +124,7 @@ public class TaxesService : ITaxesService
 
     }
 
-    public async Task<bool> UpdateEnable(int loginId, int id ,bool enable)
+    public async Task<bool> UpdateEnable(int loginId, int id, bool enable)
     {
         if (loginId == null)
         {

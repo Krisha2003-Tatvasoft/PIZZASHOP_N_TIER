@@ -121,13 +121,14 @@ public class TableAndSectionController : Controller
     [CustomAuthorize("TableAndSection", "Delete")]
     public async Task<IActionResult> DeleteSection(int id)
     {
-        if (await _sectionService.DeleteSection(id))
+        var (sucess, message) = await _sectionService.DeleteSection(id);
+        if (sucess == true)
         {
-            return Json(new { success = true, message = "Section deleted Sucessfully." });
+            return Json(new { success = true, message = message });
         }
         else
         {
-            return Json(new { error = true, message = "Section not deleted." });
+            return Json(new { success = false, message =message  });
         }
     }
 

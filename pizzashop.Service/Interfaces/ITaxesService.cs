@@ -14,6 +14,8 @@ public interface ITaxesService
 
     Task<bool> DeleteTax(int id);
 
-     Task<bool> UpdateEnable(int loginId, int id ,bool enable);
+    Task<bool> UpdateEnable(int loginId, int id, bool enable);
+
+    Task<AddTax> AddTaxget();
     
 }

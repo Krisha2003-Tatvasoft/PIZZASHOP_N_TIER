@@ -21,6 +21,11 @@ public class OrderService : IOrderService
     {
         var orderList = await _orderRepository.OrderTable(search, SortColumn, SortOrder, status, fromDate, toDate);
 
+        if (orderList == null)
+        {
+            return (new List<OrderTable>(), 0);
+        }
+
         int totalOrder = await orderList.CountAsync();
 
         var orders = await orderList
@@ -33,7 +38,7 @@ public class OrderService : IOrderService
             Customername = o.Customer.Customername,
             orderstatus = (Entity.Models.Enums.orderstatus)o.status,
             paymentmode = (Entity.Models.Enums.paymentmode)o.Paymentmode,
-            Rating = (decimal)o.Rating,
+            Rating = (decimal)(o.Rating ?? 0),
             Totalamount = o.Totalamount
         })
         .ToListAsync();
@@ -46,6 +51,10 @@ public class OrderService : IOrderService
         string status, DateTime? fromDate, DateTime? toDate)
     {
         var orderList = await _orderRepository.OrderExcelTable(search, status, fromDate, toDate);
+        if (orderList == null)
+        {
+            return new List<OrderTable>();
+        }
 
         var orders = await orderList
         .Select(o => new OrderTable
@@ -55,7 +64,7 @@ public class OrderService : IOrderService
             Customername = o.Customer.Customername,
             orderstatus = (Entity.Models.Enums.orderstatus)o.status,
             paymentmode = (Entity.Models.Enums.paymentmode)o.Paymentmode,
-            Rating = (decimal)o.Rating,
+            Rating = (decimal)(o.Rating ?? 0),
             Totalamount = o.Totalamount
         })
         .ToListAsync();
@@ -80,7 +89,7 @@ public class OrderService : IOrderService
                 Modifiername = m.Modifiers.Modifiername,
                 Quantity = (short)i.Quantity,
                 Rate = m.Modifiers.Rate,
-                TotalAmount = m.Modifiers.Rate * i.Quantity 
+                TotalAmount = m.Modifiers.Rate * i.Quantity
             }).ToList()
         }).ToList();
 
@@ -97,31 +106,32 @@ public class OrderService : IOrderService
             Taxvalue = t.Tax.Taxvalue
         }).ToList();
 
-       OrderDetails model = new OrderDetails{
-           Orderid= order.Orderid,
-           PlacedOn = order.Createdat,
-           Customername = order.Customer.Customername,
-           Phoneno = order.Customer.Phoneno,
-           Noofperson = order.Noofperson,
-           orderstatus = (Entity.Models.Enums.orderstatus)order.status,
-           Email=order.Customer.Email,
-           Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
-           Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
-           Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
-           Items=items,
-           Taxes=taxes,
-           Totalamount=TotalAmount,
-           Subamount= subTotal,
-           paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
-       };
-     return model;
-        
+        OrderDetails model = new OrderDetails
+        {
+            Orderid = order.Orderid,
+            PlacedOn = order.Createdat,
+            Customername = order.Customer.Customername,
+            Phoneno = order.Customer.Phoneno,
+            Noofperson = order.Noofperson,
+            orderstatus = (Entity.Models.Enums.orderstatus)order.status,
+            Email = order.Customer.Email,
+            Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
+            Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
+            Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
+            Items = items,
+            Taxes = taxes,
+            Totalamount = TotalAmount,
+            Subamount = subTotal,
+            paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
+        };
+        return model;
+
     }
 
-    
 
 
-    
+
+
 
 
 

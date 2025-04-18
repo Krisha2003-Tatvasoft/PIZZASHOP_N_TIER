@@ -66,21 +66,21 @@
                 <div class="search-field position-relative">
                     <input class="search form-control me-2 border-0" type="search" placeholder="Search"
                         id="searchInTable" aria-label="Search">
-                         <i class="bi bi-search custom-icon"></i>
+                    <i class="bi bi-search custom-icon"></i>
                 </div>
 
-                 @if (tablePermission.Candelete == true)
-                                {
-                <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedTables" class="delet-btn">
-                    <image class="delet-icon" src="../images/trash.svg" />
-                </button>
+                @if (tablePermission.Candelete == true)
+                {
+                    <button class="button" data-bs-toggle="modal" data-bs-target="#deleteSelectedTables" class="delet-btn">
+                        <image class="delet-icon" src="../images/trash.svg" />
+                    </button>
                 }
 
                 @if (tablePermission.Canaddedit == true)
-                                {
-                <button class="new-table-btn button openAddTableModel">
-                    <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Table</span> 
-                </button>
+                {
+                    <button class="new-table-btn button openAddTableModel">
+                        <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Table</span>
+                    </button>
                 }
 
             </div>
@@ -187,14 +187,14 @@
 
             let searchTimer4;
         $("#searchInTable").on("input", function () {
-              var element = $(".custom-icon");
-                element.addClass("d-none");
+            var element = $(".custom-icon");
+            element.addClass("d-none");
             clearTimeout(searchTimer4);
             searchTimer4 = setTimeout(function () {
                 loadTablesBySec(globalSectionId, 1);
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-        searchcross();
+            searchcross();
         });
 
 
@@ -289,7 +289,7 @@
                                 $("#add-section-form")[0].reset();
                                 $("#addNewSection").modal("hide");
                                 SectionList();
-                                 toastr.success("Section Added Succesfully.");
+                                toastr.success("Section Added Succesfully.");
                             }
                             else {
                                 toastr.error("This Section name is already exist.");
@@ -305,7 +305,7 @@
         @* edit section *@
 
             $(document).on("click", "#edit-Section", function (e) {
-             
+
                 e.preventDefault();
 
                 if ($("#edit-section-form").valid()) {
@@ -322,7 +322,7 @@
                             if (response.success) {
                                 $("#editSection").modal("hide");
                                 SectionList();
-                                 toastr.success("Section Updated Succesfully.");
+                                toastr.success("Section Updated Succesfully.");
                             }
                             else {
                                 toastr.error("This Section name is already exist.");
@@ -346,8 +346,14 @@
                     type: "POST",
                     data: { id: sectionid },
                     success: function (response) {
-                        SectionList();
-                         toastr.success("Section Deleted Succesfully.");
+                        if (response.success) {
+                            SectionList();
+                            toastr.success(response.message);
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+
                     },
                     error: function (error) {
                         console.error("Error in delete delete group:", error);
@@ -380,7 +386,7 @@
 
                 // Trigger the client-side validation first
                 if ($("#add-table-form").valid()) {
-                     $("#orderstatus").prop("disabled",false);
+                    $("#orderstatus").prop("disabled", false);
                     var formData = new FormData($("#add-table-form")[0]);
                     var sectionid = formData.get("Sectionid");
 
@@ -400,7 +406,7 @@
                                 toastr.success("Table Added Successfully.");
                             } else {
                                 // Show error message if the table name is taken
-                                 $("#orderstatus").prop("disabled",true);
+                                $("#orderstatus").prop("disabled", true);
                                 toastr.error("This Table name is already taken in this section.");
                             }
                         },
@@ -424,7 +430,7 @@
                 if ($("#edit-table-form").valid()) {
                     var formData = new FormData($("#edit-table-form")[0]);
 
-                $("#orderstatus").prop("disabled",false);
+                    $("#orderstatus").prop("disabled", false);
 
                     $.ajax({
                         url: "/TableAndSection/EditTablePost",
@@ -437,10 +443,10 @@
                             if (response.success) {
                                 $("#editTable").modal("hide");
                                 loadTablesBySec(sectionId, 1);
-                                 toastr.success("Table Updated Succesfully.");
+                                toastr.success("Table Updated Succesfully.");
                             }
                             else {
-                                  $("#orderstatus").prop("disabled",true);
+                                $("#orderstatus").prop("disabled", true);
                                 toastr.error("This table name is already exists in this section.");
                             }
                         },
@@ -462,12 +468,11 @@
                     type: "POST",
                     data: { id: tableId },
                     success: function (response) {
-                        if(response.success)
-                        {
-                        loadTablesBySec(sectionid, 1);
-                         toastr.success(response.message);
+                        if (response.success) {
+                            loadTablesBySec(sectionid, 1);
+                            toastr.success(response.message);
                         }
-                        else{
+                        else {
                             toastr.error(response.message);
                         }
                     },
@@ -513,7 +518,7 @@
                 success: function (response) {
                     selectedTableIds = [];
                     loadTablesBySec(1, 1);
-                     toastr.success("Selected Tables Deleted Succesfully.");
+                    toastr.success("Selected Tables Deleted Succesfully.");
                 },
                 error: function (error) {
                     console.error("Error deleting table:", error);
@@ -555,13 +560,13 @@
             $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
         }
 
-         function searchcross() {
-                let search = $("#searchInTable").val();
-                if (search === "") {
-                    var element = $(".custom-icon");
-                    element.removeClass("d-none");
-                }
+        function searchcross() {
+            let search = $("#searchInTable").val();
+            if (search === "") {
+                var element = $(".custom-icon");
+                element.removeClass("d-none");
             }
+        }
 
 
     });

@@ -198,11 +198,7 @@ public class ItemService : IItemService
       }
       uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
     }
-    else
-    {
-
-      uniqueFileName = item.Itemimg;
-    }
+    
     if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
     {
       return false;

@@ -49,13 +49,13 @@ public class OrdersController : Controller
     }
 
     [HttpGet]
-     [CustomAuthorize("Order", "View")]
+    [CustomAuthorize("Order", "View")]
     public async Task<IActionResult> ExportOrders(string search = "", string status = "", DateTime? fromDate = null, DateTime? toDate = null)
     {
         // Fetch orders based on filters
         List<OrderTable> orders = await _orderService.GetExcelOrderTable(search, status, fromDate, toDate);
 
-         if(orders == null || !orders.Any())
+        if(orders == null || !orders.Any())
         {
            return Json(new { success = false, message = "No data to export" });
         }

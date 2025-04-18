@@ -60,5 +60,4 @@ public class AddItem
 
   public string? Itemimg { get; set; }
 
-
 }

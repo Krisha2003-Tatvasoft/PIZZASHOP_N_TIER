@@ -1,4 +1,5 @@
 namespace pizzashop.Service.Interfaces;
+
 using VMSection = pizzashop.Entity.ViewModels.Section;
 using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
@@ -14,7 +15,7 @@ public interface ISectionService
 
     Task<bool> EditSectionPost(int loginId, VMSection viewmodel);
 
-     Task<bool> DeleteSection(int id);
+    Task<(bool sucess, string message)> DeleteSection(int id);
 
      Task<bool> SaveOrderSection(List<int> orderIds);
 

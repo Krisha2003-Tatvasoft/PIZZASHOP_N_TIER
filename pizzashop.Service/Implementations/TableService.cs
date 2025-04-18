@@ -111,7 +111,7 @@ public class TableService : ITableService
     public async Task<bool> DeleteTable(int id)
     {
         Table table = await _tableRepository.TableByIdAsync(id);
-        if (table.tablestatus  == Enums.tablestatus.Occupied)
+        if (table.tablestatus == Enums.tablestatus.Occupied)
         {
             return false;
         }
@@ -137,5 +137,18 @@ public class TableService : ITableService
     public async Task<List<SelectListItem>> GetTablesListDD(int sectionId)
     {
         return await _tableRepository.TableDDAsync(sectionId);
+    }
+
+    public async Task<bool> TableOccupeidBySec(int id)
+    {
+        List<Table> tables = await _tableRepository.tablesBysection(id);
+        foreach (var table in tables)
+        {
+            if (table.tablestatus == Enums.tablestatus.Occupied)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
