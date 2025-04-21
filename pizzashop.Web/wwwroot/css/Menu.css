@@ -1,467 +1,451 @@
 .heading-text {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 .items-modifiers {
-    height: 46px;
-    background-color: white;
+  height: 46px;
+  background-color: white;
 }
 
 .nav-link {
-    margin-right: 30px !important;
-    padding: 8px !important;
+  margin-right: 30px !important;
+  padding: 8px !important;
 }
 
-
 .nav-tabs .nav-link {
-    border: none !important;
-    color: gray !important;
-    font-weight: bold !important;
+  border: none !important;
+  color: gray !important;
+  font-weight: bold !important;
 }
 
 .nav-tabs .nav-link.active {
-    color: #087cc4 !important;
-    border: none !important;
-    border-bottom: 3px solid #087cc4 !important;
+  color: #087cc4 !important;
+  border: none !important;
+  border-bottom: 3px solid #087cc4 !important;
 }
 
 .tab-content {
-    margin-top: 20px !important;
-    display: block;
+  margin-top: 20px !important;
+  display: block;
 }
 
 .tab-svg {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
 .tab {
-    display: flex;
-    align-items: center;
-    gap: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .tab-name {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .items {
-    height: 100%;
+  height: 100%;
 }
 
 .menu-slider {
-    width: 300px;
-    background-color: white;
-    padding: 8px;
-    height: auto;
+  width: 300px;
+  background-color: white;
+  padding: 8px;
+  height: auto;
 }
 
-
 .slider-heading-text {
-    font-size: 20px;
-    color: #087cc4;
+  font-size: 20px;
+  color: #087cc4;
 }
 
 .plus-img {
-    width: 25px;
-    height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
-
 .plus-button {
-    padding: 2px;
-    border: 1px solid #087cc4;
-    border-radius: 5px;
-    height: 35px;
-    width: 35px;
-    background-color: white;
+  padding: 2px;
+  border: 1px solid #087cc4;
+  border-radius: 5px;
+  height: 35px;
+  width: 35px;
+  background-color: white;
 }
 
 .menu-svgs {
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 }
 
-
 .menu-slider ul {
-    height: 350px !important;
-    overflow-y: auto;
-    overflow-x: hidden;
+  height: 350px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .menu-slider li {
-    width: 100%;
-    display: flex;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .menu-slider a {
-    text-decoration: none;
-    color: grey;
-    width: 100%;
+  text-decoration: none;
+  color: grey;
+  width: 100%;
 }
 
 .search-field .custom-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    color: var(--bs-secondary-color);
-    padding-right: 3px;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--bs-secondary-color);
+  padding-right: 3px;
 }
 
 .menu-slider .active {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 .menu-table {
-    border-left: 2px solid #087cc4;
-    background-color: white;
-    min-height: 420px;
+  border-left: 2px solid #087cc4;
+  background-color: white;
+  min-height: 420px;
 }
 
 .menu-table-heading-text {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 .button-input {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.search-field {
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.button-input .delet-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.delet-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.button-input .new-item-btn {
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #087cc4;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem;
+  color: grey !important;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: var(--bs-border-width);
+  box-shadow: inset 0 0 0 9999px
+    var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
+}
+
+.item-type {
+  width: 5px;
+}
+
+.dining-menu-img {
+  width: 35px;
+  height: 35px;
+}
+
+.veg-nonveg-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.form-switch .form-check-input {
+  width: 2.5em !important;
+  height: 1.5em;
+  margin-left: -1.5em !important;
+}
+
+.main-content .edit-delet button {
+  border: none;
+  background: none;
+  justify-content: space-between;
+}
+
+.cat-list:focus-within > div > a > button > img {
+  display: block !important;
+}
+
+.mg-list:focus-within > div > button > img {
+  display: block !important;
+}
+
+.pagging input {
+  width: 50px;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.pagging button {
+  border: 1px solid black;
+  border-radius: 5px;
+  color: grey;
+  width: 30px;
+  background-color: white;
+}
+
+.modal-delete span {
+  color: grey;
+  font-size: 20px;
+}
+
+.modal-header {
+  color: grey;
+  border-bottom: none !important;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+.btn-primary {
+  background-color: #087cc4 !important;
+  color: white !important;
+  width: 80px !important;
+}
+
+.btn-danger {
+  background-color: white !important;
+  color: #087cc4 !important;
+  border-color: #087cc4 !important;
+  width: 100px;
+}
+
+.modal-addNewItem .modal {
+  --bs-modal-width: 70% !important;
+}
+
+.modal-addNewItem .form-switch .form-check-input {
+  width: 3.5em !important;
+  height: 2em;
+  margin-left: -2.5em !important;
+}
+
+.modal-addNewItem .form-check-input {
+  --bs-form-check-bg: lightgrey;
+}
+
+.file-upload {
+  border: 1px dashed grey;
+  border-radius: 5px;
+}
+
+.modal-content {
+  color: grey;
+}
+
+.modal-addNewItem .left-side-addItem {
+  width: 75%;
+}
+
+.modal-addNewItem .add-item-body {
+  display: flex;
+}
+
+.modal-addNewItem .right-side-addItem {
+  width: 25%;
+  background-color: lightyellow;
+  border: 1px solid grey;
+  border-radius: 5px;
+  height: auto;
+}
+
+.modal-addNewItem .right-side-content {
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.button-input .new-Modifiers-btn {
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #087cc4;
+}
+
+.modal-addModifiersGroup a {
+  text-decoration: none;
+  color: #087cc4;
+}
+
+.modal-updateModifiersGroup a {
+  text-decoration: none;
+  color: #087cc4;
+}
+
+.modal-footer {
+  padding: 5px !important;
+}
+
+.overlay1 {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  transition: opacity 0s;
+}
+
+
+@media screen and (max-width: 1200px) {
+  .parent .main-content .items {
+    position: relative;
+  }
+
+  .parent .main-content .items .menu-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 220px;
+    background-color: white;
+    height: inherit;
+    /* overflow-y: auto; */
+    /* z-index: 800; */
+    z-index: 30;
+  }
+
+  .collapse.show {
+    display: block;
+  }
+
+  .collapse.show ~ #overlay1 {
+    display: block;
+    opacity: 1;
+  }
+
+  .collapse.show ~ #overlay2 {
+    display: block;
+    opacity: 1;
+  }
+
+  .modal-addNewItem .left-side-addItem {
+    width: 100%;
+  }
+
+  .modal-addNewItem .add-item-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-addNewItem .right-side-addItem {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+    margin-top: 10px !important;
+    width: 97%;
+    height: 200px;
+  }
+
+  .modal-addNewItem .right-side-content {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+}
+
+@media screen and (max-width: 572px) {
+  .pagging {
+    margin-top: 20px;
+    font-size: 15px;
+  }
+
+  .pagging input {
+    width: 20px;
+  }
+
+  .pagging button {
+    width: 20px;
+  }
+
+  .button-input {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
-}
+  }
 
-.search-field {
-    border: 1px solid grey;
-    border-radius: 5px;
-}
+  .search-field {
+    width: 90px;
+  }
 
-.button-input .delet-btn {
-    width: 40px;
-    height: 40px;
-    border: 1px solid grey;
-    border-radius: 5px;
-}
-
-.delet-icon {
-    width: 25px;
-    height: 25px;
-}
-
-.button-input .new-item-btn {
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: #087cc4;
-
-}
-
-.table>:not(caption)>*>* {
-    padding: .5rem .5rem;
-    color: grey !important;
-    background-color: var(--bs-table-bg);
-    border-bottom-width: var(--bs-border-width);
-    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
-}
-
-.item-type {
-    width: 5px;
-}
-
-.dining-menu-img {
-    width: 35px;
-    height: 35px;
-}
-
-.veg-nonveg-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.form-switch .form-check-input {
-    width: 2.5em !important;
-    height: 1.5em;
-    margin-left: -1.5em !important;
-}
-
-.main-content .edit-delet button {
-    border: none;
-    background: none;
-    justify-content: space-between;
-}
-
-.cat-list:focus-within>div>a>button>img {
-    display: block !important;
-}
-
-.mg-list:focus-within>div>button>img {
-    display: block !important;
-}
-
-
-.pagging input {
-    width: 50px;
-    border: 1px solid grey;
-    border-radius: 5px;
-}
-
-.pagging button {
-    border: 1px solid black;
-    border-radius: 5px;
-    color: grey;
+  .button-input .delet-btn {
     width: 30px;
-    background-color: white;
-}
+    height: 30px;
+  }
 
+  .nav-link {
+    margin-right: 10px !important;
+  }
 
-.modal-delete span {
-    color: grey;
-    font-size: 20px;
-}
-
-.modal-header {
-    color: grey;
-    border-bottom: none !important;
-}
-
-.modal-footer {
-    border-top: none !important;
-}
-
-.btn-primary {
-    background-color: #087cc4 !important;
-    color: white !important;
-    width: 80px !important;
-}
-
-.btn-danger {
-    background-color: white !important;
-    color: #087cc4 !important;
-    border-color: #087cc4 !important;
-    width: 100px;
-}
-
-.modal-addNewItem .modal {
-    --bs-modal-width: 70% !important;
-}
-
-.modal-addNewItem .form-switch .form-check-input {
-    width: 3.5em !important;
-    height: 2em;
-    margin-left: -2.5em !important;
-}
-
-.modal-addNewItem .form-check-input {
-    --bs-form-check-bg: lightgrey;
-}
-
-.file-upload {
-    border: 1px dashed grey;
-    border-radius: 5px;
-}
-
-.modal-content {
-    color: grey;
-}
-
-.modal-addNewItem .left-side-addItem {
-    width: 75%;
-}
-
-.modal-addNewItem .add-item-body {
-    display: flex;
-}
-
-.modal-addNewItem .right-side-addItem {
-    width: 25%;
-    background-color: lightyellow;
-    border: 1px solid grey;
-    border-radius: 5px;
-    height: auto;
-}
-
-.modal-addNewItem .right-side-content {
-    max-height: 50vh;
-    overflow-y: auto;
-}
-
-
-.button-input .new-Modifiers-btn {
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: #087cc4;
-}
-
-.modal-addModifiersGroup a {
-    text-decoration: none;
-    color: #087cc4;
-}
-
-.modal-updateModifiersGroup a {
-    text-decoration: none;
-    color: #087cc4;
-}
-
-
-.modal-footer {
-    padding: 5px !important;
-}
-
-.overlay1 {
+  .search-field .custom-icon {
     display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 20;
-    transition: opacity 0s;
+  }
 }
-
-
-
-@media screen and (max-width: 1200px) {
-
-
-
-    .parent .main-content .items {
-        position: relative;
-    }
-
-    .parent .main-content .items .menu-slider {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 220px;
-        background-color: white;
-        height: inherit;
-        /* overflow-y: auto; */
-        /* z-index: 800; */
-        z-index: 30;
-    }
-
-    .collapse.show {
-        display: block;
-    }
-
-    .collapse.show~#overlay1 {
-        display: block;
-        opacity: 1;
-    }
-
-    .collapse.show~#overlay2 {
-        display: block;
-        opacity: 1;
-    }
-
-    .modal-addNewItem .left-side-addItem {
-        width: 100%;
-    }
-
-    .modal-addNewItem .add-item-body {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .modal-addNewItem .right-side-addItem {
-        margin-left: 10px!important;
-        margin-right: 10px!important;
-        margin-top: 10px!important;
-        width: 97%;
-        height: 200px;
-    }
-
-    .modal-addNewItem .right-side-content {
-        max-height:200px;
-        overflow-y: auto;
-    }
-    
-}
-
-@media screen and (max-width: 572px) {
-    .pagging {
-        margin-top: 20px;
-        font-size: 15px;
-    }
-
-
-    .pagging input {
-        width: 20px;
-    }
-
-    .pagging button {
-        width: 20px;
-    }
-
-    .button-input {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .search-field {
-        width: 90px;
-    }
-
-    .button-input .delet-btn {
-        width: 30px;
-        height: 30px;
-    }
-
-    .nav-link {
-        margin-right: 10px !important;
-    }
-
-    .search-field .custom-icon {
-       display: none;
-    }
-
-}
-
 
 .dropdown-menu {
-    max-height: 200px;
-    overflow-y: auto;
-    width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .dropdown-toggle::after {
-    display: none;
+  display: none;
 }
 
 .dropdown .btn {
-    text-align: left;
-    padding-top: 0.75rem;
-    padding: 1rem;
-    background: white;
-    border: 1px solid #ced4da;
+  text-align: left;
+  padding-top: 0.75rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #ced4da;
 }
 
 .dropdown-menu .form-check {
-    padding-left: 20px;
-    padding-right: 10px;
+  padding-left: 20px;
+  padding-right: 10px;
 }
 
 .modifier-pill {
-    /* display: inline-block; */
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    /* Rounded edges */
-    background-color: #f8f9fa;
-    /* Light gray background */
-    font-weight: bold;
-    color: #333;
-    margin-right: 5px;
+  /* display: inline-block; */
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  /* Rounded edges */
+  background-color: #f8f9fa;
+  /* Light gray background */
+  font-weight: bold;
+  color: #333;
+  margin-right: 5px;
 }
 
 .modifier-count {
-    font-size: 1rem;
-    color: #666;
+  font-size: 1rem;
+  color: #666;
 }

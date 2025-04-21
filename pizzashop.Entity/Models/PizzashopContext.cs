@@ -510,6 +510,7 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Itemwisecomment).HasColumnName("itemwisecomment");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+             entity.Property(e => e.ReadyQuantity).HasColumnName("readyquantity");
 
 
             entity.HasOne(d => d.Item).WithMany(p => p.Ordereditems)

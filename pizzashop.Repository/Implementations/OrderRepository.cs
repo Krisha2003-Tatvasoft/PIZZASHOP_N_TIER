@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
@@ -81,6 +82,10 @@ public class OrderRepository : IOrderRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task<List<Order>> InprogressOrders()
+    {
+        return await _context.Orders.Where(o => o.status == 0).ToListAsync();
+    }
 
 
 

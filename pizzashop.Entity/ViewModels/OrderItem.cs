@@ -12,5 +12,7 @@ public class OrderItem
 
     public decimal TotalAmount { get; set; }
 
-    public List<OrderModifier> Modifiers { get; set; } = new List<OrderModifier>(); 
+    public string? Itemwisecomment { get; set; }
+
+    public List<OrderModifier> Modifiers { get; set; } = new List<OrderModifier>();
 }

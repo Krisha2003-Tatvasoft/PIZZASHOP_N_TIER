@@ -2,10 +2,10 @@ using VMCategory = pizzashop.Entity.ViewModels.Category;
 
 namespace pizzashop.Service.Interfaces;
 
-public interface ICategoryService 
+public interface ICategoryService
 {
-     Task<bool> AddCategoryAsync(VMCategory model,int loginId);
-     
+     Task<bool> AddCategoryAsync(VMCategory model, int loginId);
+
      Task<List<VMCategory>> GetCategoryList();
 
      Task<VMCategory> GetCategoryById(int id);
@@ -17,5 +17,7 @@ public interface ICategoryService
      Task<bool> SaveOrderCategory(List<int> orderIds);
 
      Task<List<VMCategory>> GetMenuCategoryList();
+
+     Task<List<VMCategory>> GetKOTCategoryList();
 
 }

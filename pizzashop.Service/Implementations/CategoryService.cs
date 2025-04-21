@@ -146,14 +146,32 @@ public class CategoryService : ICategoryService
     catList.Insert(0, new VMCategory
     {
       Categoryid = 0,
-      Categoryname ="All"
+      Categoryname = "All"
     });
-     catList.Insert(0, new VMCategory
+    catList.Insert(0, new VMCategory
     {
       Categoryid = -1,
-      Categoryname ="Favorite Items"
+      Categoryname = "Favorite Items"
     });
 
+    return catList;
+  }
+  
+  public async Task<List<VMCategory>> GetKOTCategoryList()
+  {
+    var category = await _categoryRepository.AllCategory();
+
+    var catList = category?.Select(c => new VMCategory
+    {
+      Categoryid = c.Categoryid,
+      Categoryname = c.Categoryname,
+    }).ToList();
+
+    catList.Insert(0, new VMCategory
+    {
+      Categoryid = 0,
+      Categoryname ="All"
+    });
     return catList;
   }
 

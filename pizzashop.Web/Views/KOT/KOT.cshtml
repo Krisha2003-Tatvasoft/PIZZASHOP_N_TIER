@@ -4,41 +4,125 @@
 }
 <link rel="stylesheet" href="~/css/KOT.css" />
 
-<div class="px-3 px-sm-5 py-4 main-container">
+
 
 <div class="menu-category">
 
-    
-
     <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-tab1" data-bs-toggle="tab" data-bs-target="#tab1" type="button"
-                role="tab" aria-controls="tab1" aria-selected="true">
-                <div class="tab">
-                    <img class=tab-svg src="../images/list-check.svg" /><span class="tab-name">
-                        Items</span>
-                </div>
-            </button>
-            <button class="nav-link" id="nav-tab2" data-bs-toggle="tab" data-bs-target="#tab2" type="button" role="tab"
-                aria-controls="tab2" aria-selected="false">
-                <div class="tab">
-                    <img class=tab-svg src="../images/ui-checks-grid.svg" /><span class="tab-name">
-                        Modifiers</span>
-                </div>
-            </button>
+        <div class="nav nav-tabs  px-4  category-partial flex-nowrap overflow-x-auto overflow-y-hidden" id="nav-tab"
+            role="tablist">
         </div>
     </nav>
 
-       <div class="tab-content w-100" id="nav-tabContent">
-
-            <div class="tab-pane fade show active " id="tab1" role="tabpanel" aria-labelledby="nav-tab1">
-
-
-            </div>
-        </div>
-
-
+    <div class="tab-content w-100 ticket-parial" id="nav-tabContent">
+    </div>
 </div>
 
+<div class="tranfer-modal"></div>
 
-</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        let currentCategoryId = 0;
+        let currentCategoryName = "All";
+        let currentStatus = "Inprogress";
+        let currentPage = "@ViewBag.CurrentPage";
+
+        function loadCategoryList() {
+            $.ajax({
+
+                url: "/KOT/CategoryList",
+                type: "GET",
+                success: function (data) {
+                    $('.category-partial').html(data);
+                    $(`.cat-class`).removeClass('active').attr('aria-selected', 'false');
+                    $(`.cat-class[data-catid="${currentCategoryId}"]`).addClass('active').attr('aria-selected', 'true');
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+        loadCategoryList();
+
+        function loadTicket(categoryId, status, page) {
+            currentCategoryId = categoryId;
+
+            $.ajax({
+
+                url: "/KOT/loadTickets",
+                type: "GET",
+                data: { id: categoryId, status: status, page: page },
+                success: function (data) {
+                    $('.ticket-parial').html(data);
+                    if (currentStatus === "Inprogress") {
+                        $(".inprogress").addClass("filled-button").removeClass("unfilled-button");
+                        $(".ready").removeClass("filled-button").addClass("unfilled-button");
+                    } else {
+                        $(".ready").addClass("filled-button").removeClass("unfilled-button");
+                        $(".inprogress").removeClass("filled-button").addClass("unfilled-button");
+                    }
+                    $(".cat-name").text(currentCategoryName);
+                    currentPage = page;
+                },
+                error: function () {
+                }
+            });
+        }
+
+        $(document).on("click", ".cat-class", function (e) {
+            var categoryId = $(this).data("catid");
+            currentCategoryName = $(this).data("catname");
+            loadTicket(categoryId, "Inprogress", 1);
+        });
+
+        $(document).on("click", ".inprogress", function (e) {
+            currentStatus = "Inprogress";
+            loadTicket(currentCategoryId, currentStatus, 1);
+        });
+
+        $(document).on("click", ".ready", function (e) {
+            currentStatus = "Ready";
+            loadTicket(currentCategoryId, currentStatus, 1);
+
+        });
+
+        loadTicket(0, currentStatus, 1);
+
+        $(document).on("click", ".pagination-link", function (e) {
+            e.preventDefault();
+            let page = $(this).data("page");
+
+            if (page > 0) {
+                loadTicket(currentCategoryId, currentStatus, page);
+            }
+        });
+
+
+        $(document).on("click", ".order-card", function (e) {
+            e.preventDefault();
+            var orderid = $(this).data("orderid");
+            $.ajax({
+
+                url: "/KOT/OpenModel",
+                type: "GET",
+                data: { id: orderid, status: currentStatus },
+                success: function (data) {
+                    $(".tranfer-modal").html(data);
+                    $("#orderModal").modal("show");
+                },
+                error: function () {
+                }
+            });
+
+
+        });
+
+
+
+
+    });
+</script>

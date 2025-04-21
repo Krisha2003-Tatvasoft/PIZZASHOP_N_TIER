@@ -11,7 +11,9 @@ public partial class Ordereditem
 
     public int Itemid { get; set; }
 
-     public int Quantity { get; set; }
+    public int Quantity { get; set; }
+
+    public int ReadyQuantity { get; set; }
 
     public string? Itemwisecomment { get; set; }
 

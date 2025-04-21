@@ -94,19 +94,19 @@
                             </div>
 
 
-                              @if (menuPermission.Candelete == true)
-                                {
-                            <button id="delete-selected-item" class="button" data-bs-toggle="modal"
-                                data-bs-target="#deleteSelectedItem" class="delet-btn">
-                                <image class="delet-icon" src="../images/trash.svg" />
-                            </button>
+                            @if (menuPermission.Candelete == true)
+                            {
+                                <button id="delete-selected-item" class="button" data-bs-toggle="modal"
+                                    data-bs-target="#deleteSelectedItem" class="delet-btn">
+                                    <image class="delet-icon" src="../images/trash.svg" />
+                                </button>
                             }
 
-                              @if (menuPermission.Canaddedit == true)
-                                {
-                            <button class="new-item-btn button openModel">
-                                <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Item</span>
-                            </button>
+                            @if (menuPermission.Canaddedit == true)
+                            {
+                                <button class="new-item-btn button openModel">
+                                    <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Item</span>
+                                </button>
                             }
 
                         </div>
@@ -168,19 +168,19 @@
                                 <i class="bi bi-search custom-icon"></i>
                             </div>
 
-                              @if (menuPermission.Candelete == true)
-                                {
-                            <button id="delete-selected-modifiers" data-bs-toggle="modal"
-                                data-bs-target="#deleteSelectedModifier" class=" button delet-btn ">
-                                <image class="delet-icon " src="../images/trash.svg" />
-                            </button>
+                            @if (menuPermission.Candelete == true)
+                            {
+                                <button id="delete-selected-modifiers" data-bs-toggle="modal"
+                                    data-bs-target="#deleteSelectedModifier" class=" button delet-btn ">
+                                    <image class="delet-icon " src="../images/trash.svg" />
+                                </button>
                             }
- 
-                              @if(menuPermission.Canaddedit == true)
-                                {
-                            <button class=" button new-Modifiers-btn openModifierModel">
-                                <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Modifier</span>
-                            </button>
+
+                            @if (menuPermission.Canaddedit == true)
+                            {
+                                <button class=" button new-Modifiers-btn openModifierModel">
+                                    <i class="bi bi-plus"></i><span class="d-none d-sm-inline">New Modifier</span>
+                                </button>
                             }
 
                         </div>
@@ -355,6 +355,9 @@
 <!-- Add New modifier group -->
 <div class="modal-addNewMG"></div>
 
+<!-- edit Modifiers group -->
+<div class="modal-editMG"></div>
+
 <div class="modal-selectExisting">
 
     <!-- select existing modifiers -->
@@ -382,8 +385,6 @@
     </div>
 </div>
 
-<!-- edit Modifiers group -->
-<div class="modal-editMG"></div>
 
 <!-- delete modifiers grop -->
 <div class="modal fade modal-delete" id="deleteModifiersGrop" tabindex="-1" aria-labelledby="deleteModalLabel"
@@ -799,7 +800,7 @@
                 type: "POST",
                 data: { id: categoryId },
                 success: function (response) {
-                    
+
                     catList();
                     toastr.success("Category Deleted Succesfully.");
                 },
@@ -1443,41 +1444,48 @@
 
 
         @* Edit Modifier group *@
-
-
-            $(document).on("click", "#edit-MG-Yes", function (e) {
-                e.preventDefault();
-
-                if ($("#edit-MG-form").valid()) {
-                    var formData = new FormData($("#edit-MG-form")[0]);
-                    formData.append("selectedModifier", JSON.stringify(selectExModifier));
-
-                    $.ajax({
-                        url: "/Menu/EditMGPost",
-                        type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        dataType: 'json',
-                        success: function (response) {
-
-                            if (response.success) {
-                                $("#updateModifiersGroup").modal("hide");
-                                MGList();
-                                toastr.success("ModifierGroup Updated Succesfully.");
-                            }
-                            else {
-                                toastr.error("This Modifiergroup is already exist.");
-                            }
-
-                        },
-                        error: function (error) {
-                            console.error("Error updating modifierGroup:", error);
-                        }
-                    });
+        
+            $(document).on('hidden.bs.modal', '.modal', function () {
+                if ($('.modal:visible').length > 0) {
+                    $('body').addClass('modal-open');
                 }
-
             });
+
+
+
+        $(document).on("click", "#edit-MG-Yes", function (e) {
+            e.preventDefault();
+
+            if ($("#edit-MG-form").valid()) {
+                var formData = new FormData($("#edit-MG-form")[0]);
+                formData.append("selectedModifier", JSON.stringify(selectExModifier));
+
+                $.ajax({
+                    url: "/Menu/EditMGPost",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function (response) {
+
+                        if (response.success) {
+                            $("#updateModifiersGroup").modal("hide");
+                            MGList();
+                            toastr.success("ModifierGroup Updated Succesfully.");
+                        }
+                        else {
+                            toastr.error("This Modifiergroup is already exist.");
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error("Error updating modifierGroup:", error);
+                    }
+                });
+            }
+
+        });
 
         @* Delete ModifierGroup *@
 

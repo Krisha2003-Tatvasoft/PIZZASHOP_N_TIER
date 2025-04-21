@@ -10,7 +10,7 @@
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <input type="hidden" id="hidden" value="">
-        
+
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modifierData">@((Model != null && Model.Any()) ? Model[0].Itemname : "Item")
@@ -49,9 +49,9 @@
                                             </div>
                                             <div
                                                 class="all-type @(mg != null ? (mg.itemtype == itemtype.Veg ? "type-color-green" : (mg.itemtype == itemtype.NonVeg ? "type-color-red" : "type-color-vegan")) : "")">
-                            </div>
-                        </div>
-                                                }
+                                            </div>
+                                        </div>
+                                    }
 
                                 }
                                 else

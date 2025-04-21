@@ -1,0 +1,21 @@
+@model List<pizzashop.Entity.ViewModels.Category>
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var cat in Model)
+    {
+
+        <button class="nav-link cat-class @(cat.Categoryid == 0 ? "active" : "") d-flex align-items-center gap-1"
+            id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#@cat.Categoryid" type="button" role="tab"
+            aria-controls="@cat.Categoryid" aria-selected="@(cat.Categoryid == 0 ? "true" : "false")" style="flex: 0 0 auto;"
+            data-catid="@cat.Categoryid" data-catname="@cat.Categoryname">
+            <div class="tab">
+                @cat.Categoryname
+            </div>
+        </button>
+    }
+
+}
+else{
+    <h1>No Category</h1>
+}

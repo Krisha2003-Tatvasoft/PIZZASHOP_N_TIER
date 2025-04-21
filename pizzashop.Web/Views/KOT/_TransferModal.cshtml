@@ -1,0 +1,53 @@
+@model pizzashop.Entity.ViewModels.Ticket;
+
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered "> <!-- You can use modal-lg for wider modals -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order ID: #@Model.Orderid</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="d-flex justify-content-between align-items-center p-1">
+                    <div class="text-secondary fw-bold">
+                        Items
+                    </div>
+                    <div class="text-secondary fw-bold">
+                        Quantity
+                    </div>
+                </div>
+                <hr class="mt-0 mb-1 fw-bold">
+
+                @foreach (var item in Model.Items)
+                {
+
+                    <!-- Item 1 -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <input type="checkbox" checked class="form-check-input me-1">
+                            <span>@item.Itemname</span>
+                            @foreach (var modifier in item.Modifiers)
+                            {
+                                <div class="ms-4 text-muted small">• @modifier.Modifiername</div>
+                            }
+                        </div>
+                        <div class="d-flex align-items-center border rounded px-1 py-1 text-dark">
+                            <i class="bi bi-dash cursor-pointer text-dark"></i>
+                            <span class="mx-4">@item.Quantity</span>
+                            <i class="bi bi-plus cursor-pointer text-dark"></i>
+                        </div>
+                    </div>
+                    <hr class="mt-0 mb-1">
+                }
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary">Mark as Prepared</button>
+                <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
