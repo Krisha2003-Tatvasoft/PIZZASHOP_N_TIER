@@ -1,4 +1,5 @@
 using pizzashop.Entity.Models;
+using pizzashop.Entity.ViewModels;
 
 namespace pizzashop.Repository.Interfaces;
 
@@ -14,4 +15,6 @@ public interface IOrderRepository
     Task AddNewOrder(Order order);
 
     Task<List<Order>> InprogressOrders();
+
+    Task UpdateItemStatusAsync(OrderItemStatus model);
 }

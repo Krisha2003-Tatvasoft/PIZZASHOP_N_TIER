@@ -46,6 +46,7 @@
   color: white;
   border: 1px solid #087cc4;
   border-radius: 3px;
+  box-shadow: 0 0 6px rgba(8, 124, 196, 0.6);
 }
 
 .unfilled-button {

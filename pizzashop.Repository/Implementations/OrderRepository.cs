@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
+using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 
 namespace pizzashop.Repository.Implementations;
@@ -85,6 +86,35 @@ public class OrderRepository : IOrderRepository
     public async Task<List<Order>> InprogressOrders()
     {
         return await _context.Orders.Where(o => o.status == 0).ToListAsync();
+    }
+
+    public async Task UpdateItemStatusAsync(OrderItemStatus model)
+    {
+        var order = await _context.Orders
+            .Include(o => o.Ordereditems)
+            .FirstOrDefaultAsync(o => o.Orderid == model.OrderId);
+
+        if (order == null) return;
+
+        foreach (var ItemQuantity in model.Items)
+        {
+            var orderedItem = order.Ordereditems.FirstOrDefault(i => i.Itemid == ItemQuantity.ItemId);
+
+            if (orderedItem != null)
+            {
+                if (model.NewStatus == "Ready")
+                {
+                    orderedItem.ReadyQuantity += ItemQuantity.Quantity;
+                }
+                else if (model.NewStatus == "Inprogress")
+                {
+                    orderedItem.ReadyQuantity -= ItemQuantity.Quantity;
+                    if (orderedItem.ReadyQuantity < 0) orderedItem.ReadyQuantity = 0;
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync();
     }
 
 

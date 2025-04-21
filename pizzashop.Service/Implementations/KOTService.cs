@@ -109,6 +109,11 @@ public class KOTService : IKOTService
 
     }
 
+    public async Task UpdateItemStatusAsync(OrderItemStatus model)
+    {
+        await _orderRepository.UpdateItemStatusAsync(model);
+    }
+
 
 
 

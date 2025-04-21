@@ -41,10 +41,23 @@ public class KOTController : Controller
     [HttpGet]
     public async Task<IActionResult> OpenModel(int id, string status)
     {
-        Ticket ticket= await _KOTService.TicketDetails(id, status);
+        Ticket ticket = await _KOTService.TicketDetails(id, status);
 
         return PartialView("_TransferModal", ticket);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateItemStatus([FromBody] OrderItemStatus model)
+    {
+        if (model == null || model.Items == null || !model.Items.Any())
+        {
+            return BadRequest("Invalid input.");
+        }
+
+        await _KOTService.UpdateItemStatusAsync(model);
+        return Ok(new { success = true });
+    }
+
 
 
 }

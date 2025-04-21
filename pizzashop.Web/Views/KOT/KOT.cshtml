@@ -30,6 +30,14 @@
         let currentStatus = "Inprogress";
         let currentPage = "@ViewBag.CurrentPage";
 
+        // Set button text based on current status
+        if (currentStatus === "Inprogress") {
+            $('#updateStatusBtn').text("Mark as Prepared");
+        } else if (currentStatus === "Ready") {
+            $('#updateStatusBtn').text("Mark as In Progress");
+        }
+
+
         function loadCategoryList() {
             $.ajax({
 
@@ -112,7 +120,13 @@
                 data: { id: orderid, status: currentStatus },
                 success: function (data) {
                     $(".tranfer-modal").html(data);
+                    if (currentStatus === "Inprogress") {
+                        $('#updateStatusBtn').text("Mark as Prepared");
+                    } else if (currentStatus === "Ready") {
+                        $('#updateStatusBtn').text("Mark as In Progress");
+                    }
                     $("#orderModal").modal("show");
+                    initializeQuantityButtons();
                 },
                 error: function () {
                 }
@@ -120,6 +134,105 @@
 
 
         });
+
+        $(document).on('click', '.plus-btn, .minus-btn', function () {
+            const $parent = $(this).closest('[data-itemid]');
+            const $quantitySpan = $parent.find('.quantity');
+            const max = parseInt($parent.data('max'));
+            const itemId = $parent.data('itemid');
+
+            let currentQty = parseInt($quantitySpan.text());
+
+            if ($(this).hasClass('plus-btn')) {
+                if (currentQty < max) {
+                    currentQty++;
+                }
+            } else {
+                if (currentQty > 1) {
+                    currentQty--;
+                }
+            }
+
+            $quantitySpan.text(currentQty);
+
+            // OPTIONAL: Disable or gray out icons based on limits
+            const $plus = $parent.find('.plus-btn');
+            const $minus = $parent.find('.minus-btn');
+
+            $plus.css('opacity', currentQty === max ? 0.5 : 1);
+            $minus.css('opacity', currentQty === 1 ? 0.5 : 1);
+
+
+            console.log(`Item ${itemId}, New Quantity: ${currentQty}`);
+        });
+
+        function initializeQuantityButtons() {
+            $('[data-itemid]').each(function () {
+                const $parent = $(this);
+                const max = parseInt($parent.data('max'));
+                const $quantitySpan = $parent.find('.quantity');
+                const currentQty = parseInt($quantitySpan.text());
+
+                const $plus = $parent.find('.plus-btn');
+                const $minus = $parent.find('.minus-btn');
+
+                $plus.css('opacity', currentQty >= max ? 0.5 : 1);
+                $minus.css('opacity', currentQty <= 1 ? 0.5 : 1);
+
+                $plus.css('pointer-events', currentQty >= max ? 'none' : 'auto');
+                $minus.css('pointer-events', 'auto');
+            });
+        }
+
+
+        $(document).on('click', '#updateStatusBtn', function () {
+            const itemsToUpdate = [];
+
+            // Extract Order ID from modal title
+            const orderId = $('#orderModal').find('.modal-title').text().split('#')[1].trim();
+
+            // Loop through all checked checkboxes
+            $('#orderModal').find('input[type="checkbox"]:checked').each(function () {
+                const $itemContainer = $(this).closest('.d-flex.justify-content-between');
+
+                // Get itemId from the data attribute of the container
+                const itemId = $itemContainer.find('[data-itemid]').data('itemid');
+
+                // Get the updated quantity value
+                const quantity = parseInt($itemContainer.find('.quantity').text());
+
+                // Push the itemId and quantity to the array
+                itemsToUpdate.push({ itemId, quantity });
+            });
+
+            // Status (Current Status) - to know whether we're updating 'Inprogress' or 'Ready'
+            const newStatus = currentStatus === "Inprogress" ? "Ready" : "Inprogress";
+
+            // Now you have an array with all the selected item IDs and their quantities
+            console.log(itemsToUpdate);
+
+            // Send the data to the backend (including Order ID and Status)
+            $.ajax({
+                url: '/KOT/UpdateItemStatus',  // Adjust URL as needed
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    orderId: orderId,
+                    items: itemsToUpdate,
+                    newStatus: newStatus  // Send the status as well
+                }),
+                success: function (res) {
+                    console.log('Items updated successfully');
+                    $('#orderModal').modal('hide');
+                    loadTicket(currentCategoryId, currentStatus, currentPage); // Refresh the ticket list
+                },
+                error: function () {
+                    alert("Something went wrong while updating item status.");
+                }
+            });
+        });
+
+
 
 
 
