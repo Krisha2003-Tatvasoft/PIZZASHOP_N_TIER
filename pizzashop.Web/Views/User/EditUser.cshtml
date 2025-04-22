@@ -131,8 +131,12 @@
                         <div class="d-flex flex-row">
                             <!-- File Name -->
                             <span id="file-name" class="text-secondary text-truncate"
-                                style="max-width: 150px; cursor: pointer;"
-                                onclick="document.getElementById('fileInput').click()">Browse File</span>
+                                style="max-width: 150px;">Browse
+                                File</span>
+
+                            @* edit *@
+                            <i class="bi bi-pencil ps-2" style="cursor: pointer; display: none;"
+                                onclick="document.getElementById('fileInput').click()" id="editFile"></i>
 
                             <!-- Delete Icon (Initially Visible if Image Exists) -->
                             <i class="bi bi-trash text-danger ps-2" id="deleteFile"
@@ -343,7 +347,7 @@
 <script>
     var isvalid = true;
     var isvalidphone = true;
-    
+
 
     function previewFile(event) {
         const fileInput = document.getElementById('fileInput');
@@ -351,6 +355,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+        const editFile = document.getElementById('editFile');
 
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
@@ -362,6 +367,7 @@
                 uploadIcon.style.display = "none"; // Hide upload icon
                 fileNameSpan.textContent = file.name; // Show file name
                 deleteFile.style.display = "block"; // Show delete icon
+                editFile.style.display = "block"; // Show edit icon
             };
 
             reader.readAsDataURL(file);
@@ -374,6 +380,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+        const editFile = document.getElementById('editFile');
         const existingImagePath = document.getElementById('existingImagePath'); // Add this line
 
         fileInput.value = ""; // Clear file input
@@ -382,6 +389,7 @@
         imagePreview.src = "";
         imagePreview.style.display = "none"; // Hide image
         deleteFile.style.display = "none"; // Hide delete icon
+        editFile.style.display = "none"; // Hide edit icon
 
         // Clear the hidden input for existing image path
         if (existingImagePath) { // Check if the element exists
@@ -394,15 +402,18 @@
         const uploadIcon = document.getElementById('upload-icon');
         const fileNameSpan = document.getElementById('file-name');
         const deleteFile = document.getElementById('deleteFile');
-        const existingImagePath = document.getElementById('existingImagePath'); // Add this line
-
+        const editFile = document.getElementById('editFile');
+       
 
         if (imageUrl) {
             imagePreview.src = imageUrl;
             imagePreview.style.display = "block"; // Show image
             uploadIcon.style.display = "none"; // Hide upload icon
-            fileNameSpan.textContent = existingImagePath.value; // Set default text
+            fileNameSpan.textContent = "Current Image"; // Set default text
             deleteFile.style.display = "block"; // Show delete icon
+            editFile.style.display = "block"; // Show edit icon
+
+
         }
     }
 
@@ -416,10 +427,10 @@
     };
 
     function usernameexist() {
-       
+
         var username = $("#username").val();
         var id = $("#hidden").val();
-    
+
         if (username) {
             $.ajax({
                 url: '/User/usernameexist',
@@ -428,7 +439,7 @@
                 success: function (data) {
                     if (data.success == true) {
                         $(".usernameExist").text(data.message);
-                        isvalid= false;
+                        isvalid = false;
                     }
                     else {
                         isvalid = true;
@@ -443,10 +454,10 @@
     }
 
     function phoneexist() {
-       
+
         var phone = $("#phone").val();
         var id = $("#hidden").val();
-    
+
         if (phone) {
             $.ajax({
                 url: '/User/phoneExist',
@@ -455,7 +466,7 @@
                 success: function (data) {
                     if (data.success == true) {
                         $(".phone-exist").text(data.message);
-                        isvalidphone= false;
+                        isvalidphone = false;
                     }
                     else {
                         isvalidphone = true;
@@ -473,18 +484,17 @@
         phoneexist();
     });
 
-     $(document).on("blur", "#username", function (e) {
+    $(document).on("blur", "#username", function (e) {
         usernameexist();
     });
 
 
 
-     $(document).on("click", ".create-button", function (e) {
+    $(document).on("click", ".create-button", function (e) {
         usernameexist();
-         phoneexist();
-        if(isvalid === false || isvalidphone === false)
-        {
-        e.preventDefault();
+        phoneexist();
+        if (isvalid === false || isvalidphone === false) {
+            e.preventDefault();
         }
     });
 

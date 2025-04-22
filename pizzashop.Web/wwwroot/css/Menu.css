@@ -107,9 +107,11 @@
   padding-right: 3px;
 }
 
-.menu-slider .active {
+.main-content .menu-active {
   color: #087cc4;
 }
+
+
 
 .menu-table {
   border-left: 2px solid #087cc4;
@@ -314,7 +316,6 @@
   z-index: 20;
   transition: opacity 0s;
 }
-
 
 @media screen and (max-width: 1200px) {
   .parent .main-content .items {

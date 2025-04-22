@@ -166,9 +166,9 @@ public class MenuController : Controller
 
     [HttpGet]
     [CustomAuthorize("Menu", "AddEdit")]
-    public async Task<IActionResult> AddItem()
+    public async Task<IActionResult> AddItem(int categoryId)
     {
-        return PartialView("_Additem", await _itemService.Additem());
+        return PartialView("_Additem", await _itemService.Additem(categoryId));
     }
 
     [HttpPost]

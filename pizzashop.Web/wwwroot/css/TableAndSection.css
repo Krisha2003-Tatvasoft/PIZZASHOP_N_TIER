@@ -1,12 +1,12 @@
 .heading-text {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 .Section-slider {
-    width: 300px;
-    background-color: white;
-    padding: 8px;
-    height: auto;
+  width: 300px;
+  background-color: white;
+  padding: 8px;
+  height: auto;
 }
 /* .search
 {
@@ -17,230 +17,220 @@
 } */
 
 .search-field .custom-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    color: var(--bs-secondary-color);
-    padding-right: 3px;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--bs-secondary-color);
+  padding-right: 3px;
 }
 
+.main-content .menu-active {
+  color: #087cc4;
+}
 
 .slider-heading-text {
-    font-size: 20px;
-    color: #087cc4;
+  font-size: 20px;
+  color: #087cc4;
 }
 
 .plus-button {
-    padding: 2px;
-    border: 1px solid #087cc4;
-    border-radius: 5px;
-    height: 35px;
-    width: 35px;
-    background-color: white;
+  padding: 2px;
+  border: 1px solid #087cc4;
+  border-radius: 5px;
+  height: 35px;
+  width: 35px;
+  background-color: white;
 }
 
 .Section-svgs {
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 }
 
 .Section-slider ul {
-    height: 330px !important;
-    overflow-y: auto;
-    overflow-x: hidden;
+  height: 330px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .Section-slider li {
-    width: 100%;
-    display: flex;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .Section-slider a {
-    text-decoration: none;
-    color: grey;
-    width: 100%;
+  text-decoration: none;
+  color: grey;
+  width: 100%;
 }
 
-
 .Section-slider .active {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 .Tables-table {
-    border-left: 2px solid #087cc4;
-    background-color: white;
-    min-height: 420px;
+  border-left: 2px solid #087cc4;
+  background-color: white;
+  min-height: 420px;
 }
 
 .Tables-table-heading-text {
-    color: #087cc4;
+  color: #087cc4;
 }
 
-
 .button-input {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.search-field {
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.button-input .delet-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.delet-icon {
+  width: 25px;
+  height: 25px;
+}
+
+.button-input .new-table-btn {
+  /* width: 100px; */
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  background-color: #087cc4;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem;
+  color: grey !important;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: var(--bs-border-width);
+  box-shadow: inset 0 0 0 9999px
+    var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
+}
+
+.main-content .edit-delet button {
+  border: none;
+  background: none;
+  justify-content: space-between;
+}
+
+.overlay1 {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+  transition: opacity 0s;
+}
+
+.modal-header {
+  color: grey;
+  border-bottom: none !important;
+}
+
+.modal-footer {
+  border-top: none !important;
+}
+
+.btn-primary {
+  background-color: #087cc4 !important;
+  color: white !important;
+  width: 80px !important;
+}
+
+.btn-danger {
+  background-color: white !important;
+  color: #087cc4 !important;
+  border-color: #087cc4 !important;
+  width: 100px;
+}
+
+.modal-delete span {
+  color: grey;
+  font-size: 20px;
+}
+
+.modal-content {
+  color: grey;
+}
+
+.sec-list:focus-within > div > button > img {
+  display: block !important;
+}
+
+.tables {
+  height: 100%;
+}
+
+.availabletatus {
+  background-color: #77ab59;
+}
+
+.occuipiedstatus {
+  background-color: grey;
+}
+
+@media screen and (max-width: 1200px) {
+  .parent .main-content .tables {
+    position: relative;
+  }
+
+  .parent .main-content .tables .Section-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 220px;
+    background-color: white;
+    height: inherit;
+    z-index: 30;
+  }
+
+  .collapse.show {
+    display: block;
+  }
+
+  .collapse.show ~ #overlay1 {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@media screen and (max-width: 572px) {
+  .button-input {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 10px;
-}
+  }
 
-.search-field {
-    border: 1px solid grey;
-    border-radius: 5px;
-}
+  .search-field {
+    width: 90px;
+  }
 
-.button-input .delet-btn {
-    width: 40px;
-    height: 40px;
-    border: 1px solid grey;
-    border-radius: 5px;
-}
+  .button-input .delet-btn {
+    width: 30px;
+    height: 30px;
+  }
 
-.delet-icon {
-    width: 25px;
-    height: 25px;
-}
-
-.button-input .new-table-btn {
-    /* width: 100px; */
-    height: 40px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    background-color: #087cc4;
-
-}
-
-.table>:not(caption)>*>* {
-    padding: .5rem .5rem;
-    color: grey !important;
-    background-color: var(--bs-table-bg);
-    border-bottom-width: var(--bs-border-width);
-    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
-}
-
-.main-content .edit-delet button {
-    border: none;
-    background: none;
-    justify-content: space-between;
-}
-
-.overlay1 {
+  .search-field .custom-icon {
     display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 20;
-    transition: opacity 0s;
+  }
 }
-
-.modal-header {
-    color: grey;
-    border-bottom: none !important;
-}
-
-.modal-footer {
-    border-top: none !important;
-}
-
-.btn-primary {
-    background-color: #087cc4 !important;
-    color: white !important;
-    width: 80px !important;
-}
-
-.btn-danger {
-    background-color: white !important;
-    color: #087cc4 !important;
-    border-color: #087cc4 !important;
-    width: 100px;
-}
-
-.modal-delete span {
-    color: grey;
-    font-size: 20px;
-}
-
-.modal-content  {
-    color:grey;
-} 
-
-
-.sec-list:focus-within >div > button > img{
-    display: block!important;
- }
- 
- 
-.tables {
-    height: 100%;
-}
-
- .availabletatus{
-    background-color :#77ab59;
- }
-
- .occuipiedstatus
- {
-    background-color:grey;
- }
-
-
-@media screen and (max-width: 1200px) {
-
-  
-    .parent .main-content .tables {
-        position: relative;
-    }
-
-    .parent .main-content .tables .Section-slider {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 220px;
-        background-color: white;
-        height: inherit;
-        z-index: 30;
-    }
-
-    .collapse.show {
-        display: block;
-    }
-
-    .collapse.show~#overlay1 {
-        display: block;
-        opacity: 1;
-    }
-
-   
-}
-
-@media screen and (max-width: 572px) {
- 
-    .button-input {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .search-field {
-        width: 90px;
-    }
-
-    .button-input .delet-btn {
-        width: 30px;
-        height: 30px;
-    }
-
-    .search-field .custom-icon {
-       display: none;
-    }
-    
-}
-

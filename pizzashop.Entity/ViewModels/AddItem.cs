@@ -12,7 +12,7 @@ public class AddItem
   public int Itemid { get; set; }
 
   [Required(ErrorMessage = "Item name is required")]
-  [RegularExpression(@"^[^\d].*", ErrorMessage = "Item name cannot start with a number")]
+  [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "Item name cannot start with a space or number and cannot be only whitespace.")]
   public string Itemname { get; set; } = null!;
 
   [Required(ErrorMessage = "Category is required")]

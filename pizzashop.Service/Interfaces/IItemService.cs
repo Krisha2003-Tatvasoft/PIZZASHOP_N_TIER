@@ -7,7 +7,7 @@ public interface IItemService
 {
  Task<(List<ItemTable> , int totalitem)> GetItemTable(int id,int page, int pageSize, string search);
 
-  Task<AddItem> Additem();
+  Task<AddItem> Additem(int categoryId);
 
   Task<bool> AddItemPost(int loginId,AddItem viewmodel);
 

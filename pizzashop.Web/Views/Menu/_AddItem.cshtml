@@ -143,26 +143,7 @@
                         </div>
 
 
-                        @* <div class="container-fluid">
-                            <span>Upload Image</span>
-                            <div class="input-group d-flex justify-content-center align-items-center file-upload p-4">
-                                <!-- Button to trigger the file input -->
-                                <button type="button" class="btn d-flex align-items-center gap-2"
-                                    id="inputGroupFileAddon04"
-                                    onclick="document.getElementById('inputGroupFile01').click();">
-                                    <img class="upload-icon" src="../images/cloud-arrow-up.svg" alt="Upload" />
-                                    <div>
-                                        Drag and Drop Or Browse files
-                                    </div>
-                                </button>
-
-                                <!-- Hidden file input -->
-                                <input type="file" class="form-control" id="inputGroupFile01" asp-for="ItemPicture" style="display: none;"
-                                    aria-describedby="fileNameDisplay"
-                                    onchange="this.nextElementSibling.textContent = this.files.length > 0 ? this.files[0].name : 'No file selected';">
-
-                            </div>
-                        </div> *@
+                
 
                         <div class="container-fluid mb-3">
         <div class="d-flex align-items-center justify-content-center p-3 rounded flex-column pb-3"
@@ -178,10 +159,15 @@
                 <div id="upload-icon" onclick="document.getElementById('fileInput').click()" style="cursor: pointer;">
                     <i class="bi bi-cloud-arrow-up display-6 ps-2"></i>
                 </div>
+
                 <div class="d-flex flex-row">
                     <!-- File Name (Initially 'Browse File') -->
-                    <span id="file-name" class="text-secondary text-truncate" style="max-width: 250px; cursor: pointer;"
-                        onclick="document.getElementById('fileInput').click()">Drag and Drop Or Browse files</span>
+                    <span id="file-name" class="text-secondary text-truncate" style="max-width: 250px;">Drag and Drop Or Browse files</span>
+
+                       @* edit *@
+                        <i class="bi bi-pencil ps-2" style="cursor: pointer; display: none;"
+                             onclick="document.getElementById('fileInput').click()" id="editFile"></i>
+
 
                     <i class="bi bi-trash text-danger ps-2" id="deleteFile" style="cursor: pointer; display: none;"
                         onclick="removeFile()"></i>
@@ -401,6 +387,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+          const editFile = document.getElementById('editFile');
 
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
@@ -412,6 +399,7 @@
                 uploadIcon.style.display = "none"; // Hide upload icon
                 fileNameSpan.textContent = file.name; // Set file name
                 deleteFile.style.display = "block"; // Show delete icon
+                  editFile.style.display = "block"; // Show edit icon
             };
 
             reader.readAsDataURL(file);
@@ -424,6 +412,8 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+        const editFile = document.getElementById('editFile');
+
 
         fileInput.value = ""; // Clear input
         uploadIcon.style.display = "block"; // Show upload icon again
@@ -431,6 +421,7 @@
         imagePreview.src = "";
         imagePreview.style.display = "none"; // Hide image
         deleteFile.style.display = "none"; // Hide delete icon
+        editFile.style.display = "none"; // Hide edit icon
     }
 
 </script>

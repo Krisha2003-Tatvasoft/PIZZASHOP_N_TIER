@@ -67,14 +67,15 @@ public class ItemService : IItemService
     return (items, totalitem);
   }
 
-  public async Task<AddItem> Additem()
+  public async Task<AddItem> Additem(int categoryId)
   {
 
     AddItem model = new AddItem
     {
       Categories = await _categoryRepository.GetAllCatyAsync(),
       Units = await _unitRpository.GetAllUnitAsync(),
-      MGList = await _modifiersGropRepository.GetAllMGAsync()
+      MGList = await _modifiersGropRepository.GetAllMGAsync(),
+      Categoryid = categoryId
     };
     return model;
   }

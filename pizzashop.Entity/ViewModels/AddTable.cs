@@ -10,7 +10,8 @@ public class AddTable
 
     [Required(ErrorMessage = "Table name is required.")]
     [StringLength(100, ErrorMessage = "Table name cannot exceed 100 characters.")]
-    [RegularExpression(@"^[^\d].*", ErrorMessage = "Table name cannot start with a number.")]
+    [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "Table name cannot start with a space or number and cannot be only whitespace.")]
+
     public string Tablename { get; set; } = null!;
 
     [Required(ErrorMessage = "Section is required.")]

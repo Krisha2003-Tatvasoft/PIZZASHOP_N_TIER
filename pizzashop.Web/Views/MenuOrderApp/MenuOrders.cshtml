@@ -268,7 +268,7 @@
 
     @* load items onlick *@
       $(document).on("click", ".category", function (e) {
-         e.preventDefault();
+        e.preventDefault();
         var categoryId = $(this).data("catid");
         loadItemList(categoryId);
       });
@@ -316,34 +316,86 @@
             alert("Error toggling favourite status.");
           }
         });
-
-
-
       });
 
-     $(document).on("click", ".itemCard", function (e) {
-       e.preventDefault();
+
+    $(document).on("click", ".itemCard", function (e) {
+      e.preventDefault();
 
       const orderId = new URLSearchParams(window.location.search).get('orderId');
 
-        var itemId = $(this).data("itemid");
-    
-          $.ajax({
-          url: `/MenuOrderApp/ModifierList?orderId=${orderId}`, 
-          type: "GET",
-          data: { id: itemId},
-          success: function (data) {
-            $('.modifier-list').html(data);
-            $("#modifierData").modal("show");
-          },
-          error: function () {
-            alert("error in load category.")
-          }
-        });
+      var itemId = $(this).data("itemid");
 
-
+      $.ajax({
+        url: `/MenuOrderApp/ModifierList?orderId=${orderId}`,
+        type: "GET",
+        data: { id: itemId },
+        success: function (data) {
+          $('.modifier-list').html(data);
+          $("#modifierData").modal("show");
+        },
+        error: function () {
+          alert("error in load category.")
+        }
       });
 
+
+    });
+
+
+    let selectedModifiers = {};
+
+    $(document).on("click", ".modifier-card", function () {
+
+      var $card = $(this);
+      var modifierGroupId = $card.closest(".modifier-group").data("groupid");
+      var modifierId = $card.data("modifierid");
+
+      console.log($card);
+      var maxSelection = parseInt($card.closest(".modifier-group").data("maxselection")) || Infinity;
+
+      if (!selectedModifiers[modifierGroupId]) {
+        selectedModifiers[modifierGroupId] = [];
+      }
+
+      var currentSelections = selectedModifiers[modifierGroupId];
+      var isSelected = $card.hasClass("selected");
+
+      if (isSelected) {
+        selectedModifiers[modifierGroupId] = currentSelections.filter(id => id !== modifierId);
+        $card.removeClass("selected");
+      } else {
+        if (currentSelections.length >= maxSelection) {
+          toastr.warning("You can select a maximum of " + maxSelection + " modifiers for this group.");
+          return;
+        }
+        selectedModifiers[modifierGroupId].push(modifierId);
+        $card.addClass("selected");
+      }
+    });
+
+    $(document).on("click", "#add-button", function (){
+      console.log("in add button");
+      var allValid = true;
+
+      $(".modifier-group").each(function () {
+        var $group = $(this);
+        var groupId = $group.data("groupid");
+        var minSelection = parseInt($group.data("minselection")) || 0;
+        var selected = selectedModifiers[groupId] || [];
+
+        if (selected.length < minSelection) {
+          toastr.warning("Group " + groupId + ": You must select at least " + minSelection + " modifier(s).");
+          allValid = false;
+        }
+      });
+
+      if (allValid) {
+        // Proceed to add item to cart or next step
+        console.log("All validations passed!");
+        // Your logic here (e.g., add to cart)
+      }
+    });
 
 
 

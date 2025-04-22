@@ -128,16 +128,16 @@ public class TableAndSectionController : Controller
         }
         else
         {
-            return Json(new { success = false, message =message  });
+            return Json(new { success = false, message = message });
         }
     }
 
 
     [HttpGet]
     [CustomAuthorize("TableAndSection", "AddEdit")]
-    public async Task<IActionResult> AddTable()
+    public async Task<IActionResult> AddTable(int sectionId)
     {
-        return PartialView("_AddTable", await _tableService.AddTable());
+        return PartialView("_AddTable", await _tableService.AddTable(sectionId));
     }
 
     [HttpPost]
@@ -251,5 +251,19 @@ public class TableAndSectionController : Controller
         }
 
     }
+
+    [HttpGet]
+    [CustomAuthorize("TableAndSection", "View")]
+    public async Task<IActionResult> FirstSecId()
+    {
+        List<VMSection> sections = await _sectionService.GetSectionList();
+        var firstSec = sections.FirstOrDefault();
+        if (firstSec == null)
+        {
+            return Ok();
+        }
+        return Ok(firstSec.Sectionid);
+    }
+
 
 }

@@ -9,7 +9,8 @@ public class Category
 
      [Required(ErrorMessage = "Category name is required")]
      [StringLength(100, ErrorMessage = "Category name cannot exceed 100 characters")]
-     [RegularExpression(@"^[^\d].*", ErrorMessage = "Category name cannot start with a number")]
+      [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "Category name cannot start with a space or number and cannot be only whitespace.")]
+
      public string Categoryname { get; set; } = null!;
 
      [StringLength(255, ErrorMessage = "Description cannot exceed 255 characters")]

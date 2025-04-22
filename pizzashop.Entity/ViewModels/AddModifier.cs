@@ -9,7 +9,7 @@ public class AddModifier
 
     [Required(ErrorMessage = "Modifier name is required")]
     [StringLength(100, ErrorMessage = "Modifier name cannot exceed 100 characters")]
-    [RegularExpression(@"^[^\d].*", ErrorMessage = "Modifier name cannot start with a number")]
+    [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "Modifier name cannot start with a space or number and cannot be only whitespace.")]
     public string Modifiername { get; set; } = null!;
 
     [Required(ErrorMessage = "Rate is required")]

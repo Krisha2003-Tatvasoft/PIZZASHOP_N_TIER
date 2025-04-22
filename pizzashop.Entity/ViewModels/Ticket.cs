@@ -1,3 +1,5 @@
+using static pizzashop.Entity.Models.Enums;
+
 namespace pizzashop.Entity.ViewModels;
 
 public class Ticket
@@ -14,6 +16,10 @@ public class Ticket
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
     public string? Orderwisecomment { get; set; }
-      
+
+    public string? RunningSince { get; set; }
+
+    public orderstatus orderstatus { get; set; }
+
 
 }

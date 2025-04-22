@@ -8,7 +8,8 @@ namespace pizzashop.Entity.ViewModels
 
         [Required(ErrorMessage = "Section name is required.")]
         [StringLength(50, ErrorMessage = "Section name cannot exceed 50 characters.")]
-        [RegularExpression(@"^[^\d].*", ErrorMessage = "Section name cannot start with a number.")]
+        [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "Section name cannot start with a space or number and cannot be only whitespace.")]
+
         public string Sectionname { get; set; } = null!;
 
         [StringLength(200, ErrorMessage = "Description cannot exceed 200 characters.")]

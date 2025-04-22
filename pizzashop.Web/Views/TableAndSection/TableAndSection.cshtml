@@ -207,11 +207,39 @@
                     type: "GET",
                     success: function (response) {
                         $("#section-list").html(response);
+                        $(".section-link").removeClass("menu-active");
+                        $('.section-link[data-secid="' + globalSectionId + '"]').addClass("menu-active");
+
                     },
                     error: function (error) {
                     }
                 });
             }
+
+        loadFirstTable(1);
+
+         function loadFirstTable(page) {
+
+            let pageSize = $("#pageSizeTable").val();
+            let search = $("#searchInTable").val();
+
+            $.ajax({
+                url: "/TableAndSection/FirstSecId",
+                type: "GET",
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: search
+                },
+                success: function (response) {
+                    loadTablesBySec(response, 1);
+                    currentPage = page;
+                },
+                error: function (error) {
+                }
+            });
+        }
+
 
         SectionList();
 
@@ -222,13 +250,15 @@
             loadTablesBySec(sectionId, 1);
         });
 
-        loadTablesBySec(1, 1);
 
         @* load tablelist *@
 
             function loadTablesBySec(sectionId, page) {
 
                 globalSectionId = sectionId;
+
+                $(".section-link").removeClass("menu-active");
+                $('.section-link[data-secid="' + globalSectionId + '"]').addClass("menu-active");
 
                 let pageSize = $("#pageSizeTable").val();
                 let search = $("#searchInTable").val();
@@ -347,6 +377,7 @@
                     data: { id: sectionid },
                     success: function (response) {
                         if (response.success) {
+                            loadFirstTable(1);
                             SectionList();
                             toastr.success(response.message);
                         }
@@ -368,6 +399,7 @@
                 $.ajax({
                     url: "/TableAndSection/AddTable",
                     type: "GET",
+                    data: { sectionId: globalSectionId },
                     success: function (response) {
                         $(".modal-addNewTable").html(response);
                         $("#addNewTable").modal("show");
@@ -469,7 +501,7 @@
                     data: { id: tableId },
                     success: function (response) {
                         if (response.success) {
-                            loadTablesBySec(sectionid, 1);
+                            loadTablesBySec(globalSectionId, 1);
                             toastr.success(response.message);
                         }
                         else {
@@ -517,7 +549,7 @@
                 data: { selectedTableIds: selectedTableIds },
                 success: function (response) {
                     selectedTableIds = [];
-                    loadTablesBySec(1, 1);
+                    loadTablesBySec(globalSectionId, 1);
                     toastr.success("Selected Tables Deleted Succesfully.");
                 },
                 error: function (error) {

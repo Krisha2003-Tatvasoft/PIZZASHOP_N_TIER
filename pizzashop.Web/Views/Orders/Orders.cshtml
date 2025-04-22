@@ -61,12 +61,12 @@
             <div class="d-flex flex-column flex-sm-row gap-3 date-div">
 
                 <div class="form-floating filter w-sm-50 w-100">
-                    <input type="date" class="form-control" id="FromDate" placeholder="fromDate">
+                    <input type="date" class="form-control" id="FromDate" max="" placeholder="fromDate">
                     <label for="fromDate">From Date</label>
                 </div>
 
                 <div class="form-floating filter w-sm-50 w-100">
-                    <input type="date" class="form-control" id="ToDate" placeholder="ToDate">
+                    <input type="date" class="form-control" id="ToDate" max="" placeholder="ToDate">
                     <label for="ToDate">To Date</label>
                 </div>
 
@@ -104,7 +104,34 @@
     let GFromDate;
     let GToDate;
 
+    function formatDate(date) {
+        return date.toISOString().split("T")[0];
+    }
+
+
     $(document).ready(function () {
+
+
+
+        const today = new Date();
+        const maxDate = formatDate(today);
+
+        // Set max date to today for both inputs
+        $("#FromDate").attr("max", maxDate);
+        $("#ToDate").attr("max", maxDate);
+
+        // When FromDate changes
+        $("#FromDate").on("change", function () {
+            const fromDate = $(this).val();
+            $("#ToDate").attr("min", fromDate); // To date must be on/after From date
+        });
+
+        // When ToDate changes
+        $("#ToDate").on("change", function () {
+            const toDate = $(this).val();
+            $("#FromDate").attr("max", toDate); // From date must be on/before To date
+        });
+
 
         let currentPage = @ViewBag.CurrentPage;
         let searchQuery = "@ViewBag.SearchQuery" || "";
@@ -252,10 +279,10 @@
                 fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
                 toDate = toDate ? toDate.toISOString().split("T")[0] : null;
 
-                
+
                 $("#FromDate").val(fromDate);
                 $("#ToDate").val(toDate);
-                
+
 
 
                 GFromDate = fromDate;
@@ -277,6 +304,9 @@
 
                 GFromDate = "";
                 GToDate = "";
+
+                $("#FromDate").attr("max", maxDate);
+                $("#ToDate").attr("max", maxDate).removeAttr("min");
 
                 loadOrderTable(1);
             });
@@ -329,7 +359,7 @@
                         toastr.error("Error exporting data");
                     }
                 });
-                
+
             });
 
 
@@ -347,7 +377,7 @@
                 url: "/Orders/OrdersDetails",
                 type: "GET",
                 data: { id: Orderid },
-                success: function (data)    {
+                success: function (data) {
                     $('#orderTablePartial').hide();
                     $('#orderDetailspartial').html(data).show();
                 },

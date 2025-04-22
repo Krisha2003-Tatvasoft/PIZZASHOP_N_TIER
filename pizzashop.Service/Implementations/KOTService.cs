@@ -15,12 +15,13 @@ public class KOTService : IKOTService
     }
 
 
-
+    private static Dictionary<int, DateTime> _orderStartTimes = new();
     public async Task<(List<Ticket>, int totalOrder)> Ticket(int id, string status, int page)
     {
         var orders = await _orderRepository.InprogressOrders();
         int totalOrder = 0;
         List<Ticket> tickets = new List<Ticket>();
+
         foreach (var order in orders)
         {
             var orderdeatils = await _orderRepository.OrderDetailsByIdAsync(order.Orderid);
@@ -51,13 +52,38 @@ public class KOTService : IKOTService
                     }).ToList()
                 }).ToList();
 
+                var orderstatus = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
+                string? runningSince = null;
+                if (orderstatus == Enums.orderstatus.InProgress || orderstatus == Enums.orderstatus.Served || orderstatus == Enums.orderstatus.Pending)
+                {
+                    if (!_orderStartTimes.ContainsKey(order.Orderid))
+                    {
+                        _orderStartTimes[order.Orderid] = order?.Orderdate ?? DateTime.Now;
+                    }
+
+                    var duration = DateTime.Now - _orderStartTimes[order.Orderid];
+                    runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
+                       $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
+                       $"{duration.Minutes} min {duration.Seconds} sec";
+                }
+                else
+                {
+                    if (_orderStartTimes.ContainsKey(order.Orderid))
+                    {
+                        _orderStartTimes.Remove(order.Orderid);
+                    }
+                }
+
+
                 Ticket model = new Ticket
                 {
                     Orderid = order.Orderid,
                     Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
                     Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
                     Orderwisecomment = order.Orderwisecomment,
-                    Items = items
+                    Items = items,
+                    RunningSince = runningSince,
+                    orderstatus = (Enums.orderstatus)order.status
                 };
                 tickets.Add(model);
 

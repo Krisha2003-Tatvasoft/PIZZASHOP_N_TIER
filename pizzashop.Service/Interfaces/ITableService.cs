@@ -8,7 +8,7 @@ public interface ITableService
 {
   Task<(List<VMTable>, int totalTables)> GetTableBySec(int id, int page, int pageSize, string search);
 
-  Task<VMAddTable> AddTable();
+  Task<VMAddTable> AddTable(int sectionId);
 
   Task<bool> AddTablePost(int loginId, VMAddTable viewmodel);
 

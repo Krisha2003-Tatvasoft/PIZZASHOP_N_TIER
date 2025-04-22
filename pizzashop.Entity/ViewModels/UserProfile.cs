@@ -11,18 +11,16 @@ namespace pizzashop.Entity.ViewModels
     public int Userid { get; set; }
 
     [Required(ErrorMessage = "First name is required.")]
-    [RegularExpression(@"^[A-Za-z]{2,50}$",
-            ErrorMessage = "First name must contain only alphabets and be between 2 to 50 characters long.")]
+    [RegularExpression(@"^(?!.*\s)[A-Za-z]{2,50}$", ErrorMessage = "First name must not contain spaces and number and must be 2 to 50 letters.")]
     public string Firstname { get; set; } = null!;
 
     [Required(ErrorMessage = "Last name is required.")]
-     [RegularExpression(@"^[A-Za-z]{2,50}$",
-            ErrorMessage = "Last name must contain only alphabets and be between 2 to 50 characters long.")]
+    [RegularExpression(@"^(?!.*\s)[A-Za-z]{2,50}$", ErrorMessage = "Last name must not contain spaces and number and must be 2 to 50 letters.")]
     public string Lastname { get; set; } = null!;
 
     [Required(ErrorMessage = "Phone number is required.")]
     [Phone(ErrorMessage = "Invalid phone number format.")]
-    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")]    public string Phone { get; set; } = null!;
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits")] public string Phone { get; set; } = null!;
 
 
     [Required(ErrorMessage = "Please select a country.")]
@@ -54,11 +52,11 @@ namespace pizzashop.Entity.ViewModels
 
     public string? Profileimg { get; set; }
 
-    
-  [Display(Name = "Profile Picture")]
-   [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" })]
-  [MaxFileSize(2 * 1024 * 1024)] // 2MB limit
-  public IFormFile? ProfilePicture { get; set; }
+
+    [Display(Name = "Profile Picture")]
+    [AllowedExtensions(new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp" })]
+    [MaxFileSize(2 * 1024 * 1024)] // 2MB limit
+    public IFormFile? ProfilePicture { get; set; }
 
 
     public List<SelectListItem>? Countries { get; set; }

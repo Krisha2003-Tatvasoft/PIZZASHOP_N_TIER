@@ -13,6 +13,7 @@
     var menuPermission = permissionModel?.Permissions?.FirstOrDefault(p => p.Moduleid == 3);
 }
 
+
 @model pizzashop.Entity.ViewModels.Category;
 
 <link rel="stylesheet" href="~/css/Menu.css" />
@@ -523,9 +524,11 @@
         @* add item model *@
             $(document).on("click", ".openModel", function (e) {
 
+
                 $.ajax({
                     url: "/Menu/AddItem",
                     type: "GET",
+                    data: { categoryId: globalCat },
                     success: function (response) {
                         $(".modal-addNewItem").html(response);
                         $("#addItem").modal("show");
@@ -545,6 +548,8 @@
                     type: "GET",
                     success: function (response) {
                         $("#category-list").html(response);
+                        $(".cat-link").removeClass("menu-active");
+                        $('.cat-link[data-id="' + globalCat + '"]').addClass("menu-active");
                     },
                     error: function (error) {
                     }
@@ -585,6 +590,9 @@
             }
         });
 
+        $('#addNewCategory').on('hidden.bs.modal', function () {
+            $("#addCat")[0].reset();
+        });
 
         var globalCat;
         var globalModifier;
@@ -593,13 +601,16 @@
             selectedIds = [];
             $("#searchInput").val("");
             var categoryId = $(this).data("id");
-            loadItemTable(categoryId);
+            loadItemTable(categoryId,1);
         });
 
         function loadItemTable(categoryId, page) {
 
             globalCat = categoryId;
-            console.log(selectedIds);
+
+            // Set active class centrally
+            $(".cat-link").removeClass("menu-active");
+            $('.cat-link[data-id="' + globalCat + '"]').addClass("menu-active");
 
             let pageSize = $("#pageSizeSelect").val();
             let search = $("#searchInput").val();
@@ -626,13 +637,14 @@
 
         @* modifier *@
 
-
             function MGList() {
                 $.ajax({
                     url: "/Menu/ModiGroupList",
                     type: "GET",
                     success: function (response) {
                         $("#Modifiers-group").html(response);
+                        $(".MG-link").removeClass("menu-active");
+                        $('.MG-link[data-id="' + globalModifier + '"]').addClass("menu-active");
                     },
                     error: function (error) {
                     }
@@ -654,7 +666,7 @@
                     search: search
                 },
                 success: function (response) {
-                    loadItemTable(response, 1);
+                    loadModifierTable(response, 1);
                     currentPage = page;
                 },
                 error: function (error) {
@@ -677,7 +689,7 @@
                     search: search
                 },
                 success: function (response) {
-                    loadModifierTable(response, 1);
+                    loadItemTable(response, 1);
                     currentPage = page;
                 },
                 error: function (error) {
@@ -701,6 +713,10 @@
         function loadModifierTable(MGId, page) {
 
             globalModifier = MGId;
+
+            // Set active clmg-listass centrally
+            $(".MG-link").removeClass("menu-active");
+            $('.MG-link[data-id="' + globalModifier + '"]').addClass("menu-active");
 
             let pageSize = $("#pageSizeSelectM").val();
             let search = $("#searchModifier").val();
@@ -800,8 +816,7 @@
                 type: "POST",
                 data: { id: categoryId },
                 success: function (response) {
-
-                    catList();
+                    loadFirstItemTable(1);
                     toastr.success("Category Deleted Succesfully.");
                 },
                 error: function (error) {
@@ -895,15 +910,19 @@
         @* Delete Item *@
 
             $(document).on("click", ".delete-item", function (e) {
+
+                 e.preventDefault();
+
                 var itemId = $("#hidden").val();
-                var Categoryid = $("#Categoryid").val();
+                var categoryId = $("#Categoryid").val();
+               
 
                 $.ajax({
                     url: "/Menu/DeleteItem",
                     type: "POST",
                     data: { id: itemId },
                     success: function (response) {
-                        loadItemTable(Categoryid, 1);
+                       loadItemTable(globalCat, 1);
                         toastr.success("Item Deleted Succesfully.");
                     },
                     error: function (error) {
@@ -948,7 +967,7 @@
                 data: { selectedIds: selectedIds },
                 success: function (response) {
                     selectedIds = [];
-                    loadItemTable(1);
+                    loadItemTable(globalCat, 1);
                     toastr.success("Selected Item Deleted Succesfully.");
                 },
                 error: function (error) {
@@ -1444,7 +1463,7 @@
 
 
         @* Edit Modifier group *@
-        
+
             $(document).on('hidden.bs.modal', '.modal', function () {
                 if ($('.modal:visible').length > 0) {
                     $('body').addClass('modal-open');
@@ -1497,6 +1516,7 @@
                     type: "POST",
                     data: { id: MGId },
                     success: function (response) {
+                        loadFirstModitable(1);
                         MGList();
                         toastr.success("ModifierGroup Deleted Succesfully.");
                     },

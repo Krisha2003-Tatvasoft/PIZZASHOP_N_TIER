@@ -90,7 +90,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("category");
 
-            entity.HasIndex(e => e.Categoryname, "category_categoryname_key").IsUnique();
+            // entity.HasIndex(e => e.Categoryname, "category_categoryname_key").IsUnique();
+            //  entity.Property(e => e.Categoryname).HasColumnName("categoryname");
 
             entity.Property(e => e.Categoryid).HasColumnName("categoryid");
             entity.Property(e => e.Categoryname)
@@ -173,7 +174,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("customers");
 
-            entity.HasIndex(e => e.Phoneno, "customers_phoneno_key").IsUnique();
+            // entity.HasIndex(e => e.Phoneno, "customers_phoneno_key").IsUnique();
+            //  entity.Property(e => e.Phoneno).HasColumnName("phoneno");
 
             entity.Property(e => e.Customerid).HasColumnName("customerid");
             entity.Property(e => e.Createdat)
@@ -241,7 +243,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("invoice");
 
-            entity.HasIndex(e => e.Invoicenumber, "invoice_invoicenumber_key").IsUnique();
+            // entity.HasIndex(e => e.Invoicenumber, "invoice_invoicenumber_key").IsUnique();
+            //  entity.Property(e => e.Invoicenumber).HasColumnName("invoicenumber");
 
             entity.Property(e => e.Invoiceid).HasColumnName("invoiceid");
             entity.Property(e => e.Invoicedate)
@@ -265,7 +268,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("items");
 
-            entity.HasIndex(e => e.Itemname, "items_itemname_key").IsUnique();
+            // entity.HasIndex(e => e.Itemname, "items_itemname_key").IsUnique();
+            //  entity.Property(e => e.Itemname).HasColumnName("itemname");
 
             entity.Property(e => e.Itemid).HasColumnName("itemid");
             entity.Property(e => e.Categoryid).HasColumnName("categoryid");
@@ -357,7 +361,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("modifiers");
 
-            entity.HasIndex(e => e.Modifiername, "modifiers_modifiername_key").IsUnique();
+            // entity.HasIndex(e => e.Modifiername, "modifiers_modifiername_key").IsUnique();
+            //  entity.Property(e => e.Modifiername).HasColumnName("modifiername");
 
             entity.Property(e => e.Modifierid).HasColumnName("modifierid");
             entity.Property(e => e.Createdat)
@@ -399,7 +404,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("modifiergroup");
 
-            entity.HasIndex(e => e.Modifiergroupname, "modifiergroup_modifiergroupname_key").IsUnique();
+            // entity.HasIndex(e => e.Modifiergroupname, "modifiergroup_modifiergroupname_key").IsUnique();
+            //  entity.Property(e => e.Modifiergroupname).HasColumnName("modifiergroupname");
 
             entity.Property(e => e.Modifiergroupid).HasColumnName("modifiergroupid");
             entity.Property(e => e.Createdat)
@@ -658,7 +664,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("sections");
 
-            entity.HasIndex(e => e.Sectionname, "sections_sectionname_key").IsUnique();
+            // entity.HasIndex(e => e.Sectionname, "sections_sectionname_key").IsUnique();
+            //   entity.Property(e => e.Sectionname).HasColumnName("sectionname");
 
             entity.Property(e => e.Sectionid).HasColumnName("sectionid");
             entity.Property(e => e.Createdat)
@@ -805,7 +812,8 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("users");
 
-            entity.HasIndex(e => e.Phone, "users_phone_key").IsUnique();
+            // entity.HasIndex(e => e.Phone, "users_phone_key").IsUnique();
+            //  entity.Property(e => e.Phone).HasColumnName("phone");
 
             entity.Property(e => e.Userid).HasColumnName("userid");
             entity.Property(e => e.Address).HasColumnName("address");
@@ -861,11 +869,14 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("userslogin");
 
-            entity.HasIndex(e => e.Email, "userslogin_email_key").IsUnique();
+            // entity.HasIndex(e => e.Email, "userslogin_email_key").IsUnique();
+            //  entity.Property(e => e.Email).HasColumnName("email");
 
-            entity.HasIndex(e => e.Refreshtoken, "userslogin_refreshtoken_key").IsUnique();
+            // entity.HasIndex(e => e.Refreshtoken, "userslogin_refreshtoken_key").IsUnique();
+            //  entity.Property(e => e.Refreshtoken).HasColumnName("refreshtoken");
 
-            entity.HasIndex(e => e.Username, "userslogin_username_key").IsUnique();
+            // entity.HasIndex(e => e.Username, "userslogin_username_key").IsUnique();
+            //  entity.Property(e => e.Username).HasColumnName("username");
 
             entity.Property(e => e.Userloginid).HasColumnName("userloginid");
             entity.Property(e => e.Email)

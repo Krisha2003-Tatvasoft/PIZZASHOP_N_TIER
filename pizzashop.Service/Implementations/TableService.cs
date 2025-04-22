@@ -41,11 +41,12 @@ public class TableService : ITableService
         return (tableList, totalTables);
     }
 
-    public async Task<VMAddTable> AddTable()
+    public async Task<VMAddTable> AddTable(int sectionId)
     {
         VMAddTable model = new VMAddTable
         {
-            SectionList = await _sectionRepository.SectionDDAsync()
+            SectionList = await _sectionRepository.SectionDDAsync(),
+            Sectionid = sectionId
         };
         return model;
     }

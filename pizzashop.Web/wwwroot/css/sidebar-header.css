@@ -1,121 +1,115 @@
 .parent {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
-
 .slider {
-    width: 220px;
-    background-color: white;
-    min-height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
+  width: 220px;
+  background-color: white;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .appLogo {
-    width: 75px;
-    height: 65px;
+  width: 75px;
+  height: 65px;
 }
 
 .slider .appname a {
-    text-decoration: none;
-    color: #087cc4;
-    font-size: 20px;
+  text-decoration: none;
+  color: #087cc4;
+  font-size: 20px;
 }
 
 .slider .appname {
-    display: flex;
-    gap: 2px;
-    margin-top: 10px;
+  display: flex;
+  gap: 2px;
+  margin-top: 10px;
 }
 
 .slider li {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding-top: 30px;
-    padding-left: 10px;
-    padding-right: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-top: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .slider .svgs {
-    width: 20px;
-    height: 20px;
-    margin-right: 15px;
+  width: 20px;
+  height: 20px;
+  margin-right: 15px;
 }
 
 .slider .slider-content a {
-    text-decoration: none;
-    color: grey;
-    width: 100%;
-    padding: 10px;
+  text-decoration: none;
+  color: grey;
+  width: 100%;
+  padding: 10px;
 }
 
+
+
 .nav-main-content {
-    min-height: 100vh;
-    margin-left: 220px;
+  min-height: 100vh;
+  margin-left: 220px;
 }
 
 .nav-main-content .main-content {
-    background-color: #e5e7eb;
-    padding-top: 50px;
-    min-height: 100vh;
-    overflow: auto;
+  background-color: #e5e7eb;
+  padding-top: 50px;
+  min-height: 100vh;
+  overflow: auto;
 }
 
 .my-header {
-    height: 50px;
-    background-color: #087cc4;
-    width: 100% !important;
-    position: fixed !important;
-    top: 0px !important;
-    left: 0px;
-    z-index: 100;
+  height: 50px;
+  background-color: #087cc4;
+  width: 100% !important;
+  position: fixed !important;
+  top: 0px !important;
+  left: 0px;
+  z-index: 100;
 }
 
 .slider {
-    z-index: 200;
+  z-index: 200;
 }
 
 .my-header .profile-img {
-    width: 40px;
-    height: 40px;
-    padding: 2px;
+  width: 40px;
+  height: 40px;
+  padding: 2px;
 }
 
- .active {
-    color: #087cc4 !important;
-    background-color: lightgray;
+.active {
+  color: #087cc4 !important;
+  background-color: lightgray;
 }
-
-
 
 .my-header .profile-dropdown .dropdown-menu {
-    .dropdown-item {
-
-        &:hover,
-        &:focus {
-            background-color: #f0f0f0; 
-        }
-
-        &:active,
-        &.active {
-            background-color: #e0e0e0 !important; 
-            color: #000 !important; 
-        }
+  .dropdown-item {
+    &:hover,
+    &:focus {
+      background-color: #f0f0f0;
     }
+
+    &:active,
+    &.active {
+      background-color: #e0e0e0 !important;
+      color: #000 !important;
+    }
+  }
 }
 
-
-
 @media screen and (max-width: 992px) {
+  .offcanvas-lg {
+    width: 220px !important;
+  }
 
-    .offcanvas-lg {
-        width: 220px !important;
-    }
-
-    .nav-main-content {
-        margin-left: 0px;
-    }
-
+  .nav-main-content {
+    margin-left: 0px;
+  }
 }

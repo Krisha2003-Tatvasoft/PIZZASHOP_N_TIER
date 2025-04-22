@@ -9,7 +9,7 @@ public class AddModifierGroup
 
     [Required(ErrorMessage = "Modifier group name is required")]
     [StringLength(100, ErrorMessage = "Modifier group name cannot exceed 100 characters")]
-    [RegularExpression(@"^[^\d].*", ErrorMessage = "ModifierGroup name cannot start with a number")] 
+    [RegularExpression(@"^(?!\s)(?!\d)[^\s].*", ErrorMessage = "ModifierGroup name cannot start with a space or number and cannot be only whitespace.")]
     public string Modifiergroupname { get; set; } = null!;
 
     [StringLength(255, ErrorMessage = "Description cannot exceed 255 characters")]

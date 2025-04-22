@@ -58,7 +58,7 @@
                                 asp-for="Username">
                             <label for="username">User Name</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
-                              <span class="text-danger usernameExist"></span>
+                            <span class="text-danger usernameExist"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
@@ -80,11 +80,10 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
-                            <input type="email" class="form-control" id="email" placeholder="Email"
-                                asp-for="Email">
+                            <input type="email" class="form-control" id="email" placeholder="Email" asp-for="Email">
                             <label for="email">Email</label>
                             <span asp-validation-for="Email" class="text-danger"></span>
-                             <span class="text-danger emailExist"></span>
+                            <span class="text-danger emailExist"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3 password">
@@ -102,34 +101,40 @@
 
 
 
- <div class="container-fluid mb-3">
-        <div class="d-flex align-items-center justify-content-center p-3 rounded flex-column pb-3"
-            style="width: 100%;border-style: dashed;border:1px dashed #b3b3b3 ">
-            <div class="d-flex flex-row"><!-- Image Preview (Initially Hidden) -->
-                <img id="imagePreview" class="rounded mb-2" style=" display: none; border: 1px solid #ddd;"
-                    height="100px">
-            </div>
-
-
-            <!-- Upload Icon (Initially Visible) -->
-            <div class="align-self-center">
-                <div id="upload-icon" onclick="document.getElementById('fileInput').click()" style="cursor: pointer;">
-                    <i class="bi bi-cloud-arrow-up display-4 ps-2"></i>
+        <div class="container-fluid mb-3">
+            <div class="d-flex align-items-center justify-content-center p-3 rounded flex-column pb-3"
+                style="width: 100%;border-style: dashed;border:1px dashed #b3b3b3 ">
+                <div class="d-flex flex-row"><!-- Image Preview (Initially Hidden) -->
+                    <img id="imagePreview" class="rounded mb-2" style=" display: none; border: 1px solid #ddd;"
+                        height="100px">
                 </div>
-                <div class="d-flex flex-row">
-                    <!-- File Name (Initially 'Browse File') -->
-                    <span id="file-name" class="text-secondary text-truncate" style="max-width: 150px; cursor: pointer;"
-                        onclick="document.getElementById('fileInput').click()">Browse File</span>
 
-                    <i class="bi bi-trash text-danger ps-2" id="deleteFile" style="cursor: pointer; display: none;"
-                        onclick="removeFile()"></i>
+
+                <!-- Upload Icon (Initially Visible) -->
+                <div class="align-self-center">
+                    <div id="upload-icon" onclick="document.getElementById('fileInput').click()"
+                        style="cursor: pointer;">
+                        <i class="bi bi-cloud-arrow-up display-4 ps-2"></i>
+                    </div>
+                    <div class="d-flex flex-row">
+
+                        <!-- File Name (Initially 'Browse File') -->
+                        <span id="file-name" class="text-secondary text-truncate" style="max-width: 150px;">Browse
+                            File</span>
+
+                        @* edit *@
+                        <i class="bi bi-pencil ps-2" style="cursor: pointer; display: none;"
+                            onclick="document.getElementById('fileInput').click()" id="editFile"></i>
+
+                        <i class="bi bi-trash text-danger ps-2" id="deleteFile" style="cursor: pointer; display: none;"
+                            onclick="removeFile()"></i>
+                    </div>
                 </div>
+                <!-- Hidden File Input -->
+                <input type="file" id="fileInput" name="ProfilePicture" accept="image/*" style="display: none;"
+                    onchange="previewFile(event)">
             </div>
-            <!-- Hidden File Input -->
-            <input type="file" id="fileInput" name="file" accept="image/*" style="display: none;"
-                onchange="previewFile(event)">
         </div>
- </div>
 
         <div class="container-fluid">
             <div class="row">
@@ -188,7 +193,7 @@
                         <input type="tel" class="form-control" id="phone" placeholder="Phone" asp-for="Phone">
                         <label for="phone">Phone</label>
                         <span asp-validation-for="Phone" class="text-danger"></span>
-                         <span class="text-danger phone-exist"></span>
+                        <span class="text-danger phone-exist"></span>
                     </div>
                 </div>
             </div>
@@ -297,9 +302,9 @@
 
 
 <script>
-  var isvalid = true;
+    var isvalid = true;
     var isvalidphone = true;
-    var isvalidemail= true;
+    var isvalidemail = true;
 
     function previewFile(event) {
         const fileInput = document.getElementById('fileInput');
@@ -307,6 +312,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+        const editFile = document.getElementById('editFile');
 
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
@@ -318,6 +324,7 @@
                 uploadIcon.style.display = "none"; // Hide upload icon
                 fileNameSpan.textContent = file.name; // Set file name
                 deleteFile.style.display = "block"; // Show delete icon
+                editFile.style.display = "block"; // Show edit icon
             };
 
             reader.readAsDataURL(file);
@@ -330,6 +337,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
+        const editFile = document.getElementById('editFile');
 
         fileInput.value = ""; // Clear input
         uploadIcon.style.display = "block"; // Show upload icon again
@@ -337,13 +345,14 @@
         imagePreview.src = "";
         imagePreview.style.display = "none"; // Hide image
         deleteFile.style.display = "none"; // Hide delete icon
+        editFile.style.display = "none"; // Hide edit icon
     }
 
 
     function usernameexist() {
-       
+
         var username = $("#username").val();
-       
+
         if (username) {
             $.ajax({
                 url: '/User/usernameexist',
@@ -352,7 +361,7 @@
                 success: function (data) {
                     if (data.success == true) {
                         $(".usernameExist").text(data.message);
-                        isvalid= false;
+                        isvalid = false;
                     }
                     else {
                         isvalid = true;
@@ -366,11 +375,11 @@
         }
     }
 
-      function phoneexist() {
-       
+    function phoneexist() {
+
         var phone = $("#phone").val();
-      
-    
+
+
         if (phone) {
             $.ajax({
                 url: '/User/phoneExist',
@@ -379,7 +388,7 @@
                 success: function (data) {
                     if (data.success == true) {
                         $(".phone-exist").text(data.message);
-                        isvalidphone= false;
+                        isvalidphone = false;
                     }
                     else {
                         isvalidphone = true;
@@ -393,15 +402,15 @@
         }
     }
 
-      $(document).on("blur", "#phone", function (e) {
+    $(document).on("blur", "#phone", function (e) {
         phoneexist();
     });
 
 
-     function emailexist() {
-       
+    function emailexist() {
+
         var email = $("#email").val();
-    
+
         if (phone) {
             $.ajax({
                 url: '/User/emailExist',
@@ -410,7 +419,7 @@
                 success: function (data) {
                     if (data.success == true) {
                         $(".emailExist").text(data.message);
-                        isvalidemail= false;
+                        isvalidemail = false;
                     }
                     else {
                         isvalidemail = true;
@@ -424,23 +433,22 @@
         }
     }
 
-      $(document).on("blur", "#email", function (e) {
-       emailexist();
+    $(document).on("blur", "#email", function (e) {
+        emailexist();
     });
 
 
- 
-   $(document).on("blur", "#username", function (e) {
+
+    $(document).on("blur", "#username", function (e) {
         usernameexist();
     });
 
     $(document).on("click", ".create-button", function (e) {
         usernameexist();
-           phoneexist();
-           emailexist();
-        if(isvalid === false  || isvalidphone === false || isvalidemail === false)
-        {
-        e.preventDefault();
+        phoneexist();
+        emailexist();
+        if (isvalid === false || isvalidphone === false || isvalidemail === false) {
+            e.preventDefault();
         }
     });
 
