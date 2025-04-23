@@ -5,6 +5,7 @@ using pizzashop.Service.Utils;
 using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
+
 public class MenuOrderAppController : Controller
 {
     private readonly ICategoryService _categoryService;
@@ -13,11 +14,14 @@ public class MenuOrderAppController : Controller
 
     private readonly IOrderAppMenuService _orderAppMenuService;
 
-    public MenuOrderAppController(ICategoryService categoryService, IItemService itemService, IOrderAppMenuService orderAppMenuService)
+    private readonly IOrderService _orderService;
+
+    public MenuOrderAppController(ICategoryService categoryService, IItemService itemService, IOrderAppMenuService orderAppMenuService, IOrderService orderService)
     {
         _categoryService = categoryService;
         _itemService = itemService;
         _orderAppMenuService = orderAppMenuService;
+        _orderService = orderService;
     }
 
     public IActionResult MenuOrders()
@@ -52,7 +56,24 @@ public class MenuOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> ModifierList(int id)
     {
-        return PartialView("_ModifierList", await _orderAppMenuService.ModifiersById(id));
+        List<IMGMviewmodel> modifierslist = await _orderAppMenuService.ModifiersById(id);
+        if (!modifierslist.Any())
+        {
+            return Json(new { success = false, message = "No modifiers For this Item." });
+        }
+        else
+        {
+            return PartialView("_ModifierList", modifierslist);
+        }
+
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> OrderDetails(int id)
+    {
+         var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID
+
+        return PartialView("_OrderDetails", orderDetails);
     }
 
 

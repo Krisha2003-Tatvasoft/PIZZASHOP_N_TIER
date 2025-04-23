@@ -131,7 +131,6 @@
         let SortOrder = "@ViewBag.SortOrder" || "";
 
 
-
         @* load order table *@
             loadCustomerTable(1);
 
@@ -183,7 +182,7 @@
                 loadCustomerTable(1);
             });
 
-        @* page size  *@
+        @* page size *@
 
             $("#Customer-table").on("change", "#pageSizeCustomer", function () {
                 loadCustomerTable(1);
@@ -316,12 +315,18 @@
                     toDate = today;
                 }
                 else if (dateFilter === "customdate") {// Custom Date: Open modal
-                    fromDate = GCFromDate;
-                    toDate = GCToDate;
+                    fromDate = new Date(GCFromDate);
+                    toDate = new Date(GCToDate);
                 }
 
                 fromDate = fromDate ? fromDate.toISOString().split("T")[0] : null;
                 toDate = toDate ? toDate.toISOString().split("T")[0] : null;
+
+                if (fromDate != GCFromDate || toDate != GCToDate) {
+                    fromDate = GCFromDate;
+                    toDate = GCToDate;
+                }
+
 
                 let url = `/Customer/ExportCustomer?search=${searchQuery}&fromDate=${fromDate}&toDate=${toDate}`;
 

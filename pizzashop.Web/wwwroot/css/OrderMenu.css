@@ -134,8 +134,8 @@
 }
 
 .modifier-card.selected {
-  background-color: #87cefa; /* Example: light blue for selected */
-  border: 2px solid #1f73ae;
+  background-color: #cfecf7!important; /* Example: light blue for selected */
+  border: 2px solid rgb(31, 115, 174);
 }
 
 /* Modifier Card - Unselected */

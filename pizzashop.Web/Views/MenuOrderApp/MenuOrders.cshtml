@@ -54,166 +54,7 @@
 
   @if (!string.IsNullOrEmpty(orderId))
   {
-    <div class="card bg-white p-3 w-100" style="height:100%; ">
-
-      <div class="d-flex justify-content-between align-items-center">
-
-        <div class="d-flex justify-content-start align-items-center">
-          <div class="d-flex align-items-center justify-content-center p-1"
-            style="background-color:  #adc3e4; width:100px height:100px">
-            <img src="~/images/order-table.png" width="42px" height="42px">
-          </div>
-          <div class="d-flex flex-column ps-2 fs-6">
-            <span>sectionname</span>
-            <span><b>Table: </b> T1,T2</span>
-          </div>
-        </div>
-
-        <div class="d-flex align-items-center justify-content-end gap-3">
-          <div class=" bill-top-btn">
-            <i class="bi bi-qr-code-scan"></i>
-          </div>
-          <div class=" bill-top-btn">
-            <i class="bi bi-person-lines-fill"></i>
-          </div>
-          <div class=" bill-top-btn">
-            <i class="bi bi-chat-left-text"></i>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="w-100 pt-4">
-
-        <div class="d-flex text-secondary ">
-
-          <div class="d-flex justify-content-start w-50">
-            <h6><strong>Iteam</strong></h6>
-          </div>
-
-          <div class="d-flex justify-content-around align-items-center flex-row w-50">
-            <h6> <strong>Quantity</strong></h6>
-            <h6><strong>Amount</strong></h6>
-            <h6></h6>
-          </div>
-
-        </div>
-
-
-        <div class=" rounded border mb-2">
-
-          <div class=" d-flex">
-
-            <div class="accordion d-flex flex-column align-items-center justify-content-start gap-2 p-2 w-50">
-
-              <button class="accordion-button collapsed p-2 bg-transparent border-0" type="button"
-                data-bs-toggle="collapse" data-bs-target="#collapse-abc" aria-expanded="false"
-                aria-controls="collapse-abc">
-                <strong class="ps-1">ItemName</strong>
-              </button>
-
-              <div id="collapse-abc" class="accordion-collapse  collapse" data-bs-parent="#accordionExample">
-                <div class=" ps-1">
-                  <ul class="mb-0">
-                    @* @foreach (var topping in item.OrderModifierOnly)
-                                { *@
-                    <li>topping.ModifierName ₹topping.RateModifier</li>
-                    <li>topping.ModifierName ₹topping.RateModifier</li>
-                    @* } *@
-                  </ul>
-                </div>
-              </div>
-
-            </div>
-
-            <div class="d-flex justify-content-around align-items-center flex-row w-50">
-
-              <div class="d-flex align-items-center border rounded px-2 py-1">
-                <i class="bi bi-dash cursor-pointer"></i>
-                <span class="mx-2">1</span>
-                <i class="bi bi-plus cursor-pointer"></i>
-              </div>
-
-              <div class="text-center">
-                <div class="fw-bold">₹10</div>
-                <div class="text-muted small">₹20</div>
-              </div>
-
-              <i class="bi bi-trash text-muted fs-6 cursor-pointer"></i>
-            </div>
-
-
-
-          </div>
-
-
-
-
-
-        </div>
-
-
-
-      </div>
-
-      <div class="border-bottom pt-3"></div>
-      <div class="text-secondary mt-2">
-
-        <div class="d-flex justify-content-between fs-6">
-          <div>Sub Total :</div>
-          <div>SubTotal</div>
-        </div>
-
-        <div class="d-flex justify-content-between fs-6">
-          <div>TaxName :</div>
-          <div>
-            TaxAmount
-          </div>
-        </div>
-
-        <div>
-          <hr style="background-color: #1f73ae; height: 3px; border: 0;">
-          <div class="d-flex justify-content-between fw-bolder" style="color: #087cc4;">
-            <div class="fs-5">Total</div>
-            <div>200</div>
-          </div>
-
-          <div class="d-flex justify-content-between ">
-            <div class="fs-5 fw-bolder" style="color: #087cc4;">
-              Payment Method</div>
-            <div class="d-flex flex-row gap-3 fs-6 " style="font-weight: 500;">
-              <div class="d-flex flex-row align-items-center gap-2">
-                <input type="radio" id="Cash">
-                <span for="Cash">Cash</span>
-              </div>
-              <div class="d-flex flex-row align-items-center gap-2">
-                <input type="radio" id="card">
-                <span for="card">Card</span>
-              </div>
-              <div class="d-flex flex-row align-items-center gap-2">
-                <input type="radio" id="UPI">
-                <span for="UPI">UPI</span>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-      </div>
-
-      <div class="mt-5 ps-5 d-flex flex-row gap-3 pb-3">
-        <button type="button" class="btn p-3 w-100" id="search-btn"
-          style="background-color:#087cc4 ;border-color:#087cc4;color:#fff">Save</button>
-        <button type="button" class="btn p-3 clear-btn w-100"
-          style="color:#087cc4;border-color:#087cc4;">Complete</button>
-        <button type="button" class="btn p-3 clear-btn w-100" style="color:#087cc4;border-color:#087cc4;">Generate
-          Invoice</button>
-      </div>
-      <div class="d-flex justify-content-end">
-        <button type="button" class="btn p-3 clear-btn w-40" style="color:#087cc4;border-color:#087cc4;">cancel</button>
-      </div>
-
-
+    <div class="order-details-partial card bg-white p-3 w-100" style="height:100%; ">
     </div>
   }
 
@@ -265,6 +106,26 @@
           }
         });
       }
+
+    @* load item table *@
+      function loadOrderDetails() {
+
+        const Id = new URLSearchParams(window.location.search).get('orderId');
+        const orderId = parseInt(Id)
+
+        $.ajax({
+          url: "/MenuOrderApp/OrderDetails",
+          type: "GET",
+          data :{ id : orderId },
+          success: function (data) {
+            $('.order-details-partial').html(data);
+          },
+          error: function () {
+            alert("error in load category.")
+          }
+        });
+      }
+    loadOrderDetails();
 
     @* load items onlick *@
       $(document).on("click", ".category", function (e) {
@@ -318,21 +179,55 @@
         });
       });
 
+    let OrderItem = [];
 
     $(document).on("click", ".itemCard", function (e) {
       e.preventDefault();
 
       const orderId = new URLSearchParams(window.location.search).get('orderId');
 
-      var itemId = $(this).data("itemid");
+      var itemId = $(this).data("item-id");
+      const itemName = $(this).data("item-name");
+      const itemPrice = parseFloat($(this).data("item-price"));
+
+      selectedModifiers = {};
+
 
       $.ajax({
         url: `/MenuOrderApp/ModifierList?orderId=${orderId}`,
         type: "GET",
         data: { id: itemId },
         success: function (data) {
-          $('.modifier-list').html(data);
-          $("#modifierData").modal("show");
+          if (data.success === false) {
+            // Check if item without modifiers already exists
+            const itemExists = OrderItem.find(item => item.Itemid === itemId && (!item.Modifiers || item.Modifiers.length === 0));
+
+            if (itemExists) {
+              // Increase quantity if already exists
+              const index = OrderItem.findIndex(item => item.Itemid === itemId && (!item.Modifiers || item.Modifiers.length === 0));
+              OrderItem[index].Quantity += 1;
+            } else {
+              // Add new item to cart
+              const tempUniqueId = itemId + '_' + Date.now();
+              OrderItem.push({
+                uniqueId: tempUniqueId,
+                Itemid: itemId,
+                Itemname: itemName,
+                Rate: itemPrice,
+                Quantity: 1
+              });
+            }
+            renderOrderItems();
+
+          }
+          else {
+            $('.modifier-list').html(data);
+            // Store current uniqueId in modal
+            $("#modifierData").data("item-id", itemId);
+            $("#modifierData").data("item-name", itemName);
+            $("#modifierData").data("item-price", itemPrice);
+            $("#modifierData").modal("show");
+          }
         },
         error: function () {
           alert("error in load category.")
@@ -342,7 +237,6 @@
 
     });
 
-
     let selectedModifiers = {};
 
     $(document).on("click", ".modifier-card", function () {
@@ -351,7 +245,6 @@
       var modifierGroupId = $card.closest(".modifier-group").data("groupid");
       var modifierId = $card.data("modifierid");
 
-      console.log($card);
       var maxSelection = parseInt($card.closest(".modifier-group").data("maxselection")) || Infinity;
 
       if (!selectedModifiers[modifierGroupId]) {
@@ -364,6 +257,7 @@
       if (isSelected) {
         selectedModifiers[modifierGroupId] = currentSelections.filter(id => id !== modifierId);
         $card.removeClass("selected");
+
       } else {
         if (currentSelections.length >= maxSelection) {
           toastr.warning("You can select a maximum of " + maxSelection + " modifiers for this group.");
@@ -374,9 +268,10 @@
       }
     });
 
-    $(document).on("click", "#add-button", function (){
+    $(document).on("click", "#add-button", function () {
       console.log("in add button");
       var allValid = true;
+
 
       $(".modifier-group").each(function () {
         var $group = $(this);
@@ -393,11 +288,129 @@
       if (allValid) {
         // Proceed to add item to cart or next step
         console.log("All validations passed!");
-        // Your logic here (e.g., add to cart)
+
+        // Get item details from modal or clicked item
+        const itemId = $("#modifierData").data("item-id");
+        const itemName = $("#modifierData").data("item-name");
+        const itemPrice = parseFloat($("#modifierData").data("item-price"));
+        let flatModifiers = [];
+
+        $(".modifier-card.selected").each(function () {
+          flatModifiers.push({
+            Modifierid: $(this).data("modifierid"),
+            Modifiername: $(this).data("modifiername"),
+            Rate: parseFloat($(this).data("rate"))
+          });
+        });
+
+
+        // Check if item is already in cart by uniqueId
+        const itemExists = OrderItem.find(item => item.Itemid === itemId && isSameModifiers(item.Modifiers, flatModifiers));
+
+        if (itemExists) {
+          // If item already exists, update its quantity
+          const index = OrderItem.findIndex(i => i.Itemid === itemId && isSameModifiers(i.Modifiers, flatModifiers));
+          OrderItem[index].Quantity += 1;
+        } else {
+          // Add new item to cart with quantity 1
+          const tempUniqueId = itemId + '_' + Date.now(); // only for internal usage/display
+
+          OrderItem.push({
+            uniqueId: tempUniqueId,
+            Itemid: itemId,
+            Itemname: itemName,
+            Rate: itemPrice,
+            Modifiers: flatModifiers,
+            Quantity: 1  // Initial quantity set to 1
+          });
+
+        }
+        $("#modifierData").modal("hide");
+        console.log(OrderItem);
+        renderOrderItems();
       }
     });
 
+    // Function to check if the modifiers are the same
+    function isSameModifiers(modifiersA, modifiersB) {
+      // Flatten the arrays of modifiers
+      const flatModifiersA = modifiersA.map(modifier => JSON.stringify(modifier)); // Convert objects to JSON string
+      const flatModifiersB = modifiersB.map(modifier => JSON.stringify(modifier)); // Convert objects to JSON string
 
+      // Sort both arrays to ensure consistent order
+      flatModifiersA.sort();
+      flatModifiersB.sort();
+
+      // Compare the sorted arrays
+      return JSON.stringify(flatModifiersA) === JSON.stringify(flatModifiersB);
+    }
+
+
+
+    function renderOrderItems() {
+      $("#order-items-container").empty();
+
+      OrderItem.forEach((item, index) => {
+        let modifierList = "";
+
+        if (Array.isArray(item.Modifiers)) {
+          modifierList = item.Modifiers.map(m =>
+            `<li>${m.Modifiername}   ₹${m.Rate}</li>`
+          ).join("");
+        }
+
+        const modifiersTotalPrice = item.Modifiers?.reduce((total, modifier) => total + modifier.Rate, 0) * item.Quantity;
+
+        const itemHtml = `
+            <div class="rounded border mb-2">
+                <div class="d-flex">
+                    <div class="accordion d-flex flex-column justify-content-start gap-2 p-2 w-50">
+                        <button class="accordion-button collapsed p-2 bg-transparent border-0"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse-${index}"
+                                aria-expanded="false"
+                                aria-controls="collapse-${index}">
+                        <strong class="ps-1">${item.Itemname}</strong>
+                        </button>
+                        <div id="collapse-${index}" class="accordion-collapse collapse ">
+                            <div class="ps-3">
+                                <ul class="">
+                                    ${modifierList}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center flex-row w-50">
+                        <div class="d-flex align-items-center border rounded px-2 py-1">
+                            <i class="bi bi-dash cursor-pointer" ></i>
+                            <span class="mx-2">${item.Quantity}</span>
+                            <i class="bi bi-plus cursor-pointer"></i>
+                        </div>
+                        <div class="text-center">
+                            <div class="fw-bold">₹${item.Rate * item.Quantity}</div>
+                            <div class="text-muted small">₹${modifiersTotalPrice}</div>
+                        </div>
+                        <i class="bi bi-trash text-muted fs-6 cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        $("#order-items-container").append(itemHtml);
+      });
+      @* calculateTotals(); *@
+    }
+
+    @* function calculateTotals() {
+      let subTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      let tax = subTotal * 0.05; // example 5% tax
+      let total = subTotal + tax;
+
+      $(".subtotal").text(`₹${subTotal.toFixed(2)}`);
+      $(".taxamount").text(`₹${tax.toFixed(2)}`);
+      $(".totalamount").text(`₹${total.toFixed(2)}`);
+    } *@
 
 
   });

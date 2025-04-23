@@ -10,5 +10,5 @@ public class OrderModifier
 
     public decimal TotalAmount { get; set; }
 
-     public short Quantity { get; set; }
+    public short Quantity { get; set; }
 }
