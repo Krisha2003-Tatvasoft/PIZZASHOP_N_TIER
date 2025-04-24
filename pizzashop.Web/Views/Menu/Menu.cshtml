@@ -548,8 +548,8 @@
                     type: "GET",
                     success: function (response) {
                         $("#category-list").html(response);
-                        $(".cat-link").removeClass("menu-active");
-                        $('.cat-link[data-id="' + globalCat + '"]').addClass("menu-active");
+                        $(".cat-list").removeClass("menu-active");
+                        $('.cat-list[data-id="' + globalCat + '"]').addClass("menu-active");
                     },
                     error: function (error) {
                     }
@@ -609,8 +609,8 @@
             globalCat = categoryId;
 
             // Set active class centrally
-            $(".cat-link").removeClass("menu-active");
-            $('.cat-link[data-id="' + globalCat + '"]').addClass("menu-active");
+            $(".cat-list").removeClass("menu-active");
+            $('.cat-list[data-id="' + globalCat + '"]').addClass("menu-active");
 
             let pageSize = $("#pageSizeSelect").val();
             let search = $("#searchInput").val();
@@ -643,8 +643,8 @@
                     type: "GET",
                     success: function (response) {
                         $("#Modifiers-group").html(response);
-                        $(".MG-link").removeClass("menu-active");
-                        $('.MG-link[data-id="' + globalModifier + '"]').addClass("menu-active");
+                        $(".mg-list").removeClass("menu-active");
+                        $('.mg-list[data-id="' + globalModifier + '"]').addClass("menu-active");
                     },
                     error: function (error) {
                     }
@@ -689,6 +689,7 @@
                     search: search
                 },
                 success: function (response) {
+                    globalCat = response;
                     loadItemTable(response, 1);
                     currentPage = page;
                 },
@@ -715,8 +716,8 @@
             globalModifier = MGId;
 
             // Set active clmg-listass centrally
-            $(".MG-link").removeClass("menu-active");
-            $('.MG-link[data-id="' + globalModifier + '"]').addClass("menu-active");
+            $(".mg-list").removeClass("menu-active");
+            $('.mg-list[data-id="' + globalModifier + '"]').addClass("menu-active");
 
             let pageSize = $("#pageSizeSelectM").val();
             let search = $("#searchModifier").val();
@@ -817,6 +818,7 @@
                 data: { id: categoryId },
                 success: function (response) {
                     loadFirstItemTable(1);
+                    catList();
                     toastr.success("Category Deleted Succesfully.");
                 },
                 error: function (error) {

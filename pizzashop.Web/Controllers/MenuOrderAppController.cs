@@ -71,7 +71,7 @@ public class MenuOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> OrderDetails(int id)
     {
-         var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID
+         var orderDetails = await _orderAppMenuService.OrderDetails(id); // Fetch order details by ID
 
         return PartialView("_OrderDetails", orderDetails);
     }

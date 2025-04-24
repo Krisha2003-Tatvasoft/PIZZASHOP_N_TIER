@@ -10,9 +10,11 @@ public class OrderItem
 
     public short Quantity { get; set; }
 
-    public decimal TotalAmount { get; set; }
+    public int ReadyQuantity { get; set; }
+
+    public decimal? TotalAmount { get; set; }
 
     public string? Itemwisecomment { get; set; }
 
-    public List<OrderModifier> Modifiers { get; set; } = new List<OrderModifier>();
+    public List<OrderModifier?> Modifiers { get; set; } = new List<OrderModifier>();
 }

@@ -207,8 +207,8 @@
                     type: "GET",
                     success: function (response) {
                         $("#section-list").html(response);
-                        $(".section-link").removeClass("menu-active");
-                        $('.section-link[data-secid="' + globalSectionId + '"]').addClass("menu-active");
+                        $(".sec-list").removeClass("menu-active");
+                        $('.sec-list[data-id="' + globalSectionId + '"]').addClass("menu-active");
 
                     },
                     error: function (error) {
@@ -257,8 +257,8 @@
 
                 globalSectionId = sectionId;
 
-                $(".section-link").removeClass("menu-active");
-                $('.section-link[data-secid="' + globalSectionId + '"]').addClass("menu-active");
+                $(".sec-list").removeClass("menu-active");
+                $('.sec-list[data-id="' + globalSectionId + '"]').addClass("menu-active");
 
                 let pageSize = $("#pageSizeTable").val();
                 let search = $("#searchInTable").val();

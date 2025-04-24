@@ -8,7 +8,7 @@ public class OrderModifier
 
     public decimal Rate { get; set; }
 
-    public decimal TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     public short Quantity { get; set; }
 }

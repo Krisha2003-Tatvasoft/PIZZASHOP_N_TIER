@@ -26,8 +26,12 @@
   padding-right: 3px;
 }
 
-.main-content .menu-active {
-  color: #087cc4;
+.menu-active > a {
+  color: #087cc4!important;
+}
+
+.menu-active  > .edit-delet > button > img {
+  display: block !important;
 }
 
 .slider-heading-text {
@@ -172,9 +176,9 @@
   color: grey;
 }
 
-.sec-list:focus-within > div > button > img {
+/* .sec-list:focus-within > div > button > img {
   display: block !important;
-}
+} */
 
 .tables {
   height: 100%;

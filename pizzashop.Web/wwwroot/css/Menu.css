@@ -24,6 +24,18 @@
   border-bottom: 3px solid #087cc4 !important;
 }
 
+.menu-active > a {
+  color: #087cc4!important;
+}
+
+.menu-active  > .edit-delet > a >  button > img {
+  display: block !important;
+}
+
+.menu-active  > .edit-delet > button > img {
+  display: block !important;
+}
+
 .tab-content {
   margin-top: 20px !important;
   display: block;
@@ -111,6 +123,9 @@
   color: #087cc4;
 }
 
+/* .main-content .menu-active:hover{
+  color: #087cc4!important;
+} */
 
 
 .menu-table {
@@ -190,13 +205,16 @@
   justify-content: space-between;
 }
 
-.cat-list:focus-within > div > a > button > img {
+/* .cat-list:focus-within > div > a > button > img {
   display: block !important;
-}
+} */
 
-.mg-list:focus-within > div > button > img {
+
+/* .mg-list:focus-within > div > button > img {
   display: block !important;
-}
+} */
+
+
 
 .pagging input {
   width: 50px;
