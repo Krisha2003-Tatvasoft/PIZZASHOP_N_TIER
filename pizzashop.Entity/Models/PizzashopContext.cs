@@ -516,7 +516,7 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Itemwisecomment).HasColumnName("itemwisecomment");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-             entity.Property(e => e.ReadyQuantity).HasColumnName("readyquantity");
+            entity.Property(e => e.ReadyQuantity).HasColumnName("readyquantity");
 
 
             entity.HasOne(d => d.Item).WithMany(p => p.Ordereditems)
@@ -537,14 +537,10 @@ public partial class PizzashopContext : DbContext
             entity.ToTable("ordereditemmodifer");
 
             entity.Property(e => e.Modifieditemid).HasColumnName("modifieditemid");
-            entity.Property(e => e.Itemmodifiergroupid).HasColumnName("itemmodifiergroupid");
+
             entity.Property(e => e.modifierid).HasColumnName("modifierid");
             entity.Property(e => e.Ordereditemid).HasColumnName("ordereditemid");
 
-            entity.HasOne(d => d.Itemmodifiergroup).WithMany(p => p.Ordereditemmodifers)
-                .HasForeignKey(d => d.Itemmodifiergroupid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("ordereditemmodifer_itemmodifiergroupid_fkey");
 
             entity.HasOne(d => d.Modifiers).WithMany(p => p.Ordereditemmodifers)
            .HasForeignKey(d => d.modifierid)
@@ -588,6 +584,10 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Taxid).HasColumnName("taxid");
             entity.Property(e => e.Taxvalue).HasColumnName("taxvalue");
+            entity.Property(e => e.IsChecked)
+               .HasDefaultValueSql("false")
+               .HasColumnName("is_checked");
+
 
             entity.HasOne(d => d.Order).WithMany(p => p.Ordertaxmappings)
                 .HasForeignKey(d => d.Orderid)
@@ -685,7 +685,7 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Sectionname)
                 .HasMaxLength(30)
                 .HasColumnName("sectionname");
-                 entity.Property(e => e.sortOrder).HasColumnName("sortorder");
+            entity.Property(e => e.sortOrder).HasColumnName("sortorder");
         });
 
         modelBuilder.Entity<State>(entity =>

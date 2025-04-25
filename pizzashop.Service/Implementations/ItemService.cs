@@ -350,6 +350,8 @@ public class ItemService : IItemService
        Itemname = i.Itemname,
        Rate = i.Rate,
        itemtype = i.itemtype,
+       Isdefaulttax = i.Isdefaulttax,
+       Taxpercentage = i.Taxpercentage,
        Isfavourite = i.Isfavourite != null ? i.Isfavourite : false,
        Itemimg = i.Itemimg != null
        ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{i.Itemimg}"

@@ -17,4 +17,6 @@ public interface IOrderRepository
     Task<List<Order>> InprogressOrders();
 
     Task UpdateItemStatusAsync(OrderItemStatus model);
+
+    Task UpdateOrder(Order order);
 }

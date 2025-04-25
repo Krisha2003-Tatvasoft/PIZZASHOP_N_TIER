@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
@@ -17,14 +18,14 @@ public class TaxesRepository : ITaxesRepository
         string lowerSearch = search.ToLower();
         return await _context.Taxes
         .Where(u => u.Isdeleted == false)
-        .OrderBy(u =>u.Taxid)
+        .OrderBy(u => u.Taxid)
         .Where(u => string.IsNullOrEmpty(lowerSearch) ||
                             u.Taxname.ToLower().Contains(lowerSearch)).ToListAsync();
     }
 
     public async Task<bool> TaxesNameExist(string taxname)
     {
-        return await _context.Taxes.AnyAsync(s =>  s.Taxname.ToLower() == taxname.ToLower() && s.Isdeleted == false);
+        return await _context.Taxes.AnyAsync(s => s.Taxname.ToLower() == taxname.ToLower() && s.Isdeleted == false);
     }
 
     public async Task AddNewTax(Taxis tax)
@@ -58,6 +59,11 @@ public class TaxesRepository : ITaxesRepository
         await _context.SaveChangesAsync();
     }
 
+
+    public async Task<List<Taxis>> GetAllTaxEnabled()
+    {
+        return await _context.Taxes.Where(t => t.Isenabled == true).ToListAsync();
+    }
 
 
 

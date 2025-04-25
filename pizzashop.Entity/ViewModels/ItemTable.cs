@@ -16,9 +16,13 @@ public class ItemTable
 
   public itemtype itemtype { get; set; }
 
+  public bool Isdefaulttax { get; set; }
+
+  public decimal? Taxpercentage { get; set; }
+
   public bool Isavailable { get; set; }
 
- public int Categoryid { get; set; } 
+  public int Categoryid { get; set; }
 
   public string? Itemimg { get; set; }
 

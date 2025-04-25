@@ -10,4 +10,6 @@ public class Bill
 
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 
+    public List<TaxTable> Taxes { get; set; } = new List<TaxTable>();
+
 }

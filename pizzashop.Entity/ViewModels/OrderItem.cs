@@ -12,6 +12,10 @@ public class OrderItem
 
     public int ReadyQuantity { get; set; }
 
+    public bool Isdefaulttax { get; set; }
+
+    public decimal? Taxpercentage { get; set; }
+
     public decimal? TotalAmount { get; set; }
 
     public string? Itemwisecomment { get; set; }

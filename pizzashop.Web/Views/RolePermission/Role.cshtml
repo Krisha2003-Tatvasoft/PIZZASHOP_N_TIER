@@ -66,7 +66,13 @@
 
        $(document).on("click", ".edit-btn", function () {
             var Roleid= $(this).data("id");
+            if(Roleid === 1)
+            {
+                toastr.error("You can not Edit this Permission.");
+            }
+            else{
             loadPermissionPage(Roleid)
+            }
         });
 
  function loadPermissionPage(Roleid)

@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
@@ -71,9 +72,20 @@ public class MenuOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> OrderDetails(int id)
     {
-         var orderDetails = await _orderAppMenuService.OrderDetails(id); // Fetch order details by ID
+        var orderDetails = await _orderAppMenuService.OrderDetails(id); // Fetch order details by ID
 
         return PartialView("_OrderDetails", orderDetails);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SaveOrder([FromBody] Bill model)
+    {
+        if (model == null || model.Items == null)
+            return BadRequest("Invalid data");
+
+        var(success , message) = await _orderAppMenuService.SaveOrder(model);
+
+        return Ok(new { success = success , message =  message});
     }
 
 

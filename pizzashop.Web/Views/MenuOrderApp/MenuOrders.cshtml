@@ -113,7 +113,7 @@
                         </div>
                         <div class="text-center">
                             <div class="fw-bold">₹${item.Rate * item.Quantity}</div>
-                            <div class="text-muted small">₹${modifiersTotalPrice}</div>
+                           <div class="text-muted small">${modifiersTotalPrice ? `₹${modifiersTotalPrice}` : ''}</div>
                         </div>
                         <i class="bi bi-trash text-muted fs-6 cursor-pointer" onclick="removeItem(${index})"></i>
                     </div>
@@ -123,8 +123,11 @@
 
       $("#order-items-container").append(itemHtml);
     });
-    @* calculateTotals(); *@
-    }
+    renderFlatTaxes(taxes);
+    calculateTaxesAndDisplay(OrderItem, taxes)
+    calculateTotals();
+
+  }
 
   @* load Category details *@
     function loadCategoryList() {
@@ -192,30 +195,140 @@
   }
 
   // Function to check if the modifiers are the same
-  function isSameModifiers(modifiersA, modifiersB) {
-    // Flatten the arrays of modifiers
-    const flatModifiersA = modifiersA.map(modifier => JSON.stringify(modifier)); // Convert objects to JSON string
-    const flatModifiersB = modifiersB.map(modifier => JSON.stringify(modifier)); // Convert objects to JSON string
-
-    // Sort both arrays to ensure consistent order
-    flatModifiersA.sort();
-    flatModifiersB.sort();
-
-    // Compare the sorted arrays
-    return JSON.stringify(flatModifiersA) === JSON.stringify(flatModifiersB);
+  function isSameModifiers(modifiersA = [], modifiersB = []) {
+    const idsA = modifiersA.map(m => m.ModifierId).sort();
+    const idsB = modifiersB.map(m => m.ModifierId).sort();
+    return JSON.stringify(idsA) === JSON.stringify(idsB);
   }
 
-  function updateQuantity(index, change) {
-    OrderItem[index].Quantity += change;
-    if (OrderItem[index].Quantity <= 0) {
-      OrderItem.splice(index, 1);
+  @* update item *@
+    function updateQuantity(index, change) {
+      const item = OrderItem[index];
+      const isLocked = item.ReadyQuantity >= item.Quantity;
+
+      if (change < 0 && isLocked) {
+        toastr.error("Cannot decrease quantity. Items are already prepared.")
+        return;
+      }
+
+      item.Quantity += change;
+
+      if (item.Quantity <= 0) {
+        OrderItem.splice(index, 1);
+      }
+
+      renderOrderItems();
     }
-    renderOrderItems();
-  }
 
-  function removeItem(index) {
-    OrderItem.splice(index, 1);
-    renderOrderItems();
+  @* remove item *@
+    function removeItem(index) {
+      const item = OrderItem[index];
+      const isLocked = item.ReadyQuantity > 0;
+
+      if (isLocked) {
+        toastr.error("Cannot delete this item. It's already marked as ready.")
+        return;
+      }
+
+      OrderItem.splice(index, 1);
+      renderOrderItems();
+    }
+
+  @* calculate price *@
+    function calculateTotals() {
+      let subTotal = OrderItem.reduce((sum, item) => {
+        const basePrice = item.Rate * item.Quantity;
+
+        // Calculate total modifier price for the item
+        const modifierPrice = item.Modifiers?.reduce((modSum, mod) => {
+          return modSum + (mod.Rate || 0);
+        }, 0) * item.Quantity;
+
+        return sum + basePrice + (modifierPrice || 0);
+      }, 0);
+
+      let tax = subTotal * 0.05; // example 5% tax
+      let total = subTotal + tax;
+
+      $(".subtotal").text(`₹${subTotal.toFixed(2)}`);
+      $(".taxamount").text(`₹${tax.toFixed(2)}`);
+      $(".totalamount").text(`₹${total.toFixed(2)}`);
+    }
+
+  @* Flat amount display *@
+
+    function renderFlatTaxes(taxes) {
+      let flatTaxHtml = '';
+
+      taxes.filter(t => t.taxtype === 1).forEach(tax => {
+        flatTaxHtml += `
+        <div class="form-check">
+            <input class="form-check-input flat-tax-checkbox" type="checkbox"
+                data-taxid="${tax.Taxid}" data-taxvalue="${tax.Taxvalue}" id="tax_${tax.Taxid}">
+            <label class="form-check-label" for="tax_${tax.taxid}">
+                ${tax.Taxname} (₹${tax.Taxvalue})
+            </label>
+        </div>`;
+      });
+
+      $('#flatTaxList').html(flatTaxHtml);
+    }
+
+  function calculateTaxesAndDisplay(orderItems, taxes) {
+    let subTotal = 0;
+    let defaultTaxTotal = 0;
+    let percentageTaxTotal = 0;
+    let flatTaxTotal = 0;
+    let taxBreakdownHtml = '';
+
+    @* orderItems.forEach(item => {
+      const itemTotal = item.Rate * item.Quantity;
+      subTotal += itemTotal;
+
+      if (item.defaultTaxId === defaultTaxId) {
+        const defaultTax = taxes.find(t => t.taxid === defaultTaxId && t.taxtype === 'Percentage');
+        if (defaultTax) {
+          const taxAmount = (itemTotal * defaultTax.taxvalue) / 100;
+          defaultTaxTotal += taxAmount;
+        }
+      }
+    }); *@
+
+    // Percentage taxes (not default tax)
+     taxes.filter(t => t.taxtype === 0 && t.Taxid !== 0).forEach(tax => {
+      const taxAmount = (subTotal * tax.Taxvalue) / 100;
+      percentageTaxTotal += taxAmount;
+
+      taxBreakdownHtml += `
+        <div class="d-flex justify-content-between fs-6">
+            <div>${tax.Taxname} (${tax.Taxvalue}%):</div>
+            <div class="taxamount">₹${taxAmount.toFixed(2)}</div>
+        </div>`;
+    });
+
+    // Flat taxes (only if checked)
+    $('.flat-tax-checkbox:checked').each(function () {
+      const taxId = $(this).data('taxid');
+      const taxValue = parseFloat($(this).data('taxvalue'));
+      const tax = taxes.find(t => t.Taxid == taxId);
+      const taxName = tax ? tax.Taxname : 'Flat Tax';
+
+      flatTaxTotal += taxValue;
+
+      taxBreakdownHtml += `
+        <div class="d-flex justify-content-between fs-6">
+            <div>${taxName} (Flat):</div>
+            <div class="taxamount">₹${taxValue.toFixed(2)}</div>
+        </div>`;
+    });
+
+    const totalTax = defaultTaxTotal + percentageTaxTotal + flatTaxTotal;
+    const totalAmount = subTotal + totalTax;
+
+    // Render all
+    @* $('#subtotal').text(`₹${subTotal.toFixed(2)}`); *@
+    $('#taxBreakdown').html(taxBreakdownHtml);
+    @* $('#totalAmount').text(`₹${totalAmount.toFixed(2)}`); *@
   }
 
 
@@ -225,6 +338,13 @@
     loadCategoryList();
     loadItemList(0);
     loadOrderDetails();
+
+
+    @* chekbox change *@
+      // Trigger recalculation when flat tax is checked/unchecked
+      $(document).on('change', '.flat-tax-checkbox', function () {
+        calculateTaxesAndDisplay(orderItems, taxes);
+      });
 
     @* load items onlick *@
       $(document).on("click", ".category", function (e) {
@@ -307,7 +427,7 @@
                 Itemid: itemId,
                 Itemname: itemName,
                 Rate: itemPrice,
-                ReadyQuantity = ReadyQuantity,
+                ReadyQuantity: 0,
                 Quantity: 1
               });
             }
@@ -386,6 +506,7 @@
         const itemId = $("#modifierData").data("item-id");
         const itemName = $("#modifierData").data("item-name");
         const itemPrice = parseFloat($("#modifierData").data("item-price"));
+
         let flatModifiers = [];
 
         $(".modifier-card.selected").each(function () {
@@ -414,7 +535,7 @@
             Itemname: itemName,
             Rate: itemPrice,
             Modifiers: flatModifiers,
-            ReadyQuantity: ReadyQuantity,
+            ReadyQuantity: 0,
             Quantity: 1  // Initial quantity set to 1
           });
 
@@ -426,20 +547,37 @@
     });
 
 
+    @* save order *@
+      $(document).on("click", ".saveorder", function (e) {
+
+        const orderId = new URLSearchParams(window.location.search).get('orderId');
+
+        const Bill = {
+          Orderid: orderId,
+          Items: OrderItem // your local array in JS
+        };
+
+        $.ajax({
+          url: '/MenuOrderApp/SaveOrder',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(Bill),
+          success: function (response) {
+            if (response.success) {
+              toastr.success(response.message);
+            }
+            else {
+              toastr.error(response.message);
+            }
+          },
+          error: function (err) {
+            console.error('Error saving order:', err);
+          }
+        });
+      });
 
 
-    @* function calculateTotals() {
-      let subTotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      let tax = subTotal * 0.05; // example 5% tax
-      let total = subTotal + tax;
-
-      $(".subtotal").text(`₹${subTotal.toFixed(2)}`);
-      $(".taxamount").text(`₹${tax.toFixed(2)}`);
-      $(".totalamount").text(`₹${total.toFixed(2)}`);
-    } *@
 
 
-
-     
   });
 </script>
