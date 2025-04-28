@@ -23,9 +23,11 @@ public class OrderAppMenuService : IOrderAppMenuService
 
     private readonly IOrderTaxRepository _orderTaxRepository;
 
+    private readonly ITableRepository _tableRepository;
+
     public OrderAppMenuService(IItemRepository itemRepository, IOrderRepository orderRepository,
     IOrderItemRepository orderItemRepository, IOrderItemModifierRepository orderItemModifierRepository,
-    ITaxesRepository taxesRepository, IOrderTaxRepository orderTaxRepository)
+    ITaxesRepository taxesRepository, IOrderTaxRepository orderTaxRepository, ITableRepository tableRepository)
     {
         _itemRepository = itemRepository;
         _orderRepository = orderRepository;
@@ -33,6 +35,7 @@ public class OrderAppMenuService : IOrderAppMenuService
         _orderItemModifierRepository = orderItemModifierRepository;
         _taxRepository = taxesRepository;
         _orderTaxRepository = orderTaxRepository;
+        _tableRepository = tableRepository;
     }
 
     public async Task<List<IMGMviewmodel>> ModifiersById(int id)
@@ -79,6 +82,7 @@ public class OrderAppMenuService : IOrderAppMenuService
                 ReadyQuantity = i.ReadyQuantity != null ? i.ReadyQuantity : 0,
                 Isdefaulttax = i.Item.Isdefaulttax,
                 Taxpercentage = i.Item.Taxpercentage,
+                Itemwisecomment = i.Itemwisecomment,
                 Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
                 {
                     Modifierid = m.Modifiers.Modifierid,
@@ -164,7 +168,8 @@ public class OrderAppMenuService : IOrderAppMenuService
                         Orderid = model.Orderid,
                         Itemid = item.Itemid,
                         Quantity = item.Quantity,
-                        ReadyQuantity = 0 // or calculate based on your logic
+                        ReadyQuantity = 0,
+                        Itemwisecomment = item.Itemwisecomment
                     };
                     var addedOrderItem = await _orderItemRepository.AddOrderItemAsync(newOrderItem);
 
@@ -185,6 +190,7 @@ public class OrderAppMenuService : IOrderAppMenuService
                     if (existingItem != null)
                     {
                         existingItem.Quantity = item.Quantity;
+                        existingItem.Itemwisecomment = item.Itemwisecomment;
                         await _orderItemRepository.UpdateOrderItemAsync(existingItem);
                     }
                 }
@@ -241,7 +247,7 @@ public class OrderAppMenuService : IOrderAppMenuService
         return order?.Orderwisecomment;
     }
 
-     public async Task<bool> AddOrderComment(string comment , int orderid)
+    public async Task<bool> AddOrderComment(string comment, int orderid)
     {
         Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
         if (order == null)
@@ -254,8 +260,80 @@ public class OrderAppMenuService : IOrderAppMenuService
             await _orderRepository.UpdateOrder(order);
             return true;
         }
-        
+
     }
+
+
+    public async Task<(bool success, string message)> CancelOrder(int orderid)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        if (order == null)
+        {
+            return (false, "No Order.");
+        }
+        else
+        {
+            bool hasReadyItems = order.Ordereditems.Any(item => item.ReadyQuantity > 0);
+            if (hasReadyItems)
+            {
+                return (false, "Cannot cancel order because some items are already prepared.");
+            }
+
+            order.status = 4;
+            await _orderRepository.UpdateOrder(order);
+
+            var tables = order.Ordertables.ToList();
+            foreach (var table in tables)
+            {
+                var tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
+                tableByid.tablestatus = 0;
+                await _tableRepository.UpdateTable(tableByid);
+            }
+
+            var orderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderid);
+            foreach (var orderitem in orderItems)
+            {
+                await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(orderitem.Ordereditemid);
+                await _orderItemRepository.DeleteOrderItemAsync(orderitem.Ordereditemid);
+            }
+
+            return (true, "Order Cancelled sucessfully.");
+
+        }
+
+    }
+
+
+    public async Task<(bool success, string message)> CompleteOrder(int orderid)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        if (order == null)
+        {
+            return (false, "No Order.");
+        }
+        else
+        {
+            bool hasInProgressItems = order.Ordereditems.Any(item => item.ReadyQuantity < item.Quantity);
+            if (hasInProgressItems)
+            {
+                return (false, "Some items are still being prepared. Cannot complete the order!");
+            }
+            order.status = 3;
+            await _orderRepository.UpdateOrder(order);
+
+            var tables = order.Ordertables.ToList();
+            foreach (var table in tables)
+            {
+                var tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
+                tableByid.tablestatus = 0;
+                await _tableRepository.UpdateTable(tableByid);
+            }
+            return (true, "Order Completed Sucessfully.");
+
+        }
+    }
+
+
 }
 
 

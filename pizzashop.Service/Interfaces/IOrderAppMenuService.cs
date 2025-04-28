@@ -14,4 +14,8 @@ public interface IOrderAppMenuService
     Task<string?> GetOrderComment(int id);
 
     Task<bool> AddOrderComment(string comment, int orderid);
+
+    Task<(bool success, string message)> CancelOrder(int orderid);
+
+    Task<(bool success, string message)> CompleteOrder(int orderid);
 }

@@ -2320,6 +2320,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\38080331-2fdd-4307-b335-4c721e82b9c9_dashboard-active.png))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\3ced4cf7-17a2-4d1b-98c3-bbfdef1b4d13_5997be83561e540ded19fb82fcefe6e7.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>pizzashop.Web</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/pizzashop.Web</BasePath>
+      <RelativePath>uploads/3ced4cf7-17a2-4d1b-98c3-bbfdef1b4d13_5997be83561e540ded19fb82fcefe6e7.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\3ced4cf7-17a2-4d1b-98c3-bbfdef1b4d13_5997be83561e540ded19fb82fcefe6e7.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\uploads\3da5de29-265e-4f9c-a0e9-4262d3c2fdd9_orders-active.png))">
       <SourceType>Package</SourceType>
       <SourceId>pizzashop.Web</SourceId>

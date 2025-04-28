@@ -91,6 +91,83 @@
 </div>
 
 
+<!-- ItemWise Comment -->
+<div class="modal fade modal-delete" id="ItemWiseComment" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="ItemWiseComment">Order Wise Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="Orderitemid">
+        <div class="form-floating ">
+          <textarea id="textareaInstruction" class="form-control" placeholder="" style="height: 100px"></textarea>
+          <label for="textareaInstruction">Instruction*</label>
+          <span class="text-danger" id="instruction-error"></span>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-primary Add-OrderItem-Instruction">YES</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@* cancel order *@
+<div class="modal fade modal-delete" id="deleteOrderModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteOrderModal">Delete Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+        <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+        <span>Are you sure you want to delete this Order?</span>
+      </div>
+      <input type="hidden" id="orderid" value="">
+      <div class="modal-footer d-flex justify-content-center gap-2">
+        <a class="delete-cat">
+          <button type="button" class="btn btn-primary cancel-order-yes">YES</button>
+        </a>
+        <button type="button" class="btn btn-danger">NO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@* Complte order *@
+<div class="modal fade modal-delete" id="CompleteOrderModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="CompleteOrderModal">Delete Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+        <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
+        <span>Are you sure you want to complete this Order?</span>
+      </div>
+      <input type="hidden" id="orderid" value="">
+      <div class="modal-footer d-flex justify-content-center gap-2">
+        <a class="delete-cat">
+          <button type="button" class="btn btn-primary complele-order-yes">YES</button>
+        </a>
+        <button type="button" class="btn btn-danger">NO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <script>
 
@@ -114,7 +191,7 @@
       const modifiersTotalPrice = item.Modifiers?.reduce((total, modifier) => total + modifier.Rate, 0) * item.Quantity;
 
       const itemHtml = `
-            <div class="rounded border mb-2">
+            <div class="rounded border mb-2 ">
                 <div class="d-flex">
                     <div class="accordion d-flex flex-column justify-content-start gap-2 p-2 w-50">
                         <button class="accordion-button collapsed p-2 bg-transparent border-0"
@@ -125,7 +202,10 @@
                                 aria-controls="collapse-${index}">
                         <strong class="ps-1">${item.Itemname}</strong>
                         </button>
-                        <div id="collapse-${index}" class="accordion-collapse collapse ">
+                        <div id="collapse-${index}" class="accordion-collapse collapse cart-item-card " 
+                         data-orderitemid=${item.orderitemid} 
+            data-itemindex=${index}
+            data-itemcomment=${item.Itemwisecomment}>
                             <div class="ps-3">
                                 <ul class="">
                                     ${modifierList}
@@ -304,7 +384,7 @@
     }
 
   function calculateTaxesAndDisplay(orderItems, taxes) {
-    const orderId = new URLSearchParams(window.location.search).get('orderId');
+    const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
     let subTotal = 0;
     let defaultTaxTotal = 0;
     let percentageTaxTotal = 0;
@@ -344,7 +424,7 @@
       OrderTax.push({
         Orderid: orderId,
         Taxid: tax.Taxid,
-        Taxvalue: taxAmount
+        Taxvalue: parseInt(taxAmount)
       });
 
 
@@ -370,7 +450,7 @@
       OrderTax.push({
         Orderid: orderId,
         Taxid: taxId,
-        Taxvalue: taxValue
+        Taxvalue: parseInt(taxValue)
       });
 
 
@@ -388,7 +468,7 @@
     OrderTax.push({
       Orderid: orderId,
       Taxid: 0,
-      Taxvalue: defaultTaxTotal
+      Taxvalue: parseInt(defaultTaxTotal)
     });
 
 
@@ -463,7 +543,7 @@
     $(document).on("click", ".itemCard", function (e) {
       e.preventDefault();
 
-      const orderId = new URLSearchParams(window.location.search).get('orderId');
+      const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
 
       var itemId = $(this).data("item-id");
       const itemName = $(this).data("item-name");
@@ -498,7 +578,8 @@
                 ReadyQuantity: 0,
                 Quantity: 1,
                 Isdefaulttax: Isdefaulttax,
-                Taxpercentage: taxPercentage
+                Taxpercentage: taxPercentage,
+                Itemwisecomment: ""
               });
             }
             renderOrderItems();
@@ -609,7 +690,8 @@
             ReadyQuantity: 0,
             Quantity: 1,
             Isdefaulttax: Isdefaulttax,
-            Taxpercentage: taxPercentage
+            Taxpercentage: taxPercentage,
+            Itemwisecomment: ""
           });
 
         }
@@ -622,8 +704,9 @@
 
     @* save order *@
       $(document).on("click", ".saveorder", function (e) {
+        e.preventDefault();
 
-        const orderId = new URLSearchParams(window.location.search).get('orderId');
+        const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
 
         const Bill = {
           Orderid: orderId,
@@ -634,8 +717,8 @@
         $.ajax({
           url: '/MenuOrderApp/SaveOrder',
           type: 'POST',
-          contentType: 'application/json',
           data: JSON.stringify(Bill),
+          contentType: 'application/json',
           success: function (response) {
             if (response.success) {
               toastr.success(response.message);
@@ -645,7 +728,9 @@
             }
           },
           error: function (err) {
-            console.error('Error saving order:', err);
+            console.log("Error status: " + status);  // Inspect status code
+            console.log("Error response: " + error);  // Inspect error message
+            alert("Error while saving the order. Please check the console for details.");
           }
         });
       });
@@ -681,7 +766,7 @@
       e.preventDefault();
 
       var Comment = $("#textareaID").val();
-      
+
 
 
       if (Comment.length <= 0) {
@@ -708,6 +793,137 @@
         });
       }
     });
+
+
+    @* item wise comment *@
+      $(document).on("click", ".cart-item-card", function (e) {
+        e.preventDefault();
+        var orderitemid = $(this).data("orderitemid");
+        var itemindexvalue = $(this).data("itemindex");
+
+        var itemcomment = $(this).data("itemcomment");
+
+        $("#ItemWiseComment").modal("show");
+        $("#textareaInstruction").val(itemcomment);
+        $("#instruction-error").text("");
+        $(".Add-OrderItem-Instruction").data("itemindex", itemindexvalue);
+
+        $("#Orderitemid").val(orderitemid);
+      });
+
+
+    @* Add itemwise instruction *@
+
+      $(document).on("click", ".Add-OrderItem-Instruction", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var Comment = $("#textareaInstruction").val();
+
+        if (Comment.length <= 0) {
+          $("#instruction-error").text("Instruction is required");
+          return;
+        } else {
+
+          $("#instruction-error").text("");
+          var orderitemid = $("#Orderitemid").val();
+          var itemindex = $(this).data("itemindex");
+
+
+          OrderItem[itemindex].Itemwisecomment = Comment;
+
+
+          $("#ItemWiseComment").modal("hide");
+          $("#instruction-error").text("");
+          $("#textareaInstruction").val("");
+          renderOrderItems();
+
+        }
+      });
+
+    @* cancel button *@
+
+      $(document).on("click", ".cancel-button", function (e) {
+
+        const hasReadyItems = OrderItem.some(item => item.ReadyQuantity > 0);
+
+        if (hasReadyItems) {
+          toastr.error('Cannot cancel order because some items are already prepared.');
+          return;
+        }
+        $("#deleteOrderModal").modal("show");
+        const Id = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+        $("#orderid").val(Id);
+      });
+
+    @* cancel button yes *@
+      $(document).on("click", ".cancel-order-yes", function (e) {
+        var orderid = $("#orderid").val();
+
+        $.ajax({
+          url: "/MenuOrderApp/CancelOrder",
+          type: "POST",
+          data: { id: orderid },
+          success: function (response) {
+            if (response.success) {
+              $("#deleteOrderModal").modal("hide");
+              toastr.success(response.message);
+            }
+            else {
+              toastr.error(response.message);
+            }
+
+          },
+          error: function (error) {
+            console.error("Error in Cancel Order.", error);
+          }
+        });
+
+      });
+
+    @* Complete button *@
+
+      $(document).on("click", ".complete-button", function (e) {
+
+        const hasInProgressItems = OrderItem.some(item => item.ReadyQuantity < item.Quantity);
+
+        if (hasInProgressItems) {
+          toastr.error('Some items are still being prepared. Cannot complete the order!');
+          return;
+        }
+        $("#CompleteOrderModal").modal("show");
+        const Id = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+        $("#orderid").val(Id);
+      });
+
+
+    @* cancel button yes *@
+      $(document).on("click", ".complele-order-yes", function (e) {
+        var orderid = $("#orderid").val();
+      
+
+        $.ajax({
+          url: "/MenuOrderApp/CompleteOrder",
+          type: "POST",
+          data: { id: orderid },
+          success: function (response) {
+            if (response.success) {
+              $("#CompleteOrderModal").modal("hide");
+              toastr.success(response.message);
+            }
+            else {
+              toastr.error(response.message);
+            }
+
+          },
+          error: function (error) {
+            console.error("Error in Cancel Order.", error);
+          }
+        }); 
+
+      });
+
+
 
 
 

@@ -584,9 +584,9 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Taxid).HasColumnName("taxid");
             entity.Property(e => e.Taxvalue).HasColumnName("taxvalue");
-            entity.Property(e => e.IsChecked)
-               .HasDefaultValueSql("false")
-               .HasColumnName("is_checked");
+            // entity.Property(e => e.IsChecked)
+            //    .HasDefaultValueSql("false")
+            //    .HasColumnName("is_checked");
 
 
             entity.HasOne(d => d.Order).WithMany(p => p.Ordertaxmappings)

@@ -110,5 +110,26 @@ public class MenuOrderAppController : Controller
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> CancelOrder(int id)
+    {
+        var (success, message) = await _orderAppMenuService.CancelOrder(id);
+
+        return Ok(new { success = success, message = message });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CompleteOrder(int id)
+    {
+        var (success, message) = await _orderAppMenuService.CompleteOrder(id);
+
+        return Ok(new { success = success, message = message });
+    }
+
+
+
+
+
+
 
 }

@@ -11,7 +11,7 @@ public partial class Ordertaxmapping
 
     public int Taxid { get; set; }
 
-    public bool IsChecked { get; set; }
+    // public bool IsChecked { get; set; }
 
     public int? Taxvalue { get; set; }
 
