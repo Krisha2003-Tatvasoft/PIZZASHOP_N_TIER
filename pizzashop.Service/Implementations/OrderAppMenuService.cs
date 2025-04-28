@@ -21,14 +21,18 @@ public class OrderAppMenuService : IOrderAppMenuService
 
     private readonly ITaxesRepository _taxRepository;
 
+    private readonly IOrderTaxRepository _orderTaxRepository;
+
     public OrderAppMenuService(IItemRepository itemRepository, IOrderRepository orderRepository,
-    IOrderItemRepository orderItemRepository, IOrderItemModifierRepository orderItemModifierRepository, ITaxesRepository taxesRepository)
+    IOrderItemRepository orderItemRepository, IOrderItemModifierRepository orderItemModifierRepository,
+    ITaxesRepository taxesRepository, IOrderTaxRepository orderTaxRepository)
     {
         _itemRepository = itemRepository;
         _orderRepository = orderRepository;
         _orderItemRepository = orderItemRepository;
         _orderItemModifierRepository = orderItemModifierRepository;
         _taxRepository = taxesRepository;
+        _orderTaxRepository = orderTaxRepository;
     }
 
     public async Task<List<IMGMviewmodel>> ModifiersById(int id)
@@ -67,6 +71,7 @@ public class OrderAppMenuService : IOrderAppMenuService
 
             List<OrderItem>? items = order?.Ordereditems?.Select(i => new OrderItem
             {
+                Orderitemid = i.Ordereditemid,
                 Itemid = i.Itemid,
                 Itemname = i.Item.Itemname,
                 Rate = i.Item.Rate,
@@ -92,16 +97,25 @@ public class OrderAppMenuService : IOrderAppMenuService
                 Taxvalue = t.Taxvalue
             }).ToList();
 
+            var ordertaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(order.Orderid);
+            List<OrderTax> orderTaxes = ordertaxes.Select(t => new OrderTax
+            {
+                Orderid = t.Orderid,
+                Taxid = t.Taxid,
+                Taxvalue = t.Taxvalue
+            }).ToList();
+
+
+
             Bill model = new Bill
             {
                 Orderid = order.Orderid,
                 Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
                 Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
                 Items = items,
-                Taxes = taxes
+                Taxes = taxes,
+                OrderTax = orderTaxes
             };
-
-
 
             return model;
         }
@@ -122,62 +136,39 @@ public class OrderAppMenuService : IOrderAppMenuService
         {
             order.status = 0;
             await _orderRepository.UpdateOrder(order);
+
             var existingOrderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(model.Orderid);
+            var existingItemIds = existingOrderItems.Select(x => x.Ordereditemid).ToList();
+
+            var incomingItemIds = model.Items.Where(x => x.Orderitemid != 0).Select(x => x.Orderitemid).ToList();
+
+            var itemsToDelete = existingOrderItems.Where(x => !incomingItemIds.Contains(x.Ordereditemid)).ToList();
+            foreach (var itemToDelete in itemsToDelete)
+            {
+                // Delete the modifiers for the item
+                await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(itemToDelete.Ordereditemid);
+
+                // Delete the order item itself
+                await _orderItemRepository.DeleteOrderItemAsync(itemToDelete.Ordereditemid);
+            }
+
 
             // Loop through the items in the incoming order
             foreach (var item in model.Items)
             {
-                var existingOrderItem = existingOrderItems.FirstOrDefault(oi => oi.Itemid == item.Itemid);
 
-                if (existingOrderItem != null)
+                if (item.Orderitemid == 0)
                 {
-                    // Item exists, check if modifiers are the same
-                    var existingModifiers = await _orderItemModifierRepository.GetModifiersByOrderItemIdAsync(existingOrderItem.Ordereditemid);
-
-                    // If modifiers are different, treat it as a new entry
-                    if (!AreModifiersSame(existingModifiers, item.Modifiers))
-                    {
-                        // Create a new OrderItem as a new item
-                        var newOrderItem = new Ordereditem
-                        {
-                            Orderid = model.Orderid,
-                            Itemid = item.Itemid,
-                            Quantity = item.Quantity,
-                            ReadyQuantity = 0 // or calculate based on your logic
-                        };
-                        var addedOrderItem = await _orderItemRepository.AddOrderItemAsync(newOrderItem);
-
-                        // Add new modifiers for this new item
-                        foreach (var modifier in item.Modifiers)
-                        {
-                            var orderItemModifier = new Ordereditemmodifer
-                            {
-                                Ordereditemid = addedOrderItem.Ordereditemid,
-                                modifierid = modifier.Modifierid
-                            };
-                            await _orderItemModifierRepository.AddOrderItemModifierAsync(orderItemModifier);
-                        }
-                    }
-                    else
-                    {
-                        // No changes in modifiers, just update the quantity
-                        existingOrderItem.Quantity = item.Quantity;
-                        await _orderItemRepository.UpdateOrderItemAsync(existingOrderItem);
-                    }
-                }
-                else
-                {
-                    // Item does not exist, so add a new order item
                     var newOrderItem = new Ordereditem
                     {
                         Orderid = model.Orderid,
                         Itemid = item.Itemid,
                         Quantity = item.Quantity,
-                        ReadyQuantity = 0
+                        ReadyQuantity = 0 // or calculate based on your logic
                     };
                     var addedOrderItem = await _orderItemRepository.AddOrderItemAsync(newOrderItem);
 
-                    // Add modifiers for this new item
+                    // Add new modifiers for this new item
                     foreach (var modifier in item.Modifiers)
                     {
                         var orderItemModifier = new Ordereditemmodifer
@@ -188,20 +179,53 @@ public class OrderAppMenuService : IOrderAppMenuService
                         await _orderItemModifierRepository.AddOrderItemModifierAsync(orderItemModifier);
                     }
                 }
+                else
+                {
+                    var existingItem = existingOrderItems.FirstOrDefault(x => x.Ordereditemid == item.Orderitemid);
+                    if (existingItem != null)
+                    {
+                        existingItem.Quantity = item.Quantity;
+                        await _orderItemRepository.UpdateOrderItemAsync(existingItem);
+                    }
+                }
             }
 
-            // Now handle items that are no longer in the incoming order (i.e., deleted items)
-            var incomingItemIds = model.Items.Select(i => i.Itemid).ToList();
-            var itemsToDelete = existingOrderItems.Where(oi => !incomingItemIds.Contains(oi.Itemid)).ToList();
 
-            foreach (var itemToDelete in itemsToDelete)
+            // tax mapping....
+            var existingTaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(model.Orderid);
+
+            // Update or Add
+            foreach (var newTax in model.OrderTax)
             {
-                // Delete the modifiers for the item
-                await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(itemToDelete.Ordereditemid);
-
-                // Delete the order item itself
-                await _orderItemRepository.DeleteOrderItemAsync(itemToDelete.Ordereditemid);
+                var existingTax = existingTaxes.FirstOrDefault(x => x.Taxid == newTax.Taxid);
+                if (existingTax != null)
+                {
+                    // Update existing tax amount
+                    existingTax.Taxvalue = newTax.Taxvalue;
+                    await _orderTaxRepository.UpdateAsync(existingTax);
+                }
+                else
+                {
+                    // New tax, add it
+                    var taxToAdd = new Ordertaxmapping
+                    {
+                        Orderid = model.Orderid,
+                        Taxid = newTax.Taxid,
+                        Taxvalue = newTax.Taxvalue
+                    };
+                    await _orderTaxRepository.AddAsync(taxToAdd);
+                }
             }
+
+            // Delete taxes that are no longer selected
+            foreach (var existingTax in existingTaxes)
+            {
+                if (!model.OrderTax.Any(t => t.Taxid == existingTax.Taxid))
+                {
+                    await _orderTaxRepository.DeleteAsync(existingTax);
+                }
+            }
+
             return (true, "Order Saved Sucessfully.");
         }
         else
@@ -211,21 +235,28 @@ public class OrderAppMenuService : IOrderAppMenuService
 
     }
 
-    // Check if modifiers are the same
-    public bool AreModifiersSame(List<Ordereditemmodifer> existingModifiers, List<OrderModifier> newModifiers)
+    public async Task<string?> GetOrderComment(int id)
     {
-        if (existingModifiers.Count != newModifiers.Count)
-            return false;
-
-        // Check if every modifier is the same
-        foreach (var newModifier in newModifiers)
-        {
-            var existingModifier = existingModifiers.FirstOrDefault(m => m.modifierid == newModifier.Modifierid);
-            if (existingModifier == null)
-                return false;
-        }
-        return true;
+        Order order = await _orderRepository.OrderDetailsByIdAsync(id);
+        return order?.Orderwisecomment;
     }
 
-
+     public async Task<bool> AddOrderComment(string comment , int orderid)
+    {
+        Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        if (order == null)
+        {
+            return false;
+        }
+        else
+        {
+            order.Orderwisecomment = comment;
+            await _orderRepository.UpdateOrder(order);
+            return true;
+        }
+        
+    }
 }
+
+
+

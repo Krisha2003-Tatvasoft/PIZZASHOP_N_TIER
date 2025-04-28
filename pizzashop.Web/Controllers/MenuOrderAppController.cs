@@ -66,7 +66,6 @@ public class MenuOrderAppController : Controller
         {
             return PartialView("_ModifierList", modifierslist);
         }
-
     }
 
     [HttpGet]
@@ -83,9 +82,32 @@ public class MenuOrderAppController : Controller
         if (model == null || model.Items == null)
             return BadRequest("Invalid data");
 
-        var(success , message) = await _orderAppMenuService.SaveOrder(model);
 
-        return Ok(new { success = success , message =  message});
+        var (success, message) = await _orderAppMenuService.SaveOrder(model);
+
+        return Ok(new { success = success, message = message });
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> OrderComment(int id)
+    {
+        var orderComment = await _orderAppMenuService.GetOrderComment(id);
+        return Json(new { success = true, message = orderComment });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddOrderComment(string comment, int orderid)
+    {
+        bool success = await _orderAppMenuService.AddOrderComment(comment, orderid);
+        if (success == true)
+        {
+            return Json(new { success = true, message = "Order Comment Added Sucessfully." });
+        }
+        else
+        {
+            return Json(new { success = false, message = "Error in Add Comment." });
+        }
     }
 
 

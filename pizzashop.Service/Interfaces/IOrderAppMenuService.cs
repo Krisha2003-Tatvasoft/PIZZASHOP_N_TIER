@@ -9,7 +9,9 @@ public interface IOrderAppMenuService
 
     Task<Bill?> OrderDetails(int id);
 
-    bool AreModifiersSame(List<Ordereditemmodifer> existingModifiers, List<OrderModifier> newModifiers);
-
     Task<(bool success, string message)> SaveOrder(Bill model);
+
+    Task<string?> GetOrderComment(int id);
+
+    Task<bool> AddOrderComment(string comment, int orderid);
 }

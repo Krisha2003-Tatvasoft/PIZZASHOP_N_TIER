@@ -6,7 +6,7 @@
 
   <div class="card d-flex flex-row bg-white itemCard" style="height: 90px;width:280px;border-radius: 0.5rem;"
     data-item-id="@item.Itemid" data-item-name="@item.Itemname" data-item-price="@item.Rate"
-    data-Isdefault="@item.Isdefaulttax" data-tax-percentage="@item.Taxpercentage">
+    data-is-default=@item.Isdefaulttax data-tax-percentage="@item.Taxpercentage">
     <div class="d-flex justify-content-start pe-2">
       <div class="item-img">
         <img src="@(string.IsNullOrEmpty(item.Itemimg) ? "../images/dining-menu.png" : item.Itemimg)" alt="Item Image"

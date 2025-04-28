@@ -62,7 +62,7 @@ public class TaxesRepository : ITaxesRepository
 
     public async Task<List<Taxis>> GetAllTaxEnabled()
     {
-        return await _context.Taxes.Where(t => t.Isenabled == true).ToListAsync();
+        return await _context.Taxes.Where(t => t.Isenabled == true && t.Isdeleted == false).ToListAsync();
     }
 
 

@@ -196,26 +196,6 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
     }
 
 
-    // public async Task<bool> EmailExistsWithId(string email, int id)
-    // {
-    //     var customer = await _customerRepository.GetCustomerByEmail(email);
-    //     if (customer == null)
-    //     {
-    //         return false;
-    //     }
-    //     else
-    //     {
-    //         if (customer.Customerid != id)
-    //         {
-    //             return true;
-    //         }
-    //         else
-    //         {
-    //             return false;
-    //         }
-    //     }
-    // }
-
     public async Task<bool> EditPosttWT(int loginId, AddWaitingToken model)
     {
         Customer oldcustomer = null;

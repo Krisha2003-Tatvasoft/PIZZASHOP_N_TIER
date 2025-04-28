@@ -125,7 +125,6 @@ public class OrderService : IOrderService
             paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
         };
         return model;
-
     }
 
 

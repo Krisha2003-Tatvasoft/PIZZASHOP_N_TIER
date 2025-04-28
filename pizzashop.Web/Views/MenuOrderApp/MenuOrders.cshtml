@@ -64,6 +64,34 @@
 
 <div class="modifier-list"></div>
 
+
+<!-- OrderWise Comment -->
+<div class="modal fade modal-delete" id="OrderWiseComment" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <input type="hidden" id="OrderId-comment">
+      <div class="modal-header">
+        <h5 class="modal-title" id="OrderWiseComment">Order Wise Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating ">
+          <textarea id="textareaID" class="form-control" placeholder="" style="height: 100px"></textarea>
+          <label for="textareaID">Comment*</label>
+          <span class="text-danger" id="comment-error"></span>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-primary Add-Order-Comment">YES</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
 
   var GCatId = "";
@@ -124,8 +152,7 @@
       $("#order-items-container").append(itemHtml);
     });
     renderFlatTaxes(taxes);
-    calculateTaxesAndDisplay(OrderItem, taxes)
-    calculateTotals();
+    calculateTaxesAndDisplay(OrderItem, taxes);
 
   }
 
@@ -196,9 +223,23 @@
 
   // Function to check if the modifiers are the same
   function isSameModifiers(modifiersA = [], modifiersB = []) {
-    const idsA = modifiersA.map(m => m.ModifierId).sort();
-    const idsB = modifiersB.map(m => m.ModifierId).sort();
-    return JSON.stringify(idsA) === JSON.stringify(idsB);
+    // Extract the modifierid from both arrays and convert them into sets
+    const setA = new Set(modifiersA.map(m => m.Modifierid));
+    const setB = new Set(modifiersB.map(m => m.Modifierid));
+
+    // Check if both sets have the same size
+    if (setA.size !== setB.size) {
+      return false;
+    }
+
+    // Check if every element in setA is also present in setB
+    for (let item of setA) {
+      if (!setB.has(item)) {
+        return false;
+      }
+    }
+
+    return true; // If both conditions pass, they are the same
   }
 
   @* update item *@
@@ -234,76 +275,86 @@
       renderOrderItems();
     }
 
-  @* calculate price *@
-    function calculateTotals() {
-      let subTotal = OrderItem.reduce((sum, item) => {
-        const basePrice = item.Rate * item.Quantity;
-
-        // Calculate total modifier price for the item
-        const modifierPrice = item.Modifiers?.reduce((modSum, mod) => {
-          return modSum + (mod.Rate || 0);
-        }, 0) * item.Quantity;
-
-        return sum + basePrice + (modifierPrice || 0);
-      }, 0);
-
-      let tax = subTotal * 0.05; // example 5% tax
-      let total = subTotal + tax;
-
-      $(".subtotal").text(`₹${subTotal.toFixed(2)}`);
-      $(".taxamount").text(`₹${tax.toFixed(2)}`);
-      $(".totalamount").text(`₹${total.toFixed(2)}`);
-    }
 
   @* Flat amount display *@
 
     function renderFlatTaxes(taxes) {
       let flatTaxHtml = '';
 
+      const selectedFlatTaxIds = orderTaxes
+        .filter(t => t.Taxid !== 0)
+        .map(t => t.Taxid);
+
+
+
       taxes.filter(t => t.taxtype === 1).forEach(tax => {
+        const isChecked = selectedFlatTaxIds.includes(tax.Taxid) ? 'checked' : '';
         flatTaxHtml += `
         <div class="form-check">
             <input class="form-check-input flat-tax-checkbox" type="checkbox"
-                data-taxid="${tax.Taxid}" data-taxvalue="${tax.Taxvalue}" id="tax_${tax.Taxid}">
+                data-taxid="${tax.Taxid}" data-taxvalue="${tax.Taxvalue}" id="tax_${tax.Taxid}" ${isChecked}>
             <label class="form-check-label" for="tax_${tax.taxid}">
-                ${tax.Taxname} (₹${tax.Taxvalue})
+                ${tax.Taxname} 
             </label>
         </div>`;
       });
 
       $('#flatTaxList').html(flatTaxHtml);
+      calculateTaxesAndDisplay(OrderItem, taxes);
     }
 
   function calculateTaxesAndDisplay(orderItems, taxes) {
+    const orderId = new URLSearchParams(window.location.search).get('orderId');
     let subTotal = 0;
     let defaultTaxTotal = 0;
     let percentageTaxTotal = 0;
     let flatTaxTotal = 0;
     let taxBreakdownHtml = '';
+    let itemmodifierTotal = 0;
 
-    @* orderItems.forEach(item => {
+    OrderTax = [];
+
+    orderItems.forEach(item => {
       const itemTotal = item.Rate * item.Quantity;
-      subTotal += itemTotal;
+      itemmodifierTotal = itemTotal;
 
-      if (item.defaultTaxId === defaultTaxId) {
-        const defaultTax = taxes.find(t => t.taxid === defaultTaxId && t.taxtype === 'Percentage');
-        if (defaultTax) {
-          const taxAmount = (itemTotal * defaultTax.taxvalue) / 100;
-          defaultTaxTotal += taxAmount;
-        }
+      // Add modifier prices
+      if (item.Modifiers && item.Modifiers.length > 0) {
+        item.Modifiers.forEach(mod => {
+          itemmodifierTotal += (mod.Rate * item.Quantity);
+        });
       }
-    }); *@
+
+      subTotal += itemmodifierTotal;
+
+      if (item.Isdefaulttax === true) {
+        const taxAmount = (itemTotal * item.Taxpercentage) / 100;
+        defaultTaxTotal += taxAmount;
+      }
+
+    });
 
     // Percentage taxes (not default tax)
-     taxes.filter(t => t.taxtype === 0 && t.Taxid !== 0).forEach(tax => {
+    taxes.filter(t => t.taxtype === 0 && t.Taxid != 0).forEach(tax => {
       const taxAmount = (subTotal * tax.Taxvalue) / 100;
+
       percentageTaxTotal += taxAmount;
+
+      // Push percentage tax
+      OrderTax.push({
+        Orderid: orderId,
+        Taxid: tax.Taxid,
+        Taxvalue: taxAmount
+      });
+
+
 
       taxBreakdownHtml += `
         <div class="d-flex justify-content-between fs-6">
-            <div>${tax.Taxname} (${tax.Taxvalue}%):</div>
+            <div>${tax.Taxname}</div>
             <div class="taxamount">₹${taxAmount.toFixed(2)}</div>
         </div>`;
+
     });
 
     // Flat taxes (only if checked)
@@ -315,20 +366,36 @@
 
       flatTaxTotal += taxValue;
 
-      taxBreakdownHtml += `
-        <div class="d-flex justify-content-between fs-6">
-            <div>${taxName} (Flat):</div>
-            <div class="taxamount">₹${taxValue.toFixed(2)}</div>
-        </div>`;
+      // Push flat tax
+      OrderTax.push({
+        Orderid: orderId,
+        Taxid: taxId,
+        Taxvalue: taxValue
+      });
+
+
     });
 
     const totalTax = defaultTaxTotal + percentageTaxTotal + flatTaxTotal;
     const totalAmount = subTotal + totalTax;
 
+    taxBreakdownHtml += `
+        <div class="d-flex justify-content-between fs-6">
+            <div>DafaultTax(Item)</div>
+            <div class="taxamount">₹${defaultTaxTotal}</div>
+        </div>`;
+
+    OrderTax.push({
+      Orderid: orderId,
+      Taxid: 0,
+      Taxvalue: defaultTaxTotal
+    });
+
+
     // Render all
-    @* $('#subtotal').text(`₹${subTotal.toFixed(2)}`); *@
+    $('#subtotal').text(`₹${subTotal.toFixed(2)}`);
     $('#taxBreakdown').html(taxBreakdownHtml);
-    @* $('#totalAmount').text(`₹${totalAmount.toFixed(2)}`); *@
+    $('#totalAmount').text(`₹${totalAmount.toFixed(2)}`);
   }
 
 
@@ -339,11 +406,10 @@
     loadItemList(0);
     loadOrderDetails();
 
-
     @* chekbox change *@
       // Trigger recalculation when flat tax is checked/unchecked
       $(document).on('change', '.flat-tax-checkbox', function () {
-        calculateTaxesAndDisplay(orderItems, taxes);
+        calculateTaxesAndDisplay(OrderItem, taxes);
       });
 
     @* load items onlick *@
@@ -402,6 +468,8 @@
       var itemId = $(this).data("item-id");
       const itemName = $(this).data("item-name");
       const itemPrice = parseFloat($(this).data("item-price"));
+      const Isdefaulttax = $(this).data("is-default") == "True";
+      const taxPercentage = parseFloat($(this).data("tax-percentage"));
 
       selectedModifiers = {};
 
@@ -419,16 +487,18 @@
               // Increase quantity if already exists
               const index = OrderItem.findIndex(item => item.Itemid === itemId && (!item.Modifiers || item.Modifiers.length === 0));
               OrderItem[index].Quantity += 1;
-            } else {
-              // Add new item to cart
-              const tempUniqueId = itemId + '_' + Date.now();
+            }
+            else {
+
               OrderItem.push({
-                uniqueId: tempUniqueId,
+                Orderitemid: 0,
                 Itemid: itemId,
                 Itemname: itemName,
                 Rate: itemPrice,
                 ReadyQuantity: 0,
-                Quantity: 1
+                Quantity: 1,
+                Isdefaulttax: Isdefaulttax,
+                Taxpercentage: taxPercentage
               });
             }
             renderOrderItems();
@@ -440,6 +510,8 @@
             $("#modifierData").data("item-id", itemId);
             $("#modifierData").data("item-name", itemName);
             $("#modifierData").data("item-price", itemPrice);
+            $("#modifierData").data("is-default", Isdefaulttax);
+            $("#modifierData").data("tax-percentage", taxPercentage);
             $("#modifierData").modal("show");
           }
         },
@@ -448,9 +520,7 @@
         }
       });
 
-
     });
-
 
     $(document).on("click", ".modifier-card", function () {
 
@@ -506,6 +576,9 @@
         const itemId = $("#modifierData").data("item-id");
         const itemName = $("#modifierData").data("item-name");
         const itemPrice = parseFloat($("#modifierData").data("item-price"));
+        const Isdefaulttax = $("#modifierData").data("is-default");
+
+        const taxPercentage = parseFloat($("#modifierData").data("tax-percentage"));
 
         let flatModifiers = [];
 
@@ -526,17 +599,17 @@
           const index = OrderItem.findIndex(i => i.Itemid === itemId && isSameModifiers(i.Modifiers, flatModifiers));
           OrderItem[index].Quantity += 1;
         } else {
-          // Add new item to cart with quantity 1
-          const tempUniqueId = itemId + '_' + Date.now(); // only for internal usage/display
 
           OrderItem.push({
-            uniqueId: tempUniqueId,
+            Orderitemid: 0,
             Itemid: itemId,
             Itemname: itemName,
             Rate: itemPrice,
             Modifiers: flatModifiers,
             ReadyQuantity: 0,
-            Quantity: 1  // Initial quantity set to 1
+            Quantity: 1,
+            Isdefaulttax: Isdefaulttax,
+            Taxpercentage: taxPercentage
           });
 
         }
@@ -554,7 +627,8 @@
 
         const Bill = {
           Orderid: orderId,
-          Items: OrderItem // your local array in JS
+          Items: OrderItem,
+          OrderTax: OrderTax
         };
 
         $.ajax({
@@ -576,6 +650,64 @@
         });
       });
 
+    @*Get orderWise comment *@
+      $(document).on("click", ".order-wise-comment", function (e) {
+        e.preventDefault();
+        var orderId = $(this).data("orderid");
+
+        $.ajax({
+          url: '/MenuOrderApp/OrderComment',
+          type: 'GET',
+          data: { id: orderId },
+          success: function (response) {
+            console.log(response);
+            if (response.success) {
+              $("#OrderWiseComment").modal("show");
+              $("#textareaID").val(response.message);
+              $("#OrderId-comment").val(orderId);
+            } else {
+              toastr.error(response.message);
+            }
+          },
+          error: function () {
+            alert("Error toggling favourite status.");
+          }
+        });
+
+
+      });
+
+    $(document).on("click", ".Add-Order-Comment", function (e) {
+      e.preventDefault();
+
+      var Comment = $("#textareaID").val();
+      
+
+
+      if (Comment.length <= 0) {
+        $("#comment-error").text("Comment is required");
+        return;
+      } else {
+        $("#comment-error").text("");
+        var orderid = $("#OrderId-comment").val();
+        $.ajax({
+          url: '/MenuOrderApp/AddOrderComment',
+          type: 'POST',
+          data: { comment: Comment, orderid: orderid },
+          success: function (response) {
+            if (response.success) {
+              toastr.success(response.message);
+              $("#OrderWiseComment").modal("hide");
+            } else {
+              toastr.error(response.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching waiting token:', error);
+          }
+        });
+      }
+    });
 
 
 

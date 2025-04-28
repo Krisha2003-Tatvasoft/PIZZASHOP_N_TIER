@@ -2,6 +2,7 @@ namespace pizzashop.Entity.ViewModels;
 
 public class OrderItem
 {
+    public int Orderitemid { get; set; }
     public int Itemid { get; set; }
 
     public string Itemname { get; set; } = null!;
