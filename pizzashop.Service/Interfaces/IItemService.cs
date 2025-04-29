@@ -23,6 +23,6 @@ public interface IItemService
 
    Task<List<ItemTable>> GetMenuItem(int id, string search);
 
-   Task<bool> ToggleFavourite(int loginId, int id);
+   Task<bool> ToggleFavourite(int id);
 
 }

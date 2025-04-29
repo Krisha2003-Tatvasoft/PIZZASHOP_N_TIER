@@ -361,9 +361,9 @@ public class ItemService : IItemService
     return availableItem;
   }
 
-  public async Task<bool> ToggleFavourite(int loginId, int id)
+  public async Task<bool> ToggleFavourite(int id)
   {
-    if (loginId == null)
+    if (id == null)
     {
       return false;
     }
@@ -373,7 +373,6 @@ public class ItemService : IItemService
       if (item.Isfavourite == true)
       {
         item.Isfavourite = false;
-        item.Modifiedby = loginId;
        
 
         await _itemRepository.UpdateItem(item);
@@ -382,7 +381,6 @@ public class ItemService : IItemService
       else
       {
         item.Isfavourite = true;
-        item.Modifiedby = loginId;
         await _itemRepository.UpdateItem(item);
         return true;
       }

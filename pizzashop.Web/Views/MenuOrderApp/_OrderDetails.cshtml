@@ -1,11 +1,15 @@
 @model pizzashop.Entity.ViewModels.Bill;
 @using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
+}
 
 
 
 <div class="d-flex justify-content-between align-items-center">
-<input type="hidden" value="@Model.Orderid" asp-for="Orderid">
+    <input type="hidden" value="@Model.Orderid" asp-for="Orderid">
     <div class="d-flex justify-content-start align-items-center">
         <div class="d-flex align-items-center justify-content-center p-1"
             style="background-color:  #adc3e4; width:100px height:100px">
@@ -14,20 +18,23 @@
         <div class="d-flex flex-column ps-2 fs-6">
             <span>@Model.Sectionname</span>
             <span><b>Table: </b>@foreach(var table in Model.Tablenames)
-                                {
+                {
                     @table
                 }
-</span>
+            </span>
         </div>
     </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3">
-        <div class="bill-top-btn scanner" data-orderid="@Model.Orderid">
-            <i class="bi bi-qr-code-scan"></i>
-        </div>
-        <div class=" bill-top-btn customer-details-button" data-orderid="@Model.Orderid">
-            <i class="bi bi-person-lines-fill"></i>
-        </div>
+        @if (string.IsNullOrEmpty(token))
+        {
+            <div class="bill-top-btn scanner" data-orderid="@Model.Orderid">
+                <i class="bi bi-qr-code-scan"></i>
+            </div>
+            <div class=" bill-top-btn customer-details-button" data-orderid="@Model.Orderid">
+                <i class="bi bi-person-lines-fill"></i>
+            </div>
+        }
         <div class="bill-top-btn order-wise-comment" data-orderid="@Model.Orderid">
             <i class="bi bi-chat-left-text"></i>
         </div>
@@ -112,10 +119,10 @@
         <div id="subtotal"></div>
     </div>
 
-  
-     <div id="taxBreakdown"></div>
+
+    <div id="taxBreakdown"></div>
     <div id="flatTaxList" class="mt-2"></div>
- 
+
 
     <div>
         <hr style="background-color: #1f73ae; height: 3px; border: 0;">
@@ -148,14 +155,17 @@
 </div>
 
 <div class="mt-5 ps-5 d-flex flex-row gap-3 pb-3">
-    <button type="button" class="btn p-3 w-100 saveorder" id="search-btn"
-        style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
-    <button type="button" class="btn p-3 clear-btn w-100 complete-button" style="color:#087cc4;border-color:#087cc4;">Complete</button>
-    <button type="button" class="btn p-3 clear-btn w-100 generate-invoice" style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
+    <button type="button" class="btn p-3 w-100 saveorder" @(string.IsNullOrEmpty(token) ? "" : "disabled")
+        id="search-btn" style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
+    <button type="button" class="btn p-3 clear-btn w-100 complete-button" @(string.IsNullOrEmpty(token) ? "" :
+                                                                                  "disabled") style="color:#087cc4;border-color:#087cc4;">Complete</button>
+    <button type="button" class="btn p-3 clear-btn w-100 generate-invoice" @(string.IsNullOrEmpty(token) ? "" :
+                                                                                   "disabled") style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
         Invoice</button>
 </div>
 <div class="d-flex justify-content-end">
-    <button type="button" class="btn p-3 clear-btn w-40 cancel-button" style="color:#087cc4;border-color:#087cc4; ">cancel</button>
+    <button type="button" class="btn p-3 clear-btn w-40 cancel-button" @(string.IsNullOrEmpty(token) ? "" : "disabled")
+        style="color:#087cc4;border-color:#087cc4; ">cancel</button>
 </div>
 
 
@@ -164,31 +174,34 @@
 
 <script>
 
-   var serverItems = @Html.Raw(JsonConvert.SerializeObject(Model.Items));
-   var taxes = @Html.Raw(JsonConvert.SerializeObject(Model.Taxes)); // tax array
-   var orderTaxes = @Html.Raw(JsonConvert.SerializeObject(Model.OrderTax));
- 
+    var serverItems = @Html.Raw(JsonConvert.SerializeObject(Model.Items));
+    var taxes = @Html.Raw(JsonConvert.SerializeObject(Model.Taxes)); // tax array
+    var orderTaxes = @Html.Raw(JsonConvert.SerializeObject(Model.OrderTax));
+
     $(document).ready(function () {
 
-       serverItems.forEach(item => {
-                OrderItem.push({
-                  Orderitemid : item.Orderitemid,
-                  Itemid: item.Itemid,
-                  Itemname: item.Itemname,
-                  Rate: item.Rate,
-                  ReadyQuantity : item.ReadyQuantity,
-                  Quantity: item.Quantity,
-                  Isdefaulttax: item.Isdefaulttax,
-                  Taxpercentage: item.Taxpercentage,
-                  Itemwisecomment:item.Itemwisecomment,
-                  Modifiers: item.Modifiers || []
-                });
-         });
+        serverItems.forEach(item => {
+            OrderItem.push({
+                Orderitemid: item.Orderitemid,
+                Itemid: item.Itemid,
+                Itemname: item.Itemname,
+                Rate: item.Rate,
+                ReadyQuantity: item.ReadyQuantity,
+                Quantity: item.Quantity,
+                Isdefaulttax: item.Isdefaulttax,
+                Taxpercentage: item.Taxpercentage,
+                Itemwisecomment: item.Itemwisecomment,
+                Modifiers: item.Modifiers || []
+            });
+        });
 
-      renderOrderItems();
-     });
+        originalOrderItem = deepCopyCart(OrderItem);
+        initializeFlatTaxesFromDB(orderTaxes);
+        renderOrderItems();
+        updateCartChangeStatus();
+    });
 
 
-     
 
-    </script>
+
+</script>

@@ -26,7 +26,7 @@ public class AuthController : Controller
 
     private readonly IUserService _userService;
 
-    private readonly IRolePerService _rolePerService ;
+    private readonly IRolePerService _rolePerService;
 
     public AuthController(IAuthService authService, IJwtService jwtService, IEMailService emailService,
     IWebHostEnvironment webHostEnvironment, IUserService userService, IRolePerService rolePerService)
@@ -97,8 +97,12 @@ public class AuthController : Controller
 
 
             CookieUtils.SavePermissionData(Response, Permissions);
-
+            if (user.Role.Rolename == "Chef")
+            {
+                return RedirectToAction("KOT", "KOT");
+            }
             return RedirectToAction("Index", "Home");
+
         }
         return View(model);
 
@@ -122,7 +126,7 @@ public class AuthController : Controller
     }
 
 
- 
+
     [HttpGet]
     public IActionResult Forget()
     {
@@ -135,7 +139,7 @@ public class AuthController : Controller
     }
 
 
-   
+
     [HttpPost]
     public async Task<IActionResult> Forget(Forget viewmodal)
     {

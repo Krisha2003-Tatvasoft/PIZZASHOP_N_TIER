@@ -35,6 +35,7 @@ public class MenuOrderAppController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public IActionResult MenuOrders()
     {
+        
         string? token = Request.Cookies["CustomerToken"];
         if (string.IsNullOrEmpty(token))
         {
@@ -75,8 +76,8 @@ public class MenuOrderAppController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public async Task<IActionResult> ToggleFavourite(int id)
     {
-        CookieData user = SessionUtils.GetUser(HttpContext);
-        bool isFavourite = await _itemService.ToggleFavourite(user.Userid, id);
+        // CookieData user = SessionUtils.GetUser(HttpContext);
+        bool isFavourite = await _itemService.ToggleFavourite(id);
         return Json(new { isFavourite = isFavourite });
 
     }

@@ -1,8 +1,10 @@
 @using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
 @{
 
   Layout = "~/Views/Shared/_OrderAppLayout.cshtml";
   var orderId = Context.Request.Query["orderId"];
+  string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
 }
 
 
@@ -129,7 +131,7 @@
       </div>
       <div class="modal-body d-flex flex-column align-items-center justify-content-center">
         <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
-        <span>Are you sure you want to delete this Order?</span>
+        <span>Are you sure you want to Cancel this Order?</span>
       </div>
       <input type="hidden" id="orderid" value="">
       <div class="modal-footer d-flex justify-content-center gap-2">
@@ -154,7 +156,7 @@
       </div>
       <div class="modal-body d-flex flex-column align-items-center justify-content-center">
         <img src="../images/warning-icon.svg" alt="" width="50px" height="50px"><br>
-        <span>Are you sure you want to complete this Order?</span>
+        <span>Are you sure you want to Complete this Order?</span>
       </div>
       <input type="hidden" id="orderid" value="">
       <div class="modal-footer d-flex justify-content-center gap-2">
@@ -219,7 +221,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="Sacenner">Delete Confirmation</h5>
+        <h5 class="modal-title" id="Sacenner">Menu</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body d-flex flex-column align-items-center justify-content-center">
@@ -241,6 +243,27 @@
   var GCatId = "";
   let OrderItem = [];
   let selectedModifiers = {};
+  let originalOrderItem = []; // original cart for comparison
+  let selectedFlatTaxIds = [];
+
+  function deepCopyCart(cart) {
+    return JSON.parse(JSON.stringify(cart));
+  }
+
+  function updateCartChangeStatus() {
+    const isSame = JSON.stringify(OrderItem) === JSON.stringify(originalOrderItem);
+    if (isSame) {
+      $(".saveorder").prop("disabled", true);
+      @* $(".cancel-button").prop("disabled", true);
+      $(".complete-button").prop("disabled", true); *@
+        $(".flat-tax-checkbox").prop("disabled", true);  // Disable flat tax checkbox
+    } else {
+      $(".saveorder").prop("disabled", false);
+      @* $(".cancel-button").prop("disabled", false);
+      $(".complete-button").prop("disabled", false); *@
+        $(".flat-tax-checkbox").prop("disabled", false); // Enable flat tax checkbox
+    }
+  }
 
   function renderOrderItems() {
     console.log(OrderItem);
@@ -297,7 +320,9 @@
         `;
 
       $("#order-items-container").append(itemHtml);
+
     });
+
     renderFlatTaxes(taxes);
     calculateTaxesAndDisplay(OrderItem, taxes);
 
@@ -406,6 +431,7 @@
       }
 
       renderOrderItems();
+      updateCartChangeStatus();
     }
 
   @* remove item *@
@@ -420,35 +446,10 @@
 
       OrderItem.splice(index, 1);
       renderOrderItems();
+      updateCartChangeStatus();
     }
 
 
-  @* Flat amount display *@
-
-    function renderFlatTaxes(taxes) {
-      let flatTaxHtml = '';
-
-      const selectedFlatTaxIds = orderTaxes
-        .filter(t => t.Taxid !== 0)
-        .map(t => t.Taxid);
-
-
-
-      taxes.filter(t => t.taxtype === 1).forEach(tax => {
-        const isChecked = selectedFlatTaxIds.includes(tax.Taxid) ? 'checked' : '';
-        flatTaxHtml += `
-        <div class="form-check">
-            <input class="form-check-input flat-tax-checkbox" type="checkbox"
-                data-taxid="${tax.Taxid}" data-taxvalue="${tax.Taxvalue}" id="tax_${tax.Taxid}" ${isChecked}>
-            <label class="form-check-label" for="tax_${tax.taxid}">
-                ${tax.Taxname} 
-            </label>
-        </div>`;
-      });
-
-      $('#flatTaxList').html(flatTaxHtml);
-      calculateTaxesAndDisplay(OrderItem, taxes);
-    }
 
   function calculateTaxesAndDisplay(orderItems, taxes) {
     const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
@@ -495,12 +496,13 @@
       });
 
 
-
-      taxBreakdownHtml += `
+      if (OrderItem.length != 0) {
+        taxBreakdownHtml += `
         <div class="d-flex justify-content-between fs-6">
             <div>${tax.Taxname}</div>
             <div class="taxamount">₹${taxAmount.toFixed(2)}</div>
         </div>`;
+      }
 
     });
 
@@ -526,11 +528,13 @@
     const totalTax = defaultTaxTotal + percentageTaxTotal + flatTaxTotal;
     const totalAmount = subTotal + totalTax;
 
-    taxBreakdownHtml += `
+    if (OrderItem.length != 0) {
+      taxBreakdownHtml += `
         <div class="d-flex justify-content-between fs-6">
             <div>DafaultTax(Item)</div>
             <div class="taxamount">₹${defaultTaxTotal}</div>
         </div>`;
+    }
 
     OrderTax.push({
       Orderid: orderId,
@@ -545,6 +549,36 @@
     $('#totalAmount').text(`₹${totalAmount.toFixed(2)}`);
   }
 
+  @* Flat amount display *@
+
+    function initializeFlatTaxesFromDB(orderTaxes) {
+      selectedFlatTaxIds = orderTaxes
+        .filter(t => t.Taxid != 0)
+        .map(t => t.Taxid);
+    }
+
+  function renderFlatTaxes(taxes) {
+    let flatTaxHtml = '';
+
+    taxes.filter(t => t.taxtype === 1).forEach(tax => {
+      const isChecked = selectedFlatTaxIds.includes(tax.Taxid) ? 'checked' : '';
+      if (OrderItem.length != 0) {
+        flatTaxHtml += `
+        <div class="form-check">
+            <input class="form-check-input flat-tax-checkbox" type="checkbox"
+                data-taxid="${tax.Taxid}" data-taxvalue="${tax.Taxvalue}" id="tax_${tax.Taxid}" ${isChecked} 
+                @(string.IsNullOrEmpty(token) ? "" : "disabled")>
+            <label class="form-check-label" for="tax_${tax.taxid}">
+                ${tax.Taxname} 
+            </label>
+        </div>`;
+      }
+    });
+
+    $('#flatTaxList').html(flatTaxHtml);
+    calculateTaxesAndDisplay(OrderItem, taxes);
+  }
+
 
 
   $(document).ready(function () {
@@ -556,7 +590,18 @@
     @* chekbox change *@
       // Trigger recalculation when flat tax is checked/unchecked
       $(document).on('change', '.flat-tax-checkbox', function () {
+        const taxId = parseInt($(this).data('taxid'));
+
+        if (this.checked) {
+          if (!selectedFlatTaxIds.includes(taxId)) {
+            selectedFlatTaxIds.push(taxId);
+          }
+        } else {
+          selectedFlatTaxIds = selectedFlatTaxIds.filter(id => id !== taxId);
+        }
+        
         calculateTaxesAndDisplay(OrderItem, taxes);
+        @* updateCartChangeStatus(); *@
       });
 
     @* load items onlick *@
@@ -650,6 +695,7 @@
               });
             }
             renderOrderItems();
+            updateCartChangeStatus();
 
           }
           else {
@@ -765,6 +811,7 @@
         $("#modifierData").modal("hide");
         console.log(OrderItem);
         renderOrderItems();
+        updateCartChangeStatus();
       }
     });
 
@@ -789,6 +836,8 @@
           success: function (response) {
             if (response.success) {
               toastr.success(response.message);
+              originalOrderItem = deepCopyCart(OrderItem);
+              updateCartChangeStatus();
             }
             else {
               toastr.error(response.message);
@@ -822,7 +871,7 @@
             }
           },
           error: function () {
-            alert("Error toggling favourite status.");
+            alert("Error Add orderwise comment.");
           }
         });
 
@@ -904,6 +953,7 @@
           $("#instruction-error").text("");
           $("#textareaInstruction").val("");
           renderOrderItems();
+          updateCartChangeStatus();
 
         }
       });
@@ -935,6 +985,10 @@
             if (response.success) {
               $("#deleteOrderModal").modal("hide");
               toastr.success(response.message);
+              // After successful save AJAX call
+              originalOrderItem = deepCopyCart(OrderItem);
+              updateCartChangeStatus();
+
             }
             else {
               toastr.error(response.message);
@@ -979,6 +1033,10 @@
               toastr.success(response.message);
               $("#RevieworderId").val(orderid);
               $("#reviewModal").modal("show");
+              // After successful save AJAX call
+              originalOrderItem = deepCopyCart(OrderItem);
+              updateCartChangeStatus();
+
             }
             else {
               toastr.error(response.message);
@@ -1190,7 +1248,7 @@
         $.ajax({
           url: "/MenuOrderApp/GenerateQRCode",
           type: 'GET',
-          data: { orderId: orderId},
+          data: { orderId: orderId },
           xhrFields: {
             responseType: 'arraybuffer'  // Important: get raw bytes
           },
