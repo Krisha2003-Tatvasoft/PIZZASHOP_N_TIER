@@ -8,5 +8,8 @@ public interface IJwtService
 
     string GenerateForgetToken(string email);
 
+    string GenerateCustomerToken(int orderId);
+
     ClaimsPrincipal? ValidateToken(string token);
+   
 }

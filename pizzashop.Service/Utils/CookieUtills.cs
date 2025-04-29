@@ -34,6 +34,12 @@ namespace pizzashop.Service.Utils
             return token;
         }
 
+        public static string? GetCustomerToken(HttpRequest request)
+        {
+            _ = request.Cookies.TryGetValue("CustomerToken", out string? token);
+            return token;
+        }
+
 
         /// Save User data to Cookies
         public static void SaveUserData(HttpResponse response, Userslogin user)
@@ -82,7 +88,9 @@ namespace pizzashop.Service.Utils
             response.Cookies.Append("PermissionData", json, options);
         }
 
-
-
+        public static string? GetCustomerToken(object request)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

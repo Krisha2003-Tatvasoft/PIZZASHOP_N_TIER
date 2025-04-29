@@ -1,0 +1,61 @@
+@model pizzashop.Entity.ViewModels.CustomerDetail;
+
+<div class="modal fade modal-addNewCategory" id="CustomerDetails" tabindex="-1" aria-labelledby="CustomerDetails"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CustomerDetails">Customer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cd-form">
+                    <input type="hidden" id="customer-id" asp-for="@Model.customerId" />
+                     <input type="hidden" id="order-id" asp-for="@Model.Orderid" />
+                        <input type="hidden"  asp-for="@Model.oldemail" />
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" placeholder="Name" asp-for="Customername" required>
+                        <label for="Name">Name*</label>
+                        <span class="text-danger" asp-validation-for="Customername"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12 ">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="Mobile_Number"
+                                    asp-for="Phoneno" required>
+                                <label for="Mobile_Number">Mobile Number*</label>
+                                <span class="text-danger" asp-validation-for="Phoneno"></span>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" placeholder="noOfPersons"
+                                    asp-for="Noofperson" required>
+                                <label for="noOfPersons">No of Person(s)*</label>
+                                <span class="text-danger" asp-validation-for="Noofperson"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                      <div class="form-floating mb-3">
+                    <input type="email" class="form-control" placeholder="Email" asp-for="Email">
+                     <label for="Email">Email*</label>
+                     <span class="text-danger" asp-validation-for="Email"></span>
+                     </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary cd-yes-btn">Save</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+        </div>
+
+    </div>
+</div>
+</div>
+
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

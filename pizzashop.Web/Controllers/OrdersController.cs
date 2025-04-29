@@ -30,8 +30,7 @@ public class OrdersController : Controller
     public async Task<IActionResult> Orders(int page = 1, int pageSize = 5, string search = "", string SortColumn = "",
      string SortOrder = "", string status = "", DateTime? fromDate = null, DateTime? toDate = null)
     {
-        Console.WriteLine(fromDate);
-        Console.WriteLine(toDate);
+       
         var (orderList, totalOrder) = await _orderService.GetOrderTable(page, pageSize, search, SortColumn, SortOrder, status, fromDate, toDate);
 
         ViewBag.CurrentPage = page;

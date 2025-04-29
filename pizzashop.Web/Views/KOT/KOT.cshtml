@@ -136,10 +136,10 @@
         });
 
         $(document).on('click', '.plus-btn, .minus-btn', function () {
-            const $parent = $(this).closest('[data-itemid]');
+            const $parent = $(this).closest('[data-orderitemid]');
             const $quantitySpan = $parent.find('.quantity');
             const max = parseInt($parent.data('max'));
-            const itemId = $parent.data('itemid');
+            const orderitemid = $parent.data('orderitemid');
 
             let currentQty = parseInt($quantitySpan.text());
 
@@ -167,7 +167,7 @@
         });
 
         function initializeQuantityButtons() {
-            $('[data-itemid]').each(function () {
+            $('[data-orderitemid]').each(function () {
                 const $parent = $(this);
                 const max = parseInt($parent.data('max'));
                 const $quantitySpan = $parent.find('.quantity');
@@ -196,13 +196,13 @@
                 const $itemContainer = $(this).closest('.d-flex.justify-content-between');
 
                 // Get itemId from the data attribute of the container
-                const itemId = $itemContainer.find('[data-itemid]').data('itemid');
+                const orderitemid = $itemContainer.find('[data-orderitemid]').data('orderitemid');
 
                 // Get the updated quantity value
                 const quantity = parseInt($itemContainer.find('.quantity').text());
 
                 // Push the itemId and quantity to the array
-                itemsToUpdate.push({ itemId, quantity });
+                itemsToUpdate.push({ orderitemid, quantity });
             });
 
             // Status (Current Status) - to know whether we're updating 'Inprogress' or 'Ready'

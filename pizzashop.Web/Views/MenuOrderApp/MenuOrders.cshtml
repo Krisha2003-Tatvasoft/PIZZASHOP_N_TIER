@@ -168,9 +168,76 @@
 </div>
 
 
+@* customer-details-model *@
+<div class="customer-detail-partial"></div>
+
+
+<!-- review model -->
+<div class="modal fade modal-delete" id="reviewModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModal">Customer Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="reviewForm">
+        <div class="modal-body">
+          <input type="hidden" id="RevieworderId" value="" /> <!-- Set dynamically -->
+
+          <div class="d-flex align-items-center justify-content-between">
+            <label class="fw-bold">Food</label>
+            <div class="star-rating" data-field="foodRating"></div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <label class="fw-bold">Service</label>
+            <div class="star-rating" data-field="serviceRating"></div>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <label class="fw-bold">Ambience</label>
+            <div class="star-rating" data-field="ambienceRating"></div>
+          </div>
+          <hr class="my-3 fw-bold" style="color: gold; border-width: 2px;">
+          <div class="form-floating mb-3">
+            <textarea id="comment" class="form-control" style="height: max-content;"></textarea>
+            <label for="comment">Comments:</label>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-primary submit-review">YES</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+@* Scan QR Code *@
+<div class="modal fade modal-delete" id="Sacenner" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Sacenner">Delete Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+        <img id="qrImage" src="" alt="QR Code" width="250px" height="250px" /><br>
+      </div>
+      <div class="modal-footer d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-primary scanner-close" data-bs-dismiss="modal">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-
   var GCatId = "";
   let OrderItem = [];
   let selectedModifiers = {};
@@ -897,10 +964,10 @@
       });
 
 
-    @* cancel button yes *@
+    @* complete button yes *@
       $(document).on("click", ".complele-order-yes", function (e) {
         var orderid = $("#orderid").val();
-      
+
 
         $.ajax({
           url: "/MenuOrderApp/CompleteOrder",
@@ -910,6 +977,8 @@
             if (response.success) {
               $("#CompleteOrderModal").modal("hide");
               toastr.success(response.message);
+              $("#RevieworderId").val(orderid);
+              $("#reviewModal").modal("show");
             }
             else {
               toastr.error(response.message);
@@ -919,10 +988,229 @@
           error: function (error) {
             console.error("Error in Cancel Order.", error);
           }
-        }); 
+        });
 
       });
 
+    @* review  *@
+
+
+      function renderStars($container) {
+        for (let i = 1; i <= 5; i++) {
+          $container.append(`<i class="bi bi-star me-1" data-value="${i}"></i>`);
+        }
+      }
+
+    $('.star-rating').each(function () {
+      renderStars($(this));
+    });
+
+    $(document).on('mouseenter', '.star-rating i', function () {
+      const value = $(this).data('value');
+      $(this).parent().children('i').each(function () {
+        $(this).toggleClass('bi-star-fill', $(this).data('value') <= value);
+        $(this).toggleClass('bi-star', $(this).data('value') > value);
+      });
+    });
+
+    $(document).on('click', '.star-rating i', function () {
+      const field = $(this).parent().data('field');
+      const value = $(this).data('value');
+      $(this).parent().data('selected', value);
+    });
+
+    $(document).on("click", ".submit-review", function (e) {
+      e.preventDefault();
+
+
+      const Review = {
+        Orderid: parseInt($('#RevieworderId').val()),
+        Foodrating: $('[data-field="foodRating"]').data('selected') || 0,
+        Servicerating: $('[data-field="serviceRating"]').data('selected') || 0,
+        Ambiencerating: $('[data-field="ambienceRating"]').data('selected') || 0,
+        Comments: $('#comment').val() || ''
+      };
+
+      $.ajax({
+        url: '/MenuOrderApp/Review',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(Review),
+        success: function (response) {
+          if (response.success) {
+            toastr.success(response.message);
+            $('#reviewModal').modal('hide');
+          }
+          else {
+            toastr.error(response.message);
+          }
+        },
+        error: function () {
+          alert("Error submitting review.");
+        }
+      });
+
+
+    });
+
+
+
+    @* customer Details get *@
+
+      $(document).on("click", ".customer-details-button", function (e) {
+        e.preventDefault();
+        var Orderid = $(this).data("orderid");
+
+        $.ajax({
+          url: "/MenuOrderApp/CustomerDetail",
+          type: "GET",
+          data: { id: Orderid },
+          success: function (data) {
+            $(".customer-detail-partial").html(data);
+            $("#CustomerDetails").modal("show");
+          },
+          error: function () {
+            alert("failed to reload modal");
+          }
+        });
+
+      });
+
+
+
+    @* Customerdetails Yes Button *@
+
+      $(document).on("click", ".cd-yes-btn", function (e) {
+        e.preventDefault();
+
+        // Trigger the client-side validation first
+        if ($("#cd-form").valid()) {
+          var formData = new FormData($("#cd-form")[0]);
+
+
+          $.ajax({
+            url: "/MenuOrderApp/CustomerDetailPost",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+              if (response.success) {
+                // Reset the form and close the modal if successful
+                $("#cd-form")[0].reset();
+                $("#CustomerDetails").modal("hide");
+                toastr.success(response.message);
+              }
+              else {
+                toastr.error(response.message);
+              }
+            },
+            error: function (error) {
+              console.error("Error in Create Token.", error);
+              toastr.error("Internal server error");
+            }
+          });
+        }
+
+      });
+
+
+    @* generate Invoice *@
+
+      $(document).on("click", ".generate-invoice", function (e) {
+        e.preventDefault();
+        var orderId = $(this).data("orderid");
+        GeneratePdf(orderId);
+      });
+
+
+    function GeneratePdf(orderId) {
+      $.ajax({
+        url: "/Orders/orderInvoice",
+        type: "GET",
+        data: { id: orderId },
+        success: function (response) {
+          var iframe = document.createElement('iframe');
+          iframe.style.position = 'absolute';
+          iframe.style.left = '-9999px';
+          iframe.style.width = '800px';
+          iframe.style.height = 'auto';
+          document.body.appendChild(iframe);
+
+          // Write the response HTML into the iframe
+          var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          iframeDoc.open();
+          iframeDoc.write(response);
+          iframeDoc.close();
+
+          iframe.onload = function () {
+            html2canvas(iframe.contentWindow.document.body, { scale: 2 }).then(canvas => {
+              const imgData = canvas.toDataURL('image/png');
+              const { jsPDF } = window.jspdf;
+              const doc = new jsPDF('p', 'mm', 'a4');
+              const pageWidth = 210;
+              const pageHeight = 297;
+              const imgWidth = pageWidth;
+              const imgHeight = (canvas.height * imgWidth) / canvas.width;
+              let heightLeft = imgHeight;
+              let position = 0;
+
+              doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+              heightLeft -= pageHeight;
+
+              while (heightLeft > 0) {
+                position -= pageHeight;
+                doc.addPage();
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+              }
+
+              doc.save(`invoice_${orderId}.pdf`);
+
+              // Remove the iframe after generating the PDF
+              document.body.removeChild(iframe);
+            });
+          };
+
+        },
+        error: function () {
+          alert("Failed to load invoice.");
+        }
+      });
+
+
+    }
+
+    @* scan QR Code *@
+      $(document).on("click", ".scanner", function (e) {
+        e.preventDefault();
+        var orderId = $(this).data("orderid");
+
+        $.ajax({
+          url: "/MenuOrderApp/GenerateQRCode",
+          type: 'GET',
+          data: { orderId: orderId},
+          xhrFields: {
+            responseType: 'arraybuffer'  // Important: get raw bytes
+          },
+          success: function (data) {
+            var base64 = btoa(
+              new Uint8Array(data)
+                .reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+
+            var imageUrl = "data:image/png;base64," + base64;
+
+            $("#qrImage").attr("src", imageUrl);
+            $("#Sacenner").modal("show");
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching waiting token:', error);
+          }
+        });
+
+      });
 
 
 

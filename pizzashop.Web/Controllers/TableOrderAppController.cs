@@ -4,6 +4,7 @@ using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
 
@@ -28,6 +29,8 @@ public class TableOrderAppController : Controller
     }
 
 
+    [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> TablesOrder()
     {
         var tableSectionData = await _SectionService.OrderTableViews();
@@ -38,12 +41,14 @@ public class TableOrderAppController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> AddWaitingToken(int id)
     {
         return PartialView("_AddWaitingToken", await _orderAppWaitingTokenService.AddWaitingToken(id));
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> GetCustomerByEmail(string email)
     {
         var customers = await _cutomerService.GetCustomerByEmail(email);
@@ -65,6 +70,7 @@ public class TableOrderAppController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> AddWTPost(AddWaitingToken model)
     {
         if (ModelState.IsValid)
@@ -73,7 +79,7 @@ public class TableOrderAppController : Controller
             var (success, message) = await _orderAppWaitingTokenService.AddWaitingTokenPost(user.Userid, model);
             if (success == true)
             {
-                return Json(new { success = true, message = message});
+                return Json(new { success = true, message = message });
             }
             else
             {
@@ -91,6 +97,7 @@ public class TableOrderAppController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> GetWaitingListParial(int id)
     {
         return PartialView("_WaitingList", await _orderAppWaitingTokenService.WaitingListBySectionId(id));
@@ -98,12 +105,14 @@ public class TableOrderAppController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> AssignTable(int id)
     {
         return PartialView("_AssignTable", await _orderAppTableService.AssignTable(id));
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> GetCustomerByWaitingToken(int Id)
     {
 
@@ -128,33 +137,35 @@ public class TableOrderAppController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager"})]
     public async Task<IActionResult> assignTablePost(AssignTable model)
     {
-        
+
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
-            var(Orderid , message) = await _orderAppTableService.AssignTablePost(user.Userid, model);
-            if(Orderid!=null)
+            var (Orderid, message) = await _orderAppTableService.AssignTablePost(user.Userid, model);
+            if (Orderid != null)
             {
-            return Json(new
-            {
-                success = true,
-                orderid = Orderid,
-                message = message
-            });
+                return Json(new
+                {
+                    success = true,
+                    orderid = Orderid,
+                    message = message
+                });
             }
-            else{
-                 return Json(new
+            else
             {
-                success = false,
-                message = message
-            });
+                return Json(new
+                {
+                    success = false,
+                    message = message
+                });
             }
         }
         else
         {
-            
+
             // If model is invalid, return the same view with validation messages
             return Json(new { message = "Validation Error." });
             // return PartialView("_AddTable", model);

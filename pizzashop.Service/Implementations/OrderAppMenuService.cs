@@ -25,9 +25,14 @@ public class OrderAppMenuService : IOrderAppMenuService
 
     private readonly ITableRepository _tableRepository;
 
+    private readonly ICustomerRepository _customerRepository;
+
+    private readonly ICustomerReviewRepository _customerReviewRepository;
+
     public OrderAppMenuService(IItemRepository itemRepository, IOrderRepository orderRepository,
     IOrderItemRepository orderItemRepository, IOrderItemModifierRepository orderItemModifierRepository,
-    ITaxesRepository taxesRepository, IOrderTaxRepository orderTaxRepository, ITableRepository tableRepository)
+    ITaxesRepository taxesRepository, IOrderTaxRepository orderTaxRepository, ITableRepository tableRepository,
+    ICustomerRepository customerRepository, ICustomerReviewRepository customerReviewRepository)
     {
         _itemRepository = itemRepository;
         _orderRepository = orderRepository;
@@ -36,6 +41,8 @@ public class OrderAppMenuService : IOrderAppMenuService
         _taxRepository = taxesRepository;
         _orderTaxRepository = orderTaxRepository;
         _tableRepository = tableRepository;
+        _customerRepository = customerRepository;
+        _customerReviewRepository = customerReviewRepository;
     }
 
     public async Task<List<IMGMviewmodel>> ModifiersById(int id)
@@ -138,7 +145,12 @@ public class OrderAppMenuService : IOrderAppMenuService
         var order = await _orderRepository.OrderDetailsByIdAsync(model.Orderid);
         if (order != null)
         {
+            var subtotal = model.Items.Sum(x => x.Rate * x.Quantity + x.Modifiers.Sum(m => m.Rate * x.Quantity));
+            var tax = model.OrderTax.Sum(x => x.Taxvalue);
             order.status = 0;
+            order.Subamount = subtotal;
+            order.Totaltax = tax;
+            order.Totalamount = (decimal)(subtotal + tax);
             await _orderRepository.UpdateOrder(order);
 
             var existingOrderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(model.Orderid);
@@ -290,12 +302,12 @@ public class OrderAppMenuService : IOrderAppMenuService
                 await _tableRepository.UpdateTable(tableByid);
             }
 
-            var orderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderid);
-            foreach (var orderitem in orderItems)
-            {
-                await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(orderitem.Ordereditemid);
-                await _orderItemRepository.DeleteOrderItemAsync(orderitem.Ordereditemid);
-            }
+            // var orderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderid);
+            // foreach (var orderitem in orderItems)
+            // {
+            //     await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(orderitem.Ordereditemid);
+            //     await _orderItemRepository.DeleteOrderItemAsync(orderitem.Ordereditemid);
+            // }
 
             return (true, "Order Cancelled sucessfully.");
 
@@ -333,6 +345,105 @@ public class OrderAppMenuService : IOrderAppMenuService
         }
     }
 
+
+    public async Task<CustomerDetail?> CustomerDetail(int orderid)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        if (order != null)
+        {
+            var Customer = new CustomerDetail
+            {
+                customerId = order.Customerid,
+                Email = order.Customer?.Email,
+                Customername = order.Customer?.Customername,
+                Phoneno = order.Customer?.Phoneno,
+                Noofperson = order.Noofperson,
+                Orderid = order.Orderid,
+                oldemail = order.Customer?.Email
+            };
+            return Customer;
+        }
+        return null;
+    }
+
+    public async Task<(bool sucess, string message)> EditCustomerdetail(CustomerDetail model)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
+        if (order != null)
+        {
+            var customer = await _customerRepository.GetCustomerByEmail(model.Email);
+            if (customer != null && customer.Customerid != model.customerId)
+            {
+                return (false, "Email already In Used.");
+            }
+            else
+            {
+                var totalCapacity = 0;
+                var tables = order.Ordertables.ToList();
+                foreach (var table in tables)
+                {
+                    var tableid = await _tableRepository.TableByIdAsync(table.Tableid);
+                    totalCapacity += (int)tableid.Capacity;
+                }
+                if (totalCapacity < model.Noofperson)
+                {
+                    return (false, "No. of Person Is more Then the Table Capacity.");
+                }
+                else
+                {
+                    var oldcustomer = await _customerRepository.GetCustomerByEmail(model.oldemail);
+
+                    if (oldcustomer != null)
+                    {
+                        oldcustomer.Customername = model.Customername;
+                        oldcustomer.Phoneno = model.Phoneno;
+                        oldcustomer.Email = model.Email;
+                        Console.WriteLine("emailllllllllllllll" + oldcustomer.Email);
+                        await _customerRepository.UpdateCustomer(oldcustomer);
+                    }
+
+                    order.Noofperson = (short)model.Noofperson;
+                    await _orderRepository.UpdateOrder(order);
+
+                    return (true, "Customer Details Updated Sucessfully.");
+                }
+
+            }
+        }
+        else
+        {
+            return (false, "no order");
+        }
+    }
+
+    public async Task<(bool sucess, string message)> ReviewPost(Review model)
+    {
+        if (model != null)
+        {
+            Customerreview customerreview = new Customerreview
+            {
+                Orderid = model.Orderid,
+                Foodrating = model.Foodrating,
+                Servicerating = model.Servicerating,
+                Ambiencerating = model.Ambiencerating,
+                Avgrating = (float?)((model.Foodrating + model.Servicerating + model.Ambiencerating) / 3),
+                Comments = model.Comments,
+                Createdat = DateTime.Now
+            };
+            await _customerReviewRepository.AddNewReview(customerreview);
+            var order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
+            if (order != null)
+            {
+                order.Rating = (decimal?)customerreview.Avgrating;
+                await _orderRepository.UpdateOrder(order);
+            }
+            return (true, "Review Added Sucessfully.");
+        }
+        else
+        {
+            return (false, "No Review");
+        }
+    }
 
 }
 

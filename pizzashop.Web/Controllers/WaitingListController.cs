@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
+using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
 
@@ -26,11 +27,13 @@ public class WaitingListController : Controller
 
     }
 
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> WaitingListAsync()
     {
         return View();
     }
 
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> WaitingSectionList()
     {
         var sectionList = await _sectionService.GetSectionWithCount();
@@ -39,6 +42,7 @@ public class WaitingListController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> WaitingTableList(int sectionid)
     {
         var tableList = await _orderAppWaitingTokenService.WaitingList(sectionid);
@@ -47,26 +51,15 @@ public class WaitingListController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> EditWT(int id)
     {
         var WT = await _orderAppWaitingTokenService.EditGetWT(id);
         return PartialView("_EditWT", WT);
     }
 
-    // [HttpGet]
-    // public async Task<IActionResult> EmailExist(string email, int customId)
-    // {
-    //     if (await _orderAppWaitingTokenService.EmailExistsWithId(email, customId))
-    //     {
-    //         return Json(new { success = true, message = "email already exist." });
-    //     }
-    //     else
-    //     {
-    //         return Json(new { success = false, message = "email not exists." });
-    //     }
-    // }
-
-
+    [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> EditWTPost(AddWaitingToken model)
     {
         if (ModelState.IsValid)
@@ -101,6 +94,7 @@ public class WaitingListController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> DeleteWT(int id)
     {
         if (await _orderAppWaitingTokenService.DeleteWT(id))
@@ -114,6 +108,7 @@ public class WaitingListController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> AddWaitingToken()
     {
         return PartialView("_AddWaitingToken", await _orderAppWaitingTokenService.AddWaitingToken(0));
@@ -122,6 +117,7 @@ public class WaitingListController : Controller
 
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<JsonResult> GetSection()
     {
 
@@ -130,6 +126,7 @@ public class WaitingListController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<JsonResult> GetTable(int sectioid)
     {
 
@@ -138,6 +135,7 @@ public class WaitingListController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> AssignTable()
     {
         return PartialView("_AssignTableModel");
@@ -145,6 +143,7 @@ public class WaitingListController : Controller
 
 
     [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> AssignTablePost(WaitingListAssignTable model)
     {
         if (ModelState.IsValid)

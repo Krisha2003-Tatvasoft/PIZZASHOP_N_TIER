@@ -98,7 +98,7 @@ public class OrderRepository : IOrderRepository
 
         foreach (var ItemQuantity in model.Items)
         {
-            var orderedItem = order.Ordereditems.FirstOrDefault(i => i.Itemid == ItemQuantity.ItemId);
+            var orderedItem = order.Ordereditems.FirstOrDefault(i => i.Ordereditemid == ItemQuantity.orderitemid);
 
             if (orderedItem != null)
             {

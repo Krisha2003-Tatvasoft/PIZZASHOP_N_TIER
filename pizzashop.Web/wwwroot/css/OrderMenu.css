@@ -37,6 +37,10 @@
   padding-left: 15px;
 }
 
+.bi-star-fill {
+  color: #ffc107;
+}
+
 .active {
   color: white !important;
   background-color: #087cc4;
@@ -134,7 +138,7 @@
 }
 
 .modifier-card.selected {
-  background-color: #cfecf7!important; /* Example: light blue for selected */
+  background-color: #cfecf7 !important; /* Example: light blue for selected */
   border: 2px solid rgb(31, 115, 174);
 }
 

@@ -22,10 +22,10 @@
     </div>
 
     <div class="d-flex align-items-center justify-content-end gap-3">
-        <div class=" bill-top-btn">
+        <div class="bill-top-btn scanner" data-orderid="@Model.Orderid">
             <i class="bi bi-qr-code-scan"></i>
         </div>
-        <div class=" bill-top-btn">
+        <div class=" bill-top-btn customer-details-button" data-orderid="@Model.Orderid">
             <i class="bi bi-person-lines-fill"></i>
         </div>
         <div class="bill-top-btn order-wise-comment" data-orderid="@Model.Orderid">
@@ -129,15 +129,15 @@
                 Payment Method</div>
             <div class="d-flex flex-row gap-3 fs-6 " style="font-weight: 500;">
                 <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="Cash">
+                    <input type="radio" id="Cash" disabled checked>
                     <span for="Cash">Cash</span>
                 </div>
                 <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="card">
+                    <input type="radio" id="card" disabled>
                     <span for="card">Card</span>
                 </div>
                 <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="UPI">
+                    <input type="radio" id="UPI" disabled>
                     <span for="UPI">UPI</span>
                 </div>
             </div>
@@ -151,7 +151,7 @@
     <button type="button" class="btn p-3 w-100 saveorder" id="search-btn"
         style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
     <button type="button" class="btn p-3 clear-btn w-100 complete-button" style="color:#087cc4;border-color:#087cc4;">Complete</button>
-    <button type="button" class="btn p-3 clear-btn w-100" style="color:#087cc4;border-color:#087cc4;">Generate
+    <button type="button" class="btn p-3 clear-btn w-100 generate-invoice" style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
         Invoice</button>
 </div>
 <div class="d-flex justify-content-end">

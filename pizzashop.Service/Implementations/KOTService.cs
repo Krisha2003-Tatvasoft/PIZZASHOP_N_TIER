@@ -114,6 +114,7 @@ public class KOTService : IKOTService
         .Select(i => new OrderItem
         {
             Itemid = i.Itemid,
+            Orderitemid = i.Ordereditemid,
             Itemname = i.Item.Itemname,
             Quantity = (short)(status == "Inprogress" ? i.Quantity - i.ReadyQuantity : i.ReadyQuantity),
             Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier

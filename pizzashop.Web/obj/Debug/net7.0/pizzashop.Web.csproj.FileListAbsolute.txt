@@ -198,3 +198,14 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\refint\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\ref\pizzashop.Web.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\QRCoder.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\SkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\System.Drawing.Common.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\osx\native\libSkiaSharp.dylib
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\win-arm64\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\win-x64\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\win-x86\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll

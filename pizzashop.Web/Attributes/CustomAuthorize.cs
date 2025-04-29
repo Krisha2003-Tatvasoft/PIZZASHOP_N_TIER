@@ -24,7 +24,7 @@
 //         {
 //             // Inject JwtService to use in Middleware.
 //             var jwtService = context.HttpContext.RequestServices.GetService(typeof(IJwtService)) as IJwtService;
-            
+
 //             // Get the token from Cookie
 //             var token = CookieUtils.GetJWTToken(context.HttpContext.Request);
 
@@ -63,16 +63,21 @@ using Microsoft.AspNetCore.Authorization;
 using pizzashop.web.Attributes;
 
 
-namespace pizzashop.web.Attributes 
+namespace pizzashop.web.Attributes
 {
     public class CustomAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         private readonly string? _module;
         private readonly string? _permission;
-        public CustomAuthorizeAttribute(string? module = null, string? permission = null)
+
+        private readonly string[]? _allowedRoleIds;
+
+        public CustomAuthorizeAttribute(string? module = null, string? permission = null
+        , string[]? allowedRoleIds = null)
         {
             _module = module;
             _permission = permission;
+            _allowedRoleIds = allowedRoleIds;
         }
 
         // Required method from IAuthorizationFilter
@@ -93,11 +98,29 @@ namespace pizzashop.web.Attributes
 
             if (principal == null)
             {
+                string? customerToken = CookieUtils.GetCustomerToken(context.HttpContext.Request);
+                principal = jwtService?.ValidateToken(customerToken ?? "");
+            }
+
+            if (principal == null)
+            {
                 context.Result = new RedirectToActionResult("Login", "Auth", null);
                 return;
             }
 
             context.HttpContext.User = principal;
+
+            // Extract the user's role (assuming only one role exists)
+            var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            if (_allowedRoleIds != null && _allowedRoleIds.Length > 0)
+            {
+                if (string.IsNullOrEmpty(role) || !_allowedRoleIds.Contains(role))
+                {
+                    context.Result = new RedirectToActionResult("HttpStatusCodeHandler", "Error", 401);
+                    return;
+                }
+            }
 
             // If no module is provided, only authentication is required, skip permission check
             if (string.IsNullOrEmpty(_module) || string.IsNullOrEmpty(_permission))
@@ -105,15 +128,6 @@ namespace pizzashop.web.Attributes
                 return; // Authenticated users are allowed
             }
 
-
-            // Extract the user's role (assuming only one role exists)
-            var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-
-            if (role == null)
-            {
-                context.Result = new RedirectToActionResult("403", "Error", null);
-                return;
-            }
 
             // Check if the single role has the required permission
             bool hasPermission = await permissionService!.HasPermissionAsync(role, _module, _permission);

@@ -4,6 +4,7 @@ namespace pizzashop.Entity.ViewModels;
 
 public class Ticket
 {
+    public int orderitemid { get; set; }
     public int Categoryid { get; set; }
 
     public string Categoryname { get; set; } = null!;

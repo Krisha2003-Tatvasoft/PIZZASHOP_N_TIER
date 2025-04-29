@@ -18,4 +18,10 @@ public interface IOrderAppMenuService
     Task<(bool success, string message)> CancelOrder(int orderid);
 
     Task<(bool success, string message)> CompleteOrder(int orderid);
+
+    Task<CustomerDetail?> CustomerDetail(int orderid);
+
+    Task<(bool sucess, string message)> EditCustomerdetail(CustomerDetail model);
+
+    Task<(bool sucess, string message)> ReviewPost(Review model);
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
+using pizzashop.web.Attributes;
 
 namespace pizzashop.Web.Controllers;
 
@@ -16,11 +17,15 @@ public class KOTController : Controller
         _KOTService = kOTService;
     }
 
+    [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public IActionResult KOT()
     {
         return View();
     }
 
+    [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public async Task<IActionResult> CategoryList()
     {
         var CategoryList = await _categoryService.GetKOTCategoryList();
@@ -28,6 +33,7 @@ public class KOTController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public async Task<IActionResult> loadTickets(int id, string status, int page = 1)
     {
         var (tickets, totalOrder) = await _KOTService.Ticket(id, status, page);
@@ -39,6 +45,7 @@ public class KOTController : Controller
     }
 
     [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public async Task<IActionResult> OpenModel(int id, string status)
     {
         Ticket ticket = await _KOTService.TicketDetails(id, status);
@@ -47,6 +54,7 @@ public class KOTController : Controller
     }
 
     [HttpPost]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public async Task<IActionResult> UpdateItemStatus([FromBody] OrderItemStatus model)
     {
         if (model == null || model.Items == null || !model.Items.Any())
