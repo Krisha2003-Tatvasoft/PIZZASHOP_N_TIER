@@ -32,6 +32,7 @@
                 <option value="30">Last 30 Days</option>
                 <option value="currentMonth">Current Month</option>
                 <option value="customdate">Custom Date</option>
+                <option value="0" class="d-none">Custom Date</option>
             </select>
 
             <a clas="">
@@ -246,6 +247,7 @@
                 }
                 else if (dateFilter === "customdate") {// Custom Date: Open modal
                     $("#customDateModal").modal("show");
+                    $("#searchTimeWise").val("0");
                     return;// Stop execution here
                 }
 

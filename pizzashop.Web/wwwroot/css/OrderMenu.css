@@ -1,11 +1,23 @@
 .offcanvas-lg.offcanvas-start {
   top: 50px !important;
   width: 220px !important;
+  /* height: calc(100vh - 50px) !important;
+  overflow-y: auto; */
 }
 
 .offcanvas-backdrop {
   z-index: 0 !important;
 }
+
+.offcanvas-xxl.offcanvas-end {
+  top: 50px !important;
+}
+
+.offcanvas-xxl.offcanvas-end.show {
+  height: calc(100vh - 50px) !important;
+  overflow-y: auto;
+}
+
 
 .categoryList {
   width: 220px;

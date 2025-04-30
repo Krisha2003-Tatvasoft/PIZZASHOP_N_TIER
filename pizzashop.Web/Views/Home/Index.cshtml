@@ -21,6 +21,7 @@
                     <option value="30">Last 30 Days</option>
                     <option value="currentMonth">Current Month</option>
                     <option value="customdate">Custom Date</option>
+                     <option value="0" class="d-none">Custom Date</option>
                 </select>
                 <label>Duration</label>
             </div>
@@ -56,7 +57,7 @@
                     <button type="button" class="search-btn" style="background: #087cc4; color:white; 
                     border:1px solid #087cc4; border-radius: 5px;">Submit</button>
                 </a>
-                <button type="button" class="clear-btn" data-bs-dismiss="modal"  style="background: white; 
+                <button type="button" class="clear-btn" data-bs-dismiss="modal" style="background: white; 
                 color:#087cc4; border:1px solid #087cc4; border-radius: 5px;">Cancel</button>
             </div>
         </div>
@@ -71,6 +72,7 @@
     let GDToDate;
     let revenueChartInstance;
     let customerChartInstance;
+    let lastSelectedFilter = null;
 
     function formatDate(date) {
         return date.toISOString().split("T")[0];
@@ -266,6 +268,8 @@
         });
     }
 
+
+
     $(document).ready(function () {
 
         const today = new Date();
@@ -295,6 +299,8 @@
 
 
         loadDashboard();
+
+      
 
         function loadDashboard() {
 
@@ -346,6 +352,7 @@
             }
             else if (dateFilter === "customdate") {// Custom Date: Open modal
                 $("#customDateModal").modal("show");
+                 $("#time-main-filter").val("0"); 
                 return;// Stop execution here
             }
 
@@ -353,15 +360,8 @@
             fromDate = fromDate ? fromDate.toISOString().slice(0, 19).replace("T", " ") : null;
             toDate = toDate ? toDate.toISOString().slice(0, 19).replace("T", " ") : null;
 
-            $("#FromDate").val(fromDate);
-            $("#ToDate").val(toDate);
-
             GDFromDate = fromDate;
             GDToDate = toDate;
-
-            console.log("From Date: " + GDFromDate);
-            console.log("To Date: " + GDToDate);
-
 
             loadDashboard();
 
