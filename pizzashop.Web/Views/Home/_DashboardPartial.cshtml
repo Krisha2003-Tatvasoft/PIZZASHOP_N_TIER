@@ -1,0 +1,228 @@
+@model pizzashop.Entity.ViewModels.DashboardViewModel;
+@{
+    var index1 = 0;
+    var index2 = 0;
+}
+
+<div class="row p-0">
+    <div class="col-xl-6 col-12">
+        <div class="row">
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:210px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #00ff1473">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #00ff1473;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/total-sales.svg" style="object-fit:cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.TotalSales</strong></span>
+                        <span>Total Sales</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:210px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #c153be73">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #c153be73;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/total-orders.svg" style="object-fit:cover">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.TotalOrders</strong></span>
+                        <span>Total Orders</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-12">
+        <div class="row">
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:210px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #5bbbe96e">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #5bbbe96e;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/order-value.svg" style="width:100%;height:69%"
+                                    class="rounded-circle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.AvgOrder</strong></span>
+                        <span>Avg. Order Value</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:210px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #fa6c6c99">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #fa6c6c99;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/waiting-time.svg" style="object-fit:cover;width:90%;height:90%"
+                                    class="rounded-circle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.AvgWaitingTime</strong></span>
+                        <span>Avg. Waiting Time</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row p-0">
+    <div class="col-md-6 col-12 pb-3">
+        <div class="card" style="height:260px">
+            <div class="row h-25 p-3">
+                <span class="fs-4">Revenue</span>
+            </div>
+            <div class="row px-3 pb-2" style="height: 200px; position: relative;">
+                <canvas id="revenueChart" class="w-100 h-100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-12 pb-3">
+        <div class="card " style="height:260px">
+            <div class="row h-25 p-3">
+                <span class="fs-4">Customer Growth</span>
+            </div>
+            <div class="row p-3" style="height: 200px; position: relative;">
+                <canvas id="customerChart" class="w-100 h-100"></canvas>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row p-0">
+    <div class="col-xl-6 col-12">
+        <div class="row">
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:220px">
+                    <div class="row h-25 p-3">
+                        <span class="fs-4">Top Selling Items</span>
+                    </div>
+                    <div class="row mx-3 py-1 overflow-auto">
+                        @if (Model.TopSellingItems.Count == 0)
+                        {
+                            <span class="text-center">No Data Found</span>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.TopSellingItems)
+                            {
+                                ++@index1;
+                                <div class="d-flex flex-row align-items-center gap-3 border-bottom py-2">
+                                    <span>#@index1</span>
+                                    <div class="item-img"><img 
+                                            src="~/images/dining-menu.png"
+                                            style="width:100%;height:100%;object-fit:cover;" /></div>
+                                    <div class="d-flex flex-column">
+                                        <h6>@item.Itemname</h6>
+                                        <div class="d-flex flex-row gap-1">
+                                            <img src="~/images/dining-menu.png" style="height:20px;width:20px" />
+                                            <span>@item.TotalOrderItem</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:220px">
+                    <div class="row h-25 p-3">
+                        <span class="fs-4">Least Selling Items</span>
+                    </div>
+                    <div class="row selling-items mx-3 py-1 overflow-auto">
+                        @if (Model.LeastSellingItems.Count == 0)
+                        {
+                            <span class="text-center">No Data Found</span>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model.LeastSellingItems)
+                            {
+                                ++@index2;
+                                <div class="d-flex flex-row align-items-center gap-3 border-bottom py-2">
+                                    <span>#@index2</span>
+                                    <div class="item-img"><img src="~/images/dining-menu.png"
+                                            style="width:100%;height:100%;object-fit:cover;"/></div>
+                                    <div class="d-flex flex-column">
+                                        <h6>@item.Itemname</h6>
+                                        <div class="d-flex flex-row gap-1">
+                                            <img src="~/images/dining-menu.png" style="height:20px;width:20px" />
+                                            <span>@item.TotalOrderItem</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-12">
+        <div class="row">
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:220px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #facd6c">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #facd6c;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/waiting-list.svg" style="width:90%;height:69%"
+                                    class="rounded-circle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.WaitingCount</strong></span>
+                        <span>Waiting List Count </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pb-3">
+                <div class="card" style="height:220px">
+                    <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
+                        <div class="rounded-circle p-1" style="border:2px solid #ff6a007a">
+                            <div class="rounded-circle align-items-center d-flex justify-content-center"
+                                style="background-color: #ff6a007a;object-fit:cover;width:50px;height:50px;">
+                                <img src="~/images/customer.svg" style="width:90%;height:69%" class="rounded-circle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1"><strong>@Model.NewCustomers</strong></span>
+                        <span>New Customers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+   
+
+    var revenueGrowthData = @Html.Raw(Json.Serialize(Model.RevenueGrowthData));
+    var customerGrowthData = @Html.Raw(Json.Serialize(Model.CustomerGrowthData));
+
+    renderRevenueChart(revenueGrowthData);
+    renderCustomerChart(customerGrowthData);
+</script>

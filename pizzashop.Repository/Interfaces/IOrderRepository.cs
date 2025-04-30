@@ -19,4 +19,6 @@ public interface IOrderRepository
     Task UpdateItemStatusAsync(OrderItemStatus model);
 
     Task UpdateOrder(Order order);
+
+    Task<DashboardViewModel> GetDashboardData(DateTime? fromDate, DateTime? toDate);
 }

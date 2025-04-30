@@ -170,14 +170,18 @@
 
 
 
-
-
 <script>
 
     var serverItems = @Html.Raw(JsonConvert.SerializeObject(Model.Items));
     var taxes = @Html.Raw(JsonConvert.SerializeObject(Model.Taxes)); // tax array
     var orderTaxes = @Html.Raw(JsonConvert.SerializeObject(Model.OrderTax));
-
+    OrderItem =[];
+    originalOrderItem = [];
+    selectedFlatTaxIds = [];
+    originalFlatTaxIds = [];
+    selectedModifiers ={};
+    OrderTax = [];
+   
     $(document).ready(function () {
 
         serverItems.forEach(item => {

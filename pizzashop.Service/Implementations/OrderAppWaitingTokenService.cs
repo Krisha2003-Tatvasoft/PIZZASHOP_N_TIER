@@ -267,7 +267,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
                 var table = await _tableRepository.TableByIdAsync(id);
                 totalCapacity += (int)table.Capacity;
             }
-            
+
             if (totalCapacity < waitingtoken.Noofpeople)
             {
                 return (null, "No. of Person Is more Then the Table Capacity.");
@@ -277,6 +277,8 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             {
                 waitingtoken.Isassigned = true;
                 waitingtoken.Sectionid = model.Sectionid;
+                waitingtoken.Modifiedat = DateTime.Now;
+                waitingtoken.Modifiedby = loginid;
                 await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
             }
 

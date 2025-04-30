@@ -5,165 +5,384 @@
 <link rel="stylesheet" href="~/css/Menu.css" />
 
 <div class="container-fluid main-content px-5 mt-50px">
+
     <div class="mb-2 d-flex justify-content-between align-items-md-center flex-md-row flex-column">
         <div class="heading-text py-2">
             <h1><b>Dashboard</b></h1>
         </div>
 
-        <div class="form-floating py-2" style="height:60px">
-            <select class="form-select form-control" id="time-main-filter" aria-label="Floating label select example">
-                <option value="1">All Time</option>
-
-                <option value="2">Last 7 days</option>
-                <option value="3">Last 30 days</option>
-                <option value="4">Current Month</option>
-                <option value="5">Custome Selection</option>
-            </select>
-            <label>Duration</label>
-        </div>
-    </div>
-
-
-    <div class="row p-0">
-        <div class="col-xl-6 col-12">
-            <div class="row">
-                <div class="col-md-6 pb-3">
-                    <div class="card p-3" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            <img src="https://img.icons8.com/?size=100&id=A8guI1rGV88E&format=png&color=000000"
-                                class="w-25 h-50">
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>Total Sales</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            hello
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>Total Orders</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 col-12">
-            <div class="row">
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            hello
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>Avg. Order Value</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            hello
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>Avg. Waiting Time</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="row p-0">
-        <div class="col-md-6  pb-3">
-            <div class="card" style="height:250px">
-                <div class="row h-25 p-3">
-                    <span class="fs-4">Revenue</span>
-                </div>
-                <div class="row p-3">
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 pb-3">
-            <div class="card " style="height:250px">
-                <div class="row h-25 p-3">
-                    <span class="fs-4">Customer Growth</span>
-                </div>
-                <div class="row p-3">
-
-                </div>
+        <div class="pt-3">
+            <div class="form-floating" style="height:60px">
+                <select class="form-select form-control" id="time-main-filter"
+                    aria-label="Floating label select example">
+                    <option selected value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="currentMonth">Current Month</option>
+                    <option value="customdate">Custom Date</option>
+                </select>
+                <label>Duration</label>
             </div>
         </div>
     </div>
 
-    <div class="row p-0">
-        <div class="col-xl-6 col-12">
-            <div class="row">
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row h-25 p-3">
-                            <span class="fs-4">Top Selling Items</span>
-                        </div>
-                        <div class="row p-3">
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row h-25 p-3">
-                            <span class="fs-4">Least Selling Items</span>
-                        </div>
-                        <div class="row p-3">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 col-12">
-            <div class="row">
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            hello
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>Waiting List Count </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 pb-3">
-                    <div class="card" style="height:250px">
-                        <div class="row m-2 h-50 d-flex justify-content-end">
-                            hello
-
-                        </div>
-                        <div class="row m-2 h-50 flex-column">
-                            <span class="fs-1"><strong>1234</strong></span>
-                            <span>New Customers</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
+    <div class="dashboard-partial"></div>
 
 </div>
+
+<div class="modal fade modal-delete" id="customDateModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="customDateModal">Select Data Range</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex gap-2 flex-row align-items-center justify-content-center">
+                <div class="form-floating w-50">
+                    <input type="date" class="form-control" id="FromDate" max="" placeholder="fromDate">
+                    <label for="fromDate">From Date</label>
+                </div>
+
+                <div class="form-floating w-50">
+                    <input type="date" class="form-control" id="ToDate" max="" placeholder="ToDate">
+                    <label for="ToDate">To Date</label>
+                </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center gap-2">
+                <a id="serachDate">
+                    <button type="button" class="search-btn" style="background: #087cc4; color:white; 
+                    border:1px solid #087cc4; border-radius: 5px;">Submit</button>
+                </a>
+                <button type="button" class="clear-btn" data-bs-dismiss="modal"  style="background: white; 
+                color:#087cc4; border:1px solid #087cc4; border-radius: 5px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    let GDFromDate;
+    let GDToDate;
+    let revenueChartInstance;
+    let customerChartInstance;
+
+    function formatDate(date) {
+        return date.toISOString().split("T")[0];
+    }
+
+
+    function renderRevenueChart(data) {
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (window.revenueChartInstance) {
+            window.revenueChartInstance.destroy();
+        }
+
+        // Parse date strings to Date objects
+        data.forEach(d => d.date = new Date(d.date));
+
+        const minDate = new Date(Math.min(...data.map(d => d.date)));
+        const maxDate = new Date(Math.max(...data.map(d => d.date)));
+
+        const sameDay = minDate.toDateString() === maxDate.toDateString();
+        const sameMonth = minDate.getFullYear() === maxDate.getFullYear() &&
+            minDate.getMonth() === maxDate.getMonth();
+
+        let labels = [];
+        let grouped = {};
+
+        if (sameDay) {
+            // Group by hour
+            for (let i = 0; i < 24; i++) {
+                labels.push(`${i}:00`);
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const hour = d.date.getHours();
+                grouped[hour] += d.totalRevenue;
+            });
+        } else if (sameMonth) {
+            // Group by date
+            const daysInMonth = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0).getDate();
+            for (let i = 1; i <= daysInMonth; i++) {
+                labels.push(i.toString());
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const day = d.date.getDate();
+                grouped[day] += d.totalRevenue;
+            });
+        } else {
+            // Group by month
+            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            for (let i = 0; i < 12; i++) {
+                labels.push(monthLabels[i]);
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const month = d.date.getMonth();
+                grouped[month] += d.totalRevenue;
+            });
+        }
+
+        const values = labels.map((label, i) => grouped[i]);
+
+        window.revenueChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue',
+                    data: values,
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: '#555' },
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#555' },
+                        grid: { color: '#eee' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#444'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    function renderCustomerChart(data) {
+        const ctx = document.getElementById('customerChart').getContext('2d');
+        if (window.customerChartInstance) {
+            window.customerChartInstance.destroy();
+        }
+
+        // Convert date strings to Date objects
+        data.forEach(d => d.date = new Date(d.date));
+
+        const minDate = new Date(Math.min(...data.map(d => d.date)));
+        const maxDate = new Date(Math.max(...data.map(d => d.date)));
+
+        const sameDay = minDate.toDateString() === maxDate.toDateString();
+        const sameMonth = minDate.getFullYear() === maxDate.getFullYear() &&
+            minDate.getMonth() === maxDate.getMonth();
+
+        let labels = [];
+        let grouped = {};
+
+        if (sameDay) {
+            // Group by hour
+            for (let i = 0; i < 24; i++) {
+                labels.push(`${i}:00`);
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const hour = d.date.getHours();
+                grouped[hour] += d.totalCustomers;
+            });
+        } else if (sameMonth) {
+            // Group by date
+            const daysInMonth = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0).getDate();
+            for (let i = 1; i <= daysInMonth; i++) {
+                labels.push(i.toString());
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const day = d.date.getDate();
+                grouped[day] += d.totalCustomers;
+            });
+        } else {
+            // Group by month
+            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            for (let i = 0; i < 12; i++) {
+                labels.push(monthLabels[i]);
+                grouped[i] = 0;
+            }
+            data.forEach(d => {
+                const month = d.date.getMonth();
+                grouped[month] += d.totalCustomers;
+            });
+        }
+
+        const values = labels.map((label, i) => grouped[i]);
+
+        window.customerChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Customer',
+                    data: values,
+                    borderColor: '#1976d2',
+                    backgroundColor: 'rgba(25, 118, 210, 0.2)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: { color: '#555' },
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#555' },
+                        grid: { color: '#eee' }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#444'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        const today = new Date();
+        const maxDate = formatDate(today);
+
+        // Set max date to today for both inputs
+        $("#FromDate").attr("max", maxDate);
+        $("#ToDate").attr("max", maxDate);
+
+        // When FromDate changes
+        $("#FromDate").on("change", function () {
+            const fromDate = $(this).val();
+            $("#ToDate").attr("min", fromDate); // To date must be on/after From date
+        });
+
+        // When ToDate changes
+        $("#ToDate").on("change", function () {
+            const toDate = $(this).val();
+            $("#FromDate").attr("max", toDate); // From date must be on/before To date
+        });
+
+        $('#customDateModal').on('show.bs.modal', function () {
+            // Set max date to today for both inputs
+            $("#FromDate").attr("max", maxDate);
+            $("#ToDate").attr("max", maxDate).removeAttr("min");
+        });
+
+
+        loadDashboard();
+
+        function loadDashboard() {
+
+            $.ajax({
+                url: "/Home/Dashboard",
+                type: "GET",
+                data: {
+                    fromDate: GDFromDate,
+                    toDate: GDToDate
+                },
+                success: function (data) {
+                    $(".dashboard-partial").html(data);
+                },
+                error: function () {
+                    alert("Failed to load data.");
+                }
+            });
+        }
+
+
+
+        $("#time-main-filter").on("change", function () {
+
+            $("#FromDate").val("");
+            $("#ToDate").val("");
+
+            let dateFilter = $(this).val();
+
+            let fromDate = null;
+            let toDate = null; // Set to null for "All" option
+
+            let today = new Date();
+
+
+            if (dateFilter === "7") {
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 7);
+                toDate = today;
+            } else if (dateFilter === "30") {
+                fromDate = new Date(today);
+                fromDate.setDate(today.getDate() - 30);
+                toDate = today;
+            } else if (dateFilter === "currentMonth") {
+                fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month
+                toDate = today;
+            } else if (dateFilter === "today") {// Today
+                fromDate = today;
+                toDate = today;
+            }
+            else if (dateFilter === "customdate") {// Custom Date: Open modal
+                $("#customDateModal").modal("show");
+                return;// Stop execution here
+            }
+
+            // Convert dates to YYYY-MM-DD format for PostgreSQL
+            fromDate = fromDate ? fromDate.toISOString().slice(0, 19).replace("T", " ") : null;
+            toDate = toDate ? toDate.toISOString().slice(0, 19).replace("T", " ") : null;
+
+            $("#FromDate").val(fromDate);
+            $("#ToDate").val(toDate);
+
+            GDFromDate = fromDate;
+            GDToDate = toDate;
+
+            console.log("From Date: " + GDFromDate);
+            console.log("To Date: " + GDToDate);
+
+
+            loadDashboard();
+
+        });
+
+        $("#serachDate").on("click", function () {
+            if ($("#FromDate").val() > $("#ToDate").val()) {
+                toastr.error("To date should be greater than from date");
+                return;
+            }
+            else {
+                GDFromDate = $("#FromDate").val();
+                GDToDate = $("#ToDate").val();
+                loadDashboard();
+                $("#customDateModal").modal("hide");
+            }
+        });
+
+
+
+
+    });
+
+</script>

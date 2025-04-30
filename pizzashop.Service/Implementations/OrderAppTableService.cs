@@ -72,6 +72,8 @@ public class OrderAppTableService : IOrderAppTableService
                 {
                     waitingtoken.Isassigned = true;
                     waitingtoken.Noofpeople = (short)model.Noofperson;
+                    waitingtoken.Modifiedat = DateTime.Now;;
+                    waitingtoken.Modifiedby = loginid;
                     await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);
                 }
                 var customer = await _customerRepository.GetCustomerByEmail(waitingtoken.Customer.Email);
