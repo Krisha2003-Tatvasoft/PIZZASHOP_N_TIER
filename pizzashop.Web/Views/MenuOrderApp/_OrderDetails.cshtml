@@ -6,118 +6,125 @@
     string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
 }
 
-
-<div class="d-flex justify-content-between align-items-center">
-    <input type="hidden" value="@Model.Orderid" asp-for="Orderid">
-    <div class="d-flex justify-content-start align-items-center">
-        <div class="d-flex align-items-center justify-content-center p-1"
-            style="background-color:  #adc3e4; width:100px height:100px">
-            <img src="~/images/order-table.png" width="42px" height="42px">
-        </div>
-        <div class="d-flex flex-column ps-2 fs-6">
-            <span>@Model.Sectionname</span>
-            <span><b>Table: </b>@foreach(var table in Model.Tablenames)
-                {
-                    @table
-                }
-            </span>
-        </div>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-end gap-3">
-        @if (string.IsNullOrEmpty(token))
-        {
-            <div class="bill-top-btn scanner" data-orderid="@Model.Orderid">
-                <i class="bi bi-qr-code-scan"></i>
-            </div>
-            <div class=" bill-top-btn customer-details-button" data-orderid="@Model.Orderid">
-                <i class="bi bi-person-lines-fill"></i>
-            </div>
-        }
-        <div class="bill-top-btn order-wise-comment" data-orderid="@Model.Orderid">
-            <i class="bi bi-chat-left-text"></i>
-        </div>
-    </div>
-
+<div>
+    <button type="button" class="btn-close text-reset d-xl-none d-inline" data-bs-dismiss="offcanvas"
+        data-bs-target="#cart" aria-label="Close"></button>
 </div>
 
-<div class="w-100 pt-4">
-
-    <div class="d-flex text-secondary ">
-
-        <div class="d-flex justify-content-start w-50">
-            <h6><strong>Iteam</strong></h6>
-        </div>
-
-        <div class="d-flex justify-content-around align-items-center flex-row w-50">
-            <h6> <strong>Quantity</strong></h6>
-            <h6><strong>Amount</strong></h6>
-            <h6></h6>
-        </div>
-
-    </div>
-
-    <div id="order-items-container">
-        <!-- Dynamic order items will be appended here -->
-    </div>
-
-</div>
-
-<div class="border-bottom pt-3"></div>
-<div class="text-secondary mt-2">
-
-    <div class="d-flex justify-content-between fs-6">
-        <div>Sub Total :</div>
-        <div id="subtotal"></div>
-    </div>
-
-
-    <div id="taxBreakdown"></div>
-    <div id="flatTaxList" class="mt-2"></div>
-
-
-    <div>
-        <hr style="background-color: #1f73ae; height: 3px; border: 0;">
-        <div class="d-flex justify-content-between fw-bolder" style="color: #087cc4;">
-            <div class="fs-5">Total</div>
-            <div id="totalAmount"></div>
-        </div>
-
-        <div class="d-flex justify-content-between ">
-            <div class="fs-5 fw-bolder" style="color: #087cc4;">
-                Payment Method</div>
-            <div class="d-flex flex-row gap-3 fs-6 " style="font-weight: 500;">
-                <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="Cash" disabled checked>
-                    <span for="Cash">Cash</span>
-                </div>
-                <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="card" disabled>
-                    <span for="card">Card</span>
-                </div>
-                <div class="d-flex flex-row align-items-center gap-2">
-                    <input type="radio" id="UPI" disabled>
-                    <span for="UPI">UPI</span>
-                </div>
+<div class="p-2" style="border: 1px solid black;">
+    <div class="d-flex justify-content-between align-items-center">
+        <input type="hidden" value="@Model.Orderid" asp-for="Orderid">
+        <div class="d-flex justify-content-start align-items-center">
+            <div class="d-flex align-items-center justify-content-center p-1"
+                style="background-color:  #adc3e4; width:100px height:100px">
+                <img src="~/images/order-table.png" width="42px" height="42px">
+            </div>
+            <div class="d-flex flex-column ps-2 fs-6">
+                <span>@Model.Sectionname</span>
+                <span><b>Table: </b>@foreach(var table in Model.Tablenames)
+                    {
+                        @table
+                    }
+                </span>
             </div>
         </div>
 
+        <div class="d-flex align-items-center justify-content-end gap-3">
+            @if (string.IsNullOrEmpty(token))
+            {
+                <div class="bill-top-btn scanner" data-orderid="@Model.Orderid">
+                    <i class="bi bi-qr-code-scan"></i>
+                </div>
+                <div class=" bill-top-btn customer-details-button" data-orderid="@Model.Orderid">
+                    <i class="bi bi-person-lines-fill"></i>
+                </div>
+            }
+            <div class="bill-top-btn order-wise-comment" data-orderid="@Model.Orderid">
+                <i class="bi bi-chat-left-text"></i>
+            </div>
+        </div>
 
     </div>
-</div>
 
-<div class="mt-5 ps-5 d-flex flex-row gap-3 pb-3">
-    <button type="button" class="btn p-3 w-100 saveorder" @(string.IsNullOrEmpty(token) ? "" : "disabled")
-        id="search-btn" style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
-    <button type="button" class="btn p-3 clear-btn w-100 complete-button" @(string.IsNullOrEmpty(token) ? "" :
-                                                                                  "disabled") style="color:#087cc4;border-color:#087cc4;">Complete</button>
-    <button type="button" class="btn p-3 clear-btn w-100 generate-invoice" @(string.IsNullOrEmpty(token) ? "" :
-                                                                                   "disabled") style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
-        Invoice</button>
-</div>
-<div class="d-flex justify-content-end">
-    <button type="button" class="btn p-3 clear-btn w-40 cancel-button" @(string.IsNullOrEmpty(token) ? "" : "disabled")
-        style="color:#087cc4;border-color:#087cc4; ">cancel</button>
+    <div class="w-100 pt-4">
+
+        <div class="d-flex text-secondary ">
+
+            <div class="d-flex justify-content-start w-50">
+                <h6><strong>Iteam</strong></h6>
+            </div>
+
+            <div class="d-flex justify-content-around align-items-center flex-row w-50">
+                <h6> <strong>Quantity</strong></h6>
+                <h6><strong>Amount</strong></h6>
+                <h6></h6>
+            </div>
+
+        </div>
+
+        <div id="order-items-container">
+            <!-- Dynamic order items will be appended here -->
+        </div>
+
+    </div>
+
+    <div class="border-bottom pt-3"></div>
+    <div class="text-secondary mt-2">
+
+        <div class="d-flex justify-content-between fs-6">
+            <div>Sub Total :</div>
+            <div id="subtotal"></div>
+        </div>
+
+
+        <div id="taxBreakdown"></div>
+        <div id="flatTaxList" class="mt-2"></div>
+
+
+        <div>
+            <hr style="background-color: #1f73ae; height: 3px; border: 0;">
+            <div class="d-flex justify-content-between fw-bolder" style="color: #087cc4;">
+                <div class="fs-5">Total</div>
+                <div id="totalAmount"></div>
+            </div>
+
+            <div class="d-flex justify-content-between ">
+                <div class="fs-5 fw-bolder" style="color: #087cc4;">
+                    Payment Method</div>
+                <div class="d-flex flex-row gap-3 fs-6 " style="font-weight: 500;">
+                    <div class="d-flex flex-row align-items-center gap-2">
+                        <input type="radio" id="Cash" disabled checked>
+                        <span for="Cash">Cash</span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center gap-2">
+                        <input type="radio" id="card" disabled>
+                        <span for="card">Card</span>
+                    </div>
+                    <div class="d-flex flex-row align-items-center gap-2">
+                        <input type="radio" id="UPI" disabled>
+                        <span for="UPI">UPI</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="mt-5 ps-5 d-flex flex-row gap-3 pb-3">
+        <button type="button" class="btn p-3 w-100 saveorder" @(string.IsNullOrEmpty(token) ? "" : "disabled")
+            id="search-btn" style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
+        <button type="button" class="btn p-3 clear-btn w-100 complete-button" @(string.IsNullOrEmpty(token) ? "" :
+                                                                                          "disabled") style="color:#087cc4;border-color:#087cc4;">Complete</button>
+        <button type="button" class="btn p-3 clear-btn w-100 generate-invoice" @(string.IsNullOrEmpty(token) ? "" :
+                                                                                           "disabled") style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
+            Invoice</button>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn p-3 clear-btn w-40 cancel-button" @(string.IsNullOrEmpty(token) ? "" :
+                                                                                       "disabled") style="color:#087cc4;border-color:#087cc4; ">cancel</button>
+    </div>
+
 </div>
 
 
@@ -127,13 +134,13 @@
     var serverItems = @Html.Raw(JsonConvert.SerializeObject(Model.Items));
     var taxes = @Html.Raw(JsonConvert.SerializeObject(Model.Taxes)); // tax array
     var orderTaxes = @Html.Raw(JsonConvert.SerializeObject(Model.OrderTax));
-    OrderItem =[];
+    OrderItem = [];
     originalOrderItem = [];
     selectedFlatTaxIds = [];
     originalFlatTaxIds = [];
-    selectedModifiers ={};
+    selectedModifiers = {};
     OrderTax = [];
-   
+
     $(document).ready(function () {
 
         serverItems.forEach(item => {

@@ -21,7 +21,7 @@
                     <option value="30">Last 30 Days</option>
                     <option value="currentMonth">Current Month</option>
                     <option value="customdate">Custom Date</option>
-                     <option value="0" class="d-none">Custom Date</option>
+                    <option value="0" class="d-none">Custom Date</option>
                 </select>
                 <label>Duration</label>
             </div>
@@ -74,170 +74,332 @@
     let customerChartInstance;
     let lastSelectedFilter = null;
 
+
     function formatDate(date) {
         return date.toISOString().split("T")[0];
     }
 
-
     function renderRevenueChart(data) {
         const ctx = document.getElementById('revenueChart').getContext('2d');
-        if (window.revenueChartInstance) {
-            window.revenueChartInstance.destroy();
-        }
+        if (window.revenueChartInstance) window.revenueChartInstance.destroy();
 
-        // Parse date strings to Date objects
+        // 1) parse incoming dates
         data.forEach(d => d.date = new Date(d.date));
+        let dateFilter = $('#time-main-filter').val();
 
-        const minDate = new Date(Math.min(...data.map(d => d.date)));
-        const maxDate = new Date(Math.max(...data.map(d => d.date)));
+        // 2) decide grouping mode
+        let mode;
+        if (!GDFromDate || !GDToDate || dateFilter === "all") {
+            // ----> ALL TIME: group by actual data span
+            const dates = data.map(d => d.date.getTime());
+            const minDate = new Date(Math.min(...dates));
+            const maxDate = new Date(Math.max(...dates));
+            const sameDay = minDate.toDateString() === maxDate.toDateString();
+            const sameMonth = minDate.getFullYear() === maxDate.getFullYear()
+                && minDate.getMonth() === maxDate.getMonth();
+            const sameYear = minDate.getFullYear() === maxDate.getFullYear();
 
-        const sameDay = minDate.toDateString() === maxDate.toDateString();
-        const sameMonth = minDate.getFullYear() === maxDate.getFullYear() &&
-            minDate.getMonth() === maxDate.getMonth();
+            if (sameDay) mode = 'hour';
+            else if (sameMonth) mode = 'day';
+            else if (sameYear) mode = 'month';
+            else mode = 'monthYear';
+        }
+        else {
+            // ----> FILTERED: use GDFromDate/GDToDate + dateFilter
+            const from = new Date(GDFromDate),
+                to = new Date(GDToDate);
+            const sameDay = from.toDateString() === to.toDateString();
+            const sameMonth = from.getFullYear() === to.getFullYear()
+                && from.getMonth() === to.getMonth();
+            const sameYear = from.getFullYear() === to.getFullYear();
 
-        let labels = [];
-        let grouped = {};
-
-        if (sameDay) {
-            // Group by hour
-            for (let i = 0; i < 24; i++) {
-                labels.push(`${i}:00`);
-                grouped[i] = 0;
+            if (dateFilter === 'today') mode = 'hour';
+            else if (dateFilter === '7' || dateFilter === '30' || dateFilter === 'currentMonth')
+                mode = 'day';
+            else /* customdate */ {
+                if (sameDay) mode = 'hour';
+                else if (sameMonth) mode = 'day';
+                else if (sameYear) mode = 'month';
+                else mode = 'monthYear';
             }
-            data.forEach(d => {
-                const hour = d.date.getHours();
-                grouped[hour] += d.totalRevenue;
-            });
-        } else if (sameMonth) {
-            // Group by date
-            const daysInMonth = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0).getDate();
-            for (let i = 1; i <= daysInMonth; i++) {
-                labels.push(i.toString());
-                grouped[i] = 0;
+        }
+
+        // 3) build labels+groups exactly as before...
+        let labels = [], grouped = {};
+        let dateMap = {}; // for day mode: DD-MM format
+        if (mode === 'hour') {
+            for (let h = 0; h < 24; h++) { labels.push(`${h}:00`); grouped[h] = 0; }
+            data.forEach(d => grouped[d.date.getHours()] += d.totalRevenue);
+        }
+        else if (mode === 'day') {
+            let from, to;
+            if (dateFilter === "currentMonth") {
+                const today = new Date();
+                from = new Date(today.getFullYear(), today.getMonth(), 1);
+                to = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            } else {
+                from = new Date(GDFromDate);
+                to = new Date(GDToDate);
             }
+
+            for (let dt = new Date(from); dt <= to; dt.setDate(dt.getDate() + 1)) {
+                const dateStr = dt.toISOString().split('T')[0]; // yyyy-MM-dd
+                grouped[dateStr] = 0;
+                // Changed to "DD-MM" format
+                const day = dt.getDate().toString().padStart(2, '0');
+                const month = (dt.getMonth() + 1).toString().padStart(2, '0');
+                dateMap[dateStr] = `${day}-${month}`;
+            }
+
             data.forEach(d => {
-                const day = d.date.getDate();
-                grouped[day] += d.totalRevenue;
+                const dateStr = d.date.toISOString().split('T')[0];
+                if (grouped.hasOwnProperty(dateStr)) {
+                    grouped[dateStr] += d.totalRevenue;
+                }
             });
-        } else {
-            // Group by month
-            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        }
+        else if (mode === 'month') {
+            const M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            for (let i = 0; i < 12; i++) {
-                labels.push(monthLabels[i]);
-                grouped[i] = 0;
+            let from, to;
+            if (dateFilter === 'currentMonth') {
+                const today = new Date();
+                from = new Date(today.getFullYear(), today.getMonth(), 1);
+                to = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            } else if (dateFilter === 'customdate' && GDFromDate && GDToDate) {
+                from = new Date(GDFromDate);
+                to = new Date(GDToDate);
+            } else {
+                from = new Date(Math.min(...data.map(d => d.date.getTime())));
+                to = new Date(Math.max(...data.map(d => d.date.getTime())));
             }
+
+            // Initialize months between from and to
+            const start = new Date(from.getFullYear(), from.getMonth(), 1);
+            const end = new Date(to.getFullYear(), to.getMonth(), 1);
+            while (start <= end) {
+                const m = start.getMonth();
+                const y = start.getFullYear();
+                const key = `${y}-${m}`;
+                grouped[m] = 0; // grouped by numeric month index
+                dateMap[key] = `${M[m]} ${y}`; // label as "Jan 2025"
+                start.setMonth(start.getMonth() + 1);
+            }
+
             data.forEach(d => {
-                const month = d.date.getMonth();
-                grouped[month] += d.totalRevenue;
+                const key = `${d.date.getFullYear()}-${d.date.getMonth()}`;
+                if (grouped.hasOwnProperty(d.date.getMonth())) {
+                    grouped[d.date.getMonth()] += d.totalRevenue;
+                }
+            });
+        }
+        else /* monthYear */ {
+            data.forEach(d => {
+                const k = `${d.date.getFullYear()}-${d.date.getMonth()}`;
+                grouped[k] = (grouped[k] || 0) + d.totalRevenue;
             });
         }
 
-        const values = labels.map((label, i) => grouped[i]);
+        let values = [];
+        let finalLabels = [];
+        if (mode === 'hour') {
+            // For hour/month: Keep all labels regardless of values
+            finalLabels = [...labels];
+            values = finalLabels.map((_, i) => grouped[i] || 0);
+        }
+        else if (mode === 'month') {
+            const sortedKeys = Object.keys(dateMap).sort((a, b) => {
+                const [y1, m1] = a.split(`-`).map(Number), [y2, m2] = b.split(`-`).map(Number);
+                return y1 !== y2 ? y1 - y2 : m1 - m2;
+            });
+            finalLabels = sortedKeys.map(k => dateMap[k]);
+            values = sortedKeys.map(k => {
+                const m = Number(k.split('-')[1]);
+                return grouped[m] || 0;
+            });
+        }
+        else if (mode === 'day') {
+            const sortedKeys = Object.keys(grouped).sort();
+            finalLabels = sortedKeys.map(dateStr => dateMap[dateStr]);
+            values = sortedKeys.map(dateStr => grouped[dateStr] || 0);
+        }
+        else { // monthYear
+            const sortedKeys = Object.keys(grouped).sort((a, b) => {
+                const [y1, m1] = a.split(`-`).map(Number), [y2, m2] = b.split(`-`).map(Number);
+                return y1 !== y2 ? y1 - y2 : m1 - m2;
+            });
 
+            finalLabels = sortedKeys.map(k => {
+                const [y, m] = k.split('-').map(Number);
+                return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m] + ' ' + y;
+            });
+
+            values = sortedKeys.map(k => grouped[k] || 0);
+        }
+
+        // Replace labels with final version
+        labels = finalLabels;
+
+        // 5) render
         window.revenueChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Revenue',
-                    data: values,
-                    borderColor: '#4caf50',
-                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 2
+                labels, datasets: [{
+                    label: 'Revenue', data: values,
+                    borderColor: '#4caf50', backgroundColor: 'rgba(76,175,80,0.2)',
+                    tension: 0.4, fill: true, pointRadius: 2
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
+                responsive: true, maintainAspectRatio: false,
                 scales: {
-                    x: {
-                        ticks: { color: '#555' },
-                        grid: { display: false }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: { color: '#555' },
-                        grid: { color: '#eee' }
-                    }
+                    x: { ticks: { color: '#555' }, grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { color: '#555' }, grid: { color: '#eee' } }
                 },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#444'
-                        }
-                    }
-                }
+                plugins: { legend: { labels: { color: '#444' } } }
             }
         });
     }
+
+
+    // Customer chart—same logic, just swap totalRevenue→totalCustomers & color
     function renderCustomerChart(data) {
         const ctx = document.getElementById('customerChart').getContext('2d');
         if (window.customerChartInstance) {
             window.customerChartInstance.destroy();
         }
 
-        // Convert date strings to Date objects
+        // 1. Parse incoming date strings
         data.forEach(d => d.date = new Date(d.date));
+        let dateFilter = $('#time-main-filter').val();
 
-        const minDate = new Date(Math.min(...data.map(d => d.date)));
-        const maxDate = new Date(Math.max(...data.map(d => d.date)));
+        // 2. Determine grouping mode
+        let mode;
+        if (!GDFromDate || !GDToDate || dateFilter === "all") {
+            // ALL TIME: derive from data range
+            const times = data.map(d => d.date.getTime());
+            const minD = new Date(Math.min(...times));
+            const maxD = new Date(Math.max(...times));
+            const sameDay = minD.toDateString() === maxD.toDateString();
+            const sameMonth = minD.getFullYear() === maxD.getFullYear() && minD.getMonth() === maxD.getMonth();
+            const sameYear = minD.getFullYear() === maxD.getFullYear();
 
-        const sameDay = minDate.toDateString() === maxDate.toDateString();
-        const sameMonth = minDate.getFullYear() === maxDate.getFullYear() &&
-            minDate.getMonth() === maxDate.getMonth();
+            if (sameDay) mode = 'hour';
+            else if (sameMonth) mode = 'day';
+            else if (sameYear) mode = 'month';
+            else mode = 'monthYear';
+        }
+        else {
+            // FILTERED: based on GDFromDate/GDToDate & dateFilter
+            const from = new Date(GDFromDate),
+                to = new Date(GDToDate);
+            const sameDay = from.toDateString() === to.toDateString();
+            const sameMonth = from.getFullYear() === to.getFullYear() && from.getMonth() === to.getMonth();
+            const sameYear = from.getFullYear() === to.getFullYear();
 
-        let labels = [];
-        let grouped = {};
-
-        if (sameDay) {
-            // Group by hour
-            for (let i = 0; i < 24; i++) {
-                labels.push(`${i}:00`);
-                grouped[i] = 0;
+            if (dateFilter === "today") mode = 'hour';
+            else if (dateFilter === "7" || dateFilter === "30" || dateFilter === "currentMonth")
+                mode = 'day';
+            else /* customdate */ {
+                if (sameDay) mode = 'hour';
+                else if (sameMonth) mode = 'day';
+                else if (sameYear) mode = 'month';
+                else mode = 'monthYear';
             }
+        }
+
+        // 3. Build labels & group totals
+        let labels = [], grouped = {};
+        let dateMap = {}; // for day mode: DD-MM format
+        if (mode === 'hour') {
+            for (let h = 0; h < 24; h++) {
+                labels.push(`${h}:00`);
+                grouped[h] = 0;
+            }
+            data.forEach(d => grouped[d.date.getHours()] += d.totalCustomers);
+        }
+        else if (mode === 'day') {
+            let from, to;
+            if (dateFilter === "currentMonth") {
+                const today = new Date();
+                from = new Date(today.getFullYear(), today.getMonth(), 1);
+                to = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            } else {
+                from = new Date(GDFromDate);
+                to = new Date(GDToDate);
+            }
+
+            for (let dt = new Date(from); dt <= to; dt.setDate(dt.getDate() + 1)) {
+                const dateStr = dt.toISOString().split('T')[0]; // yyyy-MM-dd
+                grouped[dateStr] = 0;
+                // Changed to "DD-MM" format
+                const day = dt.getDate().toString().padStart(2, '0');
+                const month = (dt.getMonth() + 1).toString().padStart(2, '0');
+                dateMap[dateStr] = `${day}-${month}`;
+            }
+
             data.forEach(d => {
-                const hour = d.date.getHours();
-                grouped[hour] += d.totalCustomers;
+                const dateStr = d.date.toISOString().split('T')[0];
+                if (grouped.hasOwnProperty(dateStr)) {
+                    grouped[dateStr] += d.totalCustomers;
+                }
             });
-        } else if (sameMonth) {
-            // Group by date
-            const daysInMonth = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0).getDate();
-            for (let i = 1; i <= daysInMonth; i++) {
-                labels.push(i.toString());
-                grouped[i] = 0;
+        }
+        else if (mode === 'month') {
+            const M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            for (let m = 0; m < 12; m++) {
+                labels.push(M[m]);
+                grouped[m] = 0;
             }
+            data.forEach(d => grouped[d.date.getMonth()] += d.totalCustomers);
+        }
+        else {
             data.forEach(d => {
-                const day = d.date.getDate();
-                grouped[day] += d.totalCustomers;
-            });
-        } else {
-            // Group by month
-            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            for (let i = 0; i < 12; i++) {
-                labels.push(monthLabels[i]);
-                grouped[i] = 0;
-            }
-            data.forEach(d => {
-                const month = d.date.getMonth();
-                grouped[month] += d.totalCustomers;
+                const k = `${d.date.getFullYear()}-${d.date.getMonth()}`;
+                grouped[k] = (grouped[k] || 0) + d.totalCustomers;
             });
         }
 
-        const values = labels.map((label, i) => grouped[i]);
+        let values = [];
+        let finalLabels = [];
+        if (mode === 'hour' || mode === 'month') {
+            // For hour/month: Keep all labels regardless of values
+            finalLabels = [...labels];
+            values = finalLabels.map((_, i) => grouped[i] || 0);
+        }
+        else if (mode === 'day') {
+            const sortedKeys = Object.keys(grouped).sort();
+            finalLabels = sortedKeys.map(dateStr => dateMap[dateStr]);
+            values = sortedKeys.map(dateStr => grouped[dateStr] || 0);
+        }
+        else { // monthYear
+            const sortedKeys = Object.keys(grouped).sort((a, b) => {
+                const [y1, m1] = a.split(`-`).map(Number), [y2, m2] = b.split(`-`).map(Number);
+                return y1 !== y2 ? y1 - y2 : m1 - m2;
+            });
 
+            finalLabels = sortedKeys.map(k => {
+                const [y, m] = k.split('-').map(Number);
+                return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][m] + ' ' + y;
+            });
+
+            values = sortedKeys.map(k => grouped[k] || 0);
+        }
+
+        // Replace labels with final version
+        labels = finalLabels;
+
+
+        // 5. Render Chart.js
         window.customerChartInstance = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: labels,
+                labels,
                 datasets: [{
-                    label: 'Customer',
+                    label: 'Customers',
                     data: values,
-                    borderColor: '#1976d2',
-                    backgroundColor: 'rgba(25, 118, 210, 0.2)',
+                    borderColor: '#2196f3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.2)',
                     tension: 0.4,
                     fill: true,
                     pointRadius: 2
@@ -247,28 +409,13 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: {
-                        ticks: { color: '#555' },
-                        grid: { display: false }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: { color: '#555' },
-                        grid: { color: '#eee' }
-                    }
+                    x: { ticks: { color: '#555' }, grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { color: '#555' }, grid: { color: '#eee' } }
                 },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#444'
-                        }
-                    }
-                }
+                plugins: { legend: { labels: { color: '#444' } } }
             }
         });
     }
-
-
 
     $(document).ready(function () {
 
@@ -300,7 +447,7 @@
 
         loadDashboard();
 
-      
+
 
         function loadDashboard() {
 
@@ -352,7 +499,7 @@
             }
             else if (dateFilter === "customdate") {// Custom Date: Open modal
                 $("#customDateModal").modal("show");
-                 $("#time-main-filter").val("0"); 
+                $("#time-main-filter").val("0");
                 return;// Stop execution here
             }
 

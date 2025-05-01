@@ -9,11 +9,11 @@
   z-index: 0 !important;
 }
 
-.offcanvas-xxl.offcanvas-end {
+.offcanvas-xl.offcanvas-end {
   top: 50px !important;
 }
 
-.offcanvas-xxl.offcanvas-end.show {
+.offcanvas-xl.offcanvas-end.show {
   height: calc(100vh - 50px) !important;
   overflow-y: auto;
 }
