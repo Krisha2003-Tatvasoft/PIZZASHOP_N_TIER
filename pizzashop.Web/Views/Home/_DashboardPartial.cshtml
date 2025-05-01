@@ -127,20 +127,19 @@
                                 ++@index1;
                                 <div class="d-flex flex-row align-items-center gap-3 border-bottom py-2">
                                     <span>#@index1</span>
-                                    <div><img class="rounded-circle"
-                                            src="@(item.Itemimg != null ? Url.Content(item.Itemimg) 
-                                            : Url.Content("~/images/dining-menu.png"))"
-                                            style="width:50px;height:50px;object-fit:cover;" />
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <h6>@item.Itemname</h6>
-                                        <div class="d-flex flex-row gap-1 align-items-center">
-                                            <img src="~/images/menu-icon.png" style="height:20px;width:20px" />
-                                            <span>@item.TotalOrderItem order</span>
-                                        </div>
-                                    </div>
+                                    <div><img class="rounded-circle" src="@(item.Itemimg != null ? Url.Content(item.Itemimg) 
+                                                                                                                 : Url.Content("~/images/dining-menu.png"))"
+                                    style="width:50px;height:50px;object-fit:cover;" />
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6>@item.Itemname</h6>
+                                <div class="d-flex flex-row gap-1 align-items-center">
+                                    <img src="~/images/menu-icon.png" style="height:20px;width:20px" />
+                                    <span>@item.TotalOrderItem order</span>
                                 </div>
-                            }
+                            </div>
+                        </div>
+                                                }
                         }
                     </div>
                 </div>
@@ -163,17 +162,17 @@
                                 <div class="d-flex flex-row align-items-center gap-3 border-bottom py-2">
                                     <span>#@index2</span>
                                     <div><img class="rounded-circle" src="@(item.Itemimg != null ? Url.Content(item.Itemimg) 
-                                            : Url.Content("~/images/dining-menu.png"))"
-                                            style="width:50px;height:50px;object-fit:cover;" /></div>
-                                    <div class="d-flex flex-column">
-                                        <h6>@item.Itemname</h6>
-                                        <div class="d-flex flex-row gap-1 align-items-center">
-                                            <img src="~/images/menu-icon.png" style="height:20px;width:20px" />
-                                            <span>@item.TotalOrderItem order</span>
-                                        </div>
-                                    </div>
+                                                                                                                 : Url.Content("~/images/dining-menu.png"))"
+                                    style="width:50px;height:50px;object-fit:cover;" /></div>
+                            <div class="d-flex flex-column">
+                                <h6>@item.Itemname</h6>
+                                <div class="d-flex flex-row gap-1 align-items-center">
+                                    <img src="~/images/menu-icon.png" style="height:20px;width:20px" />
+                                    <span>@item.TotalOrderItem order</span>
                                 </div>
-                            }
+                            </div>
+                        </div>
+                                                }
                         }
                     </div>
                 </div>
@@ -226,6 +225,24 @@
     var revenueGrowthData = @Html.Raw(Json.Serialize(Model.RevenueGrowthData));
     var customerGrowthData = @Html.Raw(Json.Serialize(Model.CustomerGrowthData));
 
-    renderRevenueChart(revenueGrowthData);
-    renderCustomerChart(customerGrowthData);
+    renderChart({
+        canvasId: 'revenueChart',
+        data: revenueGrowthData,
+        valueKey: 'totalRevenue',
+        label: 'Revenue',
+        borderColor: '#4caf50',
+        backgroundColor: 'rgba(76,175,80,0.2)',
+         maxLabels: 12 
+    });
+
+    renderChart({
+        canvasId: 'customerChart',
+        data: customerGrowthData,
+        valueKey: 'totalCustomers',
+        label: 'Customers',
+        borderColor: '#2196f3',
+        backgroundColor: 'rgba(33,150,243,0.2)',
+        maxLabels: 12 
+    });
+
 </script>

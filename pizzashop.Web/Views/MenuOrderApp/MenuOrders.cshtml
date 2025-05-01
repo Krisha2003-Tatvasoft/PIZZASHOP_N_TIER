@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <div class="d-flex gap-3 justify-content-center justify-content-sm-end flex-sm-nowrap flex-wrap">
+      <div class="d-flex gap-3 justify-content-center justify-content-sm-center flex-sm-nowrap flex-wrap">
         <div class="d-flex flex-row  align-items-center">
           <span class="dot me-2" style="background-color: green;border-color: green"></span>
           <span>Vegetarian</span>
@@ -46,7 +46,7 @@
         </div>
         @if (!string.IsNullOrEmpty(orderId))
         {
-          <button class="btn d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart"
+          <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart"
             aria-controls="cart" style="background-color:#adc3e4; width:50px height:30px">
             <i class="bi bi-cart3"></i>
           </button>
@@ -55,14 +55,14 @@
 
     </div>
 
-    <div class="d-flex flex-wrap justify-content-lg-start justify-content-center w-100 gap-4 item-list">
+    <div class="row  item-list">
 
     </div>
   </div>
 
   @if (!string.IsNullOrEmpty(orderId))
   {
-    <div class="offcanvas-xl offcanvas-end order-details-partial card bg-white p-3 w-100" style="height:100%;"
+    <div class="offcanvas-lg offcanvas-end order-details-partial card bg-white p-3 w-100" style="height:100%;"
       id="cart">
    
     </div>
