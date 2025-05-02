@@ -63,7 +63,7 @@ public class TableService : ITableService
             {
                 Tablename = viewmodel.Tablename,
                 Capacity = viewmodel.Capacity,
-                tablestatus = viewmodel.tablestatus,
+                tablestatus = 0,
                 Sectionid = viewmodel.Sectionid,
                 Createdby = loginId
             };
@@ -100,7 +100,7 @@ public class TableService : ITableService
             table.Tablename = viewmodel.Tablename;
             table.Capacity = viewmodel.Capacity;
             table.Sectionid = viewmodel.Sectionid;
-            table.tablestatus = viewmodel.tablestatus;
+            // table.tablestatus = viewmodel.tablestatus;
             table.Modifiedby = loginId;
 
             await _tableRepository.UpdateTable(table);

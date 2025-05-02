@@ -9,22 +9,53 @@
   z-index: 0 !important;
 }
 
-.offcanvas-lg.offcanvas-end {
+.offcanvas-xl.offcanvas-end {
   top: 50px !important;
 }
 
-.offcanvas-lg.offcanvas-end.show {
+.offcanvas-xl.offcanvas-end.show {
   height: calc(100vh - 50px) !important;
   overflow-y: auto;
 }
 
 .item-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 1rem; /* you can adjust this or use Bootstrap gap classes */
   width: 100%;
 }
 
+.row {
+  --bs-gutter-x: 0rem;
+  max-height: calc(100vh - 120px);
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 3px; /* Adjust scrollbar width */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.item-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-rate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .categoryList {
   width: 220px;
@@ -93,12 +124,13 @@
 }
 
 .item-img {
-  width: 89px;
-  height: 89px;
+  width: 69px;
+  height: 69px;
   overflow: hidden;
   border-radius: 8px;
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
 }
+
 .type-color-green {
   background: linear-gradient(225deg, #3d8f1c 50%, rgba(255, 255, 255, 1) 50%);
 }
@@ -108,16 +140,15 @@
 }
 
 .type-color-vegan {
-  background: linear-gradient(225deg, orange 50%, rgba(255, 255, 255, 1) 50%);
+  background: linear-gradient(225deg, #f7d74f 50%, rgba(255, 255, 255, 1) 50%);
 }
 
 .all-type {
   transition: rotate(90deg);
   width: 35px;
-  height: 31px;
+  height: 35px;
   border-top-right-radius: 0.5rem;
 }
-
 .category:hover {
   color: white !important;
   background-color: #087cc4;

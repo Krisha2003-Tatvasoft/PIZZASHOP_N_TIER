@@ -35,7 +35,7 @@ public class MenuOrderAppController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public IActionResult MenuOrders()
     {
-        
+
         string? token = Request.Cookies["CustomerToken"];
         if (string.IsNullOrEmpty(token))
         {
@@ -50,9 +50,9 @@ public class MenuOrderAppController : Controller
             {
                 return RedirectToAction("Error", "Error", new { statusCode = 404 });
             }
-            return View();   
+            return View();
         }
-       
+
     }
 
     [HttpGet]
@@ -107,7 +107,7 @@ public class MenuOrderAppController : Controller
     }
 
     [HttpPost]
-    [CustomAuthorize("", "", new string[] { "Account Manager" })]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public async Task<IActionResult> SaveOrder([FromBody] Bill model)
     {
         if (model == null || model.Items == null)
@@ -118,7 +118,6 @@ public class MenuOrderAppController : Controller
 
         return Ok(new { success = success, message = message });
     }
-
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
@@ -225,7 +224,7 @@ public class MenuOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetMenu(int orderId, string token)
     {
-       
+
         var tokens = _jwtService.ValidateToken(token);
         if (tokens != null)
         {

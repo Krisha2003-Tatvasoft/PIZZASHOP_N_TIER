@@ -14,16 +14,17 @@
   </div>
 </div>
 
-<div class="d-flex flex-column flex-lg-row gap-4 w-100">
+<div class="d-flex flex-row gap-4 w-100">
 
   <div class="main-content w-100">
-    <div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
-      <div class="d-flex align-items-center justify-content-start">
-        <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
-          aria-controls="categoryList">
+
+    <div class="d-block d-sm-flex  justify-content-between mb-3 align-items-center flex-wrap">
+
+      <div class="d-flex align-items-center mb-2 mb-sm-0">
+        <button class="btn d-lg-none px-0 py-0 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
+          aria-controls="categoryList" style="background-color:lightgrey; width:30px;height:30px; border-radius:5%;>
           <i class="fs-3 bi bi-list"></i>
         </button>
-
         <div class="search-field position-relative">
           <input class="search form-control me-2 border-0" type="search" placeholder="Search" id="searchInput"
             aria-label="Search">
@@ -31,44 +32,45 @@
         </div>
       </div>
 
-      <div class="d-flex gap-3 justify-content-center justify-content-sm-center flex-sm-nowrap flex-wrap">
-        <div class="d-flex flex-row  align-items-center">
-          <span class="dot me-2" style="background-color: green;border-color: green"></span>
+      <div class="d-flex flex-row gap-1 justify-content-center justify-content-sm-end ms-auto"> 
+        <div class="d-flex flex-row align-items-center">
+          <span class="dot me-1" style="background-color: green;border-color: green"></span>
           <span>Vegetarian</span>
         </div>
         <div class="d-flex flex-row align-items-center">
-          <span class="dot me-2" style="background-color: red;border:4px solid red "></span>
+          <span class="dot me-1" style="background-color: red;border:4px solid red "></span>
           <span>Non-Vegetarian</span>
         </div>
         <div class="d-flex flex-row align-items-center">
-          <span class="dot me-2" style="background-color: orange;border-color: orange;"></span>
+          <span class="dot me-1" style="background-color: orange;border-color: orange;"></span>
           <span>Vegan</span>
         </div>
-        @if (!string.IsNullOrEmpty(orderId))
-        {
-          <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart"
-            aria-controls="cart" style="background-color:#adc3e4; width:50px height:30px">
-            <i class="bi bi-cart3"></i>
-          </button>
-        }
       </div>
+    </div>
+
+    <div class="row overflow-y-auto  item-list p-2">
 
     </div>
 
-    <div class="row  item-list">
 
-    </div>
   </div>
 
   @if (!string.IsNullOrEmpty(orderId))
   {
-    <div class="offcanvas-lg offcanvas-end order-details-partial card bg-white p-3 w-100" style="height:100%;"
-      id="cart">
-   
+    <div class="offcanvas-xl offcanvas-end order-details-partial card w-100" style="height:100%; background-color:rgba(0, 0, 0, 0.103);" id="cart">
+
     </div>
   }
 
 </div>
+
+@if (!string.IsNullOrEmpty(orderId))
+{
+  <button class="btn d-xl-none px-0 py-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart" aria-controls="cart"
+    style="background-color:#adc3e4; width:50px; height:50px; border-radius:5%; box-shadow: 0px 0px 5px #000000; z-index: 5;position:fixed; bottom: 25px; right: 25px;">
+    <i class="bi bi-cart3 fs-1 mt-0"></i>
+  </button>
+}
 
 <div class="modifier-list"></div>
 
@@ -144,7 +146,7 @@
         <a class="delete-cat">
           <button type="button" class="btn btn-primary cancel-order-yes">YES</button>
         </a>
-        <button type="button" class="btn btn-danger">NO</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
       </div>
     </div>
   </div>
@@ -169,7 +171,7 @@
         <a class="delete-cat">
           <button type="button" class="btn btn-primary complele-order-yes">YES</button>
         </a>
-        <button type="button" class="btn btn-danger">NO</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
       </div>
     </div>
   </div>
