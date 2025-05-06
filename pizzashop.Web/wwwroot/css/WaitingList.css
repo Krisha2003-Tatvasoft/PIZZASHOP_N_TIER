@@ -21,6 +21,19 @@
     display: block;
 }
 
+.overflow-y-auto::-webkit-scrollbar {
+  width: 3px; /* Adjust scrollbar width */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
 
 .tab {
     display: flex;

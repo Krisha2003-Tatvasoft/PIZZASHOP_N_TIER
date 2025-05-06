@@ -117,9 +117,25 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         return (true, "WaitingToken Created Sucessfully.");
     }
 
-    public async Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId)
+    public async Task<List<WaitingListTable>> WaitingListBySectionId(List<int> sectionId)
     {
-        var waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
+        var waiting = new List<Waitingtoken>();
+        if (sectionId == null || sectionId.Count == 0)
+        {
+            waiting = await _waitingTokenRepository.GetWaitingList();
+        }
+        else
+        {
+            foreach (var id in sectionId)
+            {
+                var waitingForSec = await _waitingTokenRepository.WaitingListBySectionId(id);
+                waiting.AddRange(waitingForSec);
+            }
+        }
+        if (waiting == null || waiting.Count == 0)
+        {
+            return new List<WaitingListTable>();
+        }
 
         var waitingList = waiting
         .Select(w => new WaitingListTable
@@ -142,7 +158,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             Email = wt.Customer.Email,
             Phoneno = wt.Customer.Phoneno,
             Noofperson = (short)wt.Noofpeople,
-            Sectionid = wt.Sectionid,
+            Sectionid = new List<int> { wt.Sectionid },
             Waitingtokenid = wt.Waitingtokenid,
         };
         return AssignTable;
@@ -276,7 +292,6 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             if (waitingtoken != null)
             {
                 waitingtoken.Isassigned = true;
-                waitingtoken.Sectionid = model.Sectionid;
                 waitingtoken.Modifiedat = DateTime.Now;
                 waitingtoken.Modifiedby = loginid;
                 await _waitingTokenRepository.UpdateWaitingToken(waitingtoken);

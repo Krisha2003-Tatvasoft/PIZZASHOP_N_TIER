@@ -33,7 +33,7 @@ public class OrderAppTableService : IOrderAppTableService
         _tableRepository = tableRepository;
     }
 
-    public async Task<AssignTable> AssignTable(int id)
+    public async Task<AssignTable> AssignTable(List<int> id)
     {
         AssignTable model = new AssignTable
         {

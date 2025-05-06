@@ -257,6 +257,267 @@
             });
 
 
+        let selectedSections = [];
+
+        function formatTimeDiff(createdTime) {
+            const now = new Date();
+            const diffMs = now - createdTime;
+
+            if (diffMs < 0) return ''; // in case of future date
+
+            const totalMinutes = Math.floor(diffMs / 60000);
+            const hrs = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+
+            return `${hrs} hrs ${mins} min`;
+        }
+
+        function updateWaitingTimes() {
+            $('.waiting-time').each(function () {
+                const timeStr = $(this).data('time');
+                if (timeStr) {
+                    const createdAt = new Date(timeStr);
+                    const formatted = formatTimeDiff(createdAt);
+                    $(this).text(formatted);
+                }
+            });
+        }
+
+        // Initial run
+        updateWaitingTimes();
+
+        // Update every second
+        setInterval(updateWaitingTimes, 1000);
+
+         $(document).on("click", ".edit-wt", function (e) {
+            e.preventDefault();
+            var WTid = $(this).data("wt-id");
+
+
+            $.ajax({
+                url: "/WaitingList/EditWT",
+                type: "GET",
+                data: { id: WTid },
+                success: function (data) {
+                    $(".modal-editWT").html(data);
+                    $("#editWT").modal("show");
+                },
+                error: function () {
+                    alert("failed to reload modal");
+                }
+            });
+
+        });
+
+        $(document).on("click", ".delete-WT-link", function (e) {
+            var Waitingtokenid = $(this).data("wt-id");
+            var sectioid = $(this).data("sectioid");
+
+            $("#hidden").val(Waitingtokenid);
+            $("#sectionid").val(sectioid);
+
+        });
+
+
+        @* assign table *@
+
+            $(document).on("click", ".assign-table-link", function (e) {
+                e.preventDefault();
+                var sectionid = $(this).data("sectionid");
+                var Waitingtokenid = $(this).data("wt-id");
+
+                $.ajax({
+                    url: "/WaitingList/AssignTable",
+                    type: "GET",
+                    success: function (data) {
+                        $("#assign-table-model").html(data);
+                        $("#AssignTable").modal("show");
+                        $(".waitingToken").val(Waitingtokenid);
+                    },
+                    error: function () {
+                        alert("failed to reload modal");
+                    }
+                });
+
+
+                $("#sectionDropdownMenu").empty();
+                selectedSections = [];
+                @* $("#Sectionid").append('<option selected disabled value="">Select Section</option>'); *@
+
+                    $("#tableDropdownMenu").empty();
+                $("#tableDropdownBtn").html("Select Tables");
+
+                selectedTables = [];
+
+
+                // Fetch and repopulate section options
+                $.get("/WaitingList/GetSection", function (data) {
+                    $.each(data, function (index, section) {
+                        var sectioid = $("#sectionDropdownBtn").val();
+                        const isChecked = section.value == sectionid ? 'checked' : '';
+                        $("#sectionDropdownMenu").append(`
+                            <li>
+                              <div class="form-check mx-2 w-100">
+                                 <input class="form-check-input section-checkbox" type="checkbox" value="${section.value}" id="section_${section.value}" ${isChecked}>
+                                 <label class="form-check-label w-100"  for="section_${section.value}">${section.text}</label>
+                               </div>
+                             </li>
+                            `);
+
+                        if (section.value == sectionid) {
+                            selectedSections.push(section.value);
+                            loadTablesForSection(section.value);   // <-- this line makes sure its tables are loaded
+                        }
+                    });
+                    updateSectionDropdownText();
+                });
+
+            });
+
+
+
+        function loadTablesForSection(sectioid) {
+            $.get("/WaitingList/GetTable?sectioid=" + sectioid, function (data) {
+                $.each(data, function (index, table) {
+                    $("#tableDropdownMenu").append(`
+                <li data-section="${sectioid}">
+                    <div class="form-check mx-2 w-100">
+                        <input class="form-check-input table-checkbox" type="checkbox" value="${table.value}" id="table_${table.value}">
+                        <label class="form-check-label w-100" for="table_${table.value}">${table.text}</label>
+                    </div>
+                </li>
+            `);
+                });
+                updateDropdownText();  // <-- update table dropdown button text
+            });
+        }
+
+
+        let selectedTables = [];
+
+
+        // Handle checkbox selection/deselection and update dropdown content
+        $(document).on("change", ".table-checkbox", function (e) {
+            const value = $(this).val();
+            const label = $(this).next("label").text();
+            if ($(this).is(":checked")) {
+                selectedTables.push({ id: value, label: label });
+            } else {
+                selectedTables = selectedTables.filter(table => table.id !== value);
+            }
+            updateDropdownText();
+        });
+
+        $(document).on('click', '.table-checkbox-input, .table-checkbox-label', function (e) {
+            e.stopPropagation();
+        });
+
+
+
+        function updateDropdownText() {
+            if (selectedTables.length === 0) {
+                $("#tableDropdownBtn").html("Select Tables");
+                $(".table-list").text("Select At least 1 table.")
+            } else if (selectedTables.length === 1) {
+                $("#tableDropdownBtn").html(`<span class=" selected-item-pill">${selectedTables[0].label}</span>`);
+                $(".table-list").text("");
+            } else {
+                $("#tableDropdownBtn").html(
+                    `<span class=" selected-item-pill">${selectedTables[0].label}</span>` +
+                    `<span class=" others-count">+${selectedTables.length - 1} selected</span>`
+                );
+                $(".table-list").text("");
+            }
+        }
+
+
+
+        function updateSectionDropdownText() {
+            if (selectedSections.length === 0) {
+                $("#sectionDropdownBtn").html("Select Sections");
+            } else if (selectedSections.length === 1) {
+                const sectionLabel = $(`#section_${selectedSections[0]}`).next("label").text();
+                $("#sectionDropdownBtn").html(`<span class="selected-item-pill">${sectionLabel}</span>`);
+            } else {
+                const sectionLabel = $(`#section_${selectedSections[0]}`).next("label").text();
+                $("#sectionDropdownBtn").html(`<span class="selected-item-pill">${sectionLabel}</span><span class="others-count">+${selectedSections.length - 1} </span>`);
+            }
+        }
+
+        $(document).on("change", ".section-checkbox", function () {
+            const value = $(this).val();
+            if ($(this).is(":checked")) {
+                if (!selectedSections.includes(value)) selectedSections.push(value);
+                loadTablesForSection(value);
+            } else {
+                selectedSections = selectedSections.filter(id => id !== value);
+                removeTablesForSection(value);
+            }
+            updateSectionDropdownText();
+        });
+
+        function removeTablesForSection(sectioid) {
+            $(`#tableDropdownMenu li[data-section='${sectioid}']`).remove();
+            selectedTables = selectedTables.filter(t => {
+                const checkbox = $(`#table_${t.id}`);
+                return checkbox.closest("li").attr("data-section") !== sectioid;
+            });
+            updateDropdownText();
+        }
+
+
+
+        function redirectToMenuOrders(orderId) {
+            window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
+        }
+
+        $(document).on("click", ".Assign-tables-yes", function () {
+
+            let tableIds = selectedTables.map(t => t.id);
+            console.log(tableIds.length)
+            if (tableIds.length <= 0) {
+                $(".table-list").text("Select At least 1 table.")
+            }
+            else {
+                let sectionId = $("#Sectionid").val();
+                if ($("#assignTable-form").valid()) {
+                    var formData = new FormData($("#assignTable-form")[0]);
+                    formData.append("TableIds", JSON.stringify(tableIds));
+
+
+                    $.ajax({
+                        url: "/WaitingList/AssignTablePost",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.success) {
+                                $("#assignTable-form")[0].reset();
+                                $("#AssignTable").modal("hide");
+                                redirectToMenuOrders(response.orderid);
+                            }
+                            else {
+                                toastr.error(response.message);
+                            }
+
+                        },
+                        error: function (error) {
+                            console.error("Error in assign table:", error);
+                        }
+                    });
+
+
+                    // Now you can use `tableIds` array to send in your request
+                    console.log("Selected Table IDs:", tableIds);
+                    console.log("Section ID:", sectionId);
+
+                }
+            }
+        });
+
+
 
 
 

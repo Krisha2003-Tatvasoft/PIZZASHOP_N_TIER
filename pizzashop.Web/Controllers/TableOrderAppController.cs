@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
@@ -30,7 +31,7 @@ public class TableOrderAppController : Controller
 
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> TablesOrder()
     {
         var tableSectionData = await _SectionService.OrderTableViews();
@@ -41,14 +42,14 @@ public class TableOrderAppController : Controller
     }
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> AddWaitingToken(int id)
     {
         return PartialView("_AddWaitingToken", await _orderAppWaitingTokenService.AddWaitingToken(id));
     }
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> GetCustomerByEmail(string email)
     {
         var customers = await _cutomerService.GetCustomerByEmail(email);
@@ -70,7 +71,7 @@ public class TableOrderAppController : Controller
 
 
     [HttpPost]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> AddWTPost(AddWaitingToken model)
     {
         if (ModelState.IsValid)
@@ -97,22 +98,22 @@ public class TableOrderAppController : Controller
 
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
-    public async Task<IActionResult> GetWaitingListParial(int id)
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
+    public async Task<IActionResult> GetWaitingListParial(List<int> id)
     {
         return PartialView("_WaitingList", await _orderAppWaitingTokenService.WaitingListBySectionId(id));
     }
 
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
-    public async Task<IActionResult> AssignTable(int id)
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
+    public async Task<IActionResult> AssignTable(List<int> id)
     {
         return PartialView("_AssignTable", await _orderAppTableService.AssignTable(id));
     }
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> GetCustomerByWaitingToken(int Id)
     {
 
@@ -137,10 +138,9 @@ public class TableOrderAppController : Controller
     }
 
     [HttpPost]
-    [CustomAuthorize("", "", new string[] { "Account Manager"})]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> assignTablePost(AssignTable model)
     {
-
         if (ModelState.IsValid)
         {
             CookieData user = SessionUtils.GetUser(HttpContext);
@@ -166,9 +166,14 @@ public class TableOrderAppController : Controller
         else
         {
 
-            // If model is invalid, return the same view with validation messages
-            return Json(new { message = "Validation Error." });
-            // return PartialView("_AddTable", model);
+            foreach (var entry in ModelState)
+            {
+                foreach (var error in entry.Value.Errors)
+                {
+                    Console.WriteLine($"Field: {entry.Key}, Error: {error.ErrorMessage}");
+                }
+            }
+            return BadRequest(ModelState);
         }
 
     }

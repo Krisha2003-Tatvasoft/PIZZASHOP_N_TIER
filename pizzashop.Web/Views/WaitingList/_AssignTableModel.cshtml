@@ -11,31 +11,35 @@
             <form id="assignTable-form">
                 <div class="modal-body d-flex flex-column flex-sm-row justify-content-center gap-3">
                     <input type="hidden" class="waitingToken" asp-for="Waitingtokenid">
-                    <input type="hidden" id="SectionId" value="">
-                    <div class="form-floating mb-2 w-100 ">
-                        <select class="form-select Sectionid " asp-for=Sectionid id="Sectionid">
-                            <option value="">Select Section</option>
-                        </select>
-                        <label for="Sectionid">Section*</label>
-                      <span class="text-danger" asp-validation-for="Sectionid"></span>
+                    <div class="form-floating w-100 position-relative mb-2">
+                        <div class="dropdown w-100">
+                            <button class="custom-select-dropdown" type="button" id="sectionDropdownBtn"  asp-for="sectionid"
+                                data-bs-toggle="dropdown" aria-expanded="false"  data-bs-auto-close="outside">
+                                Select Sections
+                            </button>
+                            <ul class="dropdown-menu w-100 overflow-y-auto" id="sectionDropdownMenu" 
+                                style="max-height: 200px;overflow-x: hidden;">
+                                <!-- Section checkboxes will be added here -->
+                            </ul>
+                        </div>
                     </div>
                     <div class="form-floating w-100 position-relative">
                         <div class="dropdown w-100">
-                            <button class="custom-select-dropdown" type="button" id="tableDropdownBtn"
+                            <button class="custom-select-dropdown" type="button" id="tableDropdownBtn" 
+                            data-bs-auto-close="outside"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 Select Tables
                             </button>
-                            <ul class="dropdown-menu w-100" id="tableDropdownMenu"
-                                style="max-height: 200px; overflow-y: auto;">
+                            <ul class="dropdown-menu w-100 overflow-y-auto" id="tableDropdownMenu"
+                                style="max-height: 200px;overflow-x: hidden;">
                                 <!-- Table checkboxes will be added here dynamically -->
                             </ul>
                         </div>
-                 <span class="text-danger text-end table-list"></span>
+                        <span class="text-danger text-end table-list"></span>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-center justify-content-sm-end  gap-2">
-                    <button type="button" class="btn btn-primary Assign-tables-yes"
-                       >Assign</button>
+                    <button type="button" class="btn btn-primary Assign-tables-yes">Assign</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
             </form>
         </div>

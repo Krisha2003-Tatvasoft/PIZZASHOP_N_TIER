@@ -100,7 +100,7 @@ else{
     <div class="d-flex align-items-center gap-2">
         <span class="d-none d-sm-inline px-1">
             Showing @(ViewBag.totalMoidifier > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
-            - @(ViewBag.totalitem > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+            - @(ViewBag.totalMoidifier > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
                         ViewBag.totalMoidifier) :
                         0)
             of @ViewBag.totalMoidifier
@@ -149,7 +149,7 @@ else{
             </div>
             <div class="modal-footer d-flex justify-content-center gap-2">
                 <button type="button" class="btn btn-primary delete-modifier" data-bs-dismiss="modal">YES</button>
-                <button type="button" class="btn btn-danger">NO</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>

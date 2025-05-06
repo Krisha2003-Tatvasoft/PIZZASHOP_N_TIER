@@ -36,7 +36,7 @@
         border: 0.5px solid #ced4da;
         border-radius: 999px;
         /* large enough to create a pill */
-        font-size: 0.5rem;
+        font-size: 0.2rem;
         color: #495057;
     }
 
@@ -49,57 +49,56 @@
 </style>
 @if (Model != null && Model.Count > 0)
 {
-<div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
+    <div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="ps-3">#TokenNo</th>
-                    <th>Created At</th>
-                    <th>Waiting Time</th>
-                    <th>Name</th>
-                    <th>No. of Persons</th>
-                    <th>Phone Number</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var table in Model)
-                {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td class="ps-3">#@table.Waitingtokenid</td>
-                        <td>@table.Createdat?.ToString("MMM dd, yyyy hh:mm tt")</td>
-                        <td> <span class="waiting-time" data-time="@table.Createdat?.ToString("o")"></span>
-                        </td>
-                        <td>@table.Customername</td>
-                        <td>@table.Noofperson</td>
-                        <td>@table.Phoneno</td>
-                        <td>@table.Email</td>
-                        <td>
-                            <div class="d-flex gap-3 edit-delet">
-
-                                <button class="button edit-wt" data-wt-id=@table.Waitingtokenid><img
-                                        src="../images/pencil.svg"></button>
-
-                                <button class="button delete-WT-link" data-bs-toggle="modal" data-bs-target="#deleteWT"
-                                    data-wt-id=@table.Waitingtokenid data-sectioid="@table.Sectionid"><img
-                                        class="delete-icon" src="../images/trash.svg"></button>
-
-                                <button class="assign-table-link" 
-                                    data-sectionid="@table.Sectionid" data-wt-id=@table.Waitingtokenid> <i
-                                        class="bi bi-person-check"></i></button>
-                            </div>
-                        </td>
+                        <th class="ps-3">#TokenNo</th>
+                        <th>Created At</th>
+                        <th>Waiting Time</th>
+                        <th>Name</th>
+                        <th>No. of Persons</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Action</th>
                     </tr>
+                </thead>
+                <tbody>
+                    @foreach (var table in Model)
+                    {
+                        <tr>
+                            <td class="ps-3">#@table.Waitingtokenid</td>
+                            <td>@table.Createdat?.ToString("MMM dd, yyyy hh:mm tt")</td>
+                            <td> <span class="waiting-time" data-time="@table.Createdat?.ToString("o")"></span>
+                            </td>
+                            <td>@table.Customername</td>
+                            <td>@table.Noofperson</td>
+                            <td>@table.Phoneno</td>
+                            <td>@table.Email</td>
+                            <td>
+                                <div class="d-flex gap-3 edit-delet">
 
-                }
+                                    <button class="button edit-wt" data-wt-id=@table.Waitingtokenid><img
+                                            src="../images/pencil.svg"></button>
 
-            </tbody>
-        </table>
+                                    <button class="button delete-WT-link" data-bs-toggle="modal" data-bs-target="#deleteWT"
+                                        data-wt-id=@table.Waitingtokenid data-sectioid="@table.Sectionid"><img
+                                            class="delete-icon" src="../images/trash.svg"></button>
+
+                                    <button class="assign-table-link" data-sectionid="@table.Sectionid"
+                                        data-wt-id=@table.Waitingtokenid> <i class="bi bi-person-check"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 }
 
 <div class="modal-editWT"></div>
@@ -129,237 +128,6 @@
 
 
 <script>
-    $(document).ready(function () {
+   
 
-        function formatTimeDiff(createdTime) {
-            const now = new Date();
-            const diffMs = now - createdTime;
-
-            if (diffMs < 0) return ''; // in case of future date
-
-            const totalMinutes = Math.floor(diffMs / 60000);
-            const hrs = Math.floor(totalMinutes / 60);
-            const mins = totalMinutes % 60;
-
-            return `${hrs} hrs ${mins} min`;
-        }
-
-        function updateWaitingTimes() {
-            $('.waiting-time').each(function () {
-                const timeStr = $(this).data('time');
-                if (timeStr) {
-                    const createdAt = new Date(timeStr);
-                    const formatted = formatTimeDiff(createdAt);
-                    $(this).text(formatted);
-                }
-            });
-        }
-
-        // Initial run
-        updateWaitingTimes();
-
-        // Update every second
-        setInterval(updateWaitingTimes, 1000);
-
-        $(".edit-wt").click(function (e) {
-            e.preventDefault();
-            var WTid = $(this).data("wt-id");
-
-
-            $.ajax({
-                url: "/WaitingList/EditWT",
-                type: "GET",
-                data: { id: WTid },
-                success: function (data) {
-                    $(".modal-editWT").html(data);
-                    $("#editWT").modal("show");
-                },
-                error: function () {
-                    alert("failed to reload modal");
-                }
-            });
-
-        });
-
-        $(document).on("click", ".delete-WT-link", function (e) {
-            var Waitingtokenid = $(this).data("wt-id");
-            var sectioid = $(this).data("sectioid");
-
-            $("#hidden").val(Waitingtokenid);
-            $("#sectionid").val(sectioid);
-
-        });
-
-
-        @* assign table *@
-
-            $(".assign-table-link").click(function (e) {
-                e.preventDefault();
-                var sectionid = $(this).data("sectionid");
-                var Waitingtokenid = $(this).data("wt-id");
-               
-                $.ajax({
-                    url: "/WaitingList/AssignTable",
-                    type: "GET",
-                    success: function (data) {
-                        $("#assign-table-model").html(data);
-                        $("#AssignTable").modal("show");
-                $(".waitingToken").val(Waitingtokenid);
-                    },
-                    error: function () {
-                        alert("failed to reload modal");
-                    }
-                });
-
-
-                // Clear section dropdown first
-                $("#Sectionid").empty();
-                $("#Sectionid").append('<option selected disabled value="">Select Section</option>');
-
-                $("#tableDropdownMenu").empty();
-                $("#tableDropdownBtn").html("Select Tables");
-
-                selectedTables = [];
-
-
-                // Fetch and repopulate section options
-                $.get("/WaitingList/GetSection", function (data) {
-                    $.each(data, function (index, section) {
-                        $("#Sectionid").append('<option value="' + section.value + '">' + section.text + '</option>');
-                    });
-
-                     if (sectionid) {
-                  $("#Sectionid").val(sectionid);
-                       }
-
-                     if (sectionid) {
-                  $.get("/WaitingList/GetTable?sectioid=" + sectionid, function (data) {
-                    $("#tableDropdownMenu").empty();
-                    $.each(data, function (index, table) {
-                        $("#tableDropdownMenu").append(`
-                    <li>
-                      <div class="form-check mx-2">
-                        <input class="form-check-input table-checkbox" type="checkbox" value="${table.value}" id="table_${table.value}">
-                        <label class="form-check-label" for="table_${table.value}">${table.text}</label>
-                      </div>
-                    </li>
-                `);
-                    });
-                });
-            } else {
-                $("#tableDropdownMenu").empty();
-            }
-
-
-                });
-            });
-
-        let selectedTables = [];
-
-        // Handle Section change and repopulate the table checkboxes
-        $(document).on("change", "#Sectionid", function (e) {
-            var sectioid = $(this).val();
-            selectedTables = []; // Clear previous selections
-            $("#tableDropdownBtn").html("Select Tables"); // reset button text
-            if (sectioid) {
-                $.get("/WaitingList/GetTable?sectioid=" + sectioid, function (data) {
-                    $("#tableDropdownMenu").empty();
-                    $.each(data, function (index, table) {
-                        $("#tableDropdownMenu").append(`
-                    <li>
-                      <div class="form-check mx-2">
-                        <input class="form-check-input table-checkbox" type="checkbox" value="${table.value}" id="table_${table.value}">
-                        <label class="form-check-label" for="table_${table.value}">${table.text}</label>
-                      </div>
-                    </li>
-                `);
-                    });
-                });
-            } else {
-                $("#tableDropdownMenu").empty();
-            }
-        });
-
-        // Handle checkbox selection/deselection and update dropdown content
-        $(document).on("change", ".table-checkbox", function () {
-            const value = $(this).val();
-            const label = $(this).next("label").text();
-            if ($(this).is(":checked")) {
-                selectedTables.push({ id: value, label: label });
-            } else {
-                selectedTables = selectedTables.filter(table => table.id !== value);
-            }
-            updateDropdownText();
-        });
-
-        function updateDropdownText() {
-            if (selectedTables.length === 0) {
-                $("#tableDropdownBtn").html("Select Tables");
-                 $(".table-list").text("Select At least 1 table.")
-            } else if (selectedTables.length === 1) {
-                $("#tableDropdownBtn").html(`<span class=" selected-item-pill">${selectedTables[0].label}</span>`);
-                 $(".table-list").text("");
-            } else {
-                $("#tableDropdownBtn").html(
-                    `<span class=" selected-item-pill">${selectedTables[0].label}</span>` +
-                    `<span class=" others-count">+${selectedTables.length - 1} selected</span>`
-                );
-                 $(".table-list").text("");
-            }
-        }
-
-           function redirectToMenuOrders(orderId) {
-        window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
-                   }
-
-        $(document).on("click", ".Assign-tables-yes", function (){
-
-            let tableIds = selectedTables.map(t => t.id);
-            console.log(tableIds.length)
-            if(tableIds.length <= 0)
-            {
-            $(".table-list").text("Select At least 1 table.")
-             }
-             else
-             { 
-            let sectionId = $("#Sectionid").val();
-            if ($("#assignTable-form").valid()) { 
-             var formData = new FormData($("#assignTable-form")[0]);
-              formData.append("TableIds", JSON.stringify(tableIds));
-            
-
-                                    $.ajax({
-                                    url: "/WaitingList/AssignTablePost",
-                                    type: "POST",
-                                    data: formData,
-                                    processData: false,
-                                    contentType: false,
-                                    dataType: 'json',
-                                    success: function (response) {
-                                        if (response.success) {
-                                           $("#assignTable-form")[0].reset();
-                                           $("#AssignTable").modal("hide");
-                                            redirectToMenuOrders(response.orderid);
-                                            }
-                                        else {
-                                            toastr.error(response.message);
-                                        }
-
-                                    },
-                                    error: function (error) {
-                                        console.error("Error in assign table:", error);
-                                    }
-                                });
-
-
-            // Now you can use `tableIds` array to send in your request
-            console.log("Selected Table IDs:", tableIds);
-            console.log("Section ID:", sectionId);
-
-        }    
-        }             
-        });
-        
-
-    });
 </script>

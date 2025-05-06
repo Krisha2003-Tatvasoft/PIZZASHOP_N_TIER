@@ -20,15 +20,12 @@ public class AssignTable
     [Range(1, 100, ErrorMessage = "No. of persons must be at least 1")]
     public short? Noofperson { get; set; }
 
-    [Required(ErrorMessage = "Section is required")]
-    public int Sectionid { get; set; }
+    // [Required(ErrorMessage = "Section is required")]
+    public List<int>? Sectionid { get; set; }
 
     public List<SelectListItem>? SectionList { get; set; }
 
     public int? Waitingtokenid { get; set; }
 
      public string? TableIds { get; set; }
-
-
-
 }

@@ -250,7 +250,6 @@ public class OrderAppMenuService : IOrderAppMenuService
         {
             return (false, "No Order.");
         }
-
     }
 
     public async Task<string?> GetOrderComment(int id)

@@ -37,7 +37,7 @@
                             <input type="hidden" asp-for="Password">
                             <input type="text" class="form-control" id="floatingInput" placeholder="First Name"
                                 asp-for="Firstname">
-                            <label for="floatingInput">First Name</label>
+                            <label for="floatingInput">First Name*</label>
                             <span asp-validation-for="Firstname" class="text-danger"></span>
 
                         </div>
@@ -46,7 +46,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Last Name"
                                 asp-for="Lastname">
-                            <label for="floatingInput">Last Name</label>
+                            <label for="floatingInput">Last Name*</label>
                             <span asp-validation-for="Lastname" class="text-danger"></span>
 
                         </div>
@@ -63,7 +63,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="username" placeholder="User Name"
                                 asp-for="Username">
-                            <label for="username">User Name</label>
+                            <label for="username">User Name*</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
                             <span class="text-danger usernameExist"></span>
                         </div>
@@ -73,7 +73,7 @@
                             <select class="form-select" asp-for="Roleid" asp-items="Model.Roles">
                                 <option value="">Select Role</option>
                             </select>
-                            <label>Role</label>
+                            <label>Role*</label>
                             <span asp-validation-for="Roleid" class="text-danger"></span>
 
                         </div>
@@ -90,7 +90,7 @@
                         <div class="form-floating">
                             <input type="email" class="form-control" id="floatingInput" placeholder="Email"
                                 asp-for="Email" disabled>
-                            <label for="floatingInput">Email</label>
+                            <label for="floatingInput">Email*</label>
 
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                                 class="form-control">
                                 <option value="">-- Select Status --</option>
                             </select>
-                            <label for="floatingInput">Status</label>
+                            <label for="floatingInput">Status*</label>
                             <span asp-validation-for="status" class="text-danger"></span>
 
                         </div>
@@ -161,7 +161,7 @@
                         <select class="form-select" id="Countryid" asp-for="Countryid" asp-items="Model.Countries">
                             <option value="">Select Country</option>
                         </select>
-                        <label for="Countryid">Country</label>
+                        <label for="Countryid">Country*</label>
                         <span asp-validation-for="Countryid" class="text-danger"></span>
 
                     </div>
@@ -171,7 +171,7 @@
                         <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
                             <option value="">Select State</option>
                         </select>
-                        <label for="Stateid">State</label>
+                        <label for="Stateid">State*</label>
                         <span asp-validation-for="Stateid" class="text-danger"></span>
 
                     </div>
@@ -181,7 +181,7 @@
                         <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
                             <option value="">Select City</option>
                         </select>
-                        <label for="Cityid">City</label>
+                        <label for="Cityid">City*</label>
                         <span asp-validation-for="Cityid" class="text-danger"></span>
 
                     </div>
@@ -212,7 +212,7 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
                         <input type="tel" class="form-control" id="phone" placeholder="Phone" asp-for="Phone">
-                        <label for="phone">Phone</label>
+                        <label for="phone">Phone*</label>
                         <span asp-validation-for="Phone" class="text-danger"></span>
                         <span class="text-danger phone-exist"></span>
                     </div>

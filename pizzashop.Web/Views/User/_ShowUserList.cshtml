@@ -68,8 +68,8 @@ else
                 <th style="min-width: 7rem;">
                     <a href="#" class="sort" data-column="Rolename" data-order=@(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
                         Role
-                        <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i>
-                        <i class="bi bi-arrow-down  @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
+                        <i class="bi bi-arrow-up fs-6 @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i>
+                        <i class="bi bi-arrow-down fs-6 @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
                     </a>
                     @* <a href="#" class="sort" data-column="Rolename" data-order="desc">
                         <i class="bi bi-arrow-down"></i>
@@ -102,7 +102,8 @@ else
                           asp-controller="User" asp-action="EditUser"
                                     asp-route-id="@user.userId"><img src="../images/pencil.svg"></a></button>
                                     <button
-                                class="button delete @(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled-btn" : "")" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                class="button delete @(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled-btn" : "")" 
+                                data-bs-toggle="modal" data-bs-target="#deleteModal"
                                 data-id="@user.userId" onclick="opendeleteModel(@user.userId)"  disabled="@(user.userId == int.Parse(ViewBag.CurrentUserId) ? "disabled" : null)">
                                 <img class="delete-icon"
                                     src="../images/trash.svg"></button>
@@ -135,7 +136,7 @@ else
                 <input id="hidden" name="Id" value="" type="hidden">
                 <div class="modal-footer d-flex justify-content-center gap-2">
                     <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">YES</button>
-                    <button type="button" class="btn btn-danger">NO</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" >NO</button>
                 </div>
             </form>
 

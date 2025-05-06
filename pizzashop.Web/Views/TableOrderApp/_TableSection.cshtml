@@ -67,7 +67,7 @@
       </div>
 
       <div id="collapse-@tableSection.Sectionid" class="accordion-collapse collapse @(index == 0 ? "show" : "")">
-        <div class="accordion-body">
+        <div class="accordion-body" data-section-id="@tableSection.Sectionid">
           <div class="row table-list w-100">
             @foreach(var tables in tableSection.Tables)
             {
@@ -151,13 +151,14 @@
 $(document).ready(function () {
 
    var tableIds = [];
+   var sectionIdArray =[];
   
    function toggleTableSelection(elem) {
      var $elem = $(elem);
      if ($elem.hasClass('class-available')) {
      var $currentSectionBody = $elem.closest('.accordion-body');
 
-     // Deselect tables in all other sections
+     @* // Deselect tables in all other sections
      $('.accordion-body').each(function () {
       if (!$(this).is($currentSectionBody)) {
       $(this).find('.selected-table').removeClass('selected-table');
@@ -168,7 +169,7 @@ $(document).ready(function () {
       $otherAssignBtn.prop('disabled', true);
         }
       }
-    });
+    }); *@
 
   // Toggle current clicked table
   $elem.toggleClass('selected-table');
@@ -186,27 +187,32 @@ $assignBtn.prop('disabled', selectedCount === 0);
 
      // Assign button click handler
          $('.assign-btn').on('click', function () {
-            var sectionId = $(this).data('section-id');
-            var selectedTables = $(this).closest('.accordion-body').find('.selected-table');
+            var selectedTables = $('.selected-table'); // collect from all sections
             tableIds = [];
+            var sectionIds = new Set(); // use a Set to avoid duplicates
 
-             selectedTables.each(function () {
-              var tableId = $(this).data('table-id');
-                if (tableId) {
-                       tableIds.push(tableId);
-                   }
-              });
+              selectedTables.each(function () {
+                var tableId = $(this).data('table-id');
+                var sectionId = $(this).closest('.accordion-body').data('section-id');
+               if (tableId) {
+                   tableIds.push(tableId);
+                 }
+               if (sectionId) {
+               sectionIds.add(sectionId);
+                  }
+             });
 
-          if (tableIds.length > 0) {
-            console.log("Section ID:", sectionId);
-            console.log("Selected Table IDs:", tableIds);
-             }
+             sectionIdArray =[];
+             sectionIdArray = Array.from(sectionIds);
+             console.log("Selected Table IDs:", tableIds);
+             console.log("Selected Section IDs:", sectionIdArray);
 
                 $.ajax({
                     url: "/TableOrderApp/GetWaitingListParial",
                     type: "GET",
+                    traditional: true,  // important to send array properly in GET
                     data: {
-                        id: sectionId,
+                        id: sectionIdArray,
                     },
                     success: function (data) {
                         $('#waiting-list-partial').html(data);
@@ -219,10 +225,35 @@ $assignBtn.prop('disabled', selectedCount === 0);
                     url: "/TableOrderApp/AssignTable",
                     type: "GET",
                     data: {
-                        id: sectionId,
+                        id: sectionIdArray,
                     },
                     success: function (data) {
                         $('#assign-table-partial').html(data);
+
+                         // Uncheck all checkboxes
+                       $('.section-checkbox').prop('checked', false);
+ 
+                       // Check selected sections
+                       sectionIdArray.forEach(function (sectionId) {
+                        $('#section-' + sectionId).prop('checked', true);
+                      });
+ 
+                          // Update dropdown button text
+                         var selectedSectionNames = [];
+                          sectionIdArray.forEach(function (sectionId) {
+                           var sectionLabel = $('label[for="section-' + sectionId + '"]').text();
+                           selectedSectionNames.push(sectionLabel);
+                           });
+ 
+                var buttonText = 'Select Sections';
+                if (selectedSectionNames.length > 0) {
+                  buttonText = selectedSectionNames[0];
+                  if (selectedSectionNames.length > 1) {
+                    buttonText += ' +' + (selectedSectionNames.length - 1);
+                       }
+                     }
+ 
+                    $('#sectionDropdown').text(buttonText);
                     },
                     error: function () {
                     }
@@ -336,7 +367,6 @@ $assignBtn.prop('disabled', selectedCount === 0);
                       $('.Email').val(data.email).prop("readonly" , true);
                          $('.noOfPersons').val(data.noofperson);
                         $('.waitingListId').val(data.waitingtokenid);
-                          
                 }
                 else{
 
@@ -367,7 +397,7 @@ window.redirectToMenuOrders = redirectToMenuOrders;
            e.preventDefault();
             if ($("#assign-table-form").valid()) { 
             var formData = new FormData($("#assign-table-form")[0]);
-           formData.append("TableIds", JSON.stringify(tableIds));
+            formData.append("TableIds", JSON.stringify(tableIds));
 
                                 $.ajax({
                                 url: "/TableOrderApp/assignTablePost",

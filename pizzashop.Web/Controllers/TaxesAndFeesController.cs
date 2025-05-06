@@ -25,7 +25,7 @@ public class TaxesAndFeesController : Controller
 
         ViewBag.CurrentPage = page;
         ViewBag.PageSize = pageSize;
-        ViewBag.TotalUsers = totalTaxes;
+        ViewBag.totalTaxes = totalTaxes;
 
         ViewBag.TotalPages = (int)Math.Ceiling((double)totalTaxes / pageSize);
 

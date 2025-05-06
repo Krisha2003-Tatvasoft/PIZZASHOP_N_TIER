@@ -32,7 +32,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="floatingInput" placeholder="First Name"
                                 asp-for="Firstname">
-                            <label for="floatingInput">First Name</label>
+                            <label for="floatingInput">First Name*</label>
                             <span asp-validation-for="Firstname" class="text-danger"></span>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="floatingInput" placeholder="Last Name"
                                 asp-for="Lastname">
-                            <label for="floatingInput">Last Name</label>
+                            <label for="floatingInput">Last Name*</label>
                             <span asp-validation-for="Lastname" class="text-danger"></span>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                         <div class="form-floating">
                             <input type="text" class="form-control" id="username" placeholder="User Name"
                                 asp-for="Username">
-                            <label for="username">User Name</label>
+                            <label for="username">User Name*</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
                             <span class="text-danger usernameExist"></span>
                         </div>
@@ -66,7 +66,7 @@
                             <select class="form-select" asp-for="Roleid" asp-items="Model.Roles">
                                 <option value="">Select Role</option>
                             </select>
-                            <label>Role</label>
+                            <label>Role*</label>
                             <span asp-validation-for="Roleid" class="text-danger"></span>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
                         <div class="form-floating">
                             <input type="email" class="form-control" id="email" placeholder="Email" asp-for="Email">
-                            <label for="email">Email</label>
+                            <label for="email">Email*</label>
                             <span asp-validation-for="Email" class="text-danger"></span>
                             <span class="text-danger emailExist"></span>
                         </div>
@@ -90,7 +90,7 @@
                         <div class="form-floating position-relative">
                             <input type="password" class="form-control password" id="floatingInput"
                                 placeholder="Password" asp-for="Password" value=@Model.Password>
-                            <label for="floatingInput">Password</label>
+                            <label for="floatingInput">Password*</label>
                             <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
                         </div>
                         <span asp-validation-for="Password" class="text-danger"></span>
@@ -144,7 +144,7 @@
                         <select class="form-select" id="Countryid" asp-for="Countryid" asp-items="Model.Countries">
                             <option value="">Select Country</option>
                         </select>
-                        <label for="Countryid">Country</label>
+                        <label for="Countryid">Country*</label>
                         <span asp-validation-for="Countryid" class="text-danger"></span>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                         <select class="form-select" id="Stateid" asp-for="Stateid" asp-items="Model.States">
                             <option value="">Select State</option>
                         </select>
-                        <label for="Stateid">State</label>
+                        <label for="Stateid">State*</label>
                         <span asp-validation-for="Stateid" class="text-danger"></span>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
                         <select class="form-select" id="Cityid" asp-for="Cityid" asp-items="Model.Cities">
                             <option value="">Select City</option>
                         </select>
-                        <label for="Cityid">City</label>
+                        <label for="Cityid">City*</label>
                         <span asp-validation-for="Cityid" class="text-danger"></span>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-3">
                     <div class="form-floating">
                         <input type="tel" class="form-control" id="phone" placeholder="Phone" asp-for="Phone">
-                        <label for="phone">Phone</label>
+                        <label for="phone">Phone*</label>
                         <span asp-validation-for="Phone" class="text-danger"></span>
                         <span class="text-danger phone-exist"></span>
                     </div>
@@ -201,7 +201,7 @@
 
         <div class="container-fluid d-flex gap-2  mt-sm-2">
             <button class="create-button" type="submit">
-                Create USer
+                Create User
             </button>
             <a class="" asp-controller="User" asp-action="UserList">
                 <button class="cancel-button" type="button">

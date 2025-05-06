@@ -8,7 +8,7 @@ public interface IOrderAppWaitingTokenService
 
    Task<(bool Success, string Message)> AddWaitingTokenPost(int loginId, AddWaitingToken model);
 
-    Task<List<WaitingListTable>> WaitingListBySectionId(int sectionId);
+    Task<List<WaitingListTable>> WaitingListBySectionId(List<int> sectionId);
 
     Task<AssignTable> DetailsFromWT(int id);
 

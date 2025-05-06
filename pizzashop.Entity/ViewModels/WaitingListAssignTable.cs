@@ -6,7 +6,7 @@ public class WaitingListAssignTable
 {
     public int? Waitingtokenid { get; set; }
 
-    [Required(ErrorMessage = "Section is required")]
+    // [Required(ErrorMessage = "Section is required")]
     public int Sectionid { get; set; }
 
     public string? TableIds { get; set; }

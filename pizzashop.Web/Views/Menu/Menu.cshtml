@@ -298,7 +298,7 @@
                 <a class="delete-cat">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">YES</button>
                 </a>
-                <button type="button" class="btn btn-danger">NO</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
@@ -322,7 +322,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center gap-2">
                 <button type="button" class="btn btn-primary delete-selected-yes" data-bs-dismiss="modal">YES</button>
-                <button type="button" class="btn btn-danger">NO</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
@@ -347,7 +347,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-center gap-2">
                 <button type="button" class="btn btn-primary delete-selectedM-Yes" data-bs-dismiss="modal">YES</button>
-                <button type="button" class="btn btn-danger">NO</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
             </div>
         </div>
     </div>
@@ -411,8 +411,6 @@
 
 
 
-
-
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
@@ -439,6 +437,10 @@
 
     var selectExModifier = [];
     var selectedModifiername = new Map();
+
+    // Temporary (modal) arrays
+    let tempSelectExModifier = [];
+    let tempSelectedModifiername = new Map();
 
 
     $(document).ready(function () {
@@ -601,7 +603,7 @@
             selectedIds = [];
             $("#searchInput").val("");
             var categoryId = $(this).data("id");
-            loadItemTable(categoryId,1);
+            loadItemTable(categoryId, 1);
         });
 
         function loadItemTable(categoryId, page) {
@@ -913,18 +915,18 @@
 
             $(document).on("click", ".delete-item", function (e) {
 
-                 e.preventDefault();
+                e.preventDefault();
 
                 var itemId = $("#hidden").val();
                 var categoryId = $("#Categoryid").val();
-               
+
 
                 $.ajax({
                     url: "/Menu/DeleteItem",
                     type: "POST",
                     data: { id: itemId },
                     success: function (response) {
-                       loadItemTable(globalCat, 1);
+                        loadItemTable(globalCat, 1);
                         toastr.success("Item Deleted Succesfully.");
                     },
                     error: function (error) {
@@ -1269,19 +1271,26 @@
                 updateExMMasterCheckbox();
             }
 
+        function restoreTempCheckedExState() {
+            $("input[name='SExmodifier']").each(function () {
+                let value = $(this).val();
+                $(this).prop("checked", tempSelectExModifier.includes(value));
+            });
+            updateExMMasterCheckbox();
+        }
+
 
         $(document).on("change", "input[name='SExmodifier']", function (e) {
             let value = $(this).val();
             let modifierName = $(this).data("id");
-
             if ($(this).is(":checked")) {
-                // Add value if checked
-                selectExModifier.push(value);
-                selectedModifiername.set(value, modifierName);
+                if (!tempSelectExModifier.includes(value)) {
+                    tempSelectExModifier.push(value);
+                    tempSelectedModifiername.set(value, modifierName);
+                }
             } else {
-                // Remove value if unchecked
-                selectExModifier = selectExModifier.filter(item => item !== value);
-                selectedModifiername.delete(value);
+                tempSelectExModifier = tempSelectExModifier.filter(item => item !== value);
+                tempSelectedModifiername.delete(value);
             }
             updateExMMasterCheckbox();
         });
@@ -1310,7 +1319,10 @@
                 success: function (data) {
                     $(".existing-modifier-data").html(data);
                     $("#selectExistingModifiers").modal("show");
-                    restoreCheckedExState();
+                    // Clone main selections into temp arrays
+                    tempSelectExModifier = [...selectExModifier];
+                    tempSelectedModifiername = new Map(selectedModifiername);
+                    restoreTempCheckedExState();
                 },
                 error: function (error) {
                     console.log("in error");
@@ -1350,6 +1362,11 @@
 
         $(document).on("click", ".add-ex-modifier", function (e) {
             e.preventDefault();
+
+            // Commit temp arrays to main arrays
+            selectExModifier = [...tempSelectExModifier];
+            selectedModifiername = new Map(tempSelectedModifiername);
+
             displaySelectedModifiers();
         });
 
@@ -1383,6 +1400,11 @@
                 selectedModifiername.delete(value);
                 displaySelectedModifiers();
             });
+
+        $('#selectExistingModifiers').on('hidden.bs.modal', function () {
+            tempSelectExModifier = [];
+            tempSelectedModifiername = new Map();
+        });
 
         @* Add modifier group *@
 
@@ -1426,7 +1448,6 @@
 
                 e.preventDefault();
 
-
                 var MGId = $(this).data("modifiergroupid");
 
 
@@ -1437,19 +1458,32 @@
                     success: function (data) {
 
                         if (data.selectedModifiers) {
-                            selectExModifier.length = 0; // Clear old data
-                            selectedModifiername.clear();
+                            selectExModifier.length = 0; // Clear old data  
+                            selectedModifiername.clear(); // Clear old data
+                            tempSelectExModifier.length = 0; // Clear old data
+                            tempSelectedModifiername.clear();
+
 
                             data.selectedModifiers.forEach(modifier => {
                                 if (modifier && modifier.modifierid !== undefined) {
                                     let modifierId = modifier.modifierid.toString();
-                                    selectExModifier.push(modifierId);
-                                    selectedModifiername.set(modifierId, modifier.modifiername);
+                                    tempSelectExModifier.push(modifierId);
+                                    tempSelectedModifiername.set(modifierId, modifier.modifiername);
                                 }
                             });
+
+
+
                             $(".modal-editMG").html(data.html);
                             $("#updateModifiersGroup").modal("show");
-                            restoreCheckedModifier();
+
+                            // Commit temp arrays to main arrays
+                            selectExModifier = [...tempSelectExModifier];
+                            selectedModifiername = new Map(tempSelectedModifiername);
+
+
+                         
+                            restoreTempCheckedExState();
                             displaySelectedModifiers();
                         }
                     },
@@ -1459,9 +1493,6 @@
                 });
 
             });
-
-
-
 
 
         @* Edit Modifier group *@
@@ -1493,6 +1524,7 @@
                         if (response.success) {
                             $("#updateModifiersGroup").modal("hide");
                             MGList();
+                            loadModifierTable(globalModifier, 1);
                             toastr.success("ModifierGroup Updated Succesfully.");
                         }
                         else {
@@ -1612,13 +1644,13 @@
                     let modifierName = $(this).data("id");
 
                     if (isChecked) {
-                        if (!selectExModifier.includes(value)) {
-                            selectExModifier.push(value);
-                            selectedModifiername.set(value, modifierName);
+                        if (!tempSelectExModifier.includes(value)) {
+                            tempSelectExModifier.push(value);
+                            tempSelectedModifiername.set(value, modifierName);
                         }
                     } else {
-                        selectExModifier = selectExModifier.filter(item => item !== value);
-                        selectedModifiername.delete(value);
+                        tempSelectExModifier = tempSelectExModifier.filter(item => item !== value);
+                        tempSelectedModifiername.delete(value);
                     }
 
                 });
