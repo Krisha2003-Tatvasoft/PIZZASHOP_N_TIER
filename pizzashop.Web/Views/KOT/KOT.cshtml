@@ -38,11 +38,12 @@
         }
 
 
-        function loadCategoryList() {
+        function loadCategoryList(status) {
             $.ajax({
 
                 url: "/KOT/CategoryList",
                 type: "GET",
+                data: {status: status},
                 success: function (data) {
                     $('.category-partial').html(data);
                     $(`.cat-class`).removeClass('active').attr('aria-selected', 'false');
@@ -54,7 +55,7 @@
             });
         }
 
-        loadCategoryList();
+        loadCategoryList(currentStatus);
 
         function loadTicket(categoryId, status, page) {
             currentCategoryId = categoryId;
@@ -90,12 +91,13 @@
         $(document).on("click", ".inprogress", function (e) {
             currentStatus = "Inprogress";
             loadTicket(currentCategoryId, currentStatus, 1);
+            loadCategoryList(currentStatus);
         });
 
         $(document).on("click", ".ready", function (e) {
             currentStatus = "Ready";
             loadTicket(currentCategoryId, currentStatus, 1);
-
+             loadCategoryList(currentStatus);
         });
 
         loadTicket(0, currentStatus, 1);
@@ -225,6 +227,7 @@
                     console.log('Items updated successfully');
                     $('#orderModal').modal('hide');
                     loadTicket(currentCategoryId, currentStatus, currentPage); // Refresh the ticket list
+                     loadCategoryList(currentStatus);
                 },
                 error: function () {
                     alert("Something went wrong while updating item status.");

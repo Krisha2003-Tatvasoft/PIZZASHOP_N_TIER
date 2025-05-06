@@ -26,9 +26,9 @@ public class KOTController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
-    public async Task<IActionResult> CategoryList()
+    public async Task<IActionResult> CategoryList(string status)
     {
-        var CategoryList = await _categoryService.GetKOTCategoryList();
+        var CategoryList = await _categoryService.GetKOTCategoryList(status);
         return PartialView("_CategoryList", CategoryList);
     }
 

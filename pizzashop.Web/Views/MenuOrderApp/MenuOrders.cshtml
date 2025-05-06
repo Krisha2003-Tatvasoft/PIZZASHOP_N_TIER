@@ -18,12 +18,12 @@
 
   <div class="main-content w-100">
 
-    <div class="d-block d-sm-flex  justify-content-between mb-3 align-items-center flex-wrap">
+    <div class="d-block d-sm-flex justify-content-between mb-3 align-items-center flex-wrap">
 
-      <div class="d-flex align-items-center mb-2 mb-sm-0">
-        <button class="btn d-lg-none px-0 py-0 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
-          aria-controls="categoryList" style="background-color:lightgrey; width:30px;height:30px; border-radius:5%;>
-          <i class="fs-3 bi bi-list"></i>
+      <div class="d-flex align-items-center mb-2 mb-sm-0 menu-list">
+        <button class="btn d-inline d-lg-none mb-0 p-1 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
+          aria-controls="categoryList" style="width:40px; height:40px;background-color: hsla(216, 50%, 79%, 0.352);">
+          <i class="h2 bi bi-list"></i>
         </button>
         <div class="search-field position-relative">
           <input class="search form-control me-2 border-0" type="search" placeholder="Search" id="searchInput"
@@ -57,7 +57,7 @@
 
   @if (!string.IsNullOrEmpty(orderId))
   {
-    <div class="offcanvas-xl offcanvas-end order-details-partial card w-100" style="height:100%; background-color:rgba(0, 0, 0, 0.103);" id="cart">
+    <div class="offcanvas-xl offcanvas-end order-details-partial card w-100" style="height:100%; background-color:rgba(128, 128, 128, 0.248);" id="cart">
 
     </div>
   }
@@ -672,6 +672,8 @@
       e.preventDefault();
 
       const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+      const Id = new URLSearchParams(window.location.search).get('orderId');
+
 
       var itemId = $(this).data("item-id");
       const itemName = $(this).data("item-name");
@@ -683,7 +685,7 @@
 
 
       $.ajax({
-        url: `/MenuOrderApp/ModifierList?orderId=${orderId}`,
+        url: `/MenuOrderApp/ModifierList?orderId=${Id}`,
         type: "GET",
         data: { id: itemId },
         success: function (data) {
@@ -732,7 +734,14 @@
 
     });
 
-    $(document).on("click", ".modifier-card", function () {
+    $(document).on("click", ".modifier-card", function () { 
+      const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+      console.log(orderId);
+
+      if(!orderId)
+      {
+        return null;
+      }
 
       var $card = $(this);
       var modifierGroupId = $card.closest(".modifier-group").data("groupid");

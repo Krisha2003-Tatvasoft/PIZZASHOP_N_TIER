@@ -14,10 +14,14 @@ public class CategoryService : ICategoryService
 
   private readonly IItemRepository _itemRepository;
 
-  public CategoryService(ICategoryRepository categoryRepository, IItemRepository itemRepository)
+  private readonly IOrderRepository _orderRepository;
+
+  public CategoryService(ICategoryRepository categoryRepository, IItemRepository itemRepository
+  , IOrderRepository orderRepository)
   {
     _categoryRepository = categoryRepository;
     _itemRepository = itemRepository;
+    _orderRepository = orderRepository;
   }
 
 
@@ -156,22 +160,79 @@ public class CategoryService : ICategoryService
 
     return catList;
   }
-  
-  public async Task<List<VMCategory>> GetKOTCategoryList()
-  {
-    var category = await _categoryRepository.AllCategory();
 
-    var catList = category?.Select(c => new VMCategory
+  public async Task<List<VMCategory>> GetKOTCategoryList(string status)
+  {
+    var categories = await _categoryRepository.AllCategory();
+    var orders = await _orderRepository.InprogressOrders();
+
+    var catList = categories?.Select(c => new VMCategory
     {
       Categoryid = c.Categoryid,
       Categoryname = c.Categoryname,
-    }).ToList();
+      OrderCount = 0
+    }).ToList() ?? new List<VMCategory>();
 
     catList.Insert(0, new VMCategory
     {
       Categoryid = 0,
-      Categoryname ="All"
+      Categoryname = "All",
+      OrderCount = 0
     });
+
+    // categoryId → HashSet of orderIds
+    var categoryOrderIds = new Dictionary<int, HashSet<int>>();
+
+    foreach (var order in orders)
+    {
+      var orderDetails = await _orderRepository.OrderDetailsByIdAsync(order.Orderid);
+
+      List<Ordereditem> itemsByFilter;
+
+      if (status == "Inprogress")
+      {
+        itemsByFilter = orderDetails.Ordereditems
+            .Where(i => (i.Quantity - i.ReadyQuantity) > 0)
+            .ToList();
+      }
+      else
+      {
+        itemsByFilter = orderDetails.Ordereditems
+            .Where(i => i.ReadyQuantity > 0)
+            .ToList();
+      }
+
+      var distinctCategoryIds = itemsByFilter
+          .Select(i => i.Item.Categoryid)
+          .Distinct();
+
+      foreach (var catId in distinctCategoryIds)
+      {
+        if (!categoryOrderIds.ContainsKey(catId))
+          categoryOrderIds[catId] = new HashSet<int>();
+
+        categoryOrderIds[catId].Add(order.Orderid);
+      }
+    }
+
+    foreach (var cat in catList)
+    {
+      if (cat.Categoryid == 0)
+      {
+        // "All" → sum all unique order counts
+        var uniqueOrderIds = new HashSet<int>(
+            categoryOrderIds.Values.SelectMany(v => v)
+        );
+        cat.OrderCount = uniqueOrderIds.Count;
+      }
+      else
+      {
+        cat.OrderCount = categoryOrderIds.ContainsKey(cat.Categoryid)
+            ? categoryOrderIds[cat.Categoryid].Count
+            : 0;
+      }
+    }
+
     return catList;
   }
 

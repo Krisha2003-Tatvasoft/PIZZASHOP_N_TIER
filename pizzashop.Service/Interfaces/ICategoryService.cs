@@ -18,6 +18,6 @@ public interface ICategoryService
 
      Task<List<VMCategory>> GetMenuCategoryList();
 
-     Task<List<VMCategory>> GetKOTCategoryList();
+     Task<List<VMCategory>> GetKOTCategoryList(string status);
 
 }

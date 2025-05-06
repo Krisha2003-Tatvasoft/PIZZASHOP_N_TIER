@@ -10,12 +10,16 @@
             aria-controls="@cat.Categoryid" aria-selected="@(cat.Categoryid == 0 ? "true" : "false")" style="flex: 0 0 auto;"
             data-catid="@cat.Categoryid" data-catname="@cat.Categoryname">
             <div class="tab">
-                @cat.Categoryname
+                <span>@cat.Categoryname</span>
+                <span class="d-inline-flex justify-content-center align-items-center mt-1 bg-secondary text-white"
+                    style="width: 20px; height: 20px; border-radius: 50%; font-size: 0.8rem;">
+                    @cat.OrderCount</span>
             </div>
         </button>
     }
 
 }
-else{
+else
+{
     <h1>No Category</h1>
 }

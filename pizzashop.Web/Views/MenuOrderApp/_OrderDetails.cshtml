@@ -6,10 +6,10 @@
     string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
 }
 
-    <button type="button" class="btn-close text-reset d-xl-none d-inline p-3" data-bs-dismiss="offcanvas"
+    <button type="button" class="btn-close text-black d-xl-none d-inline p-3" data-bs-dismiss="offcanvas"
         data-bs-target="#cart" aria-label="Close"></button>
 
-<div class="ms-xl-4 me-xl-4 mt-xl-2 p-3" style="background-color: white;">
+<div class="mx-5 mx-xl-0 my-2 my-xl-0 p-3" style="background-color: white;">
     <div class="d-flex justify-content-between align-items-center">
         <input type="hidden" value="@Model.Orderid" asp-for="Orderid">
         <div class="d-flex justify-content-start align-items-center">
@@ -60,7 +60,7 @@
 
         </div>
 
-        <div id="order-items-container">
+        <div id="order-items-container" class="overflow-y-auto" style="max-height:calc(100vh - 600px);">
             <!-- Dynamic order items will be appended here -->
         </div>
 
@@ -73,9 +73,12 @@
             <div>Sub Total :</div>
             <div id="subtotal"></div>
         </div>
-        
+
+        <div class="overflow-y-auto" style="max-height:calc(100vh - 650px);">
         <div id="taxBreakdown"></div>
         <div id="flatTaxList" class="mt-2"></div>
+        </div>
+        
 
 
         <div>
@@ -109,16 +112,16 @@
     </div>
 
     <div class="mt-5 ps-5 d-flex flex-row gap-3 pb-3">
-        <button type="button" class="btn p-1 p-sm-2 w-100 saveorder" @(string.IsNullOrEmpty(token) ? "" : "disabled")
+        <button type="button" class="btn p-1 p-lg-2 w-100 saveorder" @(string.IsNullOrEmpty(token) ? "" : "disabled")
             id="search-btn" style="background-color:#087cc4 ; border-color:#087cc4;color:#fff">Save</button>
-        <button type="button" class="btn p-1 p-sm-2 clear-btn w-100 complete-button" @(string.IsNullOrEmpty(token) ? "" :
+        <button type="button" class="btn p-1 p-sm-2 p-xl-1 clear-btn w-100 complete-button" @(string.IsNullOrEmpty(token) ? "" :
                                                                                           "disabled") style="color:#087cc4;border-color:#087cc4;">Complete</button>
-        <button type="button" class="btn p-1 p-sm-2 clear-btn w-100 generate-invoice" @(string.IsNullOrEmpty(token) ? "" :
+        <button type="button" class="btn p-1 p-sm-2 p-xl-1 clear-btn w-100 generate-invoice" @(string.IsNullOrEmpty(token) ? "" :
                                                                                            "disabled") style="color:#087cc4;border-color:#087cc4; " data-orderid="@Model.Orderid">Generate
             Invoice</button>
     </div>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn p-1 p-sm-2 clear-btn w-40 cancel-button" @(string.IsNullOrEmpty(token) ? "" :
+        <button type="button" class="btn p-1 p-sm-2 p-xl-2 clear-btn w-40 cancel-button" @(string.IsNullOrEmpty(token) ? "" :
                                                                                        "disabled") style="color:#087cc4;border-color:#087cc4; ">cancel</button>
     </div>
 
