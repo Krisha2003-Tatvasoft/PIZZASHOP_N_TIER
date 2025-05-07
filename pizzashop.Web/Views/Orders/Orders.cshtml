@@ -40,6 +40,7 @@
                         <option value="7">Last 7 Days</option>
                         <option value="30">Last 30 Days</option>
                         <option value="currentMonth">Current Month</option>
+                        <option value="CustomDate">CustomDate</option>
                     </select>
 
                     <a class="subdiv4">
@@ -120,12 +121,14 @@
 
         // When FromDate changes
         $("#FromDate").on("change", function () {
+            $("#searchTimeWise").val("CustomDate");
             const fromDate = $(this).val();
             $("#ToDate").attr("min", fromDate); // To date must be on/after From date
         });
 
         // When ToDate changes
         $("#ToDate").on("change", function () {
+            $("#searchTimeWise").val("CustomDate");
             const toDate = $(this).val();
             $("#FromDate").attr("max", toDate); // From date must be on/before To date
         });

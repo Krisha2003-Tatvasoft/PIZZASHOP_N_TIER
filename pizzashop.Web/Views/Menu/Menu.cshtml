@@ -1007,7 +1007,8 @@
             $(document).on("click", "#add-modifier", function (e) {
                 e.preventDefault();
                 let selectedMG = [];
-                $(".modifier-checkbox:checked").each(function () {
+
+                $(".modifier-checkbox-addModifier:checked").each(function () {
                     selectedMG.push($(this).val());
                 });
 
@@ -1060,7 +1061,7 @@
             function updateModifierDropdown() {
                 let selectedTexts = [];
 
-                $(".modifier-checkbox:checked").each(function () {
+                $(".modifier-checkbox-addModifier:checked").each(function () {
                     selectedTexts.push($(this).next("label").text());
                 });
 
@@ -1073,14 +1074,15 @@
                         `<span class="modifier-pill">${selectedTexts[0]}</span> 
              <span class="modifier-count">+ ${selectedTexts.length - 1} others</span>`
                     );
+                console.log(selectedTexts);
                 }
             }
 
 
         //  Call function on checkbox change
-        $(document).on("change", ".modifier-checkbox", function (e) {
+        $(document).on("change", ".modifier-checkbox-addModifier", function (e) {
             updateModifierDropdown();
-            let checkbox = $('.modifier-checkbox:checked');
+            let checkbox = $('.modifier-checkbox-addModifier:checked');
             if (checkbox.length > 0) {
                 $("#requaired-mg").hide();
             }
@@ -1103,7 +1105,7 @@
                 data: { id: modifierId },
                 success: function (data) {
                     if (data.selectedMGIds) {
-                        $(".modifier-checkbox").prop("checked", false);
+                        $(".modifier-checkbox-addModifier").prop("checked", false);
 
                         $(".modal-editModifier").html(data.html);
                         $("#updateNewModifier").modal("show");
@@ -1126,7 +1128,7 @@
                 e.preventDefault();
 
                 let selectedMG = [];
-                $(".modifier-checkbox:checked").each(function () {
+                $(".modifier-checkbox-addModifier:checked").each(function () {
                     selectedMG.push($(this).val());
                 });
 

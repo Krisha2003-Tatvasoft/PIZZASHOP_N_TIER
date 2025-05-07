@@ -30,7 +30,6 @@ public class TaxesService : ITaxesService
             Taxname = u.Taxname,
             taxtype = (Entity.Models.Enums.taxtype)u.Taxtype,
             Isenabled = (bool)u.Isenabled,
-            Isdefault = (bool)u.Isdefault,
             Taxvalue = u.Taxvalue
         })
         .ToList();
@@ -52,7 +51,6 @@ public class TaxesService : ITaxesService
                 Taxname = viewmodel.Taxname,
                 Taxtype = (int)viewmodel.taxtype,
                 Taxvalue = viewmodel.Taxvalue,
-                Isdefault = viewmodel.Isdefault,
                 Isenabled = viewmodel.Isenabled,
                 Createdby = loginId
             };
@@ -69,7 +67,6 @@ public class TaxesService : ITaxesService
             Taxname = tax.Taxname,
             taxtype = (Enums.taxtype)tax.Taxtype,
             Isenabled = (bool)tax.Isenabled,
-            Isdefault = (bool)tax.Isdefault,
             Taxvalue = tax.Taxvalue,
             Taxid = id
         };
@@ -99,7 +96,6 @@ public class TaxesService : ITaxesService
 
             tax.Taxname = viewmodel.Taxname;
             tax.Taxtype = (int)viewmodel.taxtype;
-            tax.Isdefault = viewmodel.Isdefault;
             tax.Isenabled = viewmodel.Isenabled;
             tax.Taxvalue = viewmodel.Taxvalue;
             tax.Modifiedby = loginId;

@@ -653,10 +653,10 @@
           data: { id: itemId },
           success: function (isFavourite) {
             if (isFavourite.isFavourite == true) {
-              loadItemList(-1);
+              loadItemList(GCatId);
               toastr.success("Item Added in Favourite.")
             } else {
-              loadItemList(-1);
+              loadItemList(GCatId);
               toastr.error("Item Remove From the Favourite.")
             }
           },

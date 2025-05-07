@@ -211,13 +211,45 @@
 <script src="../js/bootstarp.bundle.min.js"></script>
 <script>
     $(document).ready(function () {
+         var selectedModifiers = []; 
         var modifierIndex = 0;
+
+     // Function to update the text of the dropdown
+    function updateDropdownText() {
+        var selectedText = '';
+        
+        // If we have at least one item in the selectedModifiers array
+        if (selectedModifiers.length > 0) {
+            // Set the first selected item text as the main display
+            selectedText = selectedModifiers[0].name;
+
+            // If more than one item is selected, add the "+X other" part
+            var otherCount = selectedModifiers.length - 1;
+            if (otherCount > 0) {
+                selectedText += ' +' + otherCount + ' other';
+            }
+        }
+
+         console.log(selectedText)
+        // Update the text of the dropdown (the display)
+        $('#MGid').next('.form-select').find('.selected-text').text(selectedText);
+    }
 
         $("#MGid").change(function () {
 
             var groupId = $(this).val();
             var groupText = $("#MGid option:selected").text();
             var itemId = $("#Itemid").val();
+
+            if (groupId && !selectedModifiers.some(mod => mod.id === groupId)) {
+            // Add to selected list
+            selectedModifiers.push({ id: groupId, name: groupText });
+
+            // Call the function to update the dropdown text
+            updateDropdownText();
+            }
+
+
 
             // Check if the group is already in the list
             if (groupId && $("#group_" + groupId).length === 0) {
@@ -277,6 +309,9 @@
                         $("#modifierContainer").append(modifierList);
                         updateModifierGroupIndexes();
                         adjustSelectionLimits(groupId, modifierCount); 
+
+                         // Update the dropdown text
+                        updateDropdownText();
                     },
                     error: function (xhr) {
                         alert(xhr.responseJSON.message || "Failed to load modifiers.");
@@ -284,9 +319,6 @@
                 });
             }
         });
-
-      
-   
     
         function updateModifierGroupIndexes() {
             $(".modifier-group").each(function (index) {
@@ -368,8 +400,12 @@
         $(document).on("click", ".delete-group", function () {
             var groupId = $(this).data("group");
             $(`#group_${groupId}`).remove(); // Remove from UI
-            $("#MGid").val(""); // Reset the select box
             updateModifierGroupIndexes();
+           // Remove from the selected list
+        selectedModifiers = selectedModifiers.filter(mod => mod.id !== groupId);
+
+        // Update the dropdown text after removal
+        updateDropdownText();
         });
     });
 

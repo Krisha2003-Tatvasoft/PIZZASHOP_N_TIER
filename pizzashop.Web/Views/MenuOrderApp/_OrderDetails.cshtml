@@ -22,6 +22,10 @@
                 <span><b>Table: </b>@foreach(var table in Model.Tablenames)
                     {
                         @table
+                        if (table != Model.Tablenames.Last())
+                        {
+                            @:,
+                        }
                     }
                 </span>
             </div>

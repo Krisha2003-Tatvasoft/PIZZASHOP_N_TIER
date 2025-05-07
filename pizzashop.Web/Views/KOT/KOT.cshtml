@@ -43,7 +43,7 @@
 
                 url: "/KOT/CategoryList",
                 type: "GET",
-                data: {status: status},
+                data: { status: status },
                 success: function (data) {
                     $('.category-partial').html(data);
                     $(`.cat-class`).removeClass('active').attr('aria-selected', 'false');
@@ -85,7 +85,7 @@
         $(document).on("click", ".cat-class", function (e) {
             var categoryId = $(this).data("catid");
             currentCategoryName = $(this).data("catname");
-            loadTicket(categoryId, "Inprogress", 1);
+            loadTicket(categoryId, currentStatus, 1);
         });
 
         $(document).on("click", ".inprogress", function (e) {
@@ -97,7 +97,7 @@
         $(document).on("click", ".ready", function (e) {
             currentStatus = "Ready";
             loadTicket(currentCategoryId, currentStatus, 1);
-             loadCategoryList(currentStatus);
+            loadCategoryList(currentStatus);
         });
 
         loadTicket(0, currentStatus, 1);
@@ -207,11 +207,16 @@
                 itemsToUpdate.push({ orderitemid, quantity });
             });
 
+            if (itemsToUpdate.length === 0) {
+                toastr.warning("Please select at least one item to update.");
+                return;
+            }
+
+
             // Status (Current Status) - to know whether we're updating 'Inprogress' or 'Ready'
             const newStatus = currentStatus === "Inprogress" ? "Ready" : "Inprogress";
 
-            // Now you have an array with all the selected item IDs and their quantities
-            console.log(itemsToUpdate);
+
 
             // Send the data to the backend (including Order ID and Status)
             $.ajax({
@@ -224,10 +229,9 @@
                     newStatus: newStatus  // Send the status as well
                 }),
                 success: function (res) {
-                    console.log('Items updated successfully');
                     $('#orderModal').modal('hide');
                     loadTicket(currentCategoryId, currentStatus, currentPage); // Refresh the ticket list
-                     loadCategoryList(currentStatus);
+                    loadCategoryList(currentStatus);
                 },
                 error: function () {
                     alert("Something went wrong while updating item status.");

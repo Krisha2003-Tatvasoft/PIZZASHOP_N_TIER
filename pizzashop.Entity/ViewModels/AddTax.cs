@@ -15,14 +15,13 @@ public class AddTax
 
     public bool Isenabled { get; set; }
 
-    public bool Isdefault { get; set; }
-
     [Required(ErrorMessage = "Tax type is required")]
     public taxtype taxtype { get; set; }
 
     [Required(ErrorMessage = "Tax value is required")]
-    [RegularExpression(@"^\d+(\.\d{1,2})?$", ErrorMessage = "Tax value must be a valid number with up to 2 decimal places")]
+    [RegularExpression(@"^(?!0+(?:\.0+)?$)\d+(\.\d{1,2})?$", ErrorMessage = "Tax value must be greater than 0 and up to 2 decimal places")]
     public string Taxvalue { get; set; } = null!;
+
 }
 
 

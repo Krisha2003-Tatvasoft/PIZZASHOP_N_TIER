@@ -157,7 +157,7 @@ public class TableService : ITableService
     {
         var tables = await _tableRepository.GetTablesySec(id, "");
 
-        List<int> tableIds = tables.Select(i => i.Tableid).ToList();
+        List<int> tableIds = tables.Where(t => t.tablestatus != Enums.tablestatus.Occupied).Select(i => i.Tableid).ToList();
         return tableIds;
     }
 

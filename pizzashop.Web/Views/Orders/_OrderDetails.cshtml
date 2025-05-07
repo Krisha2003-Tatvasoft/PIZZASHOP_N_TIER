@@ -68,7 +68,11 @@
                         <p class="mb-1">Table :
                             @foreach (var table in Model.Tablenames)
                             {
-                                <span>@table</span>
+                                @table
+                                if (table != Model.Tablenames.Last())
+                                {
+                                    @:,
+                                }
                             }
                         </p>
                         <p class="mb-0">Section : @Model.Sectionname</p>
@@ -99,31 +103,31 @@
                             <tr class="text-center">
                                 <td>1</td>
                                 <td>
-                                   @item.Itemname
+                                    @item.Itemname
 
-                                   @foreach(var modifiers in item.Modifiers)
-                                   {
+                                    @foreach (var modifiers in item.Modifiers)
+                                    {
 
-                                    <div class="text-muted">
-                                        <li class="list-group-disc">@modifiers.Modifiername</li>
-                                    </div>
-                                   }
+                                        <div class="text-muted">
+                                            <li class="list-group-disc">@modifiers.Modifiername</li>
+                                        </div>
+                                    }
                                 </td>
                                 <td>@item.Quantity
-                                     @foreach(var modifiers in item.Modifiers)
+                                    @foreach (var modifiers in item.Modifiers)
                                     {
                                         <div class="">@modifiers.Rate</div>
                                     }
                                     <small class="">1</small>
                                 </td>
                                 <td>@item.Rate
-                                    @foreach(var modifiers in item.Modifiers)
+                                    @foreach (var modifiers in item.Modifiers)
                                     {
                                         <div class="">@modifiers.Rate</div>
                                     }
                                 </td>
                                 <td>@item.TotalAmount
-                                    @foreach(var modifiers in item.Modifiers)
+                                    @foreach (var modifiers in item.Modifiers)
                                     {
                                         <div class="">@modifiers.TotalAmount</div>
                                     }
@@ -152,10 +156,9 @@
                     <tr class="d-flex justify-content-between gap-5 mb-3">
                         <td><strong>Total</strong></td>
                         <td class="text-end"><strong>₹@Model.Totalamount</strong></td>
-                    </tr> 
+                    </tr>
                 </table>
             </div>
         </div>
     </div>
 </div>
-

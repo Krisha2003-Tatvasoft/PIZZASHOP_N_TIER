@@ -570,6 +570,7 @@
                         type: "GET",
                         data : { sectionId: globalSectionId },
                         success: function (ids) {
+                                console.log("hiiiiii");
                                 allTableIds = ids; // Ensure string IDs
                                 selectedTableIds = ids.map(id => id.toString()); 
                                 
@@ -591,12 +592,7 @@
 
 
         function updateTableMasterCheckbox() {
-            @* let totalCheckboxes = $("input[name='Stable']:not(:disabled)").length;
-            let checkedCheckboxes = $("input[name='Stable']:not(:disabled):checked").length;
-
-            $("#TablemasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
-            $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes); *@
-
+            
             const totalCount = allTableIds.length; // Total items across all pages
             const checkedCount = selectedTableIds.length; // How many are selected globally
 
