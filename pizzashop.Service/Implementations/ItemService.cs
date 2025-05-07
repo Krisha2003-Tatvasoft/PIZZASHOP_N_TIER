@@ -199,7 +199,7 @@ public class ItemService : IItemService
       }
       uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
     }
-    
+
     if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
     {
       return false;
@@ -373,7 +373,7 @@ public class ItemService : IItemService
       if (item.Isfavourite == true)
       {
         item.Isfavourite = false;
-       
+
 
         await _itemRepository.UpdateItem(item);
         return false;
@@ -386,6 +386,13 @@ public class ItemService : IItemService
       }
 
     }
+  }
+  
+   public async Task<List<int>> GetAllItemIds(int id)
+  {
+    var itemList = await _itemRepository.GetItemByCat(id, "");
+    List<int> itemIds = itemList.Select(i => i.Itemid).ToList();
+    return itemIds;
   }
 
 

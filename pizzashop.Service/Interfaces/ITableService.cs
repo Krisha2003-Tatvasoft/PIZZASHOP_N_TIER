@@ -23,6 +23,8 @@ public interface ITableService
   Task<List<SelectListItem>> GetTablesListDD(int sectionId);
 
   Task<bool> TableOccupeidBySec(int id);
+
+  Task<List<int>> GetAllTableIds(int id);
   
 
 }

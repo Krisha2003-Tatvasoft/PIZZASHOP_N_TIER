@@ -101,7 +101,7 @@ public class ItemRepository : IItemRepository
 
     public async Task<Item> ItemWithModifier(int id)
     {
-     
+
         return await _context.Items
         .Include(i => i.Itemmodifiergroupmaps)
         .ThenInclude(im => im.Modifiergroup)
@@ -110,6 +110,8 @@ public class ItemRepository : IItemRepository
         .FirstOrDefaultAsync(i => i.Itemid == id);
 
     }
+    
+
 
 
 }

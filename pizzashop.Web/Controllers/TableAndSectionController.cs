@@ -265,5 +265,11 @@ public class TableAndSectionController : Controller
         return Ok(firstSec.Sectionid);
     }
 
+     [HttpGet]
+    public async Task<IActionResult> GetAllModifierIds(int sectionId)
+    {
+        var ids = await _tableService.GetAllTableIds(sectionId); // should return List<string> or List<int>
+        return Json(ids);
+    }
 
 }

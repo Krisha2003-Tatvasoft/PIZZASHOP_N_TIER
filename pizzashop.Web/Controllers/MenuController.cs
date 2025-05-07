@@ -8,6 +8,7 @@ using VMCategory = pizzashop.Entity.ViewModels.Category;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Threading.Tasks;
 
 
 namespace pizzashop.Controllers;
@@ -41,9 +42,9 @@ public class MenuController : Controller
         return View();
     }
 
-    
+
     [HttpPost]
-     [CustomAuthorize("Menu", "AddEdit")] 
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> addCategory(VMCategory category)
     {
         if (ModelState.IsValid)
@@ -94,7 +95,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
-     [CustomAuthorize("Menu", "View")]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> ModiGroupList()
     {
         List<ModifiersGroup> modifiersGrops = await _modifierGroupService.GetMGList();
@@ -102,7 +103,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
-     [CustomAuthorize("Menu", "View")]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> modifierTable(int id, int page = 1, int pageSize = 5, string search = "")
     {
         var (modifiers, totalMoidifier) = await _modifierService.GetModifiersTable(id, page, pageSize, search);
@@ -263,7 +264,7 @@ public class MenuController : Controller
 
 
     [HttpGet]
-     [CustomAuthorize("Menu", "View")]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> modifierList(int id)
     {
         List<ModifierList> modifiers = await _modifierService.GetModifiersList(id);
@@ -377,7 +378,7 @@ public class MenuController : Controller
     }
 
     [HttpGet]
-     [CustomAuthorize("Menu", "View")]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> FirstMGId()
     {
         List<ModifiersGroup> modifiersGrops = await _modifierGroupService.GetMGList();
@@ -390,8 +391,8 @@ public class MenuController : Controller
     }
 
 
-     [HttpGet]
-     [CustomAuthorize("Menu", "View")]
+    [HttpGet]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> FirstCatId()
     {
         List<VMCategory> categories = await _categoryService.GetCategoryList();
@@ -513,10 +514,10 @@ public class MenuController : Controller
             return Json(new { success = false, message = "ModifierGroup not deleted." });
         }
     }
-    
+
 
     [HttpGet]
-      [CustomAuthorize("Menu", "View")]
+    [CustomAuthorize("Menu", "View")]
     public async Task<IActionResult> SelectExModifier(int page = 1, int pageSize = 5, string search = "")
     {
         var (Exmodifiers, totalExMoidifier) = await _modifierService.GetAllModifier(page, pageSize, search);
@@ -577,7 +578,7 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-     [CustomAuthorize("Menu", "AddEdit")]
+    [CustomAuthorize("Menu", "AddEdit")]
     public async Task<IActionResult> UpdateItemAvailble(int id, bool available)
     {
         CookieData user = SessionUtils.GetUser(HttpContext);
@@ -589,6 +590,33 @@ public class MenuController : Controller
         {
             return Json(new { success = false, message = "Available item not Updated." });
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllItemIds(int id)
+    {
+        var ids = await _itemService.GetAllItemIds(id); // should return List<string> or List<int>
+        return Json(ids);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllModifierIds(int mgid)
+    {
+        var ids = await _modifierService.GetAllModifierIds(mgid); // should return List<string> or List<int>
+        return Json(ids);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllExistingModifierIds()
+    {
+        var modifiers = await _modifierService.GetAllModifierInExIds(); // should return List<string> or List<int>
+        var result = modifiers.Select(m => new
+        {
+            id = m.Modifierid,
+            name = m.Modifiername
+        });
+
+        return Json(result);
     }
 
 

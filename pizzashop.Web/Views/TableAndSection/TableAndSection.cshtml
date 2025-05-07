@@ -194,7 +194,6 @@
                 loadTablesBySec(globalSectionId, 1);
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-            searchcross();
         });
 
 
@@ -218,7 +217,7 @@
 
         loadFirstTable(1);
 
-         function loadFirstTable(page) {
+        function loadFirstTable(page) {
 
             let pageSize = $("#pageSizeTable").val();
             let search = $("#searchInTable").val();
@@ -275,6 +274,7 @@
                     success: function (data) {
                         $('#load-tables').html(data);
                         restoreCheckedState();
+                        searchcross();
                         currentPage = page;
                     },
                     error: function () {
@@ -519,15 +519,15 @@
         @* deleted selected Tables *@
     
       var selectedTableIds = [];
+      var allTableIds = [];
 
         $(document).on("change", "input[name='Stable']:not(:disabled)", function (e) {
             let value = $(this).val();
-
             if ($(this).is(":checked")) {
-                // Add value if checked
-                selectedTableIds.push(value);
+                if (!selectedTableIds.includes(value)) {
+                    selectedTableIds.push(value);
+                }
             } else {
-                // Remove value if unchecked
                 selectedTableIds = selectedTableIds.filter(item => item !== value);
             }
             updateTableMasterCheckbox();
@@ -563,33 +563,55 @@
             $(document).on("change", "#TablemasterCheckbox", function (e) {
                 let isChecked = $(this).is(":checked");
 
-                // Select only checkboxes **visible on the current page**
-                $("input[name='Stable']:not(:disabled)").each(function () {
-
-                    let value = $(this).val();
-
-
-                    if (isChecked) {
-                        if (!selectedTableIds.includes(value)) {
-                            selectedTableIds.push(value);
+                if (isChecked) {
+                    // Fetch all table IDs only once when selecting all
+                    $.ajax({
+                        url: "/TableAndSection/GetAllTableIds",
+                        type: "GET",
+                        data : { sectionId: globalSectionId },
+                        success: function (ids) {
+                                allTableIds = ids; // Ensure string IDs
+                                selectedTableIds = ids.map(id => id.toString()); 
+                                
+                                $("input[name='Stable']:not(:disabled)").prop("checked", true);
+                                updateTableMasterCheckbox();
+                           
+                        },
+                        error: function (error) {
+                            console.error("Error fetching all table IDs:", error);
                         }
-                    } else {
-                        selectedTableIds = selectedTableIds.filter(item => item !== value);
-                    }
-
-                });
-
-                // Check/uncheck only the checkboxes on the current page
-                $("input[name='Stable']:not(:disabled)").prop("checked", isChecked);
+                    });
+                } else {
+                    // Clear all selections
+                    selectedTableIds = [];
+                    $("input[name='Stable']:not(:disabled)").prop("checked", false);
+                    updateTableMasterCheckbox();
+                }
             });
 
 
         function updateTableMasterCheckbox() {
-            let totalCheckboxes = $("input[name='Stable']:not(:disabled)").length;
+            @* let totalCheckboxes = $("input[name='Stable']:not(:disabled)").length;
             let checkedCheckboxes = $("input[name='Stable']:not(:disabled):checked").length;
 
             $("#TablemasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
-            $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+            $("#TablemasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes); *@
+
+            const totalCount = allTableIds.length; // Total items across all pages
+            const checkedCount = selectedTableIds.length; // How many are selected globally
+
+            if (checkedCount === 0) {
+                // Unchecked
+                $("#TablemasterCheckbox").prop("checked", false).prop("indeterminate", false);
+            } else if (checkedCount === totalCount) {
+                //Fully checked
+                $("#TablemasterCheckbox").prop("checked", true).prop("indeterminate", false);
+            } else {
+                // Indeterminate
+                $("#TablemasterCheckbox").prop("checked", false).prop("indeterminate", true);
+            }
+
+
         }
 
         function searchcross() {
@@ -597,6 +619,12 @@
             if (search === "") {
                 var element = $(".custom-icon");
                 element.removeClass("d-none");
+                var element1 = $("#TablemasterCheckbox");
+                element1.removeClass("d-none");
+            }
+            else {
+                var element1 = $("#TablemasterCheckbox");
+                element1.addClass("d-none");
             }
         }
 

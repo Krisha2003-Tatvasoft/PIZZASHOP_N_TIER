@@ -138,7 +138,7 @@ public class ModifierService : IModifierService
 
   public async Task<bool> EditModifierPost(int loginId, AddModifier viewmodel)
   {
-    if (await _modifierRepository.ModifierNameExistAtEditAsync(viewmodel.Modifiername,viewmodel.Modifierid))
+    if (await _modifierRepository.ModifierNameExistAtEditAsync(viewmodel.Modifiername, viewmodel.Modifierid))
     {
       return false;
     }
@@ -274,6 +274,20 @@ public class ModifierService : IModifierService
     return (modifiers, totalExMoidifier);
   }
 
+  public async Task<List<int>> GetAllModifierIds(int id)
+  {
+    var modifierList = await _modifierRepository.GetModifierByMG(id, "");
+
+    List<int> modifierIds = modifierList.Select(i => i.Modifierid).ToList();
+    return modifierIds;
+  }
+
+  public async Task<List<Modifier>> GetAllModifierInExIds()
+  {
+    var modifierList = await _modifierRepository.GetAllModifier("");
+
+    return modifierList;
+  }
 
 
 }

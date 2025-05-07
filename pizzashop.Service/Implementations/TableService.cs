@@ -152,4 +152,13 @@ public class TableService : ITableService
         }
         return false;
     }
+
+    public async Task<List<int>> GetAllTableIds(int id)
+    {
+        var tables = await _tableRepository.GetTablesySec(id, "");
+
+        List<int> tableIds = tables.Select(i => i.Tableid).ToList();
+        return tableIds;
+    }
+
 }

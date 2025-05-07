@@ -441,6 +441,7 @@
     // Temporary (modal) arrays
     let tempSelectExModifier = [];
     let tempSelectedModifiername = new Map();
+    let allTempModifierIds = [];
 
 
     $(document).ready(function () {
@@ -481,7 +482,7 @@
                 }
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-            searchcross();
+
         });
 
 
@@ -520,7 +521,6 @@
                 }
                 // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-            searchcrossForModifier();
         });
 
         @* add item model *@
@@ -630,6 +630,7 @@
                     $('#item-table').html(data);
                     currentPage = page;
                     restoreCheckedState();
+                    searchcross();
                 },
                 error: function () {
                 }
@@ -738,6 +739,7 @@
                     $('#modifier-table').html(data);
                     currentPage = page;
                     restoreCheckedModifier();
+                    searchcrossForModifier();
                 },
                 error: function () {
                 }
@@ -830,9 +832,7 @@
         }
 
         function updateModifierGroupIndexes() {
-            console.log("in function");
             $(".modifier-group").each(function (index) {
-                console.log("in loop");
                 $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
                 $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
                 $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
@@ -938,32 +938,37 @@
 
 
         @* deleted selected item *@
-          var selectedIds = [];
+
+            let selectedIds = [];           // Will hold ALL selected item IDs
+        let allIds = [];      // Item IDs on current page
 
         $(document).on("change", "input[name='Sitem']", function (e) {
             let value = $(this).val();
-
             if ($(this).is(":checked")) {
-                // Add value if checked
-                selectedIds.push(value);
+                if (!selectedIds.includes(value)) {
+                    selectedIds.push(value);
+                }
             } else {
-                // Remove value if unchecked
-                selectedIds = selectedIds.filter(item => item !== value);
+                selectedIds = selectedIds.filter(id => id !== value);
             }
-
             updateMasterCheckbox();
         });
 
         function restoreCheckedState() {
+            console.log("in restore");
             $("input[name='Sitem']").each(function () {
                 let value = $(this).val();
                 $(this).prop("checked", selectedIds.includes(value));
             });
-
             updateMasterCheckbox();
         }
 
         $(document).on("click", ".delete-selected-yes", function (e) {
+
+            if (selectedIds.length === 0) {
+                toastr.warning("Please select at least one item.");
+                return;
+            }
 
             $.ajax({
                 url: "/Menu/DeleteSelectedItem",
@@ -978,6 +983,7 @@
                     console.error("Error updating permissions:", error);
                 }
             });
+
         });
 
 
@@ -1046,7 +1052,6 @@
                 }
 
             });
-
 
 
         @* edit modifier get *@
@@ -1186,19 +1191,18 @@
 
         @* deleted selected modifier*@
 
-        var selectedModifierIds = [];
+            let selectedModifierIds = []; // Stores all selected modifier IDs globally
+        let allModifierIds = []; // Stores all modifier IDs from DB for current MGId
 
         $(document).on("change", "input[name='SModifier']", function (e) {
             let value = $(this).val();
-
             if ($(this).is(":checked")) {
-                // Add value if checked
-                selectedModifierIds.push(value);
+                if (!selectedModifierIds.includes(value)) {
+                    selectedModifierIds.push(value);
+                }
             } else {
-                // Remove value if unchecked
-                selectedModifierIds = selectedModifierIds.filter(item => item !== value);
+                selectedModifierIds = selectedModifierIds.filter(id => id !== value);
             }
-
             updateModifierMasterCheckbox();
         });
 
@@ -1229,7 +1233,7 @@
                 data: { selectedIds: selectedModifierIds, MGid: MGId },
                 success: function (response) {
                     selectedModifierIds = [];
-                    loadModifierTable(1);
+                    loadModifierTable(MGId);
                     toastr.success("Selected Modifiers Deleted Succesfully.");
                 },
                 error: function (error) {
@@ -1297,11 +1301,14 @@
 
         @* Existing modifier Table *@
 
+            let FirstOpen = true;
 
-            $(document).on("click", ".select-existing", function (e) {
-                e.preventDefault();
-                loadExistingModifier(1);
-            });
+        $(document).on("click", ".select-existing", function (e) {
+            e.preventDefault();
+            FirstOpen = true;
+            loadExistingModifier(1);
+        });
+
 
         function loadExistingModifier(page) {
 
@@ -1320,9 +1327,14 @@
                     $(".existing-modifier-data").html(data);
                     $("#selectExistingModifiers").modal("show");
                     // Clone main selections into temp arrays
-                    tempSelectExModifier = [...selectExModifier];
-                    tempSelectedModifiername = new Map(selectedModifiername);
+
+                    if (FirstOpen) {
+                        tempSelectExModifier = [...selectExModifier];
+                        tempSelectedModifiername = new Map(selectedModifiername);
+                        FirstOpen = false;
+                    }
                     restoreTempCheckedExState();
+                    searchcrossForEXM();
                 },
                 error: function (error) {
                     console.log("in error");
@@ -1357,7 +1369,7 @@
             searchTimer3 = setTimeout(function () {
                 loadExistingModifier(1);  // Reset to page 1 when searching
             }, 500); // 500ms delay to avoid excessive requests
-            searchcrossForEXM();
+
         });
 
         $(document).on("click", ".add-ex-modifier", function (e) {
@@ -1481,8 +1493,6 @@
                             selectExModifier = [...tempSelectExModifier];
                             selectedModifiername = new Map(tempSelectedModifiername);
 
-
-                         
                             restoreTempCheckedExState();
                             displaySelectedModifiers();
                         }
@@ -1502,7 +1512,6 @@
                     $('body').addClass('modal-open');
                 }
             });
-
 
 
         $(document).on("click", "#edit-MG-Yes", function (e) {
@@ -1565,35 +1574,49 @@
         @* master check box in item *@
 
             function updateMasterCheckbox() {
-                let totalCheckboxes = $("input[name='Sitem']").length;
-                let checkedCheckboxes = $("input[name='Sitem']:checked").length;
 
-                $("#masterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
-                $("#masterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
+                const totalCount = allIds.length; // Total items across all pages
+                const checkedCount = selectedIds.length; // How many are selected globally
 
+                if (checkedCount === 0) {
+                    // Unchecked
+                    $("#masterCheckbox").prop("checked", false).prop("indeterminate", false);
+                } else if (checkedCount === totalCount) {
+                    //Fully checked
+                    $("#masterCheckbox").prop("checked", true).prop("indeterminate", false);
+                } else {
+                    // Indeterminate
+                    $("#masterCheckbox").prop("checked", false).prop("indeterminate", true);
+                }
             }
 
 
         $(document).on("change", "#masterCheckbox", function (e) {
+
             let isChecked = $(this).is(":checked");
-
-            // Select only checkboxes **visible on the current page**
-            $("input[name='Sitem']").each(function () {
-
-                let value = $(this).val();
-
-                if (isChecked) {
-                    if (!selectedIds.includes(value)) {
-                        selectedIds.push(value);
+            if (isChecked) {
+                // Get ALL item IDs from server
+                $.ajax({
+                    url: "/Menu/GetAllItemIds",
+                    type: "GET",
+                    data: { id: globalCat },
+                    success: function (allId) {
+                        allIds = allId; // Store all IDs in a global variable
+                        selectedIds = allIds.map(item => item.toString());
+                        console.log(selectedIds);
+                        // Check only items on current page
+                        $("input[name='Sitem']").each(function () {
+                            $(this).prop("checked", true);
+                        });
+                        updateMasterCheckbox();
                     }
-                } else {
-                    selectedIds = selectedIds.filter(item => item !== value);
-                }
-
-            });
-
-            // Check/uncheck only the checkboxes on the current page
-            $("input[name='Sitem']").prop("checked", isChecked);
+                });
+            } else {
+                // Clear selection
+                selectedIds = [];
+                $("input[name='Sitem']").prop("checked", false);
+                updateMasterCheckbox();
+            }
         });
 
 
@@ -1602,33 +1625,37 @@
 
             $(document).on("change", "#ModifierMasterCheckbox", function (e) {
                 let isChecked = $(this).is(":checked");
+                if (isChecked) {
+                    $.ajax({
+                        url: "/Menu/GetAllModifierIds", // Adjust to your actual endpoint
+                        type: "GET",
+                        data: { mgid: globalModifier }, // Use current modifier group
+                        success: function (ids) {
+                            allModifierIds = ids;
+                            selectedModifierIds = ids.map(id => id.toString()); // Convert to string if needed
 
-                // Select only checkboxes **visible on the current page**
-                $("input[name='SModifier']").each(function () {
-
-                    let value = $(this).val();
-
-                    if (isChecked) {
-                        if (!selectedModifierIds.includes(value)) {
-                            selectedModifierIds.push(value);
+                            $("input[name='SModifier']").prop("checked", true);
+                            updateModifierMasterCheckbox();
                         }
-                    } else {
-                        selectedModifierIds = selectedModifierIds.filter(item => item !== value);
-                    }
-
-                });
-
-                // Check/uncheck only the checkboxes on the current page
-                $("input[name='SModifier']").prop("checked", isChecked);
+                    });
+                } else {    
+                    selectedModifierIds = [];
+                    $("input[name='SModifier']").prop("checked", false);
+                    updateModifierMasterCheckbox();
+                }
             });
 
         function updateModifierMasterCheckbox() {
-            let totalCheckboxes = $("input[name='SModifier']").length;
-            let checkedCheckboxes = $("input[name='SModifier']:checked").length;
+            const totalCount = allModifierIds.length;
+            const checkedCount = selectedModifierIds.length;
 
-            $("#ModifierMasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
-            $("#ModifierMasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
-
+            if (checkedCount === 0) {
+                $("#ModifierMasterCheckbox").prop("checked", false).prop("indeterminate", false);
+            } else if (checkedCount === totalCount) {
+                $("#ModifierMasterCheckbox").prop("checked", true).prop("indeterminate", false);
+            } else {
+                $("#ModifierMasterCheckbox").prop("checked", false).prop("indeterminate", true);
+            }
         }
 
 
@@ -1637,35 +1664,48 @@
             $(document).on("change", "#ExMmasterCheckbox", function (e) {
                 let isChecked = $(this).is(":checked");
 
-                // Select only checkboxes **visible on the current page**
-                $("input[name='SExmodifier']").each(function () {
+                if (isChecked) {
+                    $.ajax({
+                        url: "/Menu/GetAllExistingModifierIds", // ✅ Must return ALL IDs as strings
+                        type: "GET",
+                        success: function (modifiers) {
 
-                    let value = $(this).val();
-                    let modifierName = $(this).data("id");
+                            allTempModifierIds = modifiers.map(m => m.id.toString());
+                            tempSelectExModifier = [...allTempModifierIds];
 
-                    if (isChecked) {
-                        if (!tempSelectExModifier.includes(value)) {
-                            tempSelectExModifier.push(value);
-                            tempSelectedModifiername.set(value, modifierName);
+                            modifiers.forEach(m => {
+                                tempSelectedModifiername.set(m.id.toString(), m.name);
+                            });
+
+                            // Optional: update names map if needed from response
+                            $("input[name='SExmodifier']").each(function () {
+                                $(this).prop("checked", true);
+                            });
+
+                            updateExMMasterCheckbox();
                         }
-                    } else {
-                        tempSelectExModifier = tempSelectExModifier.filter(item => item !== value);
-                        tempSelectedModifiername.delete(value);
-                    }
+                    });
+                } else {
+                    tempSelectExModifier = [];
+                    tempSelectedModifiername.clear();
+                    $("input[name='SExmodifier']").prop("checked", false);
+                    updateExMMasterCheckbox();
+                }
 
-                });
-
-                // Check/uncheck only the checkboxes on the current page
-                $("input[name='SExmodifier']").prop("checked", isChecked);
             });
 
         function updateExMMasterCheckbox() {
-            let totalCheckboxes = $("input[name='SExmodifier']").length;
-            let checkedCheckboxes = $("input[name='SExmodifier']:checked").length;
+            const totalCount = allTempModifierIds.length;
+            const checkedCount = tempSelectExModifier.length;
 
-            $("#ExMmasterCheckbox").prop("checked", totalCheckboxes > 0 && totalCheckboxes === checkedCheckboxes);
-            $("#ExMmasterCheckbox").prop("indeterminate", checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes);
-
+            const master = $("#ExMmasterCheckbox");
+            if (checkedCount === 0) {
+                master.prop("checked", false).prop("indeterminate", false);
+            } else if (checkedCount === totalCount) {
+                master.prop("checked", true).prop("indeterminate", false);
+            } else {
+                master.prop("checked", false).prop("indeterminate", true);
+            }
         }
 
         function searchcross() {
@@ -1673,14 +1713,25 @@
             if (search === "") {
                 var element = $(".custom-icon");
                 element.removeClass("d-none");
+                var element1 = $("#masterCheckbox");
+                element1.removeClass("d-none");
+            }
+            else {
+                var element1 = $("#masterCheckbox");
+                element1.addClass("d-none");
             }
         }
 
         function searchcrossForModifier() {
             let search = $("#searchModifier").val();
+            let element = $(".custom-icon");
+            let master = $("#ModifierMasterCheckbox");
+
             if (search === "") {
-                var element = $(".custom-icon");
                 element.removeClass("d-none");
+                master.removeClass("d-none");
+            } else {
+                master.addClass("d-none");
             }
         }
 
@@ -1690,6 +1741,12 @@
                 if (search === "") {
                     var element = $(".custom-icon");
                     element.removeClass("d-none");
+                    var element1 = $("#ExMmasterCheckbox");
+                    element1.removeClass("d-none");
+                }
+                else {
+                    var element1 = $("#ExMmasterCheckbox");
+                    element1.addClass("d-none");
                 }
             }
 
