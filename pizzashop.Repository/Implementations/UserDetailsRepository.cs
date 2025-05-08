@@ -51,12 +51,12 @@ public class UserDetailsRepository : IUserDetailsRepository
 
     public async Task<bool> PhoneExistsAsync(string phone)
     {
-        return await _context.Users.AnyAsync(u => u.Phone == phone && u.Isdeleted == false);
+        return await _context.Users.AnyAsync(u => u.Phone.Trim() == phone.Trim() && u.Isdeleted == false);
     }
 
     public async Task<bool> PhoneExistsEditAsync(string phone,int userid)
     {
-        return await _context.Users.AnyAsync(u => u.Phone == phone && u.Userid !=userid && u.Isdeleted == false);
+        return await _context.Users.AnyAsync(u => u.Phone.Trim() == phone.Trim() && u.Userid !=userid && u.Isdeleted == false);
     }
 
 

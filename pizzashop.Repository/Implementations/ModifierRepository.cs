@@ -94,12 +94,12 @@ public class ModifierRepository : IModifierRepository
 
     public async Task<bool> ModifierExistAsync(string Modifiername)
     {
-        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower() == Modifiername.ToLower() && c.Isdeleted == false);
+        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower().Trim() == Modifiername.ToLower().Trim() && c.Isdeleted == false);
     }
 
     public async Task<bool> ModifierNameExistAtEditAsync(string Modifiername, int id)
     {
-        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower() == Modifiername.ToLower() && c.Modifierid != id && c.Isdeleted == false);
+        return await _context.Modifiers.AnyAsync(c => c.Modifiername.ToLower().Trim() == Modifiername.ToLower().Trim() && c.Modifierid != id && c.Isdeleted == false);
     }
 
 }

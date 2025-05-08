@@ -4,27 +4,27 @@
 <div class="table-responsive">
     <table class="table mb-0">
         <caption class="bg-white">
-            @if(Model !=null && Model.Count()==0)
-{
-     <h1 class="d-flex align-items-center justify-content-center fs-6">No data Found.</h1>
-}
-else
-{
-            <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
-                <div class="d-flex align-items-center">
-                    <span class="d-none d-sm-inline px-1">Items Per page:</span>
-                    <select id="pageSizeOrder" class="form-select form-select-sm" style="width: auto;">
-                        <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
-                        <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
-                        <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
-                    </select>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="d-none d-sm-inline px-1">
-                        Showing @(ViewBag.totalOrder > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
-                        - @(ViewBag.totalOrder > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
-                                                ViewBag.totalOrder) :
-                                                0)
+            @if (Model != null && Model.Count() == 0)
+            {
+                <h1 class="d-flex align-items-center justify-content-center fs-6">No data Found.</h1>
+            }
+            else
+            {
+                <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
+                    <div class="d-flex align-items-center">
+                        <span class="d-none d-sm-inline px-1">Items Per page:</span>
+                        <select id="pageSizeOrder" class="form-select form-select-sm" style="width: auto;">
+                            <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                            <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                            <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
+                        </select>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="d-none d-sm-inline px-1">
+                            Showing @(ViewBag.totalOrder > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
+                            - @(ViewBag.totalOrder > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+                                                    ViewBag.totalOrder) :
+                                                    0)
                         of @ViewBag.totalOrder
                     </span>
                     <nav class="mt-3">
@@ -36,58 +36,54 @@ else
                                 </a>
                             </li>
 
-                            <!-- Next Page -->
-                            <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
-                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                                <!-- Next Page -->
+                                <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
+                                    <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-            </div>
-            }
+                        }
 
         </caption>
 
         <thead>
             <tr>
                 <th style="min-width: 7rem;" class="ps-3">
-                    <a href="#" class="sort" data-column="OrderId" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                        #Order  <i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
-                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
+                    <a href="#" class="sort" data-column="OrderId" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
+                                                                                           : "asc")>
+                        #Order <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
-                    
+
                 </th>
                 <th style="min-width: 7rem;">
-                    <a href="#" class="sort" data-column="OrderDate" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                         Date<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
-                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
+                    <a href="#" class="sort" data-column="OrderDate" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
+                                                                                             : "asc")>
+                        Date<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
-                    @* <a href="#" class="sort" data-column="OrderDate" data-order="desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> *@
                 </th>
                 <th style="min-width: 7rem;">
-                    <a href="#" class="sort" data-column="CustomerName" data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                       Customer<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
-                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
+                    <a href="#" class="sort" data-column="CustomerName" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
+                                                                                                : "asc")>
+                        Customer<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
-                    @* <a href="#" class="sort" data-column="CustomerName" data-order="desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> *@
                 </th>
                 <th>Status</th>
                 <th>Payment Mode</th>
                 <th>Rating</th>
                 <th style="min-width: 7rem;">
-                    <a href="#" class="sort" data-column="TotalAmount"  data-order= @(ViewBag.SortOrder =="asc" ? "desc" :"asc")>
-                        Total Amount<i class="bi bi-arrow-up @(ViewBag.SortOrder =="asc" ? "text-dark" :"")"></i><i class="bi bi-arrow-down 
-                        @(ViewBag.SortOrder =="desc" ? "text-dark" :"")"></i>
+                    <a href="#" class="sort" data-column="TotalAmount" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
+                                                                                               : "asc")>
+                        Total Amount<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i
+                            class="bi bi-arrow-down 
+                        @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
-                    @* <a href="#" class="sort" data-column="TotalAmount" data-order="desc">
-                        <i class="bi bi-arrow-down"></i>
-                    </a> *@
                 </th>
                 <th>Action</th>
             </tr>
@@ -103,29 +99,41 @@ else
                     <td>@order.Customername</td>
                     <td>@order.orderstatus</td>
                     <td>@order.paymentmode</td>
-                   <td>
-    <span class="text-warning">
-        @for (int i = 1; i <= Math.Floor(@order.Rating); i++)  
-        {
-            @Html.Raw("<i class='bi bi-star-fill'></i>")  <!-- Full Star -->
-        }  
-        @if (order.Rating % 1 >= 0.5m)  
-        {  
-            @Html.Raw("<i class='bi bi-star-half'></i>")  <!-- Half Star -->
-        }  
-    </span>
-    <span class="text-secondary">
-        @for (int i = (int)Math.Ceiling(@order.Rating); i < 5; i++)  
-        {  
-            @Html.Raw("<i class='bi bi-star'></i>")  <!-- Empty Star -->
-        }  
-    </span>
-</td>
+                    <td>
+                        <span class="rating-stars d-inline-flex align-items-center">
+                            @{
+                                decimal rating = order.Rating;
+                                int orderId = order.Orderid;
+
+                                for (int i = 1; i <= 5; i++)
+                                {
+                                    decimal fill = Math.Clamp(rating - (i - 1), 0, 1); // from 0 to 1
+                                    int fillPercent = (int)(fill * 100);
+                                    <span class="star-icon">
+                                        <svg viewBox="0 0 24 24" class="star-base">
+                                            <defs>
+                                                <linearGradient id="@orderId-@i">
+                                                    <stop offset="@fillPercent%" stop-color="#ffc107" />
+                                                    <stop offset="@fillPercent%" stop-color="#e4e5e9" />
+                                                </linearGradient>
+                                            </defs>
+                                            <path fill="url(#@orderId-@i)"
+                                                d="M12 .587l3.668 7.568L24 9.423l-6 5.853 1.417 8.247L12 18.897l-7.417 4.626L6 15.276 0 9.423l8.332-1.268z" />
+                                        </svg>
+                                    </span>
+                                }
+                            }
+                           
+                        </span>
+                    </td>
 
                     <td>@order.Totalamount</td>
                     <td>
-                        <div class="d-flex gap-3 edit-delet "><button class="download-invoice"  data-orderid="@order.Orderid"><a class=""><i class="bi bi-filetype-pdf text-secondary h4"></i></a></button>
-                        <button class="button delete order-details" data-orderid="@order.Orderid"><i class="bi bi-eye text-secondary h4"></i></button>
+                        <div class="d-flex gap-3 edit-delet "><button class="download-invoice"
+                                data-orderid="@order.Orderid"><a class=""><i
+                                        class="bi bi-filetype-pdf text-secondary h4"></i></a></button>
+                            <button class="button delete order-details" data-orderid="@order.Orderid"><i
+                                    class="bi bi-eye text-secondary h4"></i></button>
                         </div>
                     </td>
                 </tr>

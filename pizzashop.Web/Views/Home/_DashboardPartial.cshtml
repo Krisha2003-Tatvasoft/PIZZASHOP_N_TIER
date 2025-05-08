@@ -225,6 +225,9 @@
     var revenueGrowthData = @Html.Raw(Json.Serialize(Model.RevenueGrowthData));
     var customerGrowthData = @Html.Raw(Json.Serialize(Model.CustomerGrowthData));
 
+    console.log(revenueGrowthData);
+    console.log(customerGrowthData);
+
     renderChart({
         canvasId: 'revenueChart',
         data: revenueGrowthData,

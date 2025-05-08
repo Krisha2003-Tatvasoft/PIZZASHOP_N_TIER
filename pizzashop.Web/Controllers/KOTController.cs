@@ -34,11 +34,10 @@ public class KOTController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
-    public async Task<IActionResult> loadTickets(int id, string status, int page = 1)
+    public async Task<IActionResult> loadTickets(int id, string status)
     {
-        var (tickets, totalOrder) = await _KOTService.Ticket(id, status, page);
-
-        ViewBag.CurrentPage = page;
+        var (tickets, totalOrder) = await _KOTService.Ticket(id, status);
+        
         ViewBag.totalOrder = totalOrder;
 
         return PartialView("_Ticket", tickets);

@@ -40,7 +40,7 @@ public class SectionRepository : ISectionRepository
 
     public async Task<bool> SectionNameAsync(string sectioname)
     {
-        return await _context.Sections.AnyAsync(s => s.Sectionname.ToLower() == sectioname.ToLower() && s.Isdeleted == false);
+        return await _context.Sections.AnyAsync(s => s.Sectionname.ToLower().Trim() == sectioname.ToLower().Trim() && s.Isdeleted == false);
     }
 
     public async Task<Section> SecByIdAsync(int id)
@@ -50,7 +50,7 @@ public class SectionRepository : ISectionRepository
 
     public async Task<bool> SecNameExistAtEditAsync(string sectionname, int id)
     {
-        return await _context.Sections.AnyAsync(s => s.Sectionname.ToLower() == sectionname.ToLower() && s.Sectionid != id && s.Isdeleted == false);
+        return await _context.Sections.AnyAsync(s => s.Sectionname.ToLower().Trim() == sectionname.ToLower().Trim() && s.Sectionid != id && s.Isdeleted == false);
     }
 
     public async Task UpdateSection(Section section)

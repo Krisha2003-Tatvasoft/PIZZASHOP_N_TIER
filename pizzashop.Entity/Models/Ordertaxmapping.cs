@@ -13,7 +13,7 @@ public partial class Ordertaxmapping
 
     // public bool IsChecked { get; set; }
 
-    public int? Taxvalue { get; set; }
+    public decimal? Taxvalue { get; set; }
 
     public virtual Order Order { get; set; } = null!;
 

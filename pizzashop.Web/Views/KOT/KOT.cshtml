@@ -57,14 +57,14 @@
 
         loadCategoryList(currentStatus);
 
-        function loadTicket(categoryId, status, page) {
+        function loadTicket(categoryId, status) {
             currentCategoryId = categoryId;
 
             $.ajax({
 
                 url: "/KOT/loadTickets",
                 type: "GET",
-                data: { id: categoryId, status: status, page: page },
+                data: { id: categoryId, status: status },
                 success: function (data) {
                     $('.ticket-parial').html(data);
                     if (currentStatus === "Inprogress") {
@@ -75,7 +75,6 @@
                         $(".inprogress").removeClass("filled-button").addClass("unfilled-button");
                     }
                     $(".cat-name").text(currentCategoryName);
-                    currentPage = page;
                 },
                 error: function () {
                 }
@@ -85,30 +84,36 @@
         $(document).on("click", ".cat-class", function (e) {
             var categoryId = $(this).data("catid");
             currentCategoryName = $(this).data("catname");
-            loadTicket(categoryId, currentStatus, 1);
+            loadTicket(categoryId, currentStatus);
         });
 
         $(document).on("click", ".inprogress", function (e) {
             currentStatus = "Inprogress";
-            loadTicket(currentCategoryId, currentStatus, 1);
+            loadTicket(currentCategoryId, currentStatus);
             loadCategoryList(currentStatus);
         });
 
         $(document).on("click", ".ready", function (e) {
             currentStatus = "Ready";
-            loadTicket(currentCategoryId, currentStatus, 1);
+            loadTicket(currentCategoryId, currentStatus);
             loadCategoryList(currentStatus);
         });
 
-        loadTicket(0, currentStatus, 1);
+        loadTicket(0, currentStatus);
+
+        
 
         $(document).on("click", ".pagination-link", function (e) {
             e.preventDefault();
-            let page = $(this).data("page");
+            console.log("Pagination clicked");
+            let isRight = $(this).find("i").hasClass("bi-chevron-right");
+            let scrollContainer = $(".ticket-scroll-container")[0];
+            let cardWidth = $(".order-card").outerWidth(true); // include margin
 
-            if (page > 0) {
-                loadTicket(currentCategoryId, currentStatus, page);
-            }
+            scrollContainer.scrollBy({
+                left: isRight ? cardWidth : -cardWidth,
+                behavior: 'smooth'
+            });
         });
 
 
@@ -193,17 +198,14 @@
             // Extract Order ID from modal title
             const orderId = $('#orderModal').find('.modal-title').text().split('#')[1].trim();
 
-            // Loop through all checked checkboxes
+
             $('#orderModal').find('input[type="checkbox"]:checked').each(function () {
                 const $itemContainer = $(this).closest('.d-flex.justify-content-between');
 
-                // Get itemId from the data attribute of the container
                 const orderitemid = $itemContainer.find('[data-orderitemid]').data('orderitemid');
 
-                // Get the updated quantity value
                 const quantity = parseInt($itemContainer.find('.quantity').text());
 
-                // Push the itemId and quantity to the array
                 itemsToUpdate.push({ orderitemid, quantity });
             });
 
@@ -230,7 +232,7 @@
                 }),
                 success: function (res) {
                     $('#orderModal').modal('hide');
-                    loadTicket(currentCategoryId, currentStatus, currentPage); // Refresh the ticket list
+                    loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
                     loadCategoryList(currentStatus);
                 },
                 error: function () {

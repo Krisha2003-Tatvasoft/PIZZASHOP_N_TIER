@@ -70,12 +70,12 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<bool> CatExistAsync(string Categoryname)
     {
-        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower() == Categoryname.ToLower() && c.Isdeleted == false);
+        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower().Trim() == Categoryname.ToLower().Trim() && c.Isdeleted == false);
     }
 
     public async Task<bool> CatNameExistAtEditAsync(string Categoryname, int id)
     {
-        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower() == Categoryname.ToLower() && c.Categoryid != id && c.Isdeleted == false);
+        return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower().Trim() == Categoryname.ToLower().Trim() && c.Categoryid != id && c.Isdeleted == false);
     }
 
 

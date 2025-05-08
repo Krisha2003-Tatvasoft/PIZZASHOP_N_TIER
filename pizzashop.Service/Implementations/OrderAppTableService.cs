@@ -89,7 +89,10 @@ public class OrderAppTableService : IOrderAppTableService
                             return (null, "This customer already has an active or recent table assignment.");
                         }
                     }
-                    customer.Visitcount = (short?)(customer.Visitcount + 1);
+                    // customer.Visitcount = (short?)(customer.Visitcount + 1);
+                    customer.Totalorder++;
+                    customer.Modifiedby = loginid;
+                    customer.Modifiedat = DateTime.Now;
                     await _customerRepository.UpdateCustomer(customer);
                     customerid = customer.Customerid;
                 }
@@ -113,6 +116,9 @@ public class OrderAppTableService : IOrderAppTableService
                     customer.Customername = model.Customername;
                     customer.Phoneno = model.Phoneno;
                     customer.Visitcount = (short?)(customer.Visitcount + 1);
+                    customer.Totalorder++;
+                    customer.Modifiedby = loginid;
+                    customer.Modifiedat = DateTime.Now;
 
                     if (model.Waitingtokenid == null)
                     {
@@ -139,7 +145,9 @@ public class OrderAppTableService : IOrderAppTableService
                         Phoneno = model.Phoneno,
                         Email = model.Email,
                         Createdby = loginid,
-                        Visitcount = 1
+                        Visitcount = 1,
+                        Totalorder = 1,
+                        Createdat = DateTime.Now
                     };
                     await _customerRepository.AddNewCustomer(customer);
                     customerid = customer.Customerid;

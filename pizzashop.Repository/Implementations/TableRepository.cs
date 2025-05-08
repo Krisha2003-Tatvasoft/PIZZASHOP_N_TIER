@@ -49,7 +49,7 @@ public class TableRepository : ITableRepository
 
     public async Task<bool> TableNameExist(int? sectionId, string tableName)
     {
-        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower() && s.Isdeleted == false);
+        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower().Trim() == tableName.ToLower().Trim() && s.Isdeleted == false);
     }
 
 
@@ -61,7 +61,7 @@ public class TableRepository : ITableRepository
 
     public async Task<bool> TableNameExistInEdit(int? sectionId, string tableName, int tableId)
     {
-        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower() == tableName.ToLower()
+        return await _context.Tables.AnyAsync(s => s.Sectionid == sectionId && s.Tablename.ToLower().Trim() == tableName.ToLower().Trim()
         && s.Tableid != tableId && s.Isdeleted == false);
     }
 

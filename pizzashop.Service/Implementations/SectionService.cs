@@ -186,7 +186,7 @@ public class SectionService : ISectionService
             {
                Tableid = t.Tableid,
                Tablename = t.Tablename,
-               Capacity = order?.Noofperson ?? t.Capacity,
+               Capacity = t.Capacity,
                tablestatus = t.tablestatus,
                orderstatus = status,
                Totalamount = order?.Totalamount ?? 0,

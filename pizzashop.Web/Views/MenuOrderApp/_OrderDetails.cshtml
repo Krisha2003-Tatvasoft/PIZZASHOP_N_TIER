@@ -9,7 +9,7 @@
     <button type="button" class="btn-close text-black d-xl-none d-inline p-3" data-bs-dismiss="offcanvas"
         data-bs-target="#cart" aria-label="Close"></button>
 
-<div class="mx-5 mx-xl-0 my-2 my-xl-0 p-3" style="background-color: white;">
+<div class="mx-5 mx-xl-0 my-2 my-xl-0 p-3 overflow-y-auto" style="background-color: white; max-height:calc(100vh - 130px);">
     <div class="d-flex justify-content-between align-items-center">
         <input type="hidden" value="@Model.Orderid" asp-for="Orderid">
         <div class="d-flex justify-content-start align-items-center">
@@ -78,7 +78,7 @@
             <div id="subtotal"></div>
         </div>
 
-        <div class="overflow-y-auto" style="max-height:calc(100vh - 650px);">
+        <div class="">
         <div id="taxBreakdown"></div>
         <div id="flatTaxList" class="mt-2"></div>
         </div>

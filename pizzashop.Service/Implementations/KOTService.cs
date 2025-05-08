@@ -16,7 +16,7 @@ public class KOTService : IKOTService
 
 
     private static Dictionary<int, DateTime> _orderStartTimes = new();
-    public async Task<(List<Ticket>, int totalOrder)> Ticket(int id, string status, int page)
+    public async Task<(List<Ticket>, int totalOrder)> Ticket(int id, string status)
     {
         var orders = await _orderRepository.InprogressOrders();
         int totalOrder = 0;
@@ -90,7 +90,7 @@ public class KOTService : IKOTService
             }
         }
         totalOrder = tickets.Count;
-        tickets = tickets.Skip((page - 1) * 4).Take(4).ToList();
+        tickets = tickets.ToList();
         return (tickets, totalOrder); // Return the list of tickets
 
     }

@@ -60,12 +60,12 @@ public class ModifiersGroupRepository : IModifiersGroupRepository
 
     public async Task<bool> MGExistAsync(string MGName)
     {
-        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower() == MGName.ToLower() && c.Isdeleted == false);
+        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower().Trim() == MGName.ToLower().Trim() && c.Isdeleted == false);
     }
 
     public async Task<bool> MGExistAtEditAsync(string MGName, int id)
     {
-        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower() == MGName.ToLower() 
+        return await _context.Modifiergroups.AnyAsync(c => c.Modifiergroupname.ToLower().Trim() == MGName.ToLower().Trim()
         && c.Modifiergroupid != id && c.Isdeleted == false);
     }
     

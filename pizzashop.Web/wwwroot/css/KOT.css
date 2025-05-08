@@ -25,6 +25,7 @@
   background-color: white !important;
 }
 
+
 .tab {
   display: flex;
   align-items: center;
@@ -58,7 +59,8 @@
 
 .order-card {
   border: 2px dashed #ccc;
-  width: 330px;
+  min-width: 350px; /* or your current size */
+  flex: 0 0 auto;
   overflow-y: auto;
   border-radius: 5px;
 }

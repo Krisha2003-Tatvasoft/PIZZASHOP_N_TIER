@@ -273,11 +273,11 @@
 
             if (dateFilter === "7") {
                 fromDate = new Date(today);
-                fromDate.setDate(today.getDate() - 7);
+                fromDate.setDate(today.getDate() - 6);
                 toDate = today;
             } else if (dateFilter === "30") {
                 fromDate = new Date(today);
-                fromDate.setDate(today.getDate() - 30);
+                fromDate.setDate(today.getDate() - 29);
                 toDate = today;
             } else if (dateFilter === "currentMonth") {
                 fromDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1)); // First day of the current month

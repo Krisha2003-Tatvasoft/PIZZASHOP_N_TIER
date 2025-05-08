@@ -488,7 +488,8 @@
       subTotal += itemmodifierTotal;
 
       if (item.Isdefaulttax === true) {
-        const taxAmount = (itemTotal * item.Taxpercentage) / 100;
+        var currenttax = parseFloat(item.Taxpercentage) || 0;
+        const taxAmount = (itemTotal * currenttax) / 100;
         defaultTaxTotal += taxAmount;
       }
 
@@ -504,7 +505,7 @@
       OrderTax.push({
         Orderid: orderId,
         Taxid: tax.Taxid,
-        Taxvalue: parseInt(taxAmount)
+        Taxvalue: parseFloat(taxAmount)
       });
 
 
@@ -531,7 +532,7 @@
       OrderTax.push({
         Orderid: orderId,
         Taxid: taxId,
-        Taxvalue: parseInt(taxValue)
+        Taxvalue: parseFloat(taxValue)
       });
 
 
@@ -551,7 +552,7 @@
     OrderTax.push({
       Orderid: orderId,
       Taxid: 0,
-      Taxvalue: parseInt(defaultTaxTotal)
+      Taxvalue: parseFloat(defaultTaxTotal)
     });
 
 
@@ -907,8 +908,6 @@
 
       var Comment = $("#textareaID").val();
 
-
-
       if (Comment.length <= 0) {
         $("#comment-error").text("Comment is required");
         return;
@@ -1009,8 +1008,8 @@
             if (response.success) {
               $("#deleteOrderModal").modal("hide");
               toastr.success(response.message);
-              loadOrderDetails();
-
+              @* loadOrderDetails(); *@
+              window.location.href = `/TableOrderApp/TablesOrder`;
             }
             else {
               toastr.error(response.message);
@@ -1117,6 +1116,7 @@
           if (response.success) {
             toastr.success(response.message);
             $('#reviewModal').modal('hide');
+             window.location.href = `/TableOrderApp/TablesOrder`;
           }
           else {
             toastr.error(response.message);

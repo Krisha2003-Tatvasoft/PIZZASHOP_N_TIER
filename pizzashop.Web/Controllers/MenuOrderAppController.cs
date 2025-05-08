@@ -113,7 +113,6 @@ public class MenuOrderAppController : Controller
         if (model == null || model.Items == null)
             return BadRequest("Invalid data");
 
-
         var (success, message) = await _orderAppMenuService.SaveOrder(model);
 
         return Ok(new { success = success, message = message });

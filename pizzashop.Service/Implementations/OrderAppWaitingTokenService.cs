@@ -82,6 +82,9 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
             customer.Customername = model.Customername;
             customer.Phoneno = model.Phoneno;
+            customer.Visitcount = (short?)(customer.Visitcount + 1);
+            customer.Modifiedat = DateTime.Now;
+            customer.Modifiedby = loginId;
             await _customerRepository.UpdateCustomer(customer);
 
             Waitingtoken token = new Waitingtoken
@@ -101,7 +104,10 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
                 Customername = model.Customername,
                 Phoneno = model.Phoneno,
                 Email = model.Email,
-                Createdby = loginId
+                Visitcount = 1,
+                Totalorder = 0,
+                Createdby = loginId,
+                Createdat = DateTime.Now,
             };
             await _customerRepository.AddNewCustomer(customer);
             Waitingtoken token = new Waitingtoken
@@ -310,7 +316,9 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
                         return (null, "This customer already has an active or recent table assignment.");
                     }
                 }
-                customer.Visitcount = (short?)(customer.Visitcount + 1);
+                customer.Totalorder++;
+                customer.Modifiedby = loginid;
+                customer.Modifiedat = DateTime.Now;
                 await _customerRepository.UpdateCustomer(customer);
             }
 

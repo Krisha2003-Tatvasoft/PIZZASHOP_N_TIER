@@ -8,6 +8,17 @@ a.sort {
     color: grey;
 }
 
+.rating-stars .star-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 2px;
+}
+ 
+.rating-stars .star-base {
+    width: 100%;
+    height: 100%;
+}
 
 
 

@@ -129,6 +129,8 @@ public class OrderRepository : IOrderRepository
 
     public async Task<DashboardViewModel> GetDashboardData(DateTime? fromDate, DateTime? toDate)
     {
+        toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
+        
         // Filter orders based on date range
         var ordersQuery = _context.Orders
             .Include(o => o.Ordereditems).ThenInclude(oi => oi.Item)
@@ -209,20 +211,20 @@ public class OrderRepository : IOrderRepository
 
         // Calculate revenue growth data
         var revenueData = orders
-            .GroupBy(o => o.Orderdate.Value.Date)
+            .GroupBy(o => o.Orderdate)
             .Select(g => new ChartPoint
             {
-                Date = g.Key,
+                Date = (DateTime)g.Key,
                 TotalRevenue = g.Sum(o => o.Totalamount)
             })
             .ToList();
 
         // Calculate customer growth data
         var customerGrowth = orders
-            .GroupBy(o => o.Orderdate.Value.Date)
+            .GroupBy(o => o.Orderdate)
             .Select(g => new ChartPoint
             {
-                Date = g.Key,
+                Date = (DateTime)g.Key,
                 TotalCustomers = g.Select(o => o.Customerid).Distinct().Count()
             })
             .ToList();
