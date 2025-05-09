@@ -67,13 +67,13 @@ public class WaitingListController : Controller
             CookieData user = SessionUtils.GetUser(HttpContext);
             bool isthis = await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model);
 
-            if (await _orderAppWaitingTokenService.EditPosttWT(user.Userid, model))
+            if (isthis)
             {
-                return Json(new { success = true, message = "token Updated Sucessfully" });
+                return Json(new { success = true, message = "Waiting Token Updated Sucessfully." });
             }
             else
             {
-                return Json(new { success = false, message = "Error in update token" });
+                return Json(new { success = false, message = "You Can Use This Email." });
             }
         }
         else

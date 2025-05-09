@@ -54,7 +54,7 @@ else
                 <th style="min-width: 7rem;" class="ps-3">
                     <a href="#" class="sort" data-column="CustomerName" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                                 : "asc")>
-                        Name <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i class="bi bi-arrow-down 
+                        Name <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
                 </th>
@@ -65,14 +65,14 @@ else
                 <th style="min-width: 7rem;">
                     <a href="#" class="sort" data-column="OrderDate" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                              : "asc")>
-                        Date<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i class="bi bi-arrow-down 
+                        Date <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
                 </th>
                 <th>
                     <a href="#" class="sort" data-column="TotalOrder" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                               : "asc")>
-                        Total Order<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")"></i><i
+                        Total Order <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i
                             class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>

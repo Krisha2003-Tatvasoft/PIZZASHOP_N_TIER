@@ -1,6 +1,35 @@
 @using static pizzashop.Entity.Models.Enums
 @model pizzashop.Entity.ViewModels.AddItem;
 
+<style>
+    .custom-select-dropdown {
+  width: 100%;
+  height: calc(3.5rem + 2px);
+  /* Similar height as .form-select */
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  text-align: left;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='none' stroke='%23666' stroke-width='.75' d='M0 0l2 2 2-2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  appearance: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.custom-select-dropdown:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+</style>
+
 <div class="modal fade" id="addItem" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog  modal-dialog-centered">
         <div class="modal-content">
@@ -183,12 +212,32 @@
                 <div class="right-side-addItem"> 
                     <div class="right-side-content p-2">
                         <div class="mt-2">
-                            <select class="form-select" id="MGid" asp-items="Model.MGList">
-                                <option selected val="">Select Modifiers Groups(s)</option>
-                            </select>
-                            
 
-                            <div id="modifierContainer" class="mt-3 ">
+                            @* <select class="form-select" id="MGid" asp-items="Model.MGList">
+                                <option selected val="">Select Modifiers Groups(s)</option>
+                            </select> *@
+
+                        <div class="dropdown">
+                            <button class="custom-select-dropdown" type="button" id="sectionDropdown"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Select Sections
+                            </button>
+                        <ul class="dropdown-menu w-100" aria-labelledby="sectionDropdown" >
+                            @foreach (var sec in Model.MGList)
+                            {
+                                <li>
+                                    <div class="form-check ms-2">
+                                        <input class="form-check-input group-checkbox" type="checkbox" value="@sec.Value"
+                                            id="section-@sec.Value">
+                                        <label class="form-check-label" for="section-@sec.Value">@sec.Text</label>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                        </div>
+
+                            <div id="modifierContainer" class="mt-3 overflow-y-auto pe-2" style="max-height: 300px;">
+                                <!-- Modifier groups will be appended here -->
                             </div>
                         </div>
                     </div>
@@ -209,207 +258,7 @@
 
 <script src="~/js/script.js"></script>
 <script src="../js/bootstarp.bundle.min.js"></script>
-<script>
-    $(document).ready(function () {
-         var selectedModifiers = []; 
-        var modifierIndex = 0;
 
-     // Function to update the text of the dropdown
-    function updateDropdownText() {
-        var selectedText = '';
-        
-        // If we have at least one item in the selectedModifiers array
-        if (selectedModifiers.length > 0) {
-            // Set the first selected item text as the main display
-            selectedText = selectedModifiers[0].name;
-
-            // If more than one item is selected, add the "+X other" part
-            var otherCount = selectedModifiers.length - 1;
-            if (otherCount > 0) {
-                selectedText += ' +' + otherCount + ' other';
-            }
-        }
-
-         console.log(selectedText)
-        // Update the text of the dropdown (the display)
-        $('#MGid').next('.form-select').find('.selected-text').text(selectedText);
-    }
-
-        $("#MGid").change(function () {
-
-            var groupId = $(this).val();
-            var groupText = $("#MGid option:selected").text();
-            var itemId = $("#Itemid").val();
-
-            if (groupId && !selectedModifiers.some(mod => mod.id === groupId)) {
-            // Add to selected list
-            selectedModifiers.push({ id: groupId, name: groupText });
-
-            // Call the function to update the dropdown text
-            updateDropdownText();
-            }
-
-
-
-            // Check if the group is already in the list
-            if (groupId && $("#group_" + groupId).length === 0) {
-                $.ajax({
-                    url: "/Menu/modifierList",
-                    type: "GET",
-                    data: { id: groupId },
-                    success: function (data) {
-                       
-
-                        var currentIndex = modifierIndex++;
-                         var modifierCount = data.length;  // Get the number of modifiers
-
-
-
-                        var modifierList = `<div id="group_${groupId}" class="modifier-group">
-
-                        <input type="hidden" class="modifier-group-id" name="ModifierGroups[${currentIndex}].Modifiergroupid" value="${groupId}" />
-
-                        <div class="d-flex justify-content-between align-items-center">
-                         <h6>${groupText} </h6>
-                        <button class="delete-group" style="border:none; background:none;" data-group="${groupId}">
-                        <img  src="../images/trash.svg"></button>
-                        </div>
-
-
-                       <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
-                       <div class="flex-fill">
-                        <select class="form-select min-selection" id="min_${groupId}"  name="ModifierGroups[${currentIndex}].Minselectionrequired" style="border-radius:25px;">
-                             ${generateOptions(modifierCount)} 
-                        </select>
-                       </div>
-                       <div class="flex-fill">
-                        <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" name="ModifierGroups[${currentIndex}].Maxselectionallowed">
-                              ${generateOptions(modifierCount)}  
-                        </select>
-                       </div>
-                       </div>
-                      
-                        
-                        <ul>`;
-
-                       
-                         
-                        // Append all modifiers inside the group
-                        data.forEach(modifier => {
-                            modifierList += `<li><div class="d-flex align-items-center justify-content-between">
-                            <div>${modifier.modifiername}</div>
-                            <div>${modifier.rate}</div>
-                            </div>
-                            </li>`;
-                        });
-
-                        modifierList += "</ul></div>";
-
-                        // Append to container
-                        $("#modifierContainer").append(modifierList);
-                        updateModifierGroupIndexes();
-                        adjustSelectionLimits(groupId, modifierCount); 
-
-                         // Update the dropdown text
-                        updateDropdownText();
-                    },
-                    error: function (xhr) {
-                        alert(xhr.responseJSON.message || "Failed to load modifiers.");
-                    }
-                });
-            }
-        });
-    
-        function updateModifierGroupIndexes() {
-            $(".modifier-group").each(function (index) {
-                $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
-                $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
-                $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
-            });
-        }
-
-
-        // Function to generate the options dynamically from 1 to the modifierCount
-    function generateOptions(modifierCount) {
-        let options = '';
-        for (let i = 1; i <= modifierCount; i++) {
-            options += `<option value="${i}">${i}</option>`;
-        }
-        return options;
-    }
-
-        // Adjust selection limits (min and max values) based on the number of modifiers
-    function adjustSelectionLimits(groupIndex, modifierCount) {
-       
-    const minSelect = $(`#min_${groupIndex}`);
-    const maxSelect = $(`#max_${groupIndex}`);
-
-    // Generate options dynamically
-    function generateOptions(modifierCount) {
-        let options = '';
-        for (let i = 1; i <= modifierCount; i++) {
-            options += `<option value="${i}">${i}</option>`;
-        }
-        return options;
-    }
-
-       // Initial population of max selection options
-    const minValue = parseInt(minSelect.val()) || 1; // Default to 1 if invalid
-    maxSelect.empty();
-    maxSelect.append(generateOptions(modifierCount)); // Populate maxSelect with all options initially
-
-    // Ensure max value is at least equal to min value
-    const maxValue = parseInt(maxSelect.val()) || minValue;
-    if (maxValue < minValue) {
-        maxSelect.val(minValue); // Ensure max is at least equal to min
-    }
-
-      // Update max options when min selection changes
-    minSelect.on('change', function () {
-       
-        const newMinValue = parseInt($(this).val()) || 1;
-        maxSelect.empty(); // Clear the current max options
-        maxSelect.append(generateOptions(modifierCount)); // Re-populate max options based on modifierCount
-        
-        // Remove options that are less than the new min value
-        maxSelect.find('option').each(function () {
-            if (parseInt($(this).val()) < newMinValue) {
-                $(this).remove(); // Remove options smaller than min value
-            }
-        });
-
-        const selectedMaxValue = parseInt(maxSelect.val());
-        if (selectedMaxValue < newMinValue) {
-            maxSelect.val(newMinValue); // Adjust max to not be less than min
-        }
-    });
-
-
-         // Update min selection when max value is changed
-     maxSelect.on('change', function () {
-        const selectedMinValue = parseInt(minSelect.val()) || 1;
-        const selectedMaxValue = parseInt($(this).val()) || selectedMinValue;
-        if (selectedMaxValue < selectedMinValue) {
-            $(this).val(selectedMinValue); // Ensure max is at least equal to min
-        }
-    });
-
-    }
-     
-        // Remove Selected Modifier Group
-        $(document).on("click", ".delete-group", function () {
-            var groupId = $(this).data("group");
-            $(`#group_${groupId}`).remove(); // Remove from UI
-            updateModifierGroupIndexes();
-           // Remove from the selected list
-        selectedModifiers = selectedModifiers.filter(mod => mod.id !== groupId);
-
-        // Update the dropdown text after removal
-        updateDropdownText();
-        });
-    });
-
-</script>
 
 
 @* add image *@

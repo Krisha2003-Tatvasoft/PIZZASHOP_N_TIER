@@ -1,3 +1,6 @@
+
+
+
 .heading-text {
   color: #087cc4;
 }
@@ -108,6 +111,20 @@
   color: grey;
   width: 100%;
 }
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 3px; /* Adjust scrollbar width */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
 
 .search-field .custom-icon {
   position: absolute;
@@ -257,17 +274,18 @@
   width: 100px;
 }
 
-.modal-addNewItem .modal {
+
+.modal-addNewItem .modal , .modal-editItem .modal {
   --bs-modal-width: 70% !important;
 }
 
-.modal-addNewItem .form-switch .form-check-input {
+.modal-addNewItem .form-switch .form-check-input, .modal-editItem .form-switch .form-check-input  {
   width: 3.5em !important;
   height: 2em;
   margin-left: -2.5em !important;
 }
 
-.modal-addNewItem .form-check-input {
+.modal-addNewItem .form-check-input , .modal-editItem .form-check-input {
   --bs-form-check-bg: lightgrey;
 }
 
@@ -280,15 +298,15 @@
   color: grey;
 }
 
-.modal-addNewItem .left-side-addItem {
+.modal-addNewItem .left-side-addItem , .modal-editItem .left-side-addItem{
   width: 75%;
 }
 
-.modal-addNewItem .add-item-body {
+.modal-addNewItem .add-item-body , .modal-editItem .add-item-body {
   display: flex;
 }
 
-.modal-addNewItem .right-side-addItem {
+.modal-addNewItem .right-side-addItem , .modal-editItem .right-side-addItem  {
   width: 25%;
   background-color: lightyellow;
   border: 1px solid grey;
@@ -296,10 +314,11 @@
   height: auto;
 }
 
-.modal-addNewItem .right-side-content {
+/* .modal-addNewItem .right-side-content {
   max-height: 50vh;
   overflow-y: auto;
-}
+} */
+
 
 .button-input .new-Modifiers-btn {
   height: 40px;
@@ -366,16 +385,16 @@
     opacity: 1;
   }
 
-  .modal-addNewItem .left-side-addItem {
+  .modal-addNewItem .left-side-addItem ,   .modal-editItem .left-side-addItem  {
     width: 100%;
   }
 
-  .modal-addNewItem .add-item-body {
+  .modal-addNewItem .add-item-body  ,  .modal-editItem .add-item-body {
     display: flex;
     flex-direction: column;
   }
 
-  .modal-addNewItem .right-side-addItem {
+  .modal-addNewItem .right-side-addItem ,  .modal-editItem .right-side-addItem {
     margin-left: 10px !important;
     margin-right: 10px !important;
     margin-top: 10px !important;
@@ -383,7 +402,7 @@
     height: 200px;
   }
 
-  .modal-addNewItem .right-side-content {
+  .modal-addNewItem .right-side-content ,   .modal-editItem .right-side-content {
     max-height: 200px;
     overflow-y: auto;
   }

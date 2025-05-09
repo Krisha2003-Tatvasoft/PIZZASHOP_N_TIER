@@ -76,7 +76,7 @@ public class OrdersController : Controller
 
 
     [HttpGet]
-    [CustomAuthorize("", "" , new string[] {"Admin" , "Account Manager" ,"Customer"})]
+    [CustomAuthorize("", "" , new string[] {"Admin" , "Account Manager"})]
     public async Task<IActionResult> orderInvoice(int id)
     {
        var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID

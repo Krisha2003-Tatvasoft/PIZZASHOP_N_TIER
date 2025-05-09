@@ -184,7 +184,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
         }
 
-        var waitingList = waiting
+        var waitingList = waiting.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
         .Select(static w => new WaitingListTable
         {
             Waitingtokenid = w.Waitingtokenid,
@@ -232,8 +232,35 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         waitingtoken.Sectionid = model.Sectionid;
         waitingtoken.Modifiedby = loginId;
         var existcustomer = await _customerRepository.GetCustomerByEmail(model.Email);
+
+
+
         if (existcustomer != null && existcustomer.Customerid != waitingtoken.Customer.Customerid)
         {
+            var waitingList = await _waitingTokenRepository.GetWaitingList();
+
+            foreach (var waiting in waitingList)
+            {
+                if (waiting.Customerid == existcustomer.Customerid &&
+                waiting.Createdat.HasValue && waiting.Createdat.Value.Date == DateTime.UtcNow.Date)
+                {
+                    return false;
+                }
+            }
+
+            var orders = existcustomer.Orders?.ToList(); // Ensure it's not null
+
+
+            if (orders != null && orders.Any())
+            {
+                var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
+
+                if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+                {
+                    return false;
+                }
+            }
+            
             oldcustomer = await _customerRepository.GetCustomerByEmail(waitingtoken.Customer.Email);
             waitingtoken.Customerid = existcustomer.Customerid;
         }
@@ -292,7 +319,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
             if (totalCapacity < waitingtoken.Noofpeople)
             {
-                return (null, "No. of Person Is more Then the Table Capacity.");
+                return (null, "No. of Person " + waitingtoken.Noofpeople + " Is more Then the Table Capacity " + totalCapacity + ".");
             }
 
             if (waitingtoken != null)

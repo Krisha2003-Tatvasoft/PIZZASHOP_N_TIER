@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "UtRO7RdGL7C5a4Aqg/3pWKE0gTwlHdfk/uNZ67PbzoA=",
+  "Hash": "WaTTLx5oJGOhIRDuC+snRpmjkXm6VUFlLXFAZwTsiE4=",
   "Source": "pizzashop.Web",
   "BasePath": "_content/pizzashop.Web",
   "Mode": "Default",
@@ -2191,6 +2191,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\uploads\\012bbb2f-21f6-47cb-89bf-6ba294438eaa_taxes-default.png"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\uploads\\0137dda3-b228-4e57-8e6c-7f0baff43826_list (1).svg",
+      "SourceId": "pizzashop.Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\",
+      "BasePath": "_content/pizzashop.Web",
+      "RelativePath": "uploads/0137dda3-b228-4e57-8e6c-7f0baff43826_list (1).svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\0137dda3-b228-4e57-8e6c-7f0baff43826_list (1).svg"
     },
     {
       "Identity": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\wwwroot\\uploads\\02b6e0ca-6b0e-44b2-8c33-5a1ce58511ea_5997be83561e540ded19fb82fcefe6e7.jpg",

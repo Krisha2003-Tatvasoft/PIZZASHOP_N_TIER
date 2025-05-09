@@ -209,7 +209,7 @@ public class SectionService : ISectionService
       {
          Sectionid = c.Sectionid,
          Sectionname = c.Sectionname,
-         TokenCount = alltokens.Count(t => t.Sectionid == c.Sectionid)
+         TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count(t => t.Sectionid == c.Sectionid)
 
       }).ToList();
 
@@ -218,7 +218,7 @@ public class SectionService : ISectionService
       {
          Sectionid = 0,
          Sectionname = "All",
-         TokenCount = alltokens.Count()
+         TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count()
       });
       sections = sectionWithCountList;
 

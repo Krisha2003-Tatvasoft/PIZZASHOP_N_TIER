@@ -26,10 +26,9 @@
 }
 
 .bi-list::before,
-.bi-cart3::before{
+.bi-cart3::before {
   vertical-align: baseline !important;
 }
-
 
 .row {
   --bs-gutter-x: 0rem;
@@ -251,4 +250,10 @@
 .accordion-button:not(.collapsed) {
   background-color: #ffffff;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
+}
+
+/* Ensure accordion button only takes content width */
+.accordion-button {
+flex-grow: 0 !important;
+width: auto !important;
 }

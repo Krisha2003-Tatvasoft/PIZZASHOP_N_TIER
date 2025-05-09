@@ -62,7 +62,7 @@ public class OrderAppTableService : IOrderAppTableService
             }
             if (totalCapacity < model.Noofperson)
             {
-                return (null, "No. of Person Is more Then the Table Capacity.");
+                return (null, "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
             }
 
             if (model.Waitingtokenid != null)

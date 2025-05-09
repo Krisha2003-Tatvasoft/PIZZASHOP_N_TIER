@@ -102,11 +102,14 @@
                         contentType: false,
                         dataType: 'json',
                         success: function (response) {
-                            if (response.success) {
+                            if (response.success == true) {
                                 $("#editWT").modal("hide");
                                 loadTableList(Sectionid);
                                 loadsectionList();
-                                toastr.success("WaitingToken Updated Succesfully.");
+                                toastr.success(response.message);
+                            }
+                            else{
+                                toastr.error(response.message);
                             }
 
                         },
@@ -289,7 +292,7 @@
         // Update every second
         setInterval(updateWaitingTimes, 1000);
 
-         $(document).on("click", ".edit-wt", function (e) {
+        $(document).on("click", ".edit-wt", function (e) {
             e.preventDefault();
             var WTid = $(this).data("wt-id");
 
@@ -388,7 +391,7 @@
                 </li>
             `);
                 });
-                updateDropdownText();  // <-- update table dropdown button text
+                @* updateDropdownText();  // <-- update table dropdown button text *@
             });
         }
 
@@ -431,10 +434,10 @@
         }
 
 
-
         function updateSectionDropdownText() {
             if (selectedSections.length === 0) {
                 $("#sectionDropdownBtn").html("Select Sections");
+                $("#tableDropdownBtn").html("Select Tables");
             } else if (selectedSections.length === 1) {
                 const sectionLabel = $(`#section_${selectedSections[0]}`).next("label").text();
                 $("#sectionDropdownBtn").html(`<span class="selected-item-pill">${sectionLabel}</span>`);
@@ -508,10 +511,6 @@
                         }
                     });
 
-
-                    // Now you can use `tableIds` array to send in your request
-                    console.log("Selected Table IDs:", tableIds);
-                    console.log("Section ID:", sectionId);
 
                 }
             }

@@ -386,7 +386,7 @@ public class OrderAppMenuService : IOrderAppMenuService
                 }
                 if (totalCapacity < model.Noofperson)
                 {
-                    return (false, "No. of Person Is more Then the Table Capacity.");
+                     return (false , "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
                 }
                 else
                 {

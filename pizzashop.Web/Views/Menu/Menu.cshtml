@@ -307,6 +307,8 @@
 <!-- Add new item -->
 <div class="modal-addNewItem"></div>
 
+<div class="modal-editItem"></div>
+
 <!-- delete selected Items -->
 <div class="modal fade modal-delete" id="deleteSelectedItem" tabindex="-1" a ria-labelledby="deleteModalLabel"
     aria-hidden="true">
@@ -442,6 +444,7 @@
     let tempSelectExModifier = [];
     let tempSelectedModifiername = new Map();
     let allTempModifierIds = [];
+    var modifierIndex = 0;
 
 
     $(document).ready(function () {
@@ -526,13 +529,16 @@
         @* add item model *@
             $(document).on("click", ".openModel", function (e) {
 
-
                 $.ajax({
                     url: "/Menu/AddItem",
                     type: "GET",
                     data: { categoryId: globalCat },
                     success: function (response) {
                         $(".modal-addNewItem").html(response);
+                        modifierIndex = 0;
+                        $("#modifierContainer").empty(); // Remove all modifier groups
+                        $(".group-checkbox").prop("checked", false); // Uncheck all
+                        $("#sectionDropdown").text("Select Sections"); // Reset dropdown text
                         $("#addItem").modal("show");
                     },
                     error: function (error) {
@@ -540,6 +546,222 @@
                     }
                 });
             });
+
+
+        $(document).on("change", ".group-checkbox", function (e) {
+
+            var groupId = $(this).val();
+            var groupText = $(this).next("label").text();
+            var itemId = $("#Itemid").val();
+
+            updateDropdownText(); // <-- Add this line
+
+            // Check if the checkbox is checked
+            if ($(this).is(":checked")) {
+                // If checked, add the group
+                addModifierGroup(groupId, groupText);
+            } else {
+                // If unchecked, remove the group
+                $(`#group_${groupId}`).remove();
+                updateModifierGroupIndexes();
+            }
+        });
+
+
+        // Function to add a modifier group
+        function addModifierGroup(groupId, groupText) {
+
+
+            // Check if the group is already in the list
+            if (groupId && $("#group_" + groupId).length === 0) {
+                console.log("Adding Modifier Group: " + groupId);
+                $.ajax({
+                    url: "/Menu/modifierList",
+                    type: "GET",
+                    data: { id: groupId },
+                    success: function (data) {
+
+
+                        var currentIndex = modifierIndex++;
+                        var modifierCount = data.length;  // Get the number of modifiers
+
+
+                        var modifierList = `<div id="group_${groupId}" class="modifier-group">
+
+                        <input type="hidden" class="modifier-group-id" name="ModifierGroups[${currentIndex}].Modifiergroupid" value="${groupId}" />
+
+                        <div class="d-flex justify-content-between align-items-center">
+                         <h6>${groupText} </h6>
+                        <button class="delete-group" style="border:none; background:none;" data-group="${groupId}">
+                        <img  src="../images/trash.svg"></button>
+                        </div>
+
+
+                       <div class="d-flex gap-2 mt-1 mb-1 align-items-center w-100">
+                       <div class="flex-fill">
+                        <select class="form-select min-selection" id="min_${groupId}"  name="ModifierGroups[${currentIndex}].Minselectionrequired" style="border-radius:25px;">
+                             ${generateOptions(modifierCount)} 
+                        </select>
+                       </div>
+                       <div class="flex-fill">
+                        <select class="form-select max-selection" id="max_${groupId}" style="border-radius:25px;" name="ModifierGroups[${currentIndex}].Maxselectionallowed">
+                              ${generateOptions(modifierCount)}  
+                        </select>
+                       </div>
+                       </div>
+                      
+                        
+                        <ul>`;
+
+
+
+                        // Append all modifiers inside the group
+                        data.forEach(modifier => {
+                            modifierList += `<li><div class="d-flex align-items-center justify-content-between">
+                            <div>${modifier.modifiername}</div>
+                            <div>${modifier.rate}</div>
+                            </div>
+                            </li>`;
+                        });
+
+                        modifierList += "</ul></div>";
+
+                        // Append to container
+                        $("#modifierContainer").append(modifierList);
+                        updateModifierGroupIndexes();
+                        adjustSelectionLimits(groupId, modifierCount);
+
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseJSON.message || "Failed to load modifiers.");
+                    }
+                });
+            }
+
+        }
+
+
+        function updateDropdownText() {
+        
+            const selected = $(".group-checkbox:checked");
+            const button = $("#sectionDropdown");
+
+            button.text("");
+
+            if (selected.length === 0) {
+                button.text("Select Sections");
+            } else if (selected.length === 1) {
+                const firstLabel = selected.first().next("label").text();
+                button.text(firstLabel);
+            } else {
+                const firstLabel = selected.first().next("label").text();
+                button.text(`${firstLabel} +${selected.length - 1} other${selected.length > 2 ? 's' : ''}`);
+            }
+        }
+
+
+
+        function updateModifierGroupIndexes() {
+            $(".modifier-group").each(function (index) {
+                $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
+                $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
+                $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
+            });
+        }
+
+
+
+        // Function to generate the options dynamically from 1 to the modifierCount
+        function generateOptions(modifierCount) {
+            let options = '';
+            for (let i = 1; i <= modifierCount; i++) {
+                options += `<option value="${i}">${i}</option>`;
+            }
+            return options;
+        }
+
+        // Adjust selection limits (min and max values) based on the number of modifiers
+        function adjustSelectionLimits(groupIndex, modifierCount) {
+
+
+            const minSelect = $(`#min_${groupIndex}`);
+            const maxSelect = $(`#max_${groupIndex}`);
+
+            // Generate options dynamically
+            function generateOptions(modifierCount) {
+                let options = '';
+                for (let i = 1; i <= modifierCount; i++) {
+                    options += `<option value="${i}">${i}</option>`;
+                }
+                return options;
+            }
+
+            // Initial population of max selection options
+            const minValue = parseInt(minSelect.val()) || 1; // Default to 1 if invalid
+            maxSelect.empty();
+            maxSelect.append(generateOptions(modifierCount)); // Populate maxSelect with all options initially
+
+            // Ensure max value is at least equal to min value
+            const maxValue = parseInt(maxSelect.val()) || minValue;
+            if (maxValue < minValue) {
+                maxSelect.val(minValue); // Ensure max is at least equal to min
+            }
+
+            maxSelect.find('option').each(function () {
+                if (parseInt($(this).val()) < minValue) {
+                    $(this).remove(); // Remove options smaller than min value
+                }
+            });
+
+            // Update max options when min selection changes
+            minSelect.on('change', function () {
+
+                const newMinValue = parseInt($(this).val()) || 1;
+                maxSelect.empty(); // Clear the current max options
+                maxSelect.append(generateOptions(modifierCount)); // Re-populate max options based on modifierCount
+
+                // Remove options that are less than the new min value
+                maxSelect.find('option').each(function () {
+                    if (parseInt($(this).val()) < newMinValue) {
+                        $(this).remove(); // Remove options smaller than min value
+                    }
+                });
+
+                const selectedMaxValue = parseInt(maxSelect.val());
+                if (selectedMaxValue < newMinValue) {
+                    maxSelect.val(newMinValue); // Adjust max to not be less than min
+                }
+            });
+
+
+            // Update min selection when max value is changed
+            maxSelect.on('change', function () {
+                const selectedMinValue = parseInt(minSelect.val()) || 1;
+                const selectedMaxValue = parseInt($(this).val()) || selectedMinValue;
+                if (selectedMaxValue < selectedMinValue) {
+                    $(this).val(selectedMinValue); // Ensure max is at least equal to min
+                }
+            });
+
+        }
+
+        // Update max options when min selection changes
+        $(document).on("change", ".ex-min", function () {
+            const groupId = $(this).closest('.modifier-group').find('.modifier-group-id').val();
+            const modifierCount = $(this).closest('.modifier-group').find('ul li').length;
+            adjustSelectionLimits(groupId, modifierCount); // Call the function to adjust limits
+        });
+
+
+        // Remove Selected Modifier Group
+        $(document).on("click", ".delete-group", function () {
+            var groupId = $(this).data("group");
+            $(`#group_${groupId}`).remove(); // Remove from UI
+            $(`#section-${groupId}`).prop("checked", false); // Uncheck the checkbox
+            updateModifierGroupIndexes();
+            updateDropdownText(); // after removing and unchecking
+
+        });
 
 
         @* get category list *@
@@ -831,13 +1053,46 @@
             });
         }
 
-        function updateModifierGroupIndexes() {
+        @* function updateModifierGroupIndexes() {
             $(".modifier-group").each(function (index) {
                 $(this).find(".modifier-group-id").attr("name", `ModifierGroups[${index}].Modifiergroupid`);
                 $(this).find(".min-selection").attr("name", `ModifierGroups[${index}].Minselectionrequired`);
                 $(this).find(".max-selection").attr("name", `ModifierGroups[${index}].Maxselectionallowed`);
             });
-        }
+        } *@
+
+
+             $(document).on("click", ".edit-item", function (e) {
+                e.preventDefault();
+                var itemId = $(this).data("itemid");
+                console.log("itemId");
+
+                $.ajax({
+                    url: "/Menu/EditItem",
+                    type: "GET",
+                    data: { id: itemId },
+                    success: function (data) {
+                         modifierIndex = 0;
+                        $("#modifierContainer").empty(); // Remove all modifier groups
+                        $(".group-checkbox").prop("checked", false); // Uncheck all
+                        $("#sectionDropdown").text("Select Sections"); // Reset dropdown text
+                        $(".modal-editItem").html(data);
+                        updateDropdownText();
+                        $("#updateItem").modal("show");
+                    },
+                    error: function () {
+                        alert("failed to reload modal");
+                    }
+                });
+
+            });
+
+        $(document).on("click", ".delete-item-link", function (e) {
+            var ItemId = $(this).data("itemid");
+            var Categoryid = $(this).data("categoryid");
+            $("#hidden").val(ItemId);
+            $("#Categoryid").val(Categoryid);
+        });
 
         @* edit item *@
 
@@ -874,6 +1129,8 @@
                 }
 
             });
+
+
 
         @* add item *@
 
@@ -1074,7 +1331,7 @@
                         `<span class="modifier-pill">${selectedTexts[0]}</span> 
              <span class="modifier-count">+ ${selectedTexts.length - 1} others</span>`
                     );
-                console.log(selectedTexts);
+                    console.log(selectedTexts);
                 }
             }
 
@@ -1640,7 +1897,7 @@
                             updateModifierMasterCheckbox();
                         }
                     });
-                } else {    
+                } else {
                     selectedModifierIds = [];
                     $("input[name='SModifier']").prop("checked", false);
                     updateModifierMasterCheckbox();

@@ -180,32 +180,7 @@ else
     $(document).ready(function () {
 
 
-        $(".edit-item").click(function (e) {
-            e.preventDefault();
-            var itemId = $(this).data("itemid");
-            console.log("itemId");
-
-            $.ajax({
-                url: "/Menu/EditItem",
-                type: "GET",
-                data: { id: itemId },
-                success: function (data) {
-                    $(".modal-addNewItem").html(data);
-                    $("#updateItem").modal("show");
-                },
-                error: function () {
-                    alert("failed to reload modal");
-                }
-            });
-
-        });
-
-        $(document).on("click", ".delete-item-link", function (e) {
-            var ItemId = $(this).data("itemid");
-            var Categoryid = $(this).data("categoryid");
-            $("#hidden").val(ItemId);
-            $("#Categoryid").val(Categoryid);
-        });
+       
 
     });
 
