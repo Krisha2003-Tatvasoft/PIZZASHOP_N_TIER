@@ -21,8 +21,9 @@
     <div class="d-block d-sm-flex justify-content-between mb-3 align-items-center flex-wrap">
 
       <div class="d-flex align-items-center mb-2 mb-sm-0 menu-list">
-        <button class="btn d-inline d-lg-none mb-0 p-1 me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#categoryList"
-          aria-controls="categoryList" style="width:40px; height:40px;background-color: hsla(216, 50%, 79%, 0.352);">
+        <button class="btn d-inline d-lg-none mb-0 p-1 me-2" type="button" data-bs-toggle="offcanvas"
+          data-bs-target="#categoryList" aria-controls="categoryList"
+          style="width:40px; height:40px;background-color: hsla(216, 50%, 79%, 0.352);">
           <i class="h2 bi bi-list"></i>
         </button>
         <div class="search-field position-relative">
@@ -32,7 +33,7 @@
         </div>
       </div>
 
-      <div class="d-flex flex-row gap-1 justify-content-center justify-content-sm-end ms-auto"> 
+      <div class="d-flex flex-row gap-1 justify-content-center justify-content-sm-end ms-auto">
         <div class="d-flex flex-row align-items-center">
           <span class="dot me-1" style="background-color: green;border-color: green"></span>
           <span>Vegetarian</span>
@@ -57,7 +58,8 @@
 
   @if (!string.IsNullOrEmpty(orderId))
   {
-    <div class="offcanvas-xl offcanvas-end order-details-partial card w-100" style="height:100%; background-color:rgba(128, 128, 128, 0.248);" id="cart">
+    <div class="offcanvas-xl offcanvas-end order-details-partial card w-100"
+      style="height:100%; background-color:rgba(128, 128, 128, 0.248);" id="cart">
 
     </div>
   }
@@ -66,7 +68,8 @@
 
 @if (!string.IsNullOrEmpty(orderId))
 {
-  <button class="btn d-xl-none px-0 py-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart" aria-controls="cart"
+  <button class="btn d-xl-none px-0 py-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart"
+    aria-controls="cart"
     style="background-color:#adc3e4; width:50px; height:50px; border-radius:5%; box-shadow: 0px 0px 5px #000000; z-index: 5;position:fixed; bottom: 25px; right: 25px;">
     <i class="bi bi-cart3 fs-1 mt-0"></i>
   </button>
@@ -294,38 +297,44 @@
       const modifiersTotalPrice = item.Modifiers?.reduce((total, modifier) => total + modifier.Rate, 0) * item.Quantity;
 
       const itemHtml = `
-            <div class="rounded border mb-2 ">
+            <div class="rounded border mb-2 cart-item-card" 
+               data-orderitemid=${item.orderitemid}
+               data-itemindex=${index}
+               data-itemcomment=${item.Itemwisecomment} >
                 <div class="d-flex">
                     <div class="accordion d-flex flex-column justify-content-start gap-2 p-2 w-50">
-                        <button class="accordion-button collapsed p-2 bg-transparent border-0"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#collapse-${index}"
-                                aria-expanded="false"
-                                aria-controls="collapse-${index}">
-                        <strong class="ps-1">${item.Itemname}</strong>
-                        </button>
-                        <div id="collapse-${index}" class="accordion-collapse collapse cart-item-card " 
-                         data-orderitemid=${item.orderitemid}  data-itemindex=${index}
-                      data-itemcomment=${item.Itemwisecomment}>
-                            <div class="ps-3">
-                                <ul class=""> 
-                                    ${modifierList}
-                                </ul>
-                            </div>
-                        </div>
+                       ${Array.isArray(item.Modifiers) && item.Modifiers.length > 0 ? `
+    <button class="accordion-button collapsed p-2 bg-transparent border-0 no-comment-trigger"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse-${index}"
+            aria-expanded="false"
+            aria-controls="collapse-${index}">
+      <strong class="ps-1">${item.Itemname}</strong>
+    </button>
+    <div id="collapse-${index}" class="accordion-collapse collapse"
+         data-orderitemid=${item.orderitemid} data-itemindex=${index}>
+      <div class="ps-3">
+        <ul class="mb-0">${modifierList}</ul>
+      </div>
+    </div>
+  ` : `
+    <div class="p-2">
+      <strong class="ps-1">${item.Itemname}</strong>
+    </div>
+  `}
                     </div>
                     <div class="d-flex justify-content-around align-items-center flex-row w-50">
                         <div class="d-flex align-items-center border rounded px-2 py-1">
-                            <i class="bi bi-dash cursor-pointer" onclick="updateQuantity(${index}, -1)"></i>
+                            <i class="bi bi-dash no-comment-trigger" style="cursor: pointer;" onclick=" updateQuantity(event,${index}, -1)"></i>
                             <span class="mx-2">${item.Quantity}</span>
-                            <i class="bi bi-plus cursor-pointer" onclick="updateQuantity(${index}, 1)"></i>
+                            <i class="bi bi-plus no-comment-trigger" style="cursor: pointer;" onclick="updateQuantity(event,${index}, 1)"></i>
                         </div>
                         <div class="text-center">
                             <div class="fw-bold">₹${item.Rate * item.Quantity}</div>
                            <div class="text-muted small">${modifiersTotalPrice ? `₹${modifiersTotalPrice}` : ''}</div>
                         </div>
-                        <i class="bi bi-trash text-muted fs-6 cursor-pointer" onclick="removeItem(${index})"></i>
+                        <i class="bi bi-trash text-muted fs-6 no-comment-trigger" style="cursor: pointer;" onclick="removeItem(${index})"></i>
                     </div>
                 </div>
             </div>
@@ -427,7 +436,7 @@
   }
 
   @* update item *@
-    function updateQuantity(index, change) {
+    function updateQuantity(event,index, change) {
       const item = OrderItem[index];
       const isLocked = item.ReadyQuantity >= item.Quantity;
 
@@ -441,6 +450,7 @@
       if (item.Quantity <= 0) {
         OrderItem.splice(index, 1);
       }
+      event.stopPropagation();
 
       renderOrderItems();
       updateCartChangeStatus();
@@ -734,12 +744,11 @@
 
     });
 
-    $(document).on("click", ".modifier-card", function () { 
+    $(document).on("click", ".modifier-card", function () {
       const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
       console.log(orderId);
 
-      if(!orderId)
-      {
+      if (!orderId) {
         return null;
       }
 
@@ -935,11 +944,18 @@
 
     @* item wise comment *@
       $(document).on("click", ".cart-item-card", function (e) {
+        if ($(e.target).closest(".no-comment-trigger").length) {
+          return; // Skip modal if clicked element is marked to not trigger it
+        }
+
+
         e.preventDefault();
         var orderitemid = $(this).data("orderitemid");
         var itemindexvalue = $(this).data("itemindex");
 
         var itemcomment = $(this).data("itemcomment");
+        console.log(orderitemid, itemindexvalue, itemcomment)
+
 
         $("#ItemWiseComment").modal("show");
         $("#textareaInstruction").val(itemcomment);
@@ -1008,7 +1024,7 @@
               $("#deleteOrderModal").modal("hide");
               toastr.success(response.message);
               @* loadOrderDetails(); *@
-              window.location.href = `/TableOrderApp/TablesOrder`;
+                window.location.href = `/TableOrderApp/TablesOrder`;
             }
             else {
               toastr.error(response.message);
@@ -1115,7 +1131,7 @@
           if (response.success) {
             toastr.success(response.message);
             $('#reviewModal').modal('hide');
-             window.location.href = `/TableOrderApp/TablesOrder`;
+            window.location.href = `/TableOrderApp/TablesOrder`;
           }
           else {
             toastr.error(response.message);

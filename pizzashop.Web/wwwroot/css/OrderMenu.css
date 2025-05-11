@@ -254,6 +254,5 @@
 
 /* Ensure accordion button only takes content width */
 .accordion-button {
-flex-grow: 0 !important;
-width: auto !important;
+width: fit-content !important;
 }
