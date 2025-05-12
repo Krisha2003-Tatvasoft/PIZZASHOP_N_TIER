@@ -37,6 +37,8 @@ public partial class Order
 
     public int? Modifiedby { get; set; }
 
+    public DateTime? ServedTime { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<Customerreview> Customerreviews { get; set; } = new List<Customerreview>();

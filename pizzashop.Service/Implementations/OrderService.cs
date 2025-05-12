@@ -93,10 +93,6 @@ public class OrderService : IOrderService
             }).ToList()
         }).ToList();
 
-        // decimal subTotal = order.Ordereditems.Sum
-        //     (oi => (oi.Item.Rate + oi.Ordereditemmodifers.Sum(mod => mod.Modifiers.Rate)) * oi.Quantity);
-
-        // decimal TotalAmount = subTotal + order.Ordertaxmappings.Sum(t => decimal.TryParse(t.Tax.Taxvalue, out var taxValue) ? taxValue : 0);
 
 
         List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
@@ -117,7 +113,7 @@ public class OrderService : IOrderService
             Email = order.Customer.Email,
             Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
             Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
-            Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
+            Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
             Items = items,
             Taxes = taxes,
             Totalamount = order.Totalamount,

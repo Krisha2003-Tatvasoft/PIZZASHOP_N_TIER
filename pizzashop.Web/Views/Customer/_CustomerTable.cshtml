@@ -1,55 +1,9 @@
 @model List<pizzashop.Entity.ViewModels.CustomerTable>
 
-<div class="table-responsive">
+<div class="table-responsive overflow-y-auto" style="max-height: calc(100vh - 240px); overflow-x: auto;">
     <table class="table mb-0">
-        <caption class="bg-white">
-            @if(Model.Count()==0)
-{
-     <h1 class="d-flex align-items-center justify-content-center fs-6">No data Found.</h1>
-}
-else
-{
-            <div class="d-flex justify-content-end align-items-center gap-2 mt-2 p-3">
-                <div class="d-flex align-items-center">
-                    <span class="d-none d-sm-inline px-1">Customer Per page:</span>
-                    <select id="pageSizeCustomer" class="form-select form-select-sm" style="width: auto;">
-                        <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
-                        <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
-                        <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
-                    </select>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="d-none d-sm-inline px-1">
-                        Showing @(ViewBag.totalCustomer > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
-                        - @(ViewBag.totalCustomer > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
-                                                ViewBag.totalCustomer) :
-                                                0)
-                        of @ViewBag.totalCustomer
-                    </span>
-                    <nav class="mt-3">
-                        <ul class="pagination pagination-sm">
-                            <!-- Previous Page -->
-                            <li class="page-item @(ViewBag.CurrentPage > 1 ? "" : "disabled")">
-                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage - 1)">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                            </li>
-
-                            <!-- Next Page -->
-                            <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
-                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-            }
-
-        </caption>
-
-        <thead>
+ 
+        <thead style="position: sticky; top: 0; background-color: white; z-index: 2;">
             <tr>
                 <th style="min-width: 7rem;" class="ps-3">
                     <a href="#" class="sort" data-column="CustomerName" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
@@ -98,4 +52,52 @@ else
     </table>
 
 </div>
+
+
+       <div class="bg-white">
+            @if(Model.Count()==0)
+{
+     <h1 class="d-flex align-items-center justify-content-center fs-6">No data Found.</h1>
+}
+else
+{
+            <div class="d-flex justify-content-end align-items-center gap-2 p-3">
+                <div class="d-flex align-items-center">
+                    <span class="d-none d-sm-inline px-1">Customer Per page:</span>
+                    <select id="pageSizeCustomer" class="form-select form-select-sm" style="width: auto;">
+                        <option value="5" selected="@(ViewBag.PageSize == 5)">5</option>
+                        <option value="10" selected="@(ViewBag.PageSize == 10)">10</option>
+                        <option value="25" selected="@(ViewBag.PageSize == 25)">25</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="d-none d-sm-inline px-1">
+                        Showing @(ViewBag.totalCustomer > 0 ? ((ViewBag.CurrentPage - 1) * ViewBag.PageSize + 1) : 0)
+                        - @(ViewBag.totalCustomer > 0 ? Math.Min(ViewBag.CurrentPage * ViewBag.PageSize,
+                                                ViewBag.totalCustomer) :
+                                                0)
+                        of @ViewBag.totalCustomer
+                    </span>
+                    <nav class="mt-3">
+                        <ul class="pagination pagination-sm">
+                            <!-- Previous Page -->
+                            <li class="page-item @(ViewBag.CurrentPage > 1 ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage - 1)">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+
+                            <!-- Next Page -->
+                            <li class="page-item @(ViewBag.CurrentPage < ViewBag.TotalPages ? "" : "disabled")">
+                                <a class="page-link pagination-link" href="#" data-page="@(ViewBag.CurrentPage + 1)">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            }
+
+        </div>
 

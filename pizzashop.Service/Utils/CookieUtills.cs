@@ -20,9 +20,15 @@ namespace pizzashop.Service.Utils
                 Secure = true
             };
 
+            // Set the cookie to expire in 1 hour if not "remember me"
+            if (!rememberMe)
+            {
+                cookieOptions.Expires = DateTime.UtcNow.AddHours(1); // Non-persistent for 1 hour
+            }
+
             if (rememberMe)
             {
-                cookieOptions.Expires = DateTime.UtcNow.AddDays(30); // Persistent for 30 days
+                cookieOptions.Expires = DateTime.UtcNow.AddDays(3); // Persistent for 30 days
             }
 
             response.Cookies.Append("SuperSecretAuthToken", token, cookieOptions);
@@ -59,7 +65,7 @@ namespace pizzashop.Service.Utils
             // Store user details in a cookie for 3 days
             var cookieOptions = new CookieOptions
             {
-                Expires = DateTime.UtcNow.AddDays(30),
+                Expires = DateTime.UtcNow.AddDays(3),
                 HttpOnly = true,
                 Secure = true,
                 IsEssential = true

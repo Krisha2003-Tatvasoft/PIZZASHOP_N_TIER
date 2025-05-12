@@ -63,7 +63,14 @@
                                 <div class="lh-sm mt-2">
                                         <span>Invoice Number : #@Model.Invoicenumber</span><br>
                                         <span>Date : @Model.PlacedOn</span><br>
-                                        <span>Section : @Model.Sectionname</span><br>
+                                        <span>Section :  @foreach (var sec in Model.Sectionname)
+                            {
+                                @sec
+                                if (sec != Model.Sectionname.Last())
+                                {
+                                    @:,
+                                }
+                            }</span><br>
                                         <span>Table :
                                                 @foreach (var table in @Model.Tablenames)
                                                 {

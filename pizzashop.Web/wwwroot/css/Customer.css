@@ -1,130 +1,138 @@
 .heading-text {
-    color: #087cc4;
+  color: #087cc4;
 }
 
 a.sort {
-    text-decoration: none;
-    color: grey;
+  text-decoration: none;
+  color: grey;
 }
 
 .heading-back-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-
 
 .heading-back-button .back-to-button button {
-    color: #087cc4;
-    border-radius: 5px;
-    border: 1px solid #087cc4;
-    height: 40px;
-    background-color: white;
-    font-size: 18px;
+  color: #087cc4;
+  border-radius: 5px;
+  border: 1px solid #087cc4;
+  height: 40px;
+  background-color: white;
+  font-size: 18px;
 }
 
+.overflow-y-auto::-webkit-scrollbar {
+  width: 3px; /* Adjust scrollbar width */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
 .heading-back-button .back-to-button .back-button {
-    color: white;
-    border-radius: 5px;
-    border: 1px solid #087cc4;
-    height: 50px;
-    background-color: #087cc4;
-    font-size: 18px;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #087cc4;
+  height: 50px;
+  background-color: #087cc4;
+  font-size: 18px;
 }
 
 .o-details button {
-    color: white;
-    border-radius: 5px;
-    border: 1px solid #087cc4;
-    height: 40px;
-    background-color: #087cc4;
-    font-size: 15px;
-    width: 100px;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #087cc4;
+  height: 40px;
+  background-color: #087cc4;
+  font-size: 15px;
+  width: 100px;
 }
 
-
 .search-btn {
-    color: white;
-    border-radius: 5px;
-    border: 1px solid #087cc4;
-    height: 42px;
-    width: 100px;
-    background-color: #087cc4;
-    font-size: 15px;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #087cc4;
+  height: 42px;
+  width: 100px;
+  background-color: #087cc4;
+  font-size: 15px;
 }
 
 .clear-btn {
-    color: #087cc4;
-    border-radius: 5px;
-    border: 1px solid #087cc4;
-    height: 42px;
-    width: 100px;
-    background-color: white;
-    font-size: 15px;
+  color: #087cc4;
+  border-radius: 5px;
+  border: 1px solid #087cc4;
+  height: 42px;
+  width: 100px;
+  background-color: white;
+  font-size: 15px;
 }
 
-
 .main-content .bg-success {
-    --bs-bg-opacity: 1;
-    background-color: #77ab59 !important;
+  --bs-bg-opacity: 1;
+  background-color: #77ab59 !important;
 }
 
 .main-content .edit-delet button {
-    border: none;
-    background: none;
+  border: none;
+  background: none;
 }
 
 .filter {
-    width: 250px;
-    height: 50px;
-    border-radius: 5px;
+  width: 250px;
+  height: 50px;
+  border-radius: 5px;
 }
 
 .heading-back-button .back-to-button .custom-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    color: var(--bs-secondary-color);
-    padding-right: 3px;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--bs-secondary-color);
+  padding-right: 3px;
 }
 
-.table>:not(caption)>*>* {
-    padding: .5rem .5rem;
-    color: grey !important;
-    background-color: var(--bs-table-bg);
-    border-bottom-width: var(--bs-border-width);
-    box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)))
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem;
+  color: grey !important;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: var(--bs-border-width);
+  box-shadow: inset 0 0 0 9999px
+    var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
 }
 
 .modal-delete span {
-    color: grey;
-    font-size: 20px;
+  color: grey;
+  font-size: 20px;
 }
 
 .modal-header {
-    color: grey;
+  color: grey;
 }
 
 .modal-footer {
-    border-top: none !important;
+  border-top: none !important;
 }
 
-@media screen and (max-width:576px) {
-  
-   .filter{
-    width:0%!important;
-   }
+@media screen and (max-width: 576px) {
+  .filter {
+    width: 0% !important;
+  }
 
-    #searchCustomerContainer,.Search{
-        width: 100%!important;
-    }
+  #searchCustomerContainer,
+  .Search {
+    width: 100% !important;
+  }
 
-    #searchTimeWise
-    {
-        width: 100%!important;
-    }
-   
+  #searchTimeWise {
+    width: 100% !important;
+  }
 }

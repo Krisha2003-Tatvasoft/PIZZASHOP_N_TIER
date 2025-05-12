@@ -51,9 +51,9 @@
 {
     <div class="tab-pane fade show active" id="@Model[0].Sectionid" role="tabpanel" aria-labelledby="nav-waiting-tab">
 
-        <div class="table-responsive">
+        <div class="table-responsive overflow-y-auto" style="max-height: calc(100vh - 230px); overflow-x: auto;">
             <table class="table">
-                <thead>
+                <thead style="position: sticky; top: 0; background-color: white; z-index: 2;">
                     <tr>
                         <th class="ps-3">#TokenNo</th>
                         <th>Created At</th>
@@ -124,7 +124,7 @@
     </div>
 </div>
 
-<div id="assign-table-model"></div>
+
 
 
 <script>

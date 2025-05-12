@@ -21,9 +21,11 @@ public interface ISectionRepository
 
     Task DeleteSection(Section section);
 
-     Task<List<SelectListItem>> SectionDDAsync();
+    Task<List<SelectListItem>> SectionDDAsync();
 
-     Task<List<Section>> AllSectionsorder();
+    Task<List<Section>> AllSectionsorder();
 
-     Task<List<Section>> GetSectionWithTables();
+    Task<List<Section>> GetSectionWithTables();
+
+    Task<List<SelectListItem>> SectionDDAvailable();
 }

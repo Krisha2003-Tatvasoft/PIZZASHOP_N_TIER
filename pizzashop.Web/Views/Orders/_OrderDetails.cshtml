@@ -75,7 +75,16 @@
                                 }
                             }
                         </p>
-                        <p class="mb-0">Section : @Model.Sectionname</p>
+                        <p class="mb-0">Section : 
+                             @foreach (var sec in Model.Sectionname)
+                            {
+                                @sec
+                                if (sec != Model.Sectionname.Last())
+                                {
+                                    @:,
+                                }
+                            }
+                        </p>
                     </div>
                 </div>
             </div>

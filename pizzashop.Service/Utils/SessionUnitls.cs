@@ -25,7 +25,6 @@ namespace pizzashop.Service.Utils
             {
                 string userData = JsonSerializer.Serialize(userdata);
                 httpContext.Session.SetString("UserData", userData);
-
             }
         }
 

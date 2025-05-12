@@ -73,7 +73,7 @@ public class AuthController : Controller
                 return Redirect(resetLink);
             }
 
-            var token = _jwtService.GenerateJwtToken(user.Email, user.User.Userid, user.Role.Rolename);
+            var token = _jwtService.GenerateJwtToken(user.Email, user.User.Userid, user.Role.Rolename , model.RememberMe);
 
             CookieUtils.SaveJWTToken(Response, token, model.RememberMe);
 

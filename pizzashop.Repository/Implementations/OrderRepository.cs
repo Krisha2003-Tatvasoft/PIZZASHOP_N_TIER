@@ -99,6 +99,8 @@ public class OrderRepository : IOrderRepository
             .FirstOrDefaultAsync(o => o.Orderid == model.OrderId);
 
         if (order == null) return;
+        var allOrderditem = order.Ordereditems.ToList();
+        bool NotAnyReady = allOrderditem.All(i => i.ReadyQuantity == 0);
 
         foreach (var ItemQuantity in model.Items)
         {
@@ -118,6 +120,13 @@ public class OrderRepository : IOrderRepository
             }
         }
 
+        if (model.NewStatus == "Ready" && NotAnyReady)
+        {
+            order.ServedTime = DateTime.Now;
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
         await _context.SaveChangesAsync();
     }
 
@@ -130,7 +139,7 @@ public class OrderRepository : IOrderRepository
     public async Task<DashboardViewModel> GetDashboardData(DateTime? fromDate, DateTime? toDate)
     {
         toDate = toDate.HasValue ? toDate.Value.AddDays(1).AddTicks(-1) : toDate;
-        
+
         // Filter orders based on date range
         var ordersQuery = _context.Orders
             .Include(o => o.Ordereditems).ThenInclude(oi => oi.Item)
@@ -231,37 +240,17 @@ public class OrderRepository : IOrderRepository
 
 
         // Calculate the average waiting time for all waiting tokens within the filtered time range
-        var avgWaitingTimeInMinutes = await _context.Waitingtokens
-            .Where(w => w.Createdat.HasValue && w.Modifiedat.HasValue &&
+        var avgWaitingTimeInMinutes = await _context.Orders
+            .Where(w => w.Createdat.HasValue && w.ServedTime.HasValue &&
                         (!fromDate.HasValue || w.Createdat >= fromDate.Value) &&
                         (!toDate.HasValue || w.Createdat <= toDate.Value))
-            .Select(w => (int?)(w.Modifiedat.Value - w.Createdat.Value).TotalMinutes) // Calculate the difference in minutes
+            .Select(w => (int?)(w.ServedTime.Value - w.Createdat.Value).TotalMinutes) // Calculate the difference in minutes
             .AverageAsync();
 
-        // Round the average waiting time to the nearest whole number
-        var roundedAvgWaitingTimeInMinutes = avgWaitingTimeInMinutes.HasValue
-            ? (int)Math.Round(avgWaitingTimeInMinutes.Value)
-            : (int?)null;
-
-        // Convert the average waiting time into hours and minutes
         string avgWaitingTimeFormatted;
-        if (roundedAvgWaitingTimeInMinutes.HasValue)
+        if (avgWaitingTimeInMinutes.HasValue)
         {
-            var totalMinutes = roundedAvgWaitingTimeInMinutes.Value;
-
-            var hours = totalMinutes / 60; // Calculate hours
-            var minutes = totalMinutes % 60 + (totalMinutes % 1); // Calculate remaining minutes with decimals
-
-            if (hours > 0)
-            {
-                avgWaitingTimeFormatted = minutes > 0
-                    ? $"{hours} hour{(hours > 1 ? "s" : "")} {Math.Round((double)minutes, 2)} min{(minutes > 1 ? "s" : "")}"
-                    : $"{hours} hour{(hours > 1 ? "s" : "")}";
-            }
-            else
-            {
-                avgWaitingTimeFormatted = $"{Math.Round((double)minutes, 2)} min{(minutes > 1 ? "s" : "")}";
-            }
+            avgWaitingTimeFormatted = $"{Math.Round(avgWaitingTimeInMinutes.Value, 2)} mins.";
         }
         else
         {

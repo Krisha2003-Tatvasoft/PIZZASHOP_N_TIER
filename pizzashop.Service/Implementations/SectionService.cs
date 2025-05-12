@@ -228,7 +228,7 @@ public class SectionService : ISectionService
 
    public async Task<List<SelectListItem>> GetSectionListDD()
    {
-      return await _sectionRepository.SectionDDAsync();
+      return  await _sectionRepository.SectionDDAvailable();
    }
 
 

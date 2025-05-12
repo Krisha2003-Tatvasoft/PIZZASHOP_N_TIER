@@ -30,7 +30,7 @@ public class SectionRepository : ISectionRepository
         .OrderBy(c => c.Sectionid).ToListAsync();
     }
 
-    
+
 
     public async Task AddNewSection(Section section)
     {
@@ -78,9 +78,17 @@ public class SectionRepository : ISectionRepository
     public async Task<List<Section>> GetSectionWithTables()
     {
         return await _context.Sections.Where(s => s.Isdeleted == false)
-        .Include(s => s.Tables.Where(t => t.Isdeleted == false)).ThenInclude(t => t.Ordertables).ThenInclude(s=> s.Order)
+        .Include(s => s.Tables.Where(t => t.Isdeleted == false)).ThenInclude(t => t.Ordertables).ThenInclude(s => s.Order)
         .ToListAsync();
     }
+    
+    public async Task<List<SelectListItem>> SectionDDAvailable() =>
+      await _context.Sections
+      .Where(c => c.Isdeleted == false && c.Tables.Any(t => t.tablestatus == 0 && t.Isdeleted == false)).Select
+      (c => new SelectListItem
+      { Value = c.Sectionid.ToString(), Text = c.Sectionname })
+      .ToListAsync();
+
 
 
 }

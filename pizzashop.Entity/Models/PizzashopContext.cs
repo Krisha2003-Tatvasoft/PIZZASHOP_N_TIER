@@ -498,6 +498,9 @@ public partial class PizzashopContext : DbContext
             entity.Property(e => e.Totaltax)
                 .HasPrecision(10, 2)
                 .HasColumnName("totaltax");
+            entity.Property(e => e.ServedTime)
+           .HasColumnType("timestamp without time zone")
+           .HasColumnName("servedtime");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Customerid)

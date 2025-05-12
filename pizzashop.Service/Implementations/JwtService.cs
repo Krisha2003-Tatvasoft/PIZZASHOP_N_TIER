@@ -20,7 +20,7 @@ public class JwtService : IJwtService
         _audience = configuration["Jwt:Audience"];
     }
 
-    public string GenerateJwtToken(string email, int userId, string role)
+    public string GenerateJwtToken(string email, int userId, string role ,bool rememberMe)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_key); // Secret Code (Salt)
@@ -36,7 +36,7 @@ public class JwtService : IJwtService
         {
 
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires =  rememberMe ?  DateTime.UtcNow.AddDays(3) : DateTime.UtcNow.AddHours(1),
             Issuer = _issuer,
             Audience = _audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)

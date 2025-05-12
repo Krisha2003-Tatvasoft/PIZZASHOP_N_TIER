@@ -61,6 +61,7 @@ using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using Microsoft.AspNetCore.Authorization;
 using pizzashop.web.Attributes;
+using Microsoft.AspNetCore.Http;
 
 
 namespace pizzashop.web.Attributes
@@ -104,6 +105,8 @@ namespace pizzashop.web.Attributes
 
             if (principal == null)
             {
+                context.HttpContext.Response.Cookies.Delete("PermissionData");
+                SessionUtils.ClearSession(context.HttpContext);
                 context.Result = new RedirectToActionResult("Login", "Auth", null);
                 return;
             }

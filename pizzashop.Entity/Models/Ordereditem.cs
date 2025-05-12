@@ -17,6 +17,7 @@ public partial class Ordereditem
 
     public string? Itemwisecomment { get; set; }
 
+
     public virtual Item Item { get; set; } = null!;
 
     public virtual Order Order { get; set; } = null!;
