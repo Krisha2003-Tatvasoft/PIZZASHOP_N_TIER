@@ -34,12 +34,37 @@
 <div id="assign-table-model"></div>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
 
 <script>
+    let currentSectionId = 0;
+
     $(document).ready(function () {
 
-        let currentSectionId = 0;
+        // Create a connection to the SignalR hub
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ChatHub") // Ensure this matches the hub route in your app
+            .build();
+
+        // Start the connection
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR connection error:", err));
+
+        // Handle the TableAdded event
+        connection.on("WTListUpdated", function () {
+            loadTableList(currentSectionId);
+            loadsectionList();
+        });
+
+        // Handle the TableAdded event
+        connection.on("AssignTable", function () {
+            loadTableList(currentSectionId);
+            loadsectionList();
+        });
+
+
 
         function loadsectionList() {
             $.ajax({
@@ -110,7 +135,7 @@
                                 loadsectionList();
                                 toastr.success(response.message);
                             }
-                            else{
+                            else {
                                 toastr.error(response.message);
                             }
 
@@ -179,7 +204,6 @@
 
             $(document).on("click", ".waiting-token-btn", function (e) {
                 e.preventDefault();
-
 
                 $.ajax({
                     url: "/WaitingList/AddWaitingToken",

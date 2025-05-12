@@ -8,53 +8,96 @@
 
 
 
-  <!-- Header with Legend -->
-  <div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
-    <h1 class="" style="color: #087cc4;">Table View</h1>
+<!-- Header with Legend -->
+<div class="d-block d-md-flex flex-md-row justify-content-between mb-3">
+  <h1 class="" style="color: #087cc4;">Table View</h1>
 
-    <div class="d-flex gap-3 justify-content-center flex-sm-nowrap flex-wrap">
-      <div class="d-flex flex-row  align-items-center">
-        <span class="dot me-2" style="background-color: #bbb;border-color: #bbb;"></span>
-        <span>Available</span>
-      </div>
-      <div class="d-flex flex-row align-items-center">
-        <span class="dot me-2" style="background-color: #ffffff;border:4px solid #78ff7f "></span>
-        <span>Selected</span>
-      </div>
-      <div class="d-flex flex-row align-items-center">
-        <span class="dot me-2" style="background-color: #48fc11;border-color: #78ff7f;"></span>
-        <span>Assign</span>
-      </div>
-      <div class="d-flex flex-row align-items-center">
-        <span class="dot me-2" style="background-color: #3ab0d4;border-color: #3ab0d4;"></span>
-        <span>Running</span>
-      </div>
+  <div class="d-flex gap-3 justify-content-center flex-sm-nowrap flex-wrap">
+    <div class="d-flex flex-row  align-items-center">
+      <span class="dot me-2" style="background-color: #bbb;border-color: #bbb;"></span>
+      <span>Available</span>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+      <span class="dot me-2" style="background-color: #ffffff;border:4px solid #78ff7f "></span>
+      <span>Selected</span>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+      <span class="dot me-2" style="background-color: #48fc11;border-color: #78ff7f;"></span>
+      <span>Assign</span>
+    </div>
+    <div class="d-flex flex-row align-items-center">
+      <span class="dot me-2" style="background-color: #3ab0d4;border-color: #3ab0d4;"></span>
+      <span>Running</span>
     </div>
   </div>
+</div>
 
 
-  <div id="table-section-partial"></div>
+<div id="table-section-partial"></div>
 
 
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
 <script>
   $(document).ready(function () {
 
-    $.ajax({
+    // Create a connection to the SignalR hub
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/ChatHub") // Ensure this matches the hub route in your app
+      .build();
 
-      url: "/TableOrderApp/TablesOrder",
-      type: "GET",
-      success: function (data) {
-        $('#table-section-partial').html(data);
-      },
-      error: function () {
+    // Start the connection
+    connection.start()
+      .then(() => console.log("SignalR connected"))
+      .catch(err => console.error("SignalR connection error:", err));
 
-      }
+    // Handle the TableAdded event
+    connection.on("TableAdded", function () {
+      loadTable();
     });
 
+    // Handle the TableAdded event
+    connection.on("TableUpdated", function () {
+      loadTable();
+    });
+
+    // Handle the TableAdded event
+    connection.on("TableDeleted", function () {
+      loadTable();
+    });
+
+    // Handle the TableAdded event
+    connection.on("AssignTable", function () {
+      loadTable();
+    });
+
+    connection.on("OrderUpdated", function () {
+      loadTable();
+    });
+
+
+
+    function loadTable() {
+      $.ajax({
+
+        url: "/TableOrderApp/TablesOrder",
+        type: "GET",
+        success: function (data) {
+          $('#table-section-partial').html(data);
+        },
+        error: function () {
+
+        }
+      });
+
+    }
+
+    loadTable();
+
+
+
   });
+
 </script>
-
-

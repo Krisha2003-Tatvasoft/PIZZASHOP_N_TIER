@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using pizzashop.web.Attributes;
+using pizzashop.Web.Hubs;
 using VMSection = pizzashop.Entity.ViewModels.Section;
 
 namespace pizzashop.Web.Controllers;
@@ -16,10 +18,13 @@ public class TableAndSectionController : Controller
 
     private readonly ITableService _tableService;
 
-    public TableAndSectionController(ISectionService sectionService, ITableService tableService)
+    private readonly IHubContext<ChatHub> _hubContext;
+
+    public TableAndSectionController(ISectionService sectionService, ITableService tableService, IHubContext<ChatHub> hubContext)
     {
         _sectionService = sectionService;
         _tableService = tableService;
+        _hubContext = hubContext;
     }
 
     public IActionResult TableAndSection()
@@ -149,6 +154,8 @@ public class TableAndSectionController : Controller
             CookieData user = SessionUtils.GetUser(HttpContext);
             if (await _tableService.AddTablePost(user.Userid, model))
             {
+                // Call the SignalR hub to send a message
+                await _hubContext.Clients.All.SendAsync("TableAdded");
                 return Json(new { success = true, message = "Table Added Successfully." });
             }
             else
@@ -183,6 +190,8 @@ public class TableAndSectionController : Controller
             CookieData user = SessionUtils.GetUser(HttpContext);
             if (await _tableService.EditTablePost(user.Userid, model))
             {
+                // Call the SignalR hub to send a message
+                await _hubContext.Clients.All.SendAsync("TableUpdated");
                 return Json(new { success = true, message = "Table Updated Sucessfully." });
             }
             else
@@ -203,6 +212,8 @@ public class TableAndSectionController : Controller
     {
         if (await _tableService.DeleteTable(id))
         {
+            // Call the SignalR hub to send a message
+            await _hubContext.Clients.All.SendAsync("TableDeleted");
             return Json(new { success = true, message = "Table deleted Sucessfully." });
         }
         else
@@ -215,15 +226,15 @@ public class TableAndSectionController : Controller
     [CustomAuthorize("TableAndSection", "Delete")]
     public async Task<IActionResult> DeleteSelectedTables(List<int> selectedTableIds)
     {
-
-
         if (await _tableService.DeleteSelectedTable(selectedTableIds))
         {
-            return Json(new { sucess = true, message = "Item deleted Sucessfully." });
+            // Call the SignalR hub to send a message
+            await _hubContext.Clients.All.SendAsync("TableDeleted");
+            return Json(new { sucess = true, message = "Table deleted Sucessfully." });
         }
         else
         {
-            return Json(new { error = true, message = "Item not deleted." });
+            return Json(new { error = true, message = "Table not deleted." });
         }
 
     }
@@ -265,7 +276,7 @@ public class TableAndSectionController : Controller
         return Ok(firstSec.Sectionid);
     }
 
-     [HttpGet]
+    [HttpGet]
     public async Task<IActionResult> GetAllTableIds(int sectionId)
     {
         var ids = await _tableService.GetAllTableIds(sectionId); // should return List<string> or List<int>

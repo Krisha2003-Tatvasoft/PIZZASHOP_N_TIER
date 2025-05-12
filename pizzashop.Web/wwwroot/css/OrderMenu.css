@@ -148,6 +148,22 @@
   background: linear-gradient(225deg, #f7d74f 50%, rgba(255, 255, 255, 1) 50%);
 }
 
+
+.type-color-orange {
+  background: linear-gradient(225deg, #ffa500  50%, rgba(255, 255, 255, 1) 50%);
+}
+
+.type-color-selected {
+  background: linear-gradient(225deg, #ffa500  50%, rgb(207, 236, 247 ,1) 50%);
+}
+
+.all-modifier {
+  transition: rotate(90deg);
+  width: 41px;
+  height: 35px;
+  border-top-right-radius: 0.5rem;
+}
+
 .all-type {
   transition: rotate(90deg);
   width: 35px;

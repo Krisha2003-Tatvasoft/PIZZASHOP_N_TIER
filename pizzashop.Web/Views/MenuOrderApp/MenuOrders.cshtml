@@ -111,7 +111,7 @@
     <div class="modal-content">
 
       <div class="modal-header">
-        <h5 class="modal-title" id="ItemWiseComment">Order Wise Comment</h5>
+        <h5 class="modal-title" id="ItemWiseComment">Item Instruction</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -245,12 +245,36 @@
   </div>
 </div>
 
+@* payment QR Code *@
+<div class="modal fade modal-delete" id="UPi-Sacenner" tabindex="-1" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Sacenner">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+        <img id="UPIqrImage" src="" alt="QR Code" width="250px" height="250px" /><br>
+      </div>
+      <div class="modal-footer d-flex justify-content-center gap-2">
+        <button type="button" class="btn btn-primary upi-payment-Done w-100" data-bs-dismiss="modal">Payment Done</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
 <script>
+
+
   var GCatId = "";
   let OrderItem = [];
   let selectedModifiers = {};
@@ -436,7 +460,7 @@
   }
 
   @* update item *@
-    function updateQuantity(event,index, change) {
+    function updateQuantity(event, index, change) {
       const item = OrderItem[index];
       const isLocked = item.ReadyQuantity >= item.Quantity;
 
@@ -609,6 +633,35 @@
 
   $(document).ready(function () {
 
+
+    // Create a connection to the SignalR hub
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/ChatHub") // Ensure this matches the hub route in your app
+      .build();
+
+    // Start the connection
+    connection.start()
+      .then(() => console.log("SignalR connected"))
+      .catch(err => console.error("SignalR connection error:", err));
+
+    // Handle the TableAdded event
+    connection.on("KOTUpdated", function () {
+      loadOrderDetails();
+    });
+
+    // Handle the TableAdded event
+    connection.on("FavouriteUpdated", function () {
+      loadCategoryList();
+      loadItemList(GCatId);
+    });
+
+    connection.on("OrderUpdated", function () {
+      loadOrderDetails();
+    });
+
+
+
+
     loadCategoryList();
     loadItemList(0);
     loadOrderDetails();
@@ -768,7 +821,7 @@
       if (isSelected) {
         selectedModifiers[modifierGroupId] = currentSelections.filter(id => id !== modifierId);
         $card.removeClass("selected");
-
+        $card.find(".all-modifier").removeClass("type-color-selected").addClass("type-color-orange"); // Update class
       } else {
         if (currentSelections.length >= maxSelection) {
           toastr.warning("You can select a maximum of " + maxSelection + " modifiers for this group.");
@@ -776,6 +829,7 @@
         }
         selectedModifiers[modifierGroupId].push(modifierId);
         $card.addClass("selected");
+        $card.find(".all-modifier").removeClass("type-color-orange").addClass("type-color-selected"); // Update class
       }
     });
 
@@ -1048,10 +1102,58 @@
           toastr.error('Some items are still being prepared. Cannot complete the order!');
           return;
         }
-        $("#CompleteOrderModal").modal("show");
         const Id = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+
+        // Check the selected payment method
+        const selectedPaymentMethod = $('input[name="paymentMethod"]:checked').attr('id');
+        console.log(selectedPaymentMethod);
+
+        if (selectedPaymentMethod === 'UPI') {
+          // Open the UPI payment modal
+          ShowPaymentModel(Id);
+          return;
+        }
+
+        $("#CompleteOrderModal").modal("show");
         $("#orderid").val(Id);
+
       });
+
+
+    @* upi QRcode With Model *@
+      function ShowPaymentModel(Id) {
+
+        $.ajax({
+          url: "/MenuOrderApp/GenerateUPIQRCode",
+          type: 'GET',
+          data: { orderId: Id },
+          xhrFields: {
+            responseType: 'arraybuffer'  // Important: get raw bytes
+          },
+          success: function (data) {
+            var base64 = btoa(
+              new Uint8Array(data)
+                .reduce((data, byte) => data + String.fromCharCode(byte), '')
+            );
+
+            var imageUrl = "data:image/png;base64," + base64;
+
+            $("#UPIqrImage").attr("src", imageUrl);
+            $("#UPi-Sacenner").modal("show");
+          },
+          error: function (xhr, status, error) {
+            console.error('Error fetching waiting token:', error);
+          }
+        });
+      }
+
+
+    $(document).on("click", ".upi-payment-Done", function (e) {
+
+      $("#UPi-Sacenner").modal("hide");
+      $("#CompleteOrderModal").modal("show");
+
+    });
 
 
     @* complete button yes *@

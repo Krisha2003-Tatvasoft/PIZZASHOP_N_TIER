@@ -21,7 +21,7 @@
 <div class="tranfer-modal"></div>
 
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -29,6 +29,24 @@
         let currentCategoryName = "All";
         let currentStatus = "Inprogress";
         let currentPage = "@ViewBag.CurrentPage";
+
+
+        // Create a connection to the SignalR hub
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ChatHub") // Ensure this matches the hub route in your app
+            .build();
+
+        // Start the connection
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR connection error:", err));
+
+        // Handle the TableAdded event
+        connection.on("KOTUpdated", function () {
+            loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
+            loadCategoryList(currentStatus);
+        });
+
 
         // Set button text based on current status
         if (currentStatus === "Inprogress") {
@@ -101,7 +119,7 @@
 
         loadTicket(0, currentStatus);
 
-        
+
 
         $(document).on("click", ".pagination-link", function (e) {
             e.preventDefault();

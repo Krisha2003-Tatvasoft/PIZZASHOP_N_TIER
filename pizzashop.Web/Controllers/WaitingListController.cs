@@ -1,9 +1,11 @@
 using DocumentFormat.OpenXml.Office.CustomUI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using pizzashop.web.Attributes;
+using pizzashop.Web.Hubs;
 
 namespace pizzashop.Web.Controllers;
 
@@ -15,16 +17,16 @@ public class WaitingListController : Controller
 
     private readonly ITableService _tableService;
 
-
+    private readonly IHubContext<ChatHub> _hubContext;
 
 
     public WaitingListController(ISectionService sectionService,
-    IOrderAppWaitingTokenService orderAppWaitingTokenService, ITableService tableService)
+    IOrderAppWaitingTokenService orderAppWaitingTokenService, ITableService tableService, IHubContext<ChatHub> hubContext)
     {
         _sectionService = sectionService;
         _orderAppWaitingTokenService = orderAppWaitingTokenService;
         _tableService = tableService;
-
+        _hubContext = hubContext;
     }
 
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
@@ -69,6 +71,8 @@ public class WaitingListController : Controller
 
             if (isthis)
             {
+                 // Call the SignalR hub to send a message
+                await _hubContext.Clients.All.SendAsync("WTListUpdated");
                 return Json(new { success = true, message = "Waiting Token Updated Sucessfully." });
             }
             else
@@ -99,6 +103,8 @@ public class WaitingListController : Controller
     {
         if (await _orderAppWaitingTokenService.DeleteWT(id))
         {
+            // Call the SignalR hub to send a message
+             await _hubContext.Clients.All.SendAsync("WTListUpdated");
             return Json(new { success = true, message = "WaitingToken deleted Sucessfully." });
         }
         else
@@ -153,6 +159,8 @@ public class WaitingListController : Controller
 
             if (Orderid != null)
             {
+                 // Call the SignalR hub to send a message
+             await _hubContext.Clients.All.SendAsync("AssignTable");
                 return Json(new
                 {
                     success = true,

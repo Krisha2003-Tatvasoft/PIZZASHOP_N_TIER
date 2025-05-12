@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.web.Attributes;
+using pizzashop.Web.Hubs;
 
 namespace pizzashop.Web.Controllers;
 
@@ -11,10 +13,14 @@ public class KOTController : Controller
 
     private readonly IKOTService _KOTService;
 
-    public KOTController(ICategoryService categoryService, IKOTService kOTService)
+    private readonly IHubContext<ChatHub> _hubContext;
+
+
+    public KOTController(ICategoryService categoryService, IKOTService kOTService, IHubContext<ChatHub> hubContext)
     {
         _categoryService = categoryService;
         _KOTService = kOTService;
+        _hubContext = hubContext;
     }
 
     [HttpGet]
@@ -37,7 +43,7 @@ public class KOTController : Controller
     public async Task<IActionResult> loadTickets(int id, string status)
     {
         var (tickets, totalOrder) = await _KOTService.Ticket(id, status);
-        
+
         ViewBag.totalOrder = totalOrder;
 
         return PartialView("_Ticket", tickets);
@@ -62,6 +68,8 @@ public class KOTController : Controller
         }
 
         await _KOTService.UpdateItemStatusAsync(model);
+        // Call the SignalR hub to send a message
+        await _hubContext.Clients.All.SendAsync("KOTUpdated");
         return Ok(new { success = true });
     }
 

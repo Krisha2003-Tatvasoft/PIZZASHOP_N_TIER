@@ -1,11 +1,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using pizzashop.web.Attributes;
+using pizzashop.Web.Hubs;
 
 namespace pizzashop.Web.Controllers;
 
@@ -20,13 +22,17 @@ public class TableOrderAppController : Controller
 
     private readonly IOrderAppTableService _orderAppTableService;
 
+    private readonly IHubContext<ChatHub> _hubContext;
+
+
     public TableOrderAppController(ISectionService sectionService, IOrderAppWaitingTokenService orderAppWaitingTokenService
-    , ICustomerService customerService, IOrderAppTableService orderAppTableService)
+    , ICustomerService customerService, IOrderAppTableService orderAppTableService, IHubContext<ChatHub> hubContext)
     {
         _SectionService = sectionService;
         _orderAppWaitingTokenService = orderAppWaitingTokenService;
         _cutomerService = customerService;
         _orderAppTableService = orderAppTableService;
+        _hubContext = hubContext;
     }
 
 
@@ -80,6 +86,8 @@ public class TableOrderAppController : Controller
             var (success, message) = await _orderAppWaitingTokenService.AddWaitingTokenPost(user.Userid, model);
             if (success == true)
             {
+                // Call the SignalR hub to send a message
+                await _hubContext.Clients.All.SendAsync("WTListUpdated");
                 return Json(new { success = true, message = message });
             }
             else
@@ -147,6 +155,8 @@ public class TableOrderAppController : Controller
             var (Orderid, message) = await _orderAppTableService.AssignTablePost(user.Userid, model);
             if (Orderid != null)
             {
+                // Call the SignalR hub to send a message
+                await _hubContext.Clients.All.SendAsync("AssignTable");
                 return Json(new
                 {
                     success = true,

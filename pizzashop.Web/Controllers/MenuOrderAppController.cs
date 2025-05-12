@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Service.Interfaces;
 using pizzashop.Service.Utils;
 using pizzashop.web.Attributes;
+using pizzashop.Web.Hubs;
 using QRCoder;
 
 namespace pizzashop.Web.Controllers;
@@ -21,14 +23,18 @@ public class MenuOrderAppController : Controller
 
     private readonly IJwtService _jwtService;
 
+    private readonly IHubContext<ChatHub> _hubContext;
+
+
     public MenuOrderAppController(ICategoryService categoryService, IItemService itemService,
-     IOrderAppMenuService orderAppMenuService, IOrderService orderService, IJwtService jwtService)
+     IOrderAppMenuService orderAppMenuService, IOrderService orderService, IJwtService jwtService, IHubContext<ChatHub> hubContext)
     {
         _categoryService = categoryService;
         _itemService = itemService;
         _orderAppMenuService = orderAppMenuService;
         _orderService = orderService;
         _jwtService = jwtService;
+        _hubContext = hubContext;
     }
 
     [HttpGet]
@@ -78,6 +84,8 @@ public class MenuOrderAppController : Controller
     {
         // CookieData user = SessionUtils.GetUser(HttpContext);
         bool isFavourite = await _itemService.ToggleFavourite(id);
+        // Call the SignalR hub to send a message
+        await _hubContext.Clients.All.SendAsync("FavouriteUpdated");
         return Json(new { isFavourite = isFavourite });
 
     }
@@ -114,6 +122,11 @@ public class MenuOrderAppController : Controller
             return BadRequest("Invalid data");
 
         var (success, message) = await _orderAppMenuService.SaveOrder(model);
+        if (success == true)
+        {
+            // Call the SignalR hub to send a message
+            await _hubContext.Clients.All.SendAsync("OrderUpdated");
+        }
 
         return Ok(new { success = success, message = message });
     }
@@ -146,6 +159,12 @@ public class MenuOrderAppController : Controller
     public async Task<IActionResult> CancelOrder(int id)
     {
         var (success, message) = await _orderAppMenuService.CancelOrder(id);
+        if (success == true)
+        {
+            // Call the SignalR hub to send a message
+            await _hubContext.Clients.All.SendAsync("OrderUpdated");
+        }
+
 
         return Ok(new { success = success, message = message });
     }
@@ -155,6 +174,12 @@ public class MenuOrderAppController : Controller
     public async Task<IActionResult> CompleteOrder(int id)
     {
         var (success, message) = await _orderAppMenuService.CompleteOrder(id);
+        if (success == true)
+        {
+            // Call the SignalR hub to send a message
+            await _hubContext.Clients.All.SendAsync("OrderUpdated");
+        }
+
 
         return Ok(new { success = success, message = message });
     }
@@ -223,7 +248,6 @@ public class MenuOrderAppController : Controller
     [HttpGet]
     public async Task<IActionResult> GetMenu(int orderId, string token)
     {
-
         var tokens = _jwtService.ValidateToken(token);
         if (tokens != null)
         {
@@ -236,5 +260,24 @@ public class MenuOrderAppController : Controller
             return RedirectToAction("Error", "Error", 404);
         }
     }
+
+    [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" , "Customer" })]
+    public async Task<IActionResult> GenerateUPIQRCode(int orderId)
+    {
+        var orderDetails = await _orderService.OrderDetails(orderId);
+        var qrUrl = $"upi://pay?pa=krishavaghasiya1211@oksbi&pn=PIZZASHOP&am={orderDetails.Totalamount}&cu=INR&tn={orderDetails.Invoicenumber}";
+
+        using (var qrGenerator = new QRCodeGenerator())
+        {
+            var qrCodeData = qrGenerator.CreateQrCode(qrUrl, QRCodeGenerator.ECCLevel.Q);
+
+            var pngQrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeImage = pngQrCode.GetGraphic(20);
+
+            return File(qrCodeImage, "image/png");
+        }
+    }
+
 
 }

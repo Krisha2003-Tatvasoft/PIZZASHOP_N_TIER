@@ -216,6 +216,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "Microsoft.AspNetCore.SignalR": {
+              "target": "Package",
+              "version": "[1.2.0, )"
+            },
             "MimeKit": {
               "target": "Package",
               "version": "[4.10.0, )"
