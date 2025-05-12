@@ -223,3 +223,6 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\refint\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\ref\pizzashop.Web.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.IO.Pipelines.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Net.WebSockets.WebSocketProtocol.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Threading.Channels.dll

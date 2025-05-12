@@ -32,12 +32,15 @@
 <div id="Waiting-token-modal"></div>
 
 <div id="assign-table-model"></div>
+
+
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
 
 <script>
+
     let currentSectionId = 0;
 
     $(document).ready(function () {
@@ -63,7 +66,6 @@
             loadTableList(currentSectionId);
             loadsectionList();
         });
-
 
 
         function loadsectionList() {
@@ -359,32 +361,22 @@
                     url: "/WaitingList/AssignTable",
                     type: "GET",
                     success: function (data) {
-                        $("#assign-table-model").html(data);
-                        $("#AssignTable").modal("show");
-                        $(".waitingToken").val(Waitingtokenid);
-                    },
-                    error: function () {
-                        alert("failed to reload modal");
-                    }
-                });
+                        $("#sectionDropdownMenu").empty();
+                        selectedSections = [];
+                        @* $("#Sectionid").append('<option selected disabled value="">Select Section</option>'); *@
+
+                            $("#tableDropdownMenu").empty();
+                        $("#tableDropdownBtn").html("Select Tables");
+
+                        selectedTables = [];
 
 
-                $("#sectionDropdownMenu").empty();
-                selectedSections = [];
-                @* $("#Sectionid").append('<option selected disabled value="">Select Section</option>'); *@
-
-                    $("#tableDropdownMenu").empty();
-                $("#tableDropdownBtn").html("Select Tables");
-
-                selectedTables = [];
-
-
-                // Fetch and repopulate section options
-                $.get("/WaitingList/GetSection", function (data) {
-                    $.each(data, function (index, section) {
-                        var sectioid = $("#sectionDropdownBtn").val();
-                        const isChecked = section.value == sectionid ? 'checked' : '';
-                        $("#sectionDropdownMenu").append(`
+                        // Fetch and repopulate section options
+                        $.get("/WaitingList/GetSection", function (data) {
+                            $.each(data, function (index, section) {
+                                var sectioid = $("#sectionDropdownBtn").val();
+                                const isChecked = section.value == sectionid ? 'checked' : '';
+                                $("#sectionDropdownMenu").append(`
                             <li>
                               <div class="form-check mx-2 w-100">
                                  <input class="form-check-input section-checkbox" type="checkbox" value="${section.value}" id="section_${section.value}" ${isChecked}>
@@ -393,12 +385,21 @@
                              </li>
                             `);
 
-                        if (section.value == sectionid) {
-                            selectedSections.push(section.value);
-                            loadTablesForSection(section.value);   // <-- this line makes sure its tables are loaded
-                        }
-                    });
-                    updateSectionDropdownText();
+                                if (section.value == sectionid) {
+                                    selectedSections.push(section.value);
+                                    loadTablesForSection(section.value);   // <-- this line makes sure its tables are loaded
+                                }
+                            });
+                            updateSectionDropdownText();
+                        });
+
+                        $("#assign-table-model").html(data);
+                        $("#AssignTable").modal("show");
+                        $(".waitingToken").val(Waitingtokenid);
+                    },
+                    error: function () {
+                        alert("failed to reload modal");
+                    }
                 });
 
             });
@@ -424,13 +425,14 @@
 
         let selectedTables = [];
 
-
         // Handle checkbox selection/deselection and update dropdown content
         $(document).on("change", ".table-checkbox", function (e) {
             const value = $(this).val();
             const label = $(this).next("label").text();
+            const sectionId = $(this).closest("li").data("section");
+
             if ($(this).is(":checked")) {
-                selectedTables.push({ id: value, label: label });
+                selectedTables.push({ id: value, label: label, section: sectionId }); // <-- include section
             } else {
                 selectedTables = selectedTables.filter(table => table.id !== value);
             }
@@ -440,7 +442,6 @@
         $(document).on('click', '.table-checkbox-input, .table-checkbox-label', function (e) {
             e.stopPropagation();
         });
-
 
 
         function updateDropdownText() {
@@ -475,8 +476,11 @@
 
         $(document).on("change", ".section-checkbox", function () {
             const value = $(this).val();
+
             if ($(this).is(":checked")) {
-                if (!selectedSections.includes(value)) selectedSections.push(value);
+                if (!selectedSections.includes(value)) {
+                    selectedSections.push(value);
+                }
                 loadTablesForSection(value);
             } else {
                 selectedSections = selectedSections.filter(id => id !== value);
@@ -487,14 +491,9 @@
 
         function removeTablesForSection(sectioid) {
             $(`#tableDropdownMenu li[data-section='${sectioid}']`).remove();
-            selectedTables = selectedTables.filter(t => {
-                const checkbox = $(`#table_${t.id}`);
-                return checkbox.closest("li").attr("data-section") !== sectioid;
-            });
+            selectedTables = selectedTables.filter(t => parseInt(t.section) !== parseInt(sectioid));
             updateDropdownText();
         }
-
-
 
         function redirectToMenuOrders(orderId) {
             window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;

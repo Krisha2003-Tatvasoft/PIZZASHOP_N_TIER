@@ -44,24 +44,63 @@
             {
                 <div class="d-flex align-items-center justify-content-end gap-1 gap-sm-3">
 
-                    <a asp-controller="KOT" asp-action="KOT">
-                        <span class="badge badge-pill px-2 px-sm-3"><i class="bi bi-clipboard-check-fill me-0 me-md-1"></i><span
-                                class="d-none d-md-inline">KOT</span></span>
-                    </a>
-                     @if (user.Rolename == "Account Manager"){
-                    <a asp-controller="WaitingList" asp-action="WaitingList">
-                        <span class="badge badge-pill px-2 px-sm-3"><i class="bi bi-clock-fill me-0 me-md-1"></i><span
-                                class="d-none d-md-inline">Waiting List</span></span>
-                    </a>
-                    <a asp-controller="TableOrderApp" asp-action="TablesOrder">
-                        <span class="badge badge-pill px-2 px-sm-3"><i class="bi bi-square-fill me-0 me-md-1"></i><span
-                                class="d-none d-md-inline">Tables</span></span>
-                    </a>
-                    <a asp-controller="MenuOrderApp" asp-action="MenuOrders">
-                        <span class="badge badge-pill px-2 px-sm-3"><img src="~/images/menu-item-fill.png" width="20px" height="100%"
-                                class="me-0 me-md-1"><span class="d-none d-md-inline">Menu</span></span>
-                    </a>
-                     }
+                    <div class="d-none d-md-flex align-items-center gap-1 gap-sm-3">
+                        <a asp-controller="KOT" asp-action="KOT">
+                            <span class="badge badge-pill px-2 px-sm-3"><i
+                                    class="bi bi-clipboard-check-fill me-0 me-md-1"></i><span>KOT</span></span>
+                        </a>
+                        @if (user.Rolename == "Account Manager")
+                        {
+                            <a asp-controller="WaitingList" asp-action="WaitingList">
+                                <span class="badge badge-pill px-2 px-sm-3"><i
+                                        class="bi bi-clock-fill me-0 me-md-1"></i><span>Waiting List</span></span>
+                            </a>
+                            <a asp-controller="TableOrderApp" asp-action="TablesOrder">
+                                <span class="badge badge-pill px-2 px-sm-3"><i
+                                        class="bi bi-square-fill me-0 me-md-1"></i><span>Tables</span></span>
+                            </a>
+                            <a asp-controller="MenuOrderApp" asp-action="MenuOrders">
+                                <span class="badge badge-pill px-2 px-sm-3"><img src="~/images/menu-item-fill.png" width="20px"
+                                        height="100%" class="me-0 me-md-1"><span>Menu</span></span>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="menu-icon dropdown d-md-none">
+                        <button id="mobileMenuToggle" class="btn btn-outline-light dropdown-toggle px-2 py-1" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <span id="activeMenuName">Tables</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" asp-controller="KOT" asp-action="KOT" data-controller="KOT">
+                                    <i class="bi bi-clipboard-check-fill me-2"></i> KOT
+                                </a>
+                            </li>
+                            @if (user.Rolename == "Account Manager")
+                            {
+                                <li>
+                                    <a class="dropdown-item" asp-controller="WaitingList" asp-action="WaitingList"
+                                        data-controller="WaitingList">
+                                        <i class="bi bi-clock-fill me-2"></i> Waiting List
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="TableOrderApp" asp-action="TablesOrder"
+                                        data-controller="TableOrderApp">
+                                        <i class="bi bi-square-fill me-2"></i> Tables
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="MenuOrderApp" asp-action="MenuOrders"
+                                        data-controller="MenuOrderApp">
+                                        <img src="~/images/menu-icon.png" width="20px" class="me-2"> Menu
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                    </div>
                     <img class="profile-img dropdown-toggle" data-bs-toggle="dropdown" id="dropdownMenuButton1"
                         src="@profileImageUrl" aria-expanded="false" style="border-radius:50%" />
 
@@ -139,16 +178,32 @@
         function activeClass() {
             let path = window.location.pathname.split("/");
             let currentController = path[1];
+            let activeName = "Tables"; // default fallback
 
             $(".orderapp-navbar a").each(function () {
                 let menu = $(this).attr("href");
                 let path = menu.split("/");
                 let menuController = path[1];
+                console.log(menuController);
 
                 if (menuController === currentController) {
                     $(this).find('span').addClass("active"); // Apply active class
+                    console.log("hiiiii" , menuController)
+                    // Set menu text based on the controller
+                    switch (menuController) {
+                        case "TableOrderApp":
+                            $("#activeMenuName").text("Tables");
+                            break;
+                        case "MenuOrderApp":
+                            $("#activeMenuName").text("Menu");
+                            break;
+                        default:
+                            $("#activeMenuName").text(menuController);
+                    }
+                    return;
                 }
             });
+
         }
 
         activeClass();

@@ -1,13 +1,11 @@
-.main-container
-{
+.main-container {
     min-height: 100vh;
     background-color: #e5e7eb;
     margin-top: 50px;
 }
 
 
-.orderapp-navbar
-{
+.orderapp-navbar {
     height: 50px;
     background-color: #087cc4;
     width: 100% !important;
@@ -17,16 +15,14 @@
     z-index: 100;
 }
 
-.orderapp-navbar .badge
-{
+.orderapp-navbar .badge {
     border: 1px solid #fff;
-    height: 25px!important;
-    border-radius: 10px!important;
+    height: 25px !important;
+    border-radius: 10px !important;
 }
 
-.orderapp-navbar .active
-{
-    background-color:#4B9CD3!important;
+.orderapp-navbar .active {
+    background-color: #4B9CD3 !important;
 }
 
 .orderapp-navbar .profile-img {
@@ -36,19 +32,33 @@
 }
 
 
-.orderapp-navbar .profile-dropdown .dropdown-menu {
+.orderapp-navbar  .dropdown-menu{
     .dropdown-item {
 
         &:hover,
         &:focus {
-            background-color: #f0f0f0; 
+            background-color: #f0f0f0;
         }
 
         &:active,
         &.active {
-            background-color: #e0e0e0 !important; 
-            color: #000 !important; 
+            background-color: #e0e0e0 !important;
+            color: #000 !important;
         }
     }
 }
 
+.menu-icon .dropdown-menu-end {
+  .dropdown-item {
+    &:hover,
+    &:focus {
+      background-color: #f0f0f0;
+    }
+
+    &:active,
+    &.active {
+      background-color: #4b9cd35a!important;
+      color: #000 !important;
+    }
+  }
+}
