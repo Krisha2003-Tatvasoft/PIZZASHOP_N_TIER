@@ -144,6 +144,7 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         }
 
         var waitingList = waiting
+        .Where(w => w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
         .Select(w => new WaitingListTable
         {
             Waitingtokenid = w.Waitingtokenid,

@@ -1,5 +1,17 @@
 @using pizzashop.Entity.Models
 @model List<pizzashop.Entity.ViewModels.Ticket>
+    <style>
+.truncate-2-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;                /* show up to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 350px;                     /* optional: you can also set this in inline style */
+}
+    </style>
 <div class=" tab-pane fade show active p-3" id="tab1" role="tabpanel" aria-labelledby="nav-tab1">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -38,9 +50,20 @@
                               order.RunningSince :  0)
                             </div>
                         </div>
-                        <div class="small text-muted fw-bold">@order.Sectionname <i class="bi bi-dot"></i> @foreach(var table in order.Tablenames)
+                        <div class="small text-muted fw-bold"> @foreach (var sec in order.Sectionname)
                             {
-                                @table
+                                @sec
+                                if (sec != order.Sectionname.Last())
+                                {
+                                    @:,
+                                }
+                            } <i class="bi bi-dot"></i> @foreach(var table in order.Tablenames)
+                            {
+                                @table 
+                                if (table != order.Tablenames.Last())
+                                {
+                                    @:,
+                                }
                             }
                         </div>
                     </div>
@@ -56,13 +79,21 @@
                                     <li>@modifier.Modifiername</li>
                                 </ul>
                             }
-                            <span class="ms-3"><span class="text-info">Instruction : </span>@item.Itemwisecomment</span>
+                            <div class="ms-3 d-flex gap-2">
+                                   <div class="text-info">Instruction:</div>
+                                   <div class="text-muted" style="max-width:200px; white-space: normal; word-break: break-word;">
+                                   @item.Itemwisecomment
+                                   </div>
+                            </div>
                         }
 
                     </div>
 
                     <div class="top-part p-2">
-                        <span><span class="text-info">Order Instruction : </span>@order.Orderwisecomment</span>
+                        <div class="truncate-2-lines" title="@order.Orderwisecomment" style="max-width: 320px;">
+                            <span class="text-info">Order Instruction: </span>
+                            @order.Orderwisecomment
+                        </div>
                     </div>
                 </div>
             }

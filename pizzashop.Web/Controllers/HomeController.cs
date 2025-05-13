@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace pizzashop.Web.Controllers;
 
-[CustomAuthorize]
+ [CustomAuthorize("", "", new string[] { "Admin" ,"Account Manager" })]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -20,7 +20,6 @@ public class HomeController : Controller
     {
         _logger = logger;
         _dashboardService = dashboardService;
-
     }
 
     public IActionResult Index()

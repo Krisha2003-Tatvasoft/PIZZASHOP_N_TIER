@@ -41,7 +41,7 @@ public class OrderRepository : IOrderRepository
             "CustomerName" => SortOrder == "desc" ? orderList.OrderByDescending(o => o.Customer.Customername) : orderList.OrderBy(o => o.Customer.Customername),
             "TotalAmount" => SortOrder == "desc" ? orderList.OrderByDescending(o => o.Totalamount) : orderList.OrderBy(o => o.Totalamount),
             // Add additional cases for other columns as needed
-            _ => orderList.OrderBy(o => o.Orderid),// Default sort (if none provided)
+            _ => orderList.OrderByDescending(o => o.Orderdate),// Default sort (if none provided)
         };
         return orderList;
     }

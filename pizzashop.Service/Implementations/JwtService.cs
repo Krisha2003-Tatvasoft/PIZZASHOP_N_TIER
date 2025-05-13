@@ -69,7 +69,7 @@ public class JwtService : IJwtService
         return tokenHandler.WriteToken(token);
     }
 
-    public string GenerateCustomerToken(int orderId)
+    public string GenerateCustomerToken(int orderId , string encodeId)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_key);
@@ -81,6 +81,7 @@ public class JwtService : IJwtService
             {
                     new Claim("TokenId", tokenId),
                     new Claim("orderId",orderId.ToString()),
+                    new Claim("encodeId",encodeId),
                     new Claim(ClaimTypes.Role, "Customer"),
             }),
             Expires = DateTime.UtcNow.AddHours(1),

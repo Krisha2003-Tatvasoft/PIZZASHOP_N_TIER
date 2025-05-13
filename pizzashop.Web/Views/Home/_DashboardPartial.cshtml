@@ -3,12 +3,17 @@
     var index1 = 0;
     var index2 = 0;
 }
+<style>
+    .fs-1-65{
+        font-size: 1.65rem;
+    }
+</style>
 
 <div class="row p-0">
     <div class="col-xl-6 col-12">
         <div class="row">
             <div class="col-md-6 pb-3">
-                <div class="card" style="height:210px">
+                <div class="card" style="height:190px">
                     <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
                         <div class="rounded-circle p-1" style="border:2px solid #00ff1473">
                             <div class="rounded-circle align-items-center d-flex justify-content-center"
@@ -18,13 +23,13 @@
                         </div>
                     </div>
                     <div class="row m-2 h-50 flex-column">
-                        <span class="fs-1"><strong>@Model.TotalSales</strong></span>
+                        <span class="fs-1-65"><strong>@Model.TotalSales</strong></span>
                         <span>Total Sales</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 pb-3">
-                <div class="card" style="height:210px">
+                <div class="card" style="height:190px">
                     <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
                         <div class="rounded-circle p-1" style="border:2px solid #c153be73">
                             <div class="rounded-circle align-items-center d-flex justify-content-center"
@@ -34,7 +39,7 @@
                         </div>
                     </div>
                     <div class="row m-2 h-50 flex-column">
-                        <span class="fs-1"><strong>@Model.TotalOrders</strong></span>
+                        <span class="fs-1-65"><strong>@Model.TotalOrders</strong></span>
                         <span>Total Orders</span>
                     </div>
                 </div>
@@ -44,7 +49,7 @@
     <div class="col-xl-6 col-12">
         <div class="row">
             <div class="col-md-6 pb-3">
-                <div class="card" style="height:210px">
+                <div class="card" style="height:190px">
                     <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
                         <div class="rounded-circle p-1" style="border:2px solid #5bbbe96e">
                             <div class="rounded-circle align-items-center d-flex justify-content-center"
@@ -55,13 +60,13 @@
                         </div>
                     </div>
                     <div class="row m-2 h-50 flex-column">
-                        <span class="fs-1"><strong>@Model.AvgOrder</strong></span>
+                        <span class="fs-1-65"><strong>@Model.AvgOrder</strong></span>
                         <span>Avg. Order Value</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 pb-3">
-                <div class="card" style="height:210px">
+                <div class="card" style="height:190px">
                     <div class="m-2 h-50 d-flex justify-content-end align-items-center pe-3">
                         <div class="rounded-circle p-1" style="border:2px solid #fa6c6c99">
                             <div class="rounded-circle align-items-center d-flex justify-content-center"
@@ -71,8 +76,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row m-2 h-50 flex-column flex-no-wrap">
-                        <span class="fs-1"><strong>@Model.AvgWaitingTime</strong></span>
+                    <div class="row m-2 h-50 flex-column">
+                        <span class="fs-1-65"><strong>@Model.AvgWaitingTime</strong></span>
                         <span>Avg. Waiting Time</span>
                     </div>
                 </div>
@@ -113,7 +118,7 @@
             <div class="col-md-6 pb-3">
                 <div class="card" style="height:220px">
                     <div class="row h-25 p-3">
-                        <span class="fs-4">Top Selling Items</span>
+                        <span class="fs-5">Top Selling Items</span>
                     </div>
                     <div class="row mx-3 py-1 overflow-auto">
                         @if (Model.TopSellingItems.Count == 0)
@@ -147,7 +152,7 @@
             <div class="col-md-6 pb-3">
                 <div class="card" style="height:220px">
                     <div class="row h-25 p-3">
-                        <span class="fs-4">Least Selling Items</span>
+                        <span class="fs-5">Least Selling Items</span>
                     </div>
                     <div class="row selling-items mx-3 py-1 overflow-auto">
                         @if (Model.LeastSellingItems.Count == 0)
@@ -193,7 +198,7 @@
                         </div>
                     </div>
                     <div class="row m-2 h-50 flex-column">
-                        <span class="fs-1"><strong>@Model.WaitingCount</strong></span>
+                        <span class="fs-1-65"><strong>@Model.WaitingCount</strong></span>
                         <span>Waiting List Count </span>
                     </div>
                 </div>
@@ -209,7 +214,7 @@
                         </div>
                     </div>
                     <div class="row m-2 h-50 flex-column">
-                        <span class="fs-1"><strong>@Model.NewCustomers</strong></span>
+                        <span class="fs-1-65"><strong>@Model.NewCustomers</strong></span>
                         <span>New Customers</span>
                     </div>
                 </div>

@@ -29,6 +29,7 @@
         let currentCategoryName = "All";
         let currentStatus = "Inprogress";
         let currentPage = "@ViewBag.CurrentPage";
+        let GorderId;
 
 
         // Create a connection to the SignalR hub
@@ -46,6 +47,12 @@
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
         });
+
+        connection.on("OrderUpdated", function () {
+            loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
+            loadCategoryList(currentStatus);
+        });
+
 
 
         // Set button text based on current status
@@ -137,8 +144,16 @@
 
         $(document).on("click", ".order-card", function (e) {
             e.preventDefault();
+            
             var orderid = $(this).data("orderid");
-            $.ajax({
+            GorderId = orderid;
+            loadtransferModal(orderid);
+
+        });
+
+        function loadtransferModal(orderid)
+        {
+             $.ajax({
 
                 url: "/KOT/OpenModel",
                 type: "GET",
@@ -156,9 +171,7 @@
                 error: function () {
                 }
             });
-
-
-        });
+        }
 
         $(document).on('click', '.plus-btn, .minus-btn', function () {
             const $parent = $(this).closest('[data-orderitemid]');
@@ -235,7 +248,6 @@
 
             // Status (Current Status) - to know whether we're updating 'Inprogress' or 'Ready'
             const newStatus = currentStatus === "Inprogress" ? "Ready" : "Inprogress";
-
 
 
             // Send the data to the backend (including Order ID and Status)

@@ -258,7 +258,8 @@
         <img id="UPIqrImage" src="" alt="QR Code" width="250px" height="250px" /><br>
       </div>
       <div class="modal-footer d-flex justify-content-center gap-2">
-        <button type="button" class="btn btn-primary upi-payment-Done w-100" data-bs-dismiss="modal">Payment Done</button>
+        <button type="button" class="btn btn-primary upi-payment-Done w-100" data-bs-dismiss="modal">Payment
+          Done</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
       </div>
     </div>
@@ -415,7 +416,8 @@
     function loadOrderDetails() {
 
       const Id = new URLSearchParams(window.location.search).get('orderId');
-      const orderId = parseInt(Id)
+      const orderId = parseInt(atob(Id)); // base64 decode
+
 
       $.ajax({
         url: "/MenuOrderApp/OrderDetails",
@@ -497,7 +499,10 @@
 
 
   function calculateTaxesAndDisplay(orderItems, taxes) {
-    const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+
+    const encoded = new URLSearchParams(window.location.search).get('orderId');
+    const orderId = parseInt(atob(encoded)); // base64 decode
+
     let subTotal = 0;
     let defaultTaxTotal = 0;
     let percentageTaxTotal = 0;
@@ -633,7 +638,6 @@
 
   $(document).ready(function () {
 
-
     // Create a connection to the SignalR hub
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/ChatHub") // Ensure this matches the hub route in your app
@@ -658,8 +662,6 @@
     connection.on("OrderUpdated", function () {
       loadOrderDetails();
     });
-
-
 
 
     loadCategoryList();
@@ -734,9 +736,8 @@
     $(document).on("click", ".itemCard", function (e) {
       e.preventDefault();
 
-      const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
-      const Id = new URLSearchParams(window.location.search).get('orderId');
-
+      const encoded = new URLSearchParams(window.location.search).get('orderId');
+      const orderId = parseInt(atob(encoded)); // base64 decode
 
       var itemId = $(this).data("item-id");
       const itemName = $(this).data("item-name");
@@ -746,6 +747,15 @@
 
       selectedModifiers = {};
 
+      console.log(orderId);
+      let Id = orderId;
+
+      if (isNaN(orderId)) {
+        Id = "";
+      }
+      else {
+        Id = orderId;
+      }
 
       $.ajax({
         url: `/MenuOrderApp/ModifierList?orderId=${Id}`,
@@ -798,8 +808,9 @@
     });
 
     $(document).on("click", ".modifier-card", function () {
-      const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
-      console.log(orderId);
+
+      const encoded = new URLSearchParams(window.location.search).get('orderId');
+      const orderId = parseInt(atob(encoded)); // base64 decode
 
       if (!orderId) {
         return null;
@@ -908,7 +919,8 @@
       $(document).on("click", ".saveorder", function (e) {
         e.preventDefault();
 
-        const orderId = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+        const encoded = new URLSearchParams(window.location.search).get('orderId');
+        const orderId = parseInt(atob(encoded)); // base64 decode
 
         const Bill = {
           Orderid: orderId,
@@ -1061,7 +1073,9 @@
           return;
         }
         $("#deleteOrderModal").modal("show");
-        const Id = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+
+        const encoded = new URLSearchParams(window.location.search).get('orderId');
+        const Id = parseInt(atob(encoded)); // base64 decode
         $("#orderid").val(Id);
       });
 
@@ -1102,7 +1116,10 @@
           toastr.error('Some items are still being prepared. Cannot complete the order!');
           return;
         }
-        const Id = parseInt(new URLSearchParams(window.location.search).get('orderId'));
+
+
+        const encoded = new URLSearchParams(window.location.search).get('orderId');
+        const Id = parseInt(atob(encoded)); // base64 decode
 
         // Check the selected payment method
         const selectedPaymentMethod = $('input[name="paymentMethod"]:checked').attr('id');
@@ -1187,7 +1204,6 @@
 
     @* review  *@
 
-
       function renderStars($container) {
         for (let i = 1; i <= 5; i++) {
           $container.append(`<i class="bi bi-star me-1" data-value="${i}"></i>`);
@@ -1206,11 +1222,30 @@
       });
     });
 
-    $(document).on('click', '.star-rating i', function () {
-      const field = $(this).parent().data('field');
-      const value = $(this).data('value');
-      $(this).parent().data('selected', value);
+    // Reset to selected value on mouseleave
+    $(document).on('mouseleave', '.star-rating', function () {
+      const selected = $(this).data('selected') || 0;
+      $(this).children('i').each(function () {
+        const val = $(this).data('value');
+        $(this).toggleClass('bi-star-fill', val <= selected);
+        $(this).toggleClass('bi-star', val > selected);
+      });
     });
+
+    $(document).on('click', '.star-rating i', function () {
+      const $parent = $(this).parent();
+      const value = $(this).data('value');
+      $parent.data('selected', value);
+
+      // Update stars permanently to reflect selection
+      $parent.children('i').each(function () {
+        const val = $(this).data('value');
+        $(this).toggleClass('bi-star-fill', val <= value);
+        $(this).toggleClass('bi-star', val > value);
+      });
+      
+    });
+
 
     $(document).on("click", ".submit-review", function (e) {
       e.preventDefault();
@@ -1380,11 +1415,13 @@
       $(document).on("click", ".scanner", function (e) {
         e.preventDefault();
         var orderId = $(this).data("orderid");
+        let encodedOrderId = btoa(orderId.toString()); // base64 encode
+
 
         $.ajax({
           url: "/MenuOrderApp/GenerateQRCode",
           type: 'GET',
-          data: { orderId: orderId },
+          data: { orderId: orderId, encodeId: encodedOrderId },
           xhrFields: {
             responseType: 'arraybuffer'  // Important: get raw bytes
           },

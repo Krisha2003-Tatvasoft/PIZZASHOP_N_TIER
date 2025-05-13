@@ -50,9 +50,9 @@ public class MenuOrderAppController : Controller
         else
         {
             var customerToken = _jwtService.ValidateToken(token);
-            var orderId = customerToken.Claims.FirstOrDefault(c => c.Type == "orderId")?.Value;
-            var orderIdparam = int.Parse(HttpContext.Request.Query["orderId"]);
-            if (orderId == null || !int.TryParse(orderId, out var parsedOrderId) || parsedOrderId != orderIdparam)
+            var encodeId = customerToken.Claims.FirstOrDefault(c => c.Type == "encodeId")?.Value;
+            var orderIdparam = HttpContext.Request.Query["orderId"];
+            if (encodeId == null || encodeId!= orderIdparam)
             {
                 return RedirectToAction("Error", "Error", new { statusCode = 404 });
             }
@@ -229,10 +229,11 @@ public class MenuOrderAppController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
-    public async Task<IActionResult> GenerateQRCode(int orderId)
+    public async Task<IActionResult> GenerateQRCode(int orderId ,string encodeId)
     {
-        var token = _jwtService.GenerateCustomerToken(orderId);
-        var qrUrl = Url.Action("GetMenu", "MenuOrderApp", new { orderId = orderId, token = token }, Request.Scheme);
+        Console.WriteLine("Order ID: " + encodeId);
+        var token = _jwtService.GenerateCustomerToken(orderId , encodeId);
+        var qrUrl = Url.Action("GetMenu", "MenuOrderApp", new { orderId = encodeId, token = token }, Request.Scheme);
 
         using (var qrGenerator = new QRCodeGenerator())
         {
@@ -246,14 +247,14 @@ public class MenuOrderAppController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetMenu(int orderId, string token)
+    public async Task<IActionResult> GetMenu(string orderId, string token)
     {
         var tokens = _jwtService.ValidateToken(token);
         if (tokens != null)
         {
             var orderIdToken = tokens.Claims.FirstOrDefault(c => c.Type == "orderId")?.Value;
             Response.Cookies.Append("CustomerToken", token);
-            return RedirectToAction("MenuOrders", "MenuOrderApp", new { orderId = orderIdToken });
+            return RedirectToAction("MenuOrders", "MenuOrderApp", new { orderId = orderId });
         }
         else
         {

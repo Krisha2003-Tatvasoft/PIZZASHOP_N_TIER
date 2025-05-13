@@ -79,7 +79,7 @@ public class KOTService : IKOTService
                 {
                     Orderid = order.Orderid,
                     Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
-                    Sectionname = order.Ordertables.FirstOrDefault()?.Table.Section.Sectionname,
+                    Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
                     Orderwisecomment = order.Orderwisecomment,
                     Items = items,
                     RunningSince = runningSince,

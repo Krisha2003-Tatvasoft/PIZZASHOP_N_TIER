@@ -12,7 +12,7 @@ public class Ticket
     public int Orderid { get; set; }
     public List<string> Tablenames { get; set; } = new List<string>();
 
-    public string Sectionname { get; set; } = null!;
+    public List<string> Sectionname { get; set; }= new List<string>();
 
     public List<OrderItem> Items { get; set; } = new List<OrderItem>();
 

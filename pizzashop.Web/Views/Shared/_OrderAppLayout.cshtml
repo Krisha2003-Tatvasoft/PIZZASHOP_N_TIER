@@ -184,11 +184,9 @@
                 let menu = $(this).attr("href");
                 let path = menu.split("/");
                 let menuController = path[1];
-                console.log(menuController);
 
                 if (menuController === currentController) {
                     $(this).find('span').addClass("active"); // Apply active class
-                    console.log("hiiiii" , menuController)
                     // Set menu text based on the controller
                     switch (menuController) {
                         case "TableOrderApp":

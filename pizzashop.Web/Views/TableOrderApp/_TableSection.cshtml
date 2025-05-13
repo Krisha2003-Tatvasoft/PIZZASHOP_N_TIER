@@ -94,7 +94,7 @@ else if (tables.orderstatus == Enums.orderstatus.InProgress || tables.orderstatu
                 <h4>@tables.Tablename</h4>
                 <span>@(tables.tablestatus !=Enums.tablestatus.Available && (tables.orderstatus == Enums.orderstatus.InProgress || tables.orderstatus == Enums.orderstatus.Served
                      || tables.orderstatus == Enums.orderstatus.Pending) ?  
-                     tables.Totalamount :  0)</span>
+                     tables.Totalamount :  0) ₹</span>
               </div>
 
               <div class="d-flex justify-content-between gap-5">
@@ -433,7 +433,8 @@ $assignBtn.prop('disabled', selectedCount === 0);
 
 
    function redirectToMenuOrders(orderId) {
-        window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
+     const encodedOrderId = btoa(orderId.toString()); // base64 encode
+      window.location.href = `/MenuOrderApp/MenuOrders?orderId=${encodedOrderId}`;
 }
 
 window.redirectToMenuOrders = redirectToMenuOrders;

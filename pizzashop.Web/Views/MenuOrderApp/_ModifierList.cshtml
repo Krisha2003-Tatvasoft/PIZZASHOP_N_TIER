@@ -16,10 +16,9 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-2 overflow-y-auto" 
-            style="max-height:calc(100vh - 150px);">
-
-
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-2 overflow-y-auto"
+                style="max-height:calc(100vh - 150px);">
+                
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var mg in Model)
@@ -50,8 +49,7 @@
                                                     <span class="fs-6">@modifier.Modifiername</span>
                                                     <span class="fs-6"><i class="bi bi-currency-rupee"></i>@modifier.Rate</span>
                                                 </div>
-                                                <div
-                                                    class="all-modifier type-color-orange">
+                                                <div class="all-modifier type-color-orange">
                                                 </div>
                                             </div>
                                         }
@@ -73,13 +71,13 @@
                     <h6>No ModifiersGroup For this item</h6>
                 }
             </div>
-             @if (Id != "null")
-             {
+            @if (!StringValues.IsNullOrEmpty(Id))
+            {
                 <div class="modal-footer d-flex justify-content-end gap-2">
                     <button type="button" class="btn btn-primary delete-section" id="add-button">Add</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">NO</button>
                 </div>
-             }
+            }
         </div>
     </div>
 </div>

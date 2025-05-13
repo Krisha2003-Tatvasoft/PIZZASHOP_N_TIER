@@ -496,7 +496,8 @@
         }
 
         function redirectToMenuOrders(orderId) {
-            window.location.href = `/MenuOrderApp/MenuOrders?orderId=${orderId}`;
+            const encodedOrderId = btoa(orderId.toString()); // base64 encode
+            window.location.href = `/MenuOrderApp/MenuOrders?orderId=${encodedOrderId}`;
         }
 
         $(document).on("click", ".Assign-tables-yes", function () {

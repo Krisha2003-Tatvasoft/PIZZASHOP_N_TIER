@@ -8,7 +8,7 @@ public interface IJwtService
 
     string GenerateForgetToken(string email);
 
-    string GenerateCustomerToken(int orderId);
+    string GenerateCustomerToken(int orderId ,string encodeId);
 
     ClaimsPrincipal? ValidateToken(string token);
    
