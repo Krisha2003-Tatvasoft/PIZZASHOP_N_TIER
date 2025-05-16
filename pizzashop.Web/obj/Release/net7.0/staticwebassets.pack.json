@@ -109,6 +109,10 @@
       "PackagePath": "staticwebassets\\images\\cloud-arrow-up.svg"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\customer.svg",
+      "PackagePath": "staticwebassets\\images\\customer.svg"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\customers-active.png",
       "PackagePath": "staticwebassets\\images\\customers-active.png"
     },
@@ -153,6 +157,14 @@
       "PackagePath": "staticwebassets\\images\\menu-default.png"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\menu-icon.png",
+      "PackagePath": "staticwebassets\\images\\menu-icon.png"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\menu-item-fill.png",
+      "PackagePath": "staticwebassets\\images\\menu-item-fill.png"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\menu_11809294.png",
       "PackagePath": "staticwebassets\\images\\menu_11809294.png"
     },
@@ -163,6 +175,10 @@
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\order-table.png",
       "PackagePath": "staticwebassets\\images\\order-table.png"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\order-value.svg",
+      "PackagePath": "staticwebassets\\images\\order-value.svg"
     },
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\orders-active.png",
@@ -213,6 +229,14 @@
       "PackagePath": "staticwebassets\\images\\taxes-default.png"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\total-orders.svg",
+      "PackagePath": "staticwebassets\\images\\total-orders.svg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\total-sales.svg",
+      "PackagePath": "staticwebassets\\images\\total-sales.svg"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\trash.svg",
       "PackagePath": "staticwebassets\\images\\trash.svg"
     },
@@ -235,6 +259,14 @@
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\vegan-icon.svg",
       "PackagePath": "staticwebassets\\images\\vegan-icon.svg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\waiting-list.svg",
+      "PackagePath": "staticwebassets\\images\\waiting-list.svg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\waiting-time.svg",
+      "PackagePath": "staticwebassets\\images\\waiting-time.svg"
     },
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\images\\warning-icon.svg",
@@ -477,6 +509,10 @@
       "PackagePath": "staticwebassets\\uploads\\012bbb2f-21f6-47cb-89bf-6ba294438eaa_taxes-default.png"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\0137dda3-b228-4e57-8e6c-7f0baff43826_list (1).svg",
+      "PackagePath": "staticwebassets\\uploads\\0137dda3-b228-4e57-8e6c-7f0baff43826_list (1).svg"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\02b6e0ca-6b0e-44b2-8c33-5a1ce58511ea_5997be83561e540ded19fb82fcefe6e7.jpg",
       "PackagePath": "staticwebassets\\uploads\\02b6e0ca-6b0e-44b2-8c33-5a1ce58511ea_5997be83561e540ded19fb82fcefe6e7.jpg"
     },
@@ -507,6 +543,10 @@
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\118409d8-e261-460b-add1-711050a0cdfb_export.svg",
       "PackagePath": "staticwebassets\\uploads\\118409d8-e261-460b-add1-711050a0cdfb_export.svg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\146d8ff1-c49f-4113-8873-10a188349db6_5997be83561e540ded19fb82fcefe6e7.jpg",
+      "PackagePath": "staticwebassets\\uploads\\146d8ff1-c49f-4113-8873-10a188349db6_5997be83561e540ded19fb82fcefe6e7.jpg"
     },
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\158a3227-39e2-49c5-9163-9c7204082abe_dashboard-default.png",
@@ -581,6 +621,10 @@
       "PackagePath": "staticwebassets\\uploads\\38080331-2fdd-4307-b335-4c721e82b9c9_dashboard-active.png"
     },
     {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\3ced4cf7-17a2-4d1b-98c3-bbfdef1b4d13_5997be83561e540ded19fb82fcefe6e7.jpg",
+      "PackagePath": "staticwebassets\\uploads\\3ced4cf7-17a2-4d1b-98c3-bbfdef1b4d13_5997be83561e540ded19fb82fcefe6e7.jpg"
+    },
+    {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\3da5de29-265e-4f9c-a0e9-4262d3c2fdd9_orders-active.png",
       "PackagePath": "staticwebassets\\uploads\\3da5de29-265e-4f9c-a0e9-4262d3c2fdd9_orders-active.png"
     },
@@ -603,6 +647,10 @@
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\453f2804-b9b3-494d-a9b4-bc5200ff163f_roles-active.png",
       "PackagePath": "staticwebassets\\uploads\\453f2804-b9b3-494d-a9b4-bc5200ff163f_roles-active.png"
+    },
+    {
+      "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\4619b672-e97d-49b7-acff-8cc5e01b3c21_export (1).svg",
+      "PackagePath": "staticwebassets\\uploads\\4619b672-e97d-49b7-acff-8cc5e01b3c21_export (1).svg"
     },
     {
       "Id": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\wwwroot\\uploads\\461c1bd5-cf3d-486b-86ea-1b5095a41283_dashboard-active.png",

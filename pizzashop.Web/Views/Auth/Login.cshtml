@@ -33,9 +33,9 @@
             <div class="position-relative">
                 <input placeholder="Password*" asp-for="Password" type="password" class="form-control" id="password">
                 <i class="eye-icon bi bi-eye-slash-fill custom-icon"></i>
+            <span asp-validation-for="Password" class="text-danger"></span>
             </div>
 
-            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         @* if you want to take as boolean give value=true *@

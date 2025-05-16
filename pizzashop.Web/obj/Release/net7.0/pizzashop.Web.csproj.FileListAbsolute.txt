@@ -190,3 +190,17 @@ d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\ExcelNumberFormat.dll
 d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\RBush.dll
 d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\SixLabors.Fonts.dll
 d:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.IO.Packaging.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\Microsoft.Win32.SystemEvents.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\QRCoder.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\SkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.Drawing.Common.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.IO.Pipelines.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.Net.WebSockets.WebSocketProtocol.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\System.Threading.Channels.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\osx\native\libSkiaSharp.dylib
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\win-arm64\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\win-x64\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\win-x86\native\libSkiaSharp.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Release\net7.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll

@@ -38,14 +38,23 @@ public class TableOrderAppController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
-    public async Task<IActionResult> TablesOrder()
+    public IActionResult TablesOrder()
+    {
+        return View();
+    }
+
+
+
+    [HttpGet]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
+    public async Task<IActionResult> TablePartial()
     {
         var tableSectionData = await _SectionService.OrderTableViews();
 
-        return Request.Headers["X-Requested-With"] == "XMLHttpRequest"
-                  ? PartialView("_TableSection", tableSectionData)
-                  : View();
+        return PartialView("_TableSection", tableSectionData);
+
     }
+
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager" })]

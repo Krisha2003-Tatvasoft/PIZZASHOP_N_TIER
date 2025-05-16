@@ -101,6 +101,7 @@ public class AuthController : Controller
             {
                 return RedirectToAction("KOT", "KOT");
             }
+            
             return RedirectToAction("Index", "Home");
 
         }

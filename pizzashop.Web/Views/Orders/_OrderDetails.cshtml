@@ -1,4 +1,7 @@
 @model pizzashop.Entity.ViewModels.OrderDetails;
+@{
+  var index=1;
+}
 
 <div class="order-detaile-container">
 
@@ -98,7 +101,7 @@
                 <table class="table">
                     <thead>
                         <tr class="text-start">
-                            <th>Sr.No</th>
+                            <th class="ps-3">Sr.No</th>
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Price</th>
@@ -110,7 +113,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr class="text-start">
-                                <td>1</td>
+                                <td class="ps-3">@(index++)</td>
                                 <td>
                                     @item.Itemname
 
@@ -123,11 +126,6 @@
                                     }
                                 </td>
                                 <td>@item.Quantity
-                                    @foreach (var modifiers in item.Modifiers)
-                                    {
-                                        <div class="">@modifiers.Rate</div>
-                                    }
-                                    <small class="">1</small>
                                 </td>
                                 <td>@item.Rate
                                     @foreach (var modifiers in item.Modifiers)

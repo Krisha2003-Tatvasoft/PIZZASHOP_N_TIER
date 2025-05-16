@@ -32,7 +32,6 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -43,8 +42,8 @@ if (!app.Environment.IsDevelopment())
 else
 {
     // In non-development environments, Redirect to a custom error page, e.g., /Error/404
- app.UseStatusCodePagesWithReExecute("/Error/{0}");
- 
+    app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 }
 
 app.UseSession();

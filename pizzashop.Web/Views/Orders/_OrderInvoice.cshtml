@@ -106,28 +106,24 @@
                                         <td class="lh-sm">@item.Itemname<br>
                                                 @foreach (var modifiers in item.Modifiers)
                                                 {
-                                                        <span>@modifiers.Modifiername</span>
+                                                        <span class="text-muted">@modifiers.Modifiername</span>
                                                         <br>
                                                 }
                                         </td>
                                         <td class="lh-sm">@item.Quantity<br>
-                                                @foreach (var modifiers in item.Modifiers)
-                                                {
-                                                        <span>@modifiers.Quantity</span>
-                                                        <br>
-                                                }
+
                                         </td>
                                         <td class="lh-sm">@item.Rate<br>
                                                 @foreach (var modifiers in item.Modifiers)
                                                 {
-                                                        <span>@modifiers.Rate</span>
+                                                        <span class="text-muted">@modifiers.Rate</span>
                                                         <br>
                                                 }
                                         </td>
                                         <td class="lh-sm text-end">@item.TotalAmount<br>
                                                 @foreach (var modifiers in item.Modifiers)
                                                 {
-                                                        <span>@modifiers.TotalAmount</span>
+                                                        <span class="text-muted">@modifiers.TotalAmount</span>
                                                         <br>
                                                 }
                                         </td>
