@@ -1322,6 +1322,8 @@
                     selectedTexts.push($(this).next("label").text());
                 });
 
+                console.log(selectedTexts);
+
                 if (selectedTexts.length === 0) {
                     $("#modifierDropdown").html("Select Modifiers Groups(s)");
                 } else if (selectedTexts.length === 1) {
@@ -1338,6 +1340,7 @@
 
         //  Call function on checkbox change
         $(document).on("change", ".modifier-checkbox-addModifier", function (e) {
+            console.log("hiii");
             updateModifierDropdown();
             let checkbox = $('.modifier-checkbox-addModifier:checked');
             if (checkbox.length > 0) {
@@ -1363,13 +1366,13 @@
                 success: function (data) {
                     if (data.selectedMGIds) {
                         $(".modifier-checkbox-addModifier").prop("checked", false);
-
+                        
                         $(".modal-editModifier").html(data.html);
-                        $("#updateNewModifier").modal("show");
                         data.selectedMGIds.forEach(groupId => {
                             $("#mod_" + groupId).prop("checked", true);
                         });
                         updateModifierDropdown();
+                        $("#updateNewModifier").modal("show");
                     }
                 },
                 error: function () {

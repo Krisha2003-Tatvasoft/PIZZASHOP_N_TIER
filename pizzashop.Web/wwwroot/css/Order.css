@@ -154,11 +154,11 @@ a.sort {
   }
 
   .subdiv3 {
-    width: 40% !important;
+    width: 60% !important;
   }
 
   .subdiv4 {
-    width: 60% !important;
+    width: 40% !important;
   }
 
   .date-div {
@@ -172,6 +172,7 @@ a.sort {
   .sec-row {
     margin-left: 30% !important;
   }
+  
 }
 
 @media (max-width: 1200px) {

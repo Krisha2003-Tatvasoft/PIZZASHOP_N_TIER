@@ -144,16 +144,16 @@
 
         $(document).on("click", ".order-card", function (e) {
             e.preventDefault();
-            
+
             var orderid = $(this).data("orderid");
             GorderId = orderid;
             loadtransferModal(orderid);
 
         });
 
-        function loadtransferModal(orderid)
-        {
-             $.ajax({
+
+        function loadtransferModal(orderid) {
+            $.ajax({
 
                 url: "/KOT/OpenModel",
                 type: "GET",

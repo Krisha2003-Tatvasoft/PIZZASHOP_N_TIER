@@ -120,7 +120,7 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("city");
 
-            entity.HasIndex(e => e.Cityname, "city_cityname_key").IsUnique();
+            // entity.HasIndex(e => e.Cityname, "city_cityname_key").IsUnique();
 
             entity.Property(e => e.Cityid).HasColumnName("cityid");
             entity.Property(e => e.Cityname)
@@ -697,7 +697,7 @@ public partial class PizzashopContext : DbContext
 
             entity.ToTable("state");
 
-            entity.HasIndex(e => e.Statename, "state_statename_key").IsUnique();
+            // entity.HasIndex(e => e.Statename, "state_statename_key").IsUnique();
 
             entity.Property(e => e.Stateid).HasColumnName("stateid");
             entity.Property(e => e.Countryid).HasColumnName("countryid");
