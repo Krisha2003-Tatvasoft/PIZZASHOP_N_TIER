@@ -17,7 +17,7 @@
 
 <div class="d-flex flex-row gap-4 w-100">
 
-  <div class="main-content w-100">
+  <div class="main-content w-100 item">
 
     <div class="d-block d-sm-flex justify-content-between mb-3 align-items-center flex-wrap">
 
@@ -892,9 +892,11 @@
         var groupId = $group.data("groupid");
         var minSelection = parseInt($group.data("minselection")) || 0;
         var selected = selectedModifiers[groupId] || [];
+        var modifiername = $group.data("groupname");
+
 
         if (selected.length < minSelection) {
-          toastr.warning("Group " + groupId + ": You must select at least " + minSelection + " modifier(s).");
+          toastr.warning("Group " + modifiername + ": You must select at least " + minSelection + " modifier(s).");
           allValid = false;
         }
       });
@@ -1296,6 +1298,7 @@
         Ambiencerating: $('[data-field="ambienceRating"]').data('selected') || 0,
         Comments: $('#comment').val() || ''
       };
+      console.log(Review);
 
       $.ajax({
         url: '/MenuOrderApp/Review',
