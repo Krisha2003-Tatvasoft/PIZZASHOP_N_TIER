@@ -6,6 +6,7 @@
   var orderId = Context.Request.Query["orderId"];
   string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
 }
+@await Html.PartialAsync("_Toast")
 
 <link rel="stylesheet" href="~/css/OrderMenu.css" />
 
@@ -636,6 +637,8 @@
 
 
 
+
+
   $(document).ready(function () {
 
     // Create a connection to the SignalR hub
@@ -667,6 +670,34 @@
     loadCategoryList();
     loadItemList(0);
     loadOrderDetails();
+    checkOrderId();
+
+    function checkOrderId() {
+      const encoded = new URLSearchParams(window.location.search).get('orderId');
+      const orderId = parseInt(atob(encoded)); // base64 decode
+
+      if (!isNaN(orderId)) {
+
+        $.ajax({
+          url: '/MenuOrderApp/checkOrderStatus',
+          type: 'GET',
+          data: { id: orderId },
+          success: function (response) {
+            if (response.success) {
+
+            } else {
+              window.location.href = `/TableOrderApp/TablesOrder?msg=cancelled`;
+            }
+          },
+          error: function () {
+            alert("Error Add orderwise comment.");
+          }
+        });
+
+      }
+    }
+
+
 
     @* chekbox change *@
       // Trigger recalculation when flat tax is checked/unchecked
@@ -711,24 +742,31 @@
       $(document).on("click", ".Favourite", function (e) {
         e.stopPropagation();
         var itemId = $(this).data("itemid");
+        if ($(this).hasClass("disable")) {
+          e.preventDefault();
+        }
+        else {
 
-        $.ajax({
-          url: '/MenuOrderApp/ToggleFavourite',
-          type: 'POST',
-          data: { id: itemId },
-          success: function (isFavourite) {
-            if (isFavourite.isFavourite == true) {
-              loadItemList(GCatId);
-              toastr.success("Item Added in Favourite.")
-            } else {
-              loadItemList(GCatId);
-              toastr.error("Item Remove From the Favourite.")
+          $.ajax({
+            url: '/MenuOrderApp/ToggleFavourite',
+            type: 'POST',
+            data: { id: itemId },
+            success: function (isFavourite) {
+              if (isFavourite.isFavourite == true) {
+                loadItemList(GCatId);
+                toastr.success("Item Added in Favourite.")
+              } else {
+                loadItemList(GCatId);
+                toastr.error("Item Remove From the Favourite.")
+              }
+            },
+            error: function () {
+              alert("Error toggling favourite status.");
             }
-          },
-          error: function () {
-            alert("Error toggling favourite status.");
-          }
-        });
+          });
+
+        }
+
       });
 
 
@@ -1243,7 +1281,7 @@
         $(this).toggleClass('bi-star-fill', val <= value);
         $(this).toggleClass('bi-star', val > value);
       });
-      
+
     });
 
 

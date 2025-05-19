@@ -24,4 +24,6 @@ public interface IOrderAppMenuService
     Task<(bool sucess, string message)> EditCustomerdetail(CustomerDetail model);
 
     Task<(bool sucess, string message)> ReviewPost(Review model);
+
+    Task<bool> checkOrderStatus(int id);
 }

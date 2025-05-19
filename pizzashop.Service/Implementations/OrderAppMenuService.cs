@@ -385,7 +385,7 @@ public class OrderAppMenuService : IOrderAppMenuService
                 }
                 if (totalCapacity < model.Noofperson)
                 {
-                     return (false , "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
+                    return (false, "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
                 }
                 else
                 {
@@ -441,6 +441,28 @@ public class OrderAppMenuService : IOrderAppMenuService
         {
             return (false, "No Review");
         }
+    }
+
+
+    public async Task<bool> checkOrderStatus(int id)
+    {
+        var order = await _orderRepository.OrderDetailsByIdAsync(id);
+        if (order != null)
+        {
+            if (order.status == 1 || order.status == 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+         
     }
 
 }

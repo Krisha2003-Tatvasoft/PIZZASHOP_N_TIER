@@ -1,5 +1,10 @@
 @using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.ItemTable>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    string? token = HttpContextAccessor.HttpContext?.Request.Cookies["CustomerToken"];
+}
+
 
 @foreach (var item in Model)
 {
@@ -21,8 +26,8 @@
         </div>
         <div class="d-flex justify-content-between align-items-center">
             <span class="item-rate" title="@item.Rate">@item.Rate</span>
-            <i class="bi Favourite @(item.Isfavourite == true ? "bi-heart-fill text-danger" : "bi-heart")"
-              data-itemid="@item.Itemid"></i>
+            <i class="bi Favourite @(string.IsNullOrEmpty(token) ? "" :"disable") @(item.Isfavourite == true ? "bi-heart-fill text-danger" : "bi-heart")"
+              data-itemid="@item.Itemid" ></i>
         </div>
       </div>
 

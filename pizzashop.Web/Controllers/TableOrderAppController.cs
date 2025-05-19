@@ -38,8 +38,16 @@ public class TableOrderAppController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
-    public IActionResult TablesOrder()
+    public IActionResult TablesOrder(string msg)
     {
+        if (!string.IsNullOrEmpty(msg))
+        {
+            if (msg == "cancelled")
+            {
+                TempData["ErrorMessage"] = "This Order is Completed Or Canclled";
+            }
+        }
+
         return View();
     }
 

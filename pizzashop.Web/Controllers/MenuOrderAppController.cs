@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.InkML;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using pizzashop.Entity.ViewModels;
@@ -41,7 +42,7 @@ public class MenuOrderAppController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public IActionResult MenuOrders()
     {
-
+        
         string? token = Request.Cookies["CustomerToken"];
         if (string.IsNullOrEmpty(token))
         {
@@ -52,7 +53,7 @@ public class MenuOrderAppController : Controller
             var customerToken = _jwtService.ValidateToken(token);
             var encodeId = customerToken.Claims.FirstOrDefault(c => c.Type == "encodeId")?.Value;
             var orderIdparam = HttpContext.Request.Query["orderId"];
-            if (encodeId == null || encodeId!= orderIdparam)
+            if (encodeId == null || encodeId != orderIdparam)
             {
                 return RedirectToAction("Error", "Error", new { statusCode = 404 });
             }
@@ -79,7 +80,7 @@ public class MenuOrderAppController : Controller
     }
 
     [HttpPost]
-    [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
+    [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<IActionResult> ToggleFavourite(int id)
     {
         // CookieData user = SessionUtils.GetUser(HttpContext);
@@ -229,10 +230,10 @@ public class MenuOrderAppController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
-    public async Task<IActionResult> GenerateQRCode(int orderId ,string encodeId)
+    public async Task<IActionResult> GenerateQRCode(int orderId, string encodeId)
     {
         Console.WriteLine("Order ID: " + encodeId);
-        var token = _jwtService.GenerateCustomerToken(orderId , encodeId);
+        var token = _jwtService.GenerateCustomerToken(orderId, encodeId);
         var qrUrl = Url.Action("GetMenu", "MenuOrderApp", new { orderId = encodeId, token = token }, Request.Scheme);
 
         using (var qrGenerator = new QRCodeGenerator())
@@ -253,6 +254,9 @@ public class MenuOrderAppController : Controller
         if (tokens != null)
         {
             var orderIdToken = tokens.Claims.FirstOrDefault(c => c.Type == "orderId")?.Value;
+            CookieUtils.ClearCookies(HttpContext);
+            HttpContext.Response.Cookies.Delete("PermissionData");
+            SessionUtils.ClearSession(HttpContext);
             Response.Cookies.Append("CustomerToken", token);
             return RedirectToAction("MenuOrders", "MenuOrderApp", new { orderId = orderId });
         }
@@ -263,7 +267,7 @@ public class MenuOrderAppController : Controller
     }
 
     [HttpGet]
-    [CustomAuthorize("", "", new string[] { "Account Manager" , "Customer" })]
+    [CustomAuthorize("", "", new string[] { "Account Manager", "Customer" })]
     public async Task<IActionResult> GenerateUPIQRCode(int orderId)
     {
         var orderDetails = await _orderService.OrderDetails(orderId);
@@ -279,6 +283,14 @@ public class MenuOrderAppController : Controller
             return File(qrCodeImage, "image/png");
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> checkOrderStatus(int id)
+    {
+        bool isvalidOrder = await _orderAppMenuService.checkOrderStatus(id); // Fetch order details by ID
+        return Json(new { success = isvalidOrder});
+    }
+
 
 
 }

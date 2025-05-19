@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="~/css/KOT.css" />
 
 
-
 <div class="menu-category">
 
     <nav>
@@ -16,13 +15,15 @@
 
     <div class="tab-content w-100 ticket-parial" id="nav-tabContent">
     </div>
+
 </div>
 
 <div class="tranfer-modal"></div>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
 <script>
+
     $(document).ready(function () {
 
         let currentCategoryId = 0;
@@ -30,7 +31,6 @@
         let currentStatus = "Inprogress";
         let currentPage = "@ViewBag.CurrentPage";
         let GorderId;
-
 
         // Create a connection to the SignalR hub
         const connection = new signalR.HubConnectionBuilder()
@@ -52,7 +52,6 @@
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
         });
-
 
 
         // Set button text based on current status
