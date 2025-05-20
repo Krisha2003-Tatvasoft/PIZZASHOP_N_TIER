@@ -30,6 +30,10 @@
   vertical-align: baseline !important;
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 04962064708cf5d4a490c4b839e7693584546a87
 .item .row {
   --bs-gutter-x: 0rem;
   max-height: calc(100vh - 130px);

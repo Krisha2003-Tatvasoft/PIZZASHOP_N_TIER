@@ -447,6 +447,7 @@ public class OrderAppMenuService : IOrderAppMenuService
     public async Task<bool> checkOrderStatus(int id)
     {
         var order = await _orderRepository.OrderDetailsByIdAsync(id);
+         Console.WriteLine("hellllllllllllllllllllllo" + order.status);
         if (order != null)
         {
             if (order.status == 0 || order.status == 1)

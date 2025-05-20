@@ -288,7 +288,8 @@ public class MenuOrderAppController : Controller
     public async Task<IActionResult> checkOrderStatus(int id)
     {
         bool isvalidOrder = await _orderAppMenuService.checkOrderStatus(id); // Fetch order details by ID
-        return Json(new { success = isvalidOrder});
+        Console.WriteLine("hellllllllllllllllllllllo" + isvalidOrder);
+        return Json(new { success = isvalidOrder });
     }
 
 
