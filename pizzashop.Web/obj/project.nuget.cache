@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QT2Ly1TSTbEKJY6EQ01i7UPaEvOrXl/qsEo2AkkTf+M/QZx5XDf9yyuXAi9DuF+osHm4yDAWwyoUI0XI99IqQg==",
+  "dgSpecHash": "LRHDTuIzjAmln6ItRgsKFGs7+Y+6ykhDYskpUKO3OKuK1zb8JF+NpQqQ1wK5LQuIExM2Soq6xR1wNZumGd5aDA==",
   "success": true,
-  "projectFilePath": "D:\\PIZZASHOP_N_TIER\\pizzashop.Web\\pizzashop.Web.csproj",
+  "projectFilePath": "D:\\PIZZASHOP_N_TIER\\pizzashop.web\\pizzashop.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pci44\\.nuget\\packages\\bouncycastle.cryptography\\2.5.0\\bouncycastle.cryptography.2.5.0.nupkg.sha512",
     "C:\\Users\\pci44\\.nuget\\packages\\closedxml\\0.104.2\\closedxml.0.104.2.nupkg.sha512",
