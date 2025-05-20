@@ -449,7 +449,7 @@ public class OrderAppMenuService : IOrderAppMenuService
         var order = await _orderRepository.OrderDetailsByIdAsync(id);
         if (order != null)
         {
-            if (order.status == 1 || order.status == 2)
+            if (order.status == 0 || order.status == 1)
             {
                 return true;
             }
@@ -462,7 +462,6 @@ public class OrderAppMenuService : IOrderAppMenuService
         {
             return false;
         }
-         
     }
 
 }

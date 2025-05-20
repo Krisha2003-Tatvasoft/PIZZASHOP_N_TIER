@@ -30,7 +30,7 @@
   vertical-align: baseline !important;
 }
 
-.row {
+.item .row {
   --bs-gutter-x: 0rem;
   max-height: calc(100vh - 130px);
 }

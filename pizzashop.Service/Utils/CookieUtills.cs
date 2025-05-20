@@ -77,6 +77,7 @@ namespace pizzashop.Service.Utils
         {
             httpContext.Response.Cookies.Delete("SuperSecretAuthToken");
             httpContext.Response.Cookies.Delete("UserData");
+             httpContext.Response.Cookies.Delete("PermissionData");
         }
 
         public static void SavePermissionData(HttpResponse response, List<RolePermission> permissionData)

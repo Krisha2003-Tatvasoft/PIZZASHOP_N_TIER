@@ -20,6 +20,7 @@
   gap: 1rem; /* you can adjust this or use Bootstrap gap classes */
   width: 100%;
 }
+
 .table-list .row {
   --bs-gutter-x: 0rem;
 }

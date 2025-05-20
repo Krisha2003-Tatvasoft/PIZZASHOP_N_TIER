@@ -122,6 +122,19 @@ a.sort {
   border-top: none !important;
 }
 
+.table-responsive {
+  max-height: calc(100vh - 270px);
+}
+
+
+@media screen and (max-width: 1200px) {
+
+  .table-responsive {
+    max-height: calc(100vh - 310px);
+  }
+
+}
+
 @media screen and (max-width: 576px) {
   .filter {
     width: 0% !important;

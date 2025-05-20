@@ -227,9 +227,38 @@
 </body>
 
 </html>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 <script>
     $(document).ready(function () {
+
+        // Create a connection to the SignalR hub
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ChatHub") // Ensure this matches the hub route in your app
+            .build();
+
+        // Start the connection
+        connection.start()
+        
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error("SignalR connection error:", err));
+
+        // Handle the TableAdded event
+        connection.on("Permission", function () {
+            updatePermission();
+        });
+        
+        function updatePermission() {
+            $.ajax({
+                url: '/RolePermission/UpdateperCookie',
+                type: 'POST',
+                success: function (responce) {
+                    window.location.reload();
+                },
+                error: function () {
+                    alert("Error toggling favourite status.");
+                }
+            });
+        }
 
         function activeClass() {
             let path = window.location.pathname.split("/");

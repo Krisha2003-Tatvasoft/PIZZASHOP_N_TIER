@@ -1,39 +1,39 @@
 @using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.OrderTable>
 
-<div class="table-responsive overflow-y-auto" style="max-height: calc(100vh - 330px); overflow-x: auto;">
+<div class="table-responsive overflow-y-auto" style="overflow-x: auto;">
     <table class="table mb-0">
         <thead style="position: sticky; top: 0; background-color: white; z-index: 2;">
             <tr>
-                <th style="min-width: 7rem;" class="ps-3">
+                <th class="ps-3">
                     <a href="#" class="sort" data-column="OrderId" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                            : "asc")>
-                        #Order <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
+                        #Order<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
 
                 </th>
-                <th style="min-width: 7rem;">
+                <th>
                     <a href="#" class="sort" data-column="OrderDate" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                              : "asc")>
-                        Date <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
+                        Date<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
                 </th>
-                <th style="min-width: 7rem;">
+                <th>
                     <a href="#" class="sort" data-column="CustomerName" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                                 : "asc")>
-                        Customer <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
+                        Customer<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
                 </th>
                 <th>Status</th>
                 <th>Payment Mode</th>
                 <th>Rating</th>
-                <th style="min-width: 7rem;">
+                <th>
                     <a href="#" class="sort" data-column="TotalAmount" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                                : "asc")>
-                        Total Amount <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i
+                        Total Amount<i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i
                             class="bi bi-arrow-down 
                         @(ViewBag.SortOrder == "desc" ? "text-dark" : "")"></i>
                     </a>
@@ -106,7 +106,7 @@
             }
             else
             {
-                <div class="d-flex justify-content-end align-items-center gap-2 p-3">
+                <div class="d-flex justify-content-end align-items-center gap-2 p-3 mb-5 mb-xl-0">
                     <div class="d-flex align-items-center">
                         <span class="d-none d-sm-inline px-1">Items Per page:</span>
                         <select id="pageSizeOrder" class="form-select form-select-sm" style="width: auto;">

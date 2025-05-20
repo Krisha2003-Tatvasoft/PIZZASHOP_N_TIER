@@ -125,6 +125,10 @@ a.sort {
   margin-left: 200px;
 }
 
+.table-responsive {
+  max-height: calc(100vh - 400px);
+}
+
 @media screen and (max-width: 540px) {
   .heading-back-button .back-to-button button {
     font-size: 10px;
@@ -172,7 +176,6 @@ a.sort {
   .sec-row {
     margin-left: 30% !important;
   }
-  
 }
 
 @media (max-width: 1200px) {
@@ -187,6 +190,7 @@ a.sort {
   .sec-row {
     margin-left: 0% !important;
   }
+
 }
 
 @media (max-width: 576px) {
@@ -196,5 +200,9 @@ a.sort {
 
   .subdiv4 {
     width: 100% !important;
+  }
+
+  .table-responsive {
+    max-height: calc(100vh - 300px);
   }
 }
