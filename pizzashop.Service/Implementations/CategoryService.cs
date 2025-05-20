@@ -234,7 +234,7 @@ public class CategoryService : ICategoryService
     // }
 
     // return catList;
-    int mappedStatus = status == "Inprogress" ? 0 : 1;
+    int mappedStatus = status == "Inprogress" ? 0 : 1 ;
     return await _categoryRepository.GetKOTCategoryListFromSP(mappedStatus);
   }
 

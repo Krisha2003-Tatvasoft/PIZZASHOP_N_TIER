@@ -84,6 +84,7 @@ public class CategoryRepository : ICategoryRepository
     {
         using (var connection = _context.Database.GetDbConnection())
         {
+            
             var result = await connection.QueryAsync<VMCategory>(
                 "SELECT * FROM get_kot_category_list(@status);",
                 new { status }

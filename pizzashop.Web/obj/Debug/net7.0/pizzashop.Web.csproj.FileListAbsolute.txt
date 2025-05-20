@@ -228,3 +228,5 @@ D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Net.WebSockets.WebSocke
 D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Threading.Channels.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Dapper.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Dapper.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll

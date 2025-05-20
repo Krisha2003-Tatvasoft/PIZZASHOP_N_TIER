@@ -1,9 +1,9 @@
 @using static pizzashop.Entity.Models.Enums
 @model List<pizzashop.Entity.ViewModels.OrderTable>
 
-<div class="table-responsive overflow-y-auto" style="overflow-x: auto;">
-    <table class="table mb-0">
-        <thead style="position: sticky; top: 0; background-color: white; z-index: 2;">
+<div class="table-responsive overflow-y-auto overflow-x-auto">
+    <table class="table mb-0 " >
+        <thead style="position: sticky; top: 0; background-color: white; z-index: 2; white-space: nowrap;">
             <tr>
                 <th class="ps-3">
                     <a href="#" class="sort" data-column="OrderId" data-order=@(ViewBag.SortOrder =="asc" ? "desc"

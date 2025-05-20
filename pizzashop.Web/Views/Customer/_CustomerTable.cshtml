@@ -1,11 +1,11 @@
 @model List<pizzashop.Entity.ViewModels.CustomerTable>
 
-<div class="table-responsive overflow-y-auto" style="overflow-x: auto;">
+<div class="table-responsive overflow-y-auto overflow-x-auto">
     <table class="table mb-0">
  
-        <thead style="position: sticky; top: 0; background-color: white; z-index: 2;">
+        <thead style="position: sticky; top: 0; background-color: white; z-index: 2; white-space: nowrap;">
             <tr>
-                <th style="min-width: 7rem;" class="ps-3">
+                <th class="ps-3">
                     <a href="#" class="sort" data-column="CustomerName" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                                 : "asc")>
                         Name <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 
@@ -16,7 +16,7 @@
                 </th>
                 <th>Phone Number
                 </th>
-                <th style="min-width: 7rem;">
+                <th>
                     <a href="#" class="sort" data-column="OrderDate" data-order=@(ViewBag.SortOrder =="asc" ? "desc"
                                                                                              : "asc")>
                         Date <i class="bi bi-arrow-up @(ViewBag.SortOrder == "asc" ? "text-dark" : "")" style="margin-right: -3px;"></i><i class="bi bi-arrow-down 

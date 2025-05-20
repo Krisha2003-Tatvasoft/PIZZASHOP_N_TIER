@@ -33,6 +33,8 @@ a.sort {
   background: #f1f1f1;
 }
 
+
+
 .heading-back-button .back-to-button button {
   color: #087cc4;
   border-radius: 5px;
@@ -126,7 +128,7 @@ a.sort {
 }
 
 .table-responsive {
-  max-height: calc(100vh - 400px);
+  max-height: calc(100vh - 220px);
 }
 
 @media screen and (max-width: 540px) {
@@ -203,6 +205,6 @@ a.sort {
   }
 
   .table-responsive {
-    max-height: calc(100vh - 300px);
+    max-height: calc(100vh - 220px);
   }
 }

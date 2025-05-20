@@ -146,6 +146,7 @@ public class SectionService : ISectionService
    public async Task<List<VMOrderTableView>> OrderTableViews()
    {
       List<Section> sections = await _sectionRepository.GetSectionWithTables();
+      sections = sections.Where(s => s.Tables != null && s.Tables.Any()).ToList();
 
       var orderTableViews = sections.Select(s => new VMOrderTableView
       {
