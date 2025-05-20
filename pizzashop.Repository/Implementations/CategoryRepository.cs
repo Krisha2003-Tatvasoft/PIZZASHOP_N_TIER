@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
+using VMCategory = pizzashop.Entity.ViewModels.Category;
+using Dapper;
 
 namespace pizzashop.Repository.Implementations;
 
@@ -76,6 +78,19 @@ public class CategoryRepository : ICategoryRepository
     public async Task<bool> CatNameExistAtEditAsync(string Categoryname, int id)
     {
         return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower().Trim() == Categoryname.ToLower().Trim() && c.Categoryid != id && c.Isdeleted == false);
+    }
+
+      public async Task<List<VMCategory>> GetKOTCategoryListFromSP(int status)
+    {
+        using (var connection = _context.Database.GetDbConnection())
+        {
+            var result = await connection.QueryAsync<VMCategory>(
+                "SELECT * FROM get_kot_category_list(@status);",
+                new { status }
+            );
+
+            return result.ToList();
+        }
     }
 
 
