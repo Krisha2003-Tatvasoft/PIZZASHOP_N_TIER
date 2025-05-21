@@ -18,7 +18,14 @@
 
 </div>
 
-<div class="tranfer-modal"></div>
+<div class="tranfer-modal">
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered "> <!-- You can use modal-lg for wider modals -->
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
@@ -46,11 +53,13 @@
         connection.on("KOTUpdated", function () {
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
+            loadtransferModal(GorderId);
         });
 
         connection.on("OrderUpdated", function () {
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
+            loadtransferModal(GorderId);
         });
 
 
@@ -129,7 +138,6 @@
 
         $(document).on("click", ".pagination-link", function (e) {
             e.preventDefault();
-            console.log("Pagination clicked");
             let isRight = $(this).find("i").hasClass("bi-chevron-right");
             let scrollContainer = $(".ticket-scroll-container")[0];
             let cardWidth = $(".order-card").outerWidth(true); // include margin
@@ -158,13 +166,16 @@
                 type: "GET",
                 data: { id: orderid, status: currentStatus },
                 success: function (data) {
-                    $(".tranfer-modal").html(data);
+                    $(".tranfer-modal .modal-content").html(data);
                     if (currentStatus === "Inprogress") {
                         $('#updateStatusBtn').text("Mark as Prepared");
                     } else if (currentStatus === "Ready") {
                         $('#updateStatusBtn').text("Mark as In Progress");
                     }
+                    if($("#orderModal").is(':visible')){}
+                    else{
                     $("#orderModal").modal("show");
+                    }
                     initializeQuantityButtons();
                 },
                 error: function () {
@@ -199,9 +210,11 @@
             $plus.css('opacity', currentQty === max ? 0.5 : 1);
             $minus.css('opacity', currentQty === 1 ? 0.5 : 1);
 
+            $plus.css('pointer-events', currentQty >= max ? 'none' : 'auto');
+            $minus.css('pointer-events', 'auto');
 
-            console.log(`Item ${itemId}, New Quantity: ${currentQty}`);
         });
+
 
         function initializeQuantityButtons() {
             $('[data-orderitemid]').each(function () {

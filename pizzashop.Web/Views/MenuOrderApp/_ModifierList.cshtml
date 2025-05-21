@@ -16,15 +16,14 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-2 overflow-y-auto"
-                style="max-height:calc(100vh - 150px);">
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center p-2 ">
                 
                 @if (Model != null && Model.Any())
                 {
                     @foreach (var mg in Model)
                     {
-                        <div class="modifier-group" data-groupid="@mg.Modifiergroupid" data-groupname="@mg.Modifiergroupname"
-                            data-minselection="@mg.Minselectionrequired" data-maxselection="@mg.Maxselectionallowed">
+                        <div class="modifier-group overflow-y-auto" data-groupid="@mg.Modifiergroupid" data-groupname="@mg.Modifiergroupname"
+                            data-minselection="@mg.Minselectionrequired" data-maxselection="@mg.Maxselectionallowed" style="max-height:calc(100vh - 200px);">
                             <div class="row p-2 w-100">
                                 <div class="row pb-2">
                                     <span class="d-inline">

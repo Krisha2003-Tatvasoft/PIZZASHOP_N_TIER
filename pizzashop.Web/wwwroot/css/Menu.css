@@ -355,6 +355,7 @@
 }
 
 @media screen and (max-width: 1200px) {
+  
   .parent .main-content .items {
     position: relative;
   }

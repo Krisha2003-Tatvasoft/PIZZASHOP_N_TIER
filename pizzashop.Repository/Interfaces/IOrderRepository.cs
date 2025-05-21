@@ -21,4 +21,8 @@ public interface IOrderRepository
     Task UpdateOrder(Order order);
 
     Task<DashboardViewModel> GetDashboardData(DateTime? fromDate, DateTime? toDate);
+
+    Task<List<TicketResult>> GetTicketResultFromSP(int categoryId, int status);
+
+    Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status);
 }

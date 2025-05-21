@@ -80,11 +80,11 @@ public class CategoryRepository : ICategoryRepository
         return await _context.Categories.AnyAsync(c => c.Categoryname.ToLower().Trim() == Categoryname.ToLower().Trim() && c.Categoryid != id && c.Isdeleted == false);
     }
 
-      public async Task<List<VMCategory>> GetKOTCategoryListFromSP(int status)
+    public async Task<List<VMCategory>> GetKOTCategoryListFromSP(int status)
     {
         using (var connection = _context.Database.GetDbConnection())
         {
-            
+
             var result = await connection.QueryAsync<VMCategory>(
                 "SELECT * FROM get_kot_category_list(@status);",
                 new { status }

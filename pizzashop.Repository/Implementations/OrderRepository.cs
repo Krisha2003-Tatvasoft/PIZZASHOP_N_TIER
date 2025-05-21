@@ -1,6 +1,9 @@
+using System.Data;
+using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -94,40 +97,77 @@ public class OrderRepository : IOrderRepository
 
     public async Task UpdateItemStatusAsync(OrderItemStatus model)
     {
-        var order = await _context.Orders
-            .Include(o => o.Ordereditems)
-            .FirstOrDefaultAsync(o => o.Orderid == model.OrderId);
+        // var order = await _context.Orders
+        //     .Include(o => o.Ordereditems)
+        //     .FirstOrDefaultAsync(o => o.Orderid == model.OrderId);
 
-        if (order == null) return;
-        var allOrderditem = order.Ordereditems.ToList();
-        bool NotAnyReady = allOrderditem.All(i => i.ReadyQuantity == 0);
+        // if (order == null) return;
+        // var allOrderditem = order.Ordereditems.ToList();
+        // bool NotAnyReady = allOrderditem.All(i => i.ReadyQuantity == 0);
 
-        foreach (var ItemQuantity in model.Items)
+        // foreach (var ItemQuantity in model.Items)
+        // {
+        //     var orderedItem = order.Ordereditems.FirstOrDefault(i => i.Ordereditemid == ItemQuantity.orderitemid);
+
+        //     if (orderedItem != null)
+        //     {
+        //         if (model.NewStatus == "Ready")
+        //         {
+        //             orderedItem.ReadyQuantity += ItemQuantity.Quantity;
+        //         }
+        //         else if (model.NewStatus == "Inprogress")
+        //         {
+        //             orderedItem.ReadyQuantity -= ItemQuantity.Quantity;
+        //             if (orderedItem.ReadyQuantity < 0) orderedItem.ReadyQuantity = 0;
+        //         }
+        //     }
+        // }
+
+        // if (model.NewStatus == "Ready" && NotAnyReady)
+        // {
+        //     order.ServedTime = DateTime.Now;
+        //     _context.Orders.Update(order);
+        //     await _context.SaveChangesAsync();
+        // }
+
+        // await _context.SaveChangesAsync();
+
+        var itemsJson = JsonConvert.SerializeObject(model.Items);
+
+        using (var connection = _context.Database.GetDbConnection())
         {
-            var orderedItem = order.Ordereditems.FirstOrDefault(i => i.Ordereditemid == ItemQuantity.orderitemid);
+            if (connection.State == ConnectionState.Closed)
+                connection.Open();
 
-            if (orderedItem != null)
+            var parameters = new
             {
-                if (model.NewStatus == "Ready")
+                p_order_id = model.OrderId,
+                p_new_status = model.NewStatus,
+                p_items = itemsJson
+            };
+
+            if (connection is Npgsql.NpgsqlConnection npgsqlConnection)
+            {
+                npgsqlConnection.Notice += (sender, e) =>
                 {
-                    orderedItem.ReadyQuantity += ItemQuantity.Quantity;
-                }
-                else if (model.NewStatus == "Inprogress")
-                {
-                    orderedItem.ReadyQuantity -= ItemQuantity.Quantity;
-                    if (orderedItem.ReadyQuantity < 0) orderedItem.ReadyQuantity = 0;
-                }
+                    Console.WriteLine("PG NOTICE: " + e.Notice.MessageText);
+                };
             }
+
+
+
+            await connection.ExecuteAsync(
+                "CALL update_item_status(@p_order_id, @p_new_status, @p_items::jsonb);",
+                parameters);
+
+
+
+            Console.WriteLine(parameters.p_order_id);
+            Console.WriteLine(parameters.p_new_status);
+            Console.WriteLine(parameters.p_items);
+
         }
 
-        if (model.NewStatus == "Ready" && NotAnyReady)
-        {
-            order.ServedTime = DateTime.Now;
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-        }
-
-        await _context.SaveChangesAsync();
     }
 
     public async Task UpdateOrder(Order order)
@@ -271,6 +311,32 @@ public class OrderRepository : IOrderRepository
             RevenueGrowthData = revenueData,
             CustomerGrowthData = customerGrowth
         };
+    }
+
+    public async Task<List<TicketResult>> GetTicketResultFromSP(int categoryId, int status)
+    {
+        using (var connection = _context.Database.GetDbConnection())
+        {
+            var result = await connection.QueryAsync<TicketResult>(
+                "SELECT * FROM get_tickets(@p_categoryid, @p_status);",
+                new { p_categoryid = categoryId, p_status = status }
+            );
+
+            return result.ToList();
+        }
+    }
+
+    public async Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status)
+    {
+        using (var connection = _context.Database.GetDbConnection())
+        {
+            var result = await connection.QueryAsync<TicketDetailResult>(
+                  "SELECT * FROM get_ticket_by_orderid(@p_orderid, @p_status);",
+               new { p_orderid = orderId, p_status = status }
+            );
+
+            return result.ToList();
+        }
     }
 
 

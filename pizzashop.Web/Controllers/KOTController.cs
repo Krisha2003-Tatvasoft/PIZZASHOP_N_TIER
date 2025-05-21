@@ -42,9 +42,7 @@ public class KOTController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
     public async Task<IActionResult> loadTickets(int id, string status)
     {
-        var (tickets, totalOrder) = await _KOTService.Ticket(id, status);
-
-        ViewBag.totalOrder = totalOrder;
+        var tickets = await _KOTService.Ticket(id, status);
 
         return PartialView("_Ticket", tickets);
     }
