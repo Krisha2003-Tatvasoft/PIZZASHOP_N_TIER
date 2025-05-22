@@ -37,10 +37,17 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     public async Task<AddWaitingToken> AddWaitingToken(int id)
     {
+        // AddWaitingToken model = new AddWaitingToken
+        // {
+        //     Sectionid = id,
+        //     SectionList = await _sectionRepository.SectionDDAsync()
+        // };
+        // return model;
+
         AddWaitingToken model = new AddWaitingToken
         {
             Sectionid = id,
-            SectionList = await _sectionRepository.SectionDDAsync()
+            SectionList = await _sectionRepository.SectionDDFromSp()
         };
         return model;
     }
@@ -51,76 +58,77 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
         {
             return (false, "no data given");
         }
-        var customer = await _customerRepository.GetCustomerByEmail(model.Email);
+        // var customer = await _customerRepository.GetCustomerByEmail(model.Email);
 
-        if (customer != null)
-        {
-            var waitingList = await _waitingTokenRepository.GetWaitingList();
+        // if (customer != null)
+        // {
+        //     var waitingList = await _waitingTokenRepository.GetWaitingList();
 
-            foreach (var waiting in waitingList)
-            {
-                if (waiting.Customerid == customer.Customerid &&
-                waiting.Createdat.HasValue && waiting.Createdat.Value.Date == DateTime.UtcNow.Date)
-                {
-                    return (false, "This Customer is Already Present in WaitingToken.");
-                }
-            }
-
-
-            var orders = customer.Orders?.ToList(); // Ensure it's not null
+        //     foreach (var waiting in waitingList)
+        //     {
+        //         if (waiting.Customerid == customer.Customerid &&
+        //         waiting.Createdat.HasValue && waiting.Createdat.Value.Date == DateTime.UtcNow.Date)
+        //         {
+        //             return (false, "This Customer is Already Present in WaitingToken.");
+        //         }
+        //     }
 
 
-            if (orders != null && orders.Any())
-            {
-                var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
+        //     var orders = customer.Orders?.ToList(); // Ensure it's not null
 
-                if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
-                {
-                    return (false, "This customer already has an active or recent table assignment.");
-                }
-            }
 
-            customer.Customername = model.Customername;
-            customer.Phoneno = model.Phoneno;
-            customer.Visitcount = (short?)(customer.Visitcount + 1);
-            customer.Modifiedat = DateTime.Now;
-            customer.Modifiedby = loginId;
-            await _customerRepository.UpdateCustomer(customer);
+        //     if (orders != null && orders.Any())
+        //     {
+        //         var latestOrder = orders.OrderByDescending(o => o.Orderid).FirstOrDefault();
 
-            Waitingtoken token = new Waitingtoken
-            {
-                Customerid = customer.Customerid,
-                Noofpeople = (short)model.Noofperson,
-                Sectionid = model.Sectionid,
-                Isassigned = false,
-                Createdby = loginId
-            };
-            await _waitingTokenRepository.AddNewWaitingToken(token);
-        }
-        else
-        {
-            customer = new Customer
-            {
-                Customername = model.Customername,
-                Phoneno = model.Phoneno,
-                Email = model.Email,
-                Visitcount = 1,
-                Totalorder = 0,
-                Createdby = loginId,
-                Createdat = DateTime.Now,
-            };
-            await _customerRepository.AddNewCustomer(customer);
-            Waitingtoken token = new Waitingtoken
-            {
-                Customerid = customer.Customerid,
-                Noofpeople = (short)model.Noofperson,
-                Sectionid = model.Sectionid,
-                Isassigned = false,
-                Createdby = loginId
-            };
-            await _waitingTokenRepository.AddNewWaitingToken(token);
-        }
-        return (true, "WaitingToken Created Sucessfully.");
+        //         if (latestOrder != null && (latestOrder.status == 0 || latestOrder.status == 1 || latestOrder.status == 2))
+        //         {
+        //             return (false, "This customer already has an active or recent table assignment.");
+        //         }
+        //     }
+
+        //     customer.Customername = model.Customername;
+        //     customer.Phoneno = model.Phoneno;
+        //     customer.Visitcount = (short?)(customer.Visitcount + 1);
+        //     customer.Modifiedat = DateTime.Now;
+        //     customer.Modifiedby = loginId;
+        //     await _customerRepository.UpdateCustomer(customer);
+
+        //     Waitingtoken token = new Waitingtoken
+        //     {
+        //         Customerid = customer.Customerid,
+        //         Noofpeople = (short)model.Noofperson,
+        //         Sectionid = model.Sectionid,
+        //         Isassigned = false,
+        //         Createdby = loginId
+        //     };
+        //     await _waitingTokenRepository.AddNewWaitingToken(token);
+        // }
+        // else
+        // {
+        //     customer = new Customer
+        //     {
+        //         Customername = model.Customername,
+        //         Phoneno = model.Phoneno,
+        //         Email = model.Email,
+        //         Visitcount = 1,
+        //         Totalorder = 0,
+        //         Createdby = loginId,
+        //         Createdat = DateTime.Now,
+        //     };
+        //     await _customerRepository.AddNewCustomer(customer);
+        //     Waitingtoken token = new Waitingtoken
+        //     {
+        //         Customerid = customer.Customerid,
+        //         Noofpeople = (short)model.Noofperson,
+        //         Sectionid = model.Sectionid,
+        //         Isassigned = false,
+        //         Createdby = loginId
+        //     };
+        //     await _waitingTokenRepository.AddNewWaitingToken(token);
+        // }
+        // return (true, "WaitingToken Created Sucessfully.");
+        return await _waitingTokenRepository.AddWaitingTokenPostSP(model, loginId);
     }
 
     public async Task<List<WaitingListTable>> WaitingListBySectionId(List<int> sectionId)
@@ -174,48 +182,53 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     public async Task<List<WaitingListTable>> WaitingList(int sectionId)
     {
-        List<Waitingtoken> waiting = null;
+        // List<Waitingtoken> waiting = null;
 
-        if (sectionId == 0)
-        {
-            waiting = await _waitingTokenRepository.GetWaitingList();
-        }
-        else
-        {
-            waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
-        }
+        // if (sectionId == 0)
+        // {
+        //     waiting = await _waitingTokenRepository.GetWaitingList();
+        // }
+        // else
+        // {
+        //     waiting = await _waitingTokenRepository.WaitingListBySectionId(sectionId);
+        // }
 
-        var waitingList = waiting.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
-        .Select(static w => new WaitingListTable
-        {
-            Waitingtokenid = w.Waitingtokenid,
-            Createdat = w.Createdat,
-            Customername = w.Customer.Customername,
-            Noofperson = (short)w.Noofpeople,
-            Phoneno = w.Customer.Phoneno,
-            Email = w.Customer.Email,
-            Sectionid = w.Sectionid
-        }
-        ).ToList();
+        // var waitingList = waiting.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
+        // .Select(static w => new WaitingListTable
+        // {
+        //     Waitingtokenid = w.Waitingtokenid,
+        //     Createdat = w.Createdat,
+        //     Customername = w.Customer.Customername,
+        //     Noofperson = (short)w.Noofpeople,
+        //     Phoneno = w.Customer.Phoneno,
+        //     Email = w.Customer.Email,
+        //     Sectionid = w.Sectionid
+        // }
+        // ).ToList();
 
-        return waitingList;
+        // return waitingList;
+
+        return await _waitingTokenRepository.GetWTTokenListFromSP(sectionId);
     }
 
     public async Task<AddWaitingToken> EditGetWT(int id)
     {
-        Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(id);
-        AddWaitingToken model = new AddWaitingToken
-        {
-            Email = waitingtoken.Customer.Email,
-            Customername = waitingtoken.Customer.Customername,
-            Phoneno = waitingtoken.Customer.Phoneno,
-            Noofperson = (short)waitingtoken.Noofpeople,
-            Sectionid = waitingtoken.Sectionid,
-            Waitingtokenid = waitingtoken.Waitingtokenid,
-            customerId = waitingtoken.Customer.Customerid,
-            SectionList = await _sectionRepository.SectionDDAsync()
-        };
-        return model;
+        // Waitingtoken waitingtoken = await _waitingTokenRepository.WTByIdAsync(id);
+        // AddWaitingToken model = new AddWaitingToken
+        // {
+        //     Email = waitingtoken.Customer.Email,
+        //     Customername = waitingtoken.Customer.Customername,
+        //     Phoneno = waitingtoken.Customer.Phoneno,
+        //     Noofperson = (short)waitingtoken.Noofpeople,
+        //     Sectionid = waitingtoken.Sectionid,
+        //     Waitingtokenid = waitingtoken.Waitingtokenid,
+        //     customerId = waitingtoken.Customer.Customerid,
+        //     SectionList = await _sectionRepository.SectionDDAsync()
+        // };
+        // return model;
+        var result = await _waitingTokenRepository.EditGetWTSP(id);
+        result.SectionList = await _sectionRepository.SectionDDFromSp();
+        return result;
     }
 
 
@@ -297,7 +310,6 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
             await _waitingTokenRepository.Delete(waitingtoken);
             return true;
         }
-
     }
 
     public async Task<(int? orderid, string Message)> AssignTablePost(int loginid, WaitingListAssignTable model)

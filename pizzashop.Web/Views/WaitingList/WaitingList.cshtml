@@ -96,7 +96,7 @@
                 data: { sectionid: sectionid },
                 success: function (data) {
                     $('.waiting-table-partial').html(data);
-
+                     updateWaitingTimes();
                 },
                 error: function () {
                 }
@@ -229,6 +229,7 @@
                 var formData = new FormData($("#add-WT")[0]);
 
                 var Sectionid = formData.get("Sectionid");
+                console.log(Sectionid);
 
                 $.ajax({
                     url: "/TableOrderApp/AddWTPost",
@@ -319,6 +320,8 @@
 
         // Update every second
         setInterval(updateWaitingTimes, 1000);
+        
+        @* get edit waiting token *@
 
         $(document).on("click", ".edit-wt", function (e) {
             e.preventDefault();

@@ -49,9 +49,9 @@ public class KOTController : Controller
 
     [HttpGet]
     [CustomAuthorize("", "", new string[] { "Account Manager", "Chef" })]
-    public async Task<IActionResult> OpenModel(int id, string status)
+    public async Task<IActionResult> OpenModel(int id, string status,int categoryId)
     {
-        Ticket ticket = await _KOTService.TicketDetails(id, status);
+        Ticket ticket = await _KOTService.TicketDetails(id, status,categoryId);
 
         return PartialView("_TransferModal", ticket);
     }

@@ -2,8 +2,10 @@ using System.Data.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
-using VMTableView =  pizzashop.Entity.ViewModels.OrderTableView;
+using VMTableView = pizzashop.Entity.ViewModels.OrderTableView;
 using pizzashop.Repository.Interfaces;
+using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
+using Dapper;
 
 
 namespace pizzashop.Repository.Implementations;
@@ -81,7 +83,7 @@ public class SectionRepository : ISectionRepository
         .Include(s => s.Tables.Where(t => t.Isdeleted == false)).ThenInclude(t => t.Ordertables).ThenInclude(s => s.Order)
         .ToListAsync();
     }
-    
+
     public async Task<List<SelectListItem>> SectionDDAvailable() =>
       await _context.Sections
       .Where(c => c.Isdeleted == false && c.Tables.Any(t => t.tablestatus == 0 && t.Isdeleted == false)).Select
@@ -89,6 +91,32 @@ public class SectionRepository : ISectionRepository
       { Value = c.Sectionid.ToString(), Text = c.Sectionname })
       .ToListAsync();
 
+    public async Task<List<VMSectionWIthCount>> GetWTSectionListFromSP()
+    {
+        using var connection = _context.Database.GetDbConnection();
+
+        var result = await connection.QueryAsync<VMSectionWIthCount>(
+            "SELECT * FROM get_sections_with_token_count()"
+        );
+
+        return result.ToList();
+    }
+
+
+    public async Task<List<SelectListItem>> SectionDDFromSp()
+    {
+        using var connection = _context.Database.GetDbConnection();
+
+        var result = await connection.QueryAsync<VMSectionWIthCount>(
+            "SELECT * FROM get_sections_with_token_count()"
+        );
+
+        return result.Where(s => s.Sectionid != 0).Select(s => new SelectListItem
+        {
+            Value = s.Sectionid.ToString(),
+            Text = s.Sectionname
+        }).ToList();
+    }
 
 
 }

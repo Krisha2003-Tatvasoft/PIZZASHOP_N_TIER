@@ -82,16 +82,14 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<List<VMCategory>> GetKOTCategoryListFromSP(int status)
     {
-        using (var connection = _context.Database.GetDbConnection())
-        {
+        using var connection = _context.Database.GetDbConnection();
 
-            var result = await connection.QueryAsync<VMCategory>(
-                "SELECT * FROM get_kot_category_list(@status);",
-                new { status }
-            );
+        var result = await connection.QueryAsync<VMCategory>(
+            "SELECT * FROM get_kot_category_list(@status);",
+            new { status }
+        );
 
-            return result.ToList();
-        }
+        return result.ToList();
     }
 
 

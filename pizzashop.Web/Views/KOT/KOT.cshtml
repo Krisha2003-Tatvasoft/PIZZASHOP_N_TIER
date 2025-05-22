@@ -53,13 +53,19 @@
         connection.on("KOTUpdated", function () {
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
+            if($("#orderModal").is(':visible'))
+            {
             loadtransferModal(GorderId);
+            }
         });
 
         connection.on("OrderUpdated", function () {
             loadTicket(currentCategoryId, currentStatus); // Refresh the ticket list
             loadCategoryList(currentStatus);
+            if($("#orderModal").is(':visible'))
+            {
             loadtransferModal(GorderId);
+            }
         });
 
 
@@ -164,7 +170,7 @@
 
                 url: "/KOT/OpenModel",
                 type: "GET",
-                data: { id: orderid, status: currentStatus },
+                data: { id: orderid, status: currentStatus , categoryId : currentCategoryId },
                 success: function (data) {
                     $(".tranfer-modal .modal-content").html(data);
                     if (currentStatus === "Inprogress") {

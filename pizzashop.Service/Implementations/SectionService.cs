@@ -203,29 +203,30 @@ public class SectionService : ISectionService
 
    public async Task<List<VMSectionWIthCount>> GetSectionWithCount()
    {
-      var sectionList = await _sectionRepository.AllSections();
-      var alltokens = await _waitingTokenRepository.GetWaitingList();
+      // var sectionList = await _sectionRepository.AllSections();
+      // var alltokens = await _waitingTokenRepository.GetWaitingList();
 
-      var sections = sectionList.Select(c => new VMSectionWIthCount
-      {
-         Sectionid = c.Sectionid,
-         Sectionname = c.Sectionname,
-         TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count(t => t.Sectionid == c.Sectionid)
+      // var sections = sectionList.Select(c => new VMSectionWIthCount
+      // {
+      //    Sectionid = c.Sectionid,
+      //    Sectionname = c.Sectionname,
+      //    TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count(t => t.Sectionid == c.Sectionid)
 
-      }).ToList();
+      // }).ToList();
 
-      var sectionWithCountList = sections.ToList();
-      sectionWithCountList.Insert(0, new VMSectionWIthCount
-      {
-         Sectionid = 0,
-         Sectionname = "All",
-         TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count()
-      });
-      sections = sectionWithCountList;
+      // var sectionWithCountList = sections.ToList();
+      // sectionWithCountList.Insert(0, new VMSectionWIthCount
+      // {
+      //    Sectionid = 0,
+      //    Sectionname = "All",
+      //    TokenCount = alltokens.Where(w=> w.Createdat != null && w.Createdat.Value.Date == DateTime.Today).Count()
+      // });
+      // sections = sectionWithCountList;
 
-
-      return sections;
+      // return sections;
+      return await _sectionRepository.GetWTSectionListFromSP();
    }
+   
 
    public async Task<List<SelectListItem>> GetSectionListDD()
    {

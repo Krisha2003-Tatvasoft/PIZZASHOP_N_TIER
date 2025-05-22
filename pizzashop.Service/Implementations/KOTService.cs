@@ -155,18 +155,18 @@ public class KOTService : IKOTService
     }
 
 
-    public async Task<Ticket> TicketDetails(int id, string status)
+    public async Task<Ticket> TicketDetails(int id, string status,int categoryId)
     {
 
         // var orderdeatils = await _orderRepository.OrderDetailsByIdAsync(id);
         // List<Ordereditem> ItemsByFilter = new List<Ordereditem>();
         // if (status == "Inprogress")
         // {
-        //     ItemsByFilter = orderdeatils.Ordereditems.Where(i => (i.Quantity - i.ReadyQuantity) > 0).ToList();
+        //     ItemsByFilter = orderdeatils.Ordereditems.Where(i => (i.Quantity - i.ReadyQuantity) > 0 && (categoryId != 0 ? i.Item.Categoryid == categoryId : true)).ToList();
         // }
         // else
         // {
-        //     ItemsByFilter = orderdeatils.Ordereditems.Where(i => i.ReadyQuantity > 0).ToList();
+        //     ItemsByFilter = orderdeatils.Ordereditems.Where(i => i.ReadyQuantity > 0 && (categoryId != 0 ? i.Item.Categoryid == categoryId : true)).ToList();
         // }
 
         // List<OrderItem> items = ItemsByFilter
@@ -194,7 +194,7 @@ public class KOTService : IKOTService
         // return model; // Return the list of tickets
 
         int mappedStatus = status == "Inprogress" ? 0 : 1;
-        var result = await _orderRepository.GetTicketDetailsFromSP(id, mappedStatus); // assume this calls the SP
+        var result = await _orderRepository.GetTicketDetailsFromSP(id, mappedStatus,categoryId); // assume this calls the SP
 
         if (!result.Any())
             return new Ticket { Orderid = id };

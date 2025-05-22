@@ -126,7 +126,6 @@ public class WaitingListController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<JsonResult> GetSection()
     {
-
         var section = await _sectionService.GetSectionListDD();
         return Json(section);
     }
@@ -135,7 +134,6 @@ public class WaitingListController : Controller
     [CustomAuthorize("", "", new string[] { "Account Manager" })]
     public async Task<JsonResult> GetTable(int sectioid)
     {
-
         var table = await _tableService.GetTablesListDD(sectioid);
         return Json(table);
     }

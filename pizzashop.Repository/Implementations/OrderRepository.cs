@@ -326,13 +326,13 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    public async Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status)
+    public async Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status,int categoryId)
     {
         using (var connection = _context.Database.GetDbConnection())
         {
             var result = await connection.QueryAsync<TicketDetailResult>(
-                  "SELECT * FROM get_ticket_by_orderid(@p_orderid, @p_status);",
-               new { p_orderid = orderId, p_status = status }
+                  "SELECT * FROM get_ticket_by_orderid(@p_orderid, @p_status,@p_categoryId);",
+               new { p_orderid = orderId, p_status = status , p_categoryid = categoryId }
             );
 
             return result.ToList();
