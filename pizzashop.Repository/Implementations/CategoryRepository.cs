@@ -4,6 +4,7 @@ using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
 using VMCategory = pizzashop.Entity.ViewModels.Category;
 using Dapper;
+using Npgsql;
 
 namespace pizzashop.Repository.Implementations;
 
@@ -82,8 +83,9 @@ public class CategoryRepository : ICategoryRepository
 
     public async Task<List<VMCategory>> GetKOTCategoryListFromSP(int status)
     {
-        using var connection = _context.Database.GetDbConnection();
-
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+         await connection.OpenAsync();
+         
         var result = await connection.QueryAsync<VMCategory>(
             "SELECT * FROM get_kot_category_list(@status);",
             new { status }

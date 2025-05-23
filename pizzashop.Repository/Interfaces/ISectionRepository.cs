@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using pizzashop.Entity.Models;
 using VMSection = pizzashop.Entity.ViewModels.Section;
 using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
+using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
 
 namespace pizzashop.Repository.Interfaces;
 
@@ -33,4 +34,6 @@ public interface ISectionRepository
     Task<List<VMSectionWIthCount>> GetWTSectionListFromSP();
 
     Task<List<SelectListItem>> SectionDDFromSp();
+
+    Task<List<VMOrderTableView>> GetOrderTableViewsFromSP();
 }

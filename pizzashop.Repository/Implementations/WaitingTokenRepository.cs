@@ -67,7 +67,8 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public async Task<List<WaitingListTable>> GetWTTokenListFromSP(int sectionId)
     {
-        using var connection = _context.Database.GetDbConnection();
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
 
         var param = new { p_section_id = sectionId };
 
@@ -135,6 +136,77 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         return result;
     }
 
+    public async Task<bool> DeleteWaitingTokenBySP(int id)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        await using var command = new NpgsqlCommand("delete_waitingtoken_logic", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("p_waitingtokenid", id);
+
+        var successParam = new NpgsqlParameter("success", NpgsqlDbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        return successParam.Value is bool b && b;
+    }
+
+    public async Task<bool> EditWaitingTokenPostSP(AddWaitingToken model, int loginId)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        using var command = new NpgsqlCommand("sp_edit_waitingtoken", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("p_waitingtokenid", model.Waitingtokenid);
+        command.Parameters.AddWithValue("p_customername", model.Customername ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("p_phoneno", model.Phoneno ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("p_email", model.Email ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("p_noofperson", model.Noofperson);
+        command.Parameters.AddWithValue("p_sectionid", model.Sectionid);
+        command.Parameters.AddWithValue("p_modifiedby", loginId);
+
+        var successParam = new NpgsqlParameter("success", NpgsqlDbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        command.Parameters.Add(successParam);
+
+        await command.ExecuteNonQueryAsync();
+        return successParam.Value is bool b && b;
+    }
+
+    public async Task<(int? OrderId, string Message)> AssignTablePostSP(int loginId, int waitingTokenId, List<int> tableIds)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var parameters = new DynamicParameters();
+        parameters.Add("p_loginid", loginId);
+        parameters.Add("p_waitingtokenid", waitingTokenId);
+        parameters.Add("p_tableids", tableIds.ToArray());
+        parameters.Add("o_orderid", dbType: DbType.Int32, direction: ParameterDirection.Output);
+        parameters.Add("o_message", dbType: DbType.String, size: 500, direction: ParameterDirection.Output);
+
+        await connection.ExecuteAsync("assign_table_post", parameters, commandType: CommandType.StoredProcedure);
+
+        var orderId = parameters.Get<int?>("o_orderid");
+        var message = parameters.Get<string>("o_message");
+
+        return (orderId, message);
+    }
 
 
 }

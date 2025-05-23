@@ -145,59 +145,60 @@ public class SectionService : ISectionService
 
    public async Task<List<VMOrderTableView>> OrderTableViews()
    {
-      List<Section> sections = await _sectionRepository.GetSectionWithTables();
-      sections = sections.Where(s => s.Tables != null && s.Tables.Any()).ToList();
+      // List<Section> sections = await _sectionRepository.GetSectionWithTables();
+      // sections = sections.Where(s => s.Tables != null && s.Tables.Any()).ToList();
 
-      var orderTableViews = sections.Select(s => new VMOrderTableView
-      {
-         Sectionid = s.Sectionid,
-         Sectionname = s.Sectionname,
-         Tables = s.Tables.Select(static t =>
-         {
-            var orderTable = t.Ordertables?
-           .OrderByDescending(ot => ot.Order.Orderid)
-           .FirstOrDefault();
-            var order = orderTable?.Order;
-            var status = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
-            var Orderid = order?.Orderid;
+      // var orderTableViews = sections.Select(s => new VMOrderTableView
+      // {
+      //    Sectionid = s.Sectionid,
+      //    Sectionname = s.Sectionname,
+      //    Tables = s.Tables.Select(static t =>
+      //    {
+      //       var orderTable = t.Ordertables?
+      //      .OrderByDescending(ot => ot.Order.Orderid)
+      //      .FirstOrDefault();
+      //       var order = orderTable?.Order;
+      //       var status = order != null ? (Enums.orderstatus)order.status : Enums.orderstatus.Pending;
+      //       var Orderid = order?.Orderid;
 
-            string? runningSince = null;
+      //       string? runningSince = null;
 
-            if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served || status == Enums.orderstatus.Pending)
-            {
-               if (!_orderStartTimes.ContainsKey(t.Tableid))
-               {
-                  _orderStartTimes[t.Tableid] = order?.Orderdate ?? DateTime.Now;
-               }
+      //       if (status == Enums.orderstatus.InProgress || status == Enums.orderstatus.Served || status == Enums.orderstatus.Pending)
+      //       {
+      //          if (!_orderStartTimes.ContainsKey(t.Tableid))
+      //          {
+      //             _orderStartTimes[t.Tableid] = order?.Orderdate ?? DateTime.Now;
+      //          }
 
-               var duration = DateTime.Now - _orderStartTimes[t.Tableid];
-               runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
-                  $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
-                  $"{duration.Minutes} min {duration.Seconds} sec";
-            }
-            else
-            {
-               if (_orderStartTimes.ContainsKey(t.Tableid))
-               {
-                  _orderStartTimes.Remove(t.Tableid);
-               }
-            }
+      //          var duration = DateTime.Now - _orderStartTimes[t.Tableid];
+      //          runningSince = $"{(duration.Days > 0 ? duration.Days + " days " : "")}" +
+      //             $"{(duration.Hours > 0 ? duration.Hours + " hours\n" : "")}" +
+      //             $"{duration.Minutes} min {duration.Seconds} sec";
+      //       }
+      //       else
+      //       {
+      //          if (_orderStartTimes.ContainsKey(t.Tableid))
+      //          {
+      //             _orderStartTimes.Remove(t.Tableid);
+      //          }
+      //       }
 
-            return new VMTable
-            {
-               Tableid = t.Tableid,
-               Tablename = t.Tablename,
-               Capacity = t.Capacity,
-               tablestatus = t.tablestatus,
-               orderstatus = status,
-               Totalamount = order?.Totalamount ?? 0,
-               RunningSince = runningSince,
-               Orderid = Orderid
-            };
-         }).ToList()
-      }).ToList();
+      //       return new VMTable
+      //       {
+      //          Tableid = t.Tableid,
+      //          Tablename = t.Tablename,
+      //          Capacity = t.Capacity,
+      //          tablestatus = t.tablestatus,
+      //          orderstatus = status,
+      //          Totalamount = order?.Totalamount ?? 0,
+      //          RunningSince = runningSince,
+      //          Orderid = Orderid
+      //       };
+      //    }).ToList()
+      // }).ToList();
 
-      return orderTableViews;
+      // return orderTableViews;
+      return await _sectionRepository.GetOrderTableViewsFromSP();
    }
 
 
@@ -226,14 +227,13 @@ public class SectionService : ISectionService
       // return sections;
       return await _sectionRepository.GetWTSectionListFromSP();
    }
-   
+
 
    public async Task<List<SelectListItem>> GetSectionListDD()
    {
-      return  await _sectionRepository.SectionDDAvailable();
+      // return  await _sectionRepository.SectionDDAvailable();
+      return  await _sectionRepository.SectionDDFromSp();
    }
-
-
 
 
 

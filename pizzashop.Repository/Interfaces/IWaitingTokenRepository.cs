@@ -22,4 +22,10 @@ public interface IWaitingTokenRepository
     Task<(bool Success, string Message)> AddWaitingTokenPostSP(AddWaitingToken model, int loginId);
 
     Task<AddWaitingToken> EditGetWTSP(int id);
+
+    Task<bool> DeleteWaitingTokenBySP(int id);
+
+    Task<bool> EditWaitingTokenPostSP(AddWaitingToken model, int loginId);
+
+    Task<(int? OrderId, string Message)> AssignTablePostSP(int loginId, int waitingTokenId, List<int> tableIds);
 }

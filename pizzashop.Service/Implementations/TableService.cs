@@ -137,7 +137,8 @@ public class TableService : ITableService
 
     public async Task<List<SelectListItem>> GetTablesListDD(int sectionId)
     {
-        return await _tableRepository.TableDDAsync(sectionId);
+        // return await _tableRepository.TableDDAsync(sectionId);
+        return await _tableRepository.TableDDFromSPAsync(sectionId);
     }
 
     public async Task<bool> TableOccupeidBySec(int id)

@@ -1,5 +1,8 @@
+using System.Data;
+using Dapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using pizzashop.Entity.Models;
 using pizzashop.Repository.Interfaces;
 
@@ -101,7 +104,14 @@ public class TableRepository : ITableRepository
         return await _context.Tables.Where(t => t.Sectionid == id && t.Isdeleted == false).ToListAsync();
     }
 
+    public async Task<List<SelectListItem>> TableDDFromSPAsync(int sectionId)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        var result = await connection.QueryAsync<SelectListItem>(
+            "SELECT * FROM fn_get_available_tables_by_section(@sectionid)",
+            new { sectionid = sectionId });
 
-
+        return result.ToList();
+    }
 
 }

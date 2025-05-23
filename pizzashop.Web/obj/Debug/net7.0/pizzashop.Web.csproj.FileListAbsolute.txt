@@ -109,6 +109,11 @@ D:\pizzashop_nTier\pizzashop.web\obj\Debug\net7.0\refint\pizzashop.Web.dll
 D:\pizzashop_nTier\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.pdb
 D:\pizzashop_nTier\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
 D:\pizzashop_nTier\pizzashop.web\obj\Debug\net7.0\ref\pizzashop.Web.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.IO.Pipelines.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Net.WebSockets.WebSocketProtocol.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Threading.Channels.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Dapper.dll
+D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\appsettings.Development.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\appsettings.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.staticwebassets.runtime.json
@@ -120,6 +125,7 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\ClosedXML.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\ClosedXML.Parser.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Dapper.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\DocumentFormat.OpenXml.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\DocumentFormat.OpenXml.Framework.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\ExcelNumberFormat.dll
@@ -128,6 +134,7 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.AspNetCore.Authenti
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.AspNetCore.Razor.Language.dll
+D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.CodeAnalysis.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.CodeAnalysis.CSharp.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.CodeAnalysis.Razor.dll
@@ -223,10 +230,3 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\refint\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\ref\pizzashop.Web.dll
-D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.IO.Pipelines.dll
-D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Net.WebSockets.WebSocketProtocol.dll
-D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\System.Threading.Channels.dll
-D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Dapper.dll
-D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
-D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Dapper.dll
-D:\pizzashop_nTier\pizzashop.web\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll

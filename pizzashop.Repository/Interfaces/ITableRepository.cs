@@ -27,4 +27,6 @@ public interface ITableRepository
 
     Task<List<Table>> tablesBysection(int id);
 
+    Task<List<SelectListItem>> TableDDFromSPAsync(int sectionId);
+
 }

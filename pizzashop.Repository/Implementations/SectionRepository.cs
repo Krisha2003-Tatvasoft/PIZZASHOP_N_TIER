@@ -2,10 +2,14 @@ using System.Data.Common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Entity.Models;
-using VMTableView = pizzashop.Entity.ViewModels.OrderTableView;
+using VMTable = pizzashop.Entity.ViewModels.Table;
 using pizzashop.Repository.Interfaces;
 using VMSectionWIthCount = pizzashop.Entity.ViewModels.SectionWithCount;
+using VMOrderTableView = pizzashop.Entity.ViewModels.OrderTableView;
+using RawOrderTableView = pizzashop.Entity.ViewModels.RawOrderTableView;
 using Dapper;
+using Npgsql;
+using static pizzashop.Entity.Models.Enums;
 
 
 namespace pizzashop.Repository.Implementations;
@@ -93,7 +97,9 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<VMSectionWIthCount>> GetWTSectionListFromSP()
     {
-        using var connection = _context.Database.GetDbConnection();
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
 
         var result = await connection.QueryAsync<VMSectionWIthCount>(
             "SELECT * FROM get_sections_with_token_count()"
@@ -105,7 +111,8 @@ public class SectionRepository : ISectionRepository
 
     public async Task<List<SelectListItem>> SectionDDFromSp()
     {
-        using var connection = _context.Database.GetDbConnection();
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
 
         var result = await connection.QueryAsync<VMSectionWIthCount>(
             "SELECT * FROM get_sections_with_token_count()"
@@ -116,6 +123,38 @@ public class SectionRepository : ISectionRepository
             Value = s.Sectionid.ToString(),
             Text = s.Sectionname
         }).ToList();
+    }
+
+    public async Task<List<VMOrderTableView>> GetOrderTableViewsFromSP()
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var rawData = await connection.QueryAsync<RawOrderTableView>(
+            "SELECT * FROM get_orderapp_table_views();");
+
+        var grouped = rawData
+            .GroupBy(r => new { r.Sectionid, r.Sectionname })
+            .Select(g => new VMOrderTableView
+            {
+                Sectionid = g.Key.Sectionid,
+                Sectionname = g.Key.Sectionname,
+                Tables = g.Select(t => new VMTable
+                {
+                    Tableid = t.Tableid,
+                    Tablename = t.Tablename,
+                    Sectionid = g.Key.Sectionid,
+                    Capacity = t.Capacity,
+                    tablestatus = (tablestatus)t.tablestatus,
+                    orderstatus = (orderstatus)t.orderstatus,
+                    Totalamount = t.Totalamount,
+                    RunningSince = t.RunningSince,
+                    Orderid = t.Orderid
+                }).ToList()
+            })
+            .ToList();
+
+        return grouped;
     }
 
 
