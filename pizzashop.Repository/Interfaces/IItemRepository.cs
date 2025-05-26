@@ -1,4 +1,5 @@
 using pizzashop.Entity.Models;
+using IMGMviewmodel = pizzashop.Entity.ViewModels.IMGMviewmodel;
 
 namespace pizzashop.Repository.Interfaces;
 
@@ -25,5 +26,9 @@ public interface IItemRepository
     Task<List<Item>> GetMenuItem(string search);
 
     Task<Item> ItemWithModifier(int id);
+
+    Task<List<Item>> GetMenuItemSP(string search, int categoryId);
+
+    Task<List<IMGMviewmodel>> ModifiersByIdSP(int itemId);
     
 }

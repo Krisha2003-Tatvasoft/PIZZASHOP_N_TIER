@@ -28,4 +28,9 @@ public interface IWaitingTokenRepository
     Task<bool> EditWaitingTokenPostSP(AddWaitingToken model, int loginId);
 
     Task<(int? OrderId, string Message)> AssignTablePostSP(int loginId, int waitingTokenId, List<int> tableIds);
+
+    Task<List<WaitingListTable>> GetWTBySectionsfromSP(List<int> sectionIds);
+
+    Task<(int? OrderId, string Message)> Assign_From_Tables_SP(int loginId, AssignTable model, List<int> tableIds);
+
 }

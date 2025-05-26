@@ -135,7 +135,7 @@ public class OrderRepository : IOrderRepository
 
         var itemsJson = JsonConvert.SerializeObject(model.Items);
 
-         await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
         await connection.OpenAsync();
 
         var parameters = new
@@ -266,14 +266,18 @@ public class OrderRepository : IOrderRepository
             .ToList();
 
         // Calculate customer growth data
-        var customerGrowth = orders
-            .GroupBy(o => o.Orderdate)
-            .Select(g => new ChartPoint
-            {
-                Date = (DateTime)g.Key,
-                TotalCustomers = g.Select(o => o.Customerid).Distinct().Count()
-            })
-            .ToList();
+        var customerGrowth = await _context.Customers
+      .Where(c => c.Createdat.HasValue &&
+                  (!fromDate.HasValue || c.Createdat.Value >= fromDate.Value) &&
+                  (!toDate.HasValue || c.Createdat.Value <= toDate.Value))
+      .GroupBy(c => c.Createdat)
+      .Select(g => new ChartPoint
+      {
+          Date = (DateTime)g.Key,
+          TotalCustomers = g.Count()
+      })
+      .OrderBy(g => g.Date)
+      .ToListAsync();
 
 
         // Calculate the average waiting time for all waiting tokens within the filtered time range
@@ -323,14 +327,28 @@ public class OrderRepository : IOrderRepository
         return result.ToList();
     }
 
-    public async Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status,int categoryId)
+    public async Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status, int categoryId)
     {
         await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
         await connection.OpenAsync();
-        
+
         var result = await connection.QueryAsync<TicketDetailResult>(
               "SELECT * FROM get_ticket_by_orderid(@p_orderid, @p_status,@p_categoryId);",
            new { p_orderid = orderId, p_status = status, p_categoryid = categoryId }
+        );
+
+        return result.ToList();
+    }
+
+
+    public async Task<List<OrderDetailsFlat>> GetOrderDetailsSp(int orderId)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var result = await connection.QueryAsync<OrderDetailsFlat>(
+              "SELECT * FROM get_order_detail(@p_orderid);",
+           new { p_orderid = orderId }
         );
 
         return result.ToList();

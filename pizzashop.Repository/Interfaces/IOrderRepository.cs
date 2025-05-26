@@ -24,5 +24,7 @@ public interface IOrderRepository
 
     Task<List<TicketResult>> GetTicketResultFromSP(int categoryId, int status);
 
-    Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status,int categoryId);
+    Task<List<TicketDetailResult>> GetTicketDetailsFromSP(int orderId, int status, int categoryId);
+
+    Task<List<OrderDetailsFlat>> GetOrderDetailsSp(int orderId);
 }

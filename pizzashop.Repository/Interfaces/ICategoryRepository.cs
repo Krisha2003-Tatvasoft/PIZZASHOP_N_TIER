@@ -23,6 +23,8 @@ public interface ICategoryRepository
     Task<bool> CatNameExistAtEditAsync(string Categoryname, int id);
 
     Task<List<Category>> AllCategoryForOrder();
-    
-     Task<List<VMCategory>> GetKOTCategoryListFromSP(int status);
+
+    Task<List<VMCategory>> GetKOTCategoryListFromSP(int status);
+
+    Task<List<VMCategory>> GetMenuCategoryListSP();
 }

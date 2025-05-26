@@ -327,38 +327,58 @@ public class ItemService : IItemService
 
   public async Task<List<ItemTable>> GetMenuItem(int id, string search)
   {
-    var itemList = await _itemRepository.GetMenuItem(search);
-    List<Item> items;
-    if (id == 0)
-    {
-      items = itemList;
-    }
-    else if (id == -1)
-    {
-      items = itemList.Where(i => i.Isfavourite == true).ToList();
-    }
-    else
-    {
-      items = itemList.Where(i => i.Categoryid == id).ToList();
-    }
+    // var itemList = await _itemRepository.GetMenuItem(search);
+    // List<Item> items;
+    // if (id == 0)
+    // {
+    //   items = itemList;
+    // }
+    // else if (id == -1)
+    // {
+    //   items = itemList.Where(i => i.Isfavourite == true).ToList();
+    // }
+    // else
+    // {
+    //   items = itemList.Where(i => i.Categoryid == id).ToList();
+    // }
 
-    var availableItem = items
-     .Select(i => new ItemTable
-     {
-       Categoryid = id,
-       Itemid = i.Itemid,
-       Itemname = i.Itemname,
-       Rate = i.Rate,
-       itemtype = i.itemtype,
-       Isdefaulttax = i.Isdefaulttax,
-       Taxpercentage = i.Taxpercentage,
-       Isfavourite = i.Isfavourite != null ? i.Isfavourite : false,
-       Itemimg = i.Itemimg != null
-       ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{i.Itemimg}"
-       : null
-     }).ToList();
+    // var availableItem = items
+    //  .Select(i => new ItemTable
+    //  {
+    //    Categoryid = id,
+    //    Itemid = i.Itemid,
+    //    Itemname = i.Itemname,
+    //    Rate = i.Rate,
+    //    itemtype = i.itemtype,
+    //    Isdefaulttax = i.Isdefaulttax,
+    //    Taxpercentage = i.Taxpercentage,
+    //    Isfavourite = i.Isfavourite != null ? i.Isfavourite : false,
+    //    Itemimg = i.Itemimg != null
+    //    ? $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}/uploads/{i.Itemimg}"
+    //    : null
+    //  }).ToList();
 
-    return availableItem;
+    // return availableItem;
+
+    var itemList = await _itemRepository.GetMenuItemSP(search, id);
+
+    var http = _httpContextAccessor.HttpContext;
+    var baseUrl = $"{http.Request.Scheme}://{http.Request.Host}/uploads/";
+
+    var items = itemList.Select(i => new ItemTable
+    {
+      Categoryid = i.Categoryid,
+      Itemid = i.Itemid,
+      Itemname = i.Itemname,
+      Rate = i.Rate,
+      itemtype = i.itemtype,
+      Isdefaulttax = i.Isdefaulttax,
+      Taxpercentage = i.Taxpercentage,
+      Isfavourite = i.Isfavourite ?? false,
+      Itemimg = i.Itemimg != null ? baseUrl + i.Itemimg : null
+    }).ToList();
+
+    return items;
   }
 
   public async Task<bool> ToggleFavourite(int id)
@@ -387,8 +407,8 @@ public class ItemService : IItemService
 
     }
   }
-  
-   public async Task<List<int>> GetAllItemIds(int id)
+
+  public async Task<List<int>> GetAllItemIds(int id)
   {
     var itemList = await _itemRepository.GetItemByCat(id, "");
     List<int> itemIds = itemList.Select(i => i.Itemid).ToList();

@@ -208,5 +208,42 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         return (orderId, message);
     }
 
+    public async Task<List<WaitingListTable>> GetWTBySectionsfromSP(List<int> sectionIds)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var result = await connection.QueryAsync<WaitingListTable>(
+            "SELECT * FROM get_waiting_list_by_sections(@section_ids);",
+            new { section_ids = sectionIds?.ToArray() }
+        );
+
+        return result.ToList();
+    }
+
+    public async Task<(int? OrderId, string Message)> Assign_From_Tables_SP(int loginId, AssignTable model, List<int> tableIds){
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var parameters = new DynamicParameters();
+        parameters.Add("p_loginid", loginId);
+        parameters.Add("p_waitingtokenid", model.Waitingtokenid); // can be null
+        parameters.Add("p_email", model.Email);
+        parameters.Add("p_customername", model.Customername);
+        parameters.Add("p_phoneno", model.Phoneno);
+        parameters.Add("p_noofperson", model.Noofperson);
+        parameters.Add("p_tableids", tableIds.ToArray());
+
+        parameters.Add("result_orderid", dbType: DbType.Int32, direction: ParameterDirection.Output);
+        parameters.Add("result_message", dbType: DbType.String, size: 500, direction: ParameterDirection.Output);
+
+        await connection.ExecuteAsync("assign_orderapp_table", parameters, commandType: CommandType.StoredProcedure);
+
+        var orderId = parameters.Get<int?>("result_orderid");
+        var message = parameters.Get<string>("result_message");
+
+        return (orderId, message);
+    }
+
 
 }

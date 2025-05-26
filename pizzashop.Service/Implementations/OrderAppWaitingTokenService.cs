@@ -133,46 +133,60 @@ public class OrderAppWaitingTokenService : IOrderAppWaitingTokenService
 
     public async Task<List<WaitingListTable>> WaitingListBySectionId(List<int> sectionId)
     {
-        var waiting = new List<Waitingtoken>();
-        if (sectionId == null || sectionId.Count == 0)
-        {
-            waiting = await _waitingTokenRepository.GetWaitingList();
-        }
-        else
-        {
-            foreach (var id in sectionId)
-            {
-                var waitingForSec = await _waitingTokenRepository.WaitingListBySectionId(id);
-                waiting.AddRange(waitingForSec);
-            }
-        }
-        if (waiting == null || waiting.Count == 0)
-        {
-            return new List<WaitingListTable>();
-        }
+        // var waiting = new List<Waitingtoken>();
+        // if (sectionId == null || sectionId.Count == 0)
+        // {
+        //     waiting = await _waitingTokenRepository.GetWaitingList();
+        // }
+        // else
+        // {
+        //     foreach (var id in sectionId)
+        //     {
+        //         var waitingForSec = await _waitingTokenRepository.WaitingListBySectionId(id);
+        //         waiting.AddRange(waitingForSec);
+        //     }
+        // }
+        // if (waiting == null || waiting.Count == 0)
+        // {
+        //     return new List<WaitingListTable>();
+        // }
 
-        var waitingList = waiting
-        .Where(w => w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
-        .Select(w => new WaitingListTable
-        {
-            Waitingtokenid = w.Waitingtokenid,
-            Customername = w.Customer.Customername,
-            Noofperson = (short)w.Noofpeople
-        }
-        ).ToList();
+        // var waitingList = waiting
+        // .Where(w => w.Createdat != null && w.Createdat.Value.Date == DateTime.Today)
+        // .Select(w => new WaitingListTable
+        // {
+        //     Waitingtokenid = w.Waitingtokenid,
+        //     Customername = w.Customer.Customername,
+        //     Noofperson = (short)w.Noofpeople
+        // }
+        // ).ToList();
 
-        return waitingList;
+        // return waitingList;
+
+        return await _waitingTokenRepository.GetWTBySectionsfromSP(sectionId);
     }
 
     public async Task<AssignTable> DetailsFromWT(int id)
     {
-        var wt = await _waitingTokenRepository.WTByIdAsync(id);
+        // var wt = await _waitingTokenRepository.WTByIdAsync(id);
+        // var AssignTable = new AssignTable
+        // {
+        //     Customername = wt.Customer.Customername,
+        //     Email = wt.Customer.Email,
+        //     Phoneno = wt.Customer.Phoneno,
+        //     Noofperson = (short)wt.Noofpeople,
+        //     Sectionid = new List<int> { wt.Sectionid },
+        //     Waitingtokenid = wt.Waitingtokenid,
+        // };
+        // return AssignTable;
+        var waitingtokens = await _waitingTokenRepository.GetWTTokenListFromSP(0);
+        var wt = waitingtokens.FirstOrDefault(w => w.Waitingtokenid == id);
         var AssignTable = new AssignTable
         {
-            Customername = wt.Customer.Customername,
-            Email = wt.Customer.Email,
-            Phoneno = wt.Customer.Phoneno,
-            Noofperson = (short)wt.Noofpeople,
+            Customername = wt.Customername,
+            Email = wt.Email,
+            Phoneno = wt.Phoneno,
+            Noofperson = (short)wt.Noofperson,
             Sectionid = new List<int> { wt.Sectionid },
             Waitingtokenid = wt.Waitingtokenid,
         };

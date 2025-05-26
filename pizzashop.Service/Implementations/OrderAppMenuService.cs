@@ -6,6 +6,7 @@ using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
 using pizzashop.Service.Interfaces;
+using static pizzashop.Entity.Models.Enums;
 
 namespace pizzashop.Service.Implementations;
 
@@ -48,89 +49,151 @@ public class OrderAppMenuService : IOrderAppMenuService
     public async Task<List<IMGMviewmodel>> ModifiersById(int id)
     {
 
-        var item = await _itemRepository.ItemWithModifier(id);
-        List<IMGMviewmodel>? itemWithModifier = item?.Itemmodifiergroupmaps?.Select(im => new IMGMviewmodel
-        {
-            Itemid = item.Itemid,
-            Itemname = item.Itemname,
-            Itemmodifiergroupid = im.Itemmodifiergroupid,
-            Modifiergroupname = im.Modifiergroup.Modifiergroupname,
-            Modifiergroupid = im.Modifiergroupid,
-            Minselectionrequired = im.Minselectionrequired,
-            Maxselectionallowed = im.Maxselectionallowed,
-            itemtype = item.itemtype,
-            modifiers = im.Modifiergroup?.ModifierGroupModifier?.Select(mgm => new Modifier
-            {
-                Modifierid = mgm.ModifierId,
-                Modifiername = mgm.Modifier?.Modifiername,
-                Rate = (decimal)(mgm.Modifier?.Rate),
-            }).ToList()
+        // var item = await _itemRepository.ItemWithModifier(id);
+        // List<IMGMviewmodel>? itemWithModifier = item?.Itemmodifiergroupmaps?.Select(im => new IMGMviewmodel
+        // {
+        //     Itemid = item.Itemid,
+        //     Itemname = item.Itemname,
+        //     Itemmodifiergroupid = im.Itemmodifiergroupid,
+        //     Modifiergroupname = im.Modifiergroup.Modifiergroupname,
+        //     Modifiergroupid = im.Modifiergroupid,
+        //     Minselectionrequired = im.Minselectionrequired,
+        //     Maxselectionallowed = im.Maxselectionallowed,
+        //     itemtype = item.itemtype,
+        //     modifiers = im.Modifiergroup?.ModifierGroupModifier?.Select(mgm => new Modifier
+        //     {
+        //         Modifierid = mgm.ModifierId,
+        //         Modifiername = mgm.Modifier?.Modifiername,
+        //         Rate = (decimal)(mgm.Modifier?.Rate),
+        //     }).ToList()
 
-        }).ToList();
+        // }).ToList();
 
-        return itemWithModifier;
+        // return itemWithModifier;
+
+        return await _itemRepository.ModifiersByIdSP(id);
 
     }
 
     public async Task<Bill?> OrderDetails(int id)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(id);
+        // var order = await _orderRepository.OrderDetailsByIdAsync(id);
 
-        if (order != null)
+        // if (order != null)
+        // {
+
+        //     List<OrderItem>? items = order?.Ordereditems?.Select(i => new OrderItem
+        //     {
+        //         Orderitemid = i.Ordereditemid,
+        //         Itemid = i.Itemid,
+        //         Itemname = i.Item.Itemname,
+        //         Rate = i.Item.Rate,
+        //         Quantity = (short)i.Quantity,
+        //         ReadyQuantity = i.ReadyQuantity != null ? i.ReadyQuantity : 0,
+        //         Isdefaulttax = i.Item.Isdefaulttax,
+        //         Taxpercentage = i.Item.Taxpercentage,
+        //         Itemwisecomment = i.Itemwisecomment,
+        //         Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
+        //         {
+        //             Modifierid = m.Modifiers.Modifierid,
+        //             Modifiername = m.Modifiers.Modifiername,
+        //             Quantity = (short)i.Quantity,
+        //             Rate = m.Modifiers.Rate
+        //         }).ToList()
+        //     }).ToList();
+
+        //     var taxlist = await _taxRepository.GetAllTaxEnabled();
+        //     List<TaxTable> taxes = taxlist.Select(t => new TaxTable
+        //     {
+        //         Taxid = t.Taxid,
+        //         Taxname = t.Taxname,
+        //         taxtype = (Enums.taxtype)t.Taxtype,
+        //         Taxvalue = t.Taxvalue
+        //     }).ToList();
+
+        //     var ordertaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(order.Orderid);
+        //     List<OrderTax> orderTaxes = ordertaxes.Select(t => new OrderTax
+        //     {
+        //         Orderid = t.Orderid,
+        //         Taxid = t.Taxid,
+        //         Taxvalue = t.Taxvalue
+        //     }).ToList();
+
+
+        //     Bill model = new Bill
+        //     {
+        //         Orderid = order.Orderid,
+        //         Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
+        //         Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
+        //         Items = items,
+        //         Taxes = taxes,
+        //         OrderTax = orderTaxes
+        //     };
+
+        //     return model;
+        // }
+
+        // return new Bill();
+
+        var flatList = await _orderRepository.GetOrderDetailsSp(id);
+
+        if (!flatList.Any()) return null;
+
+        var bill = new Bill
         {
-
-            List<OrderItem>? items = order?.Ordereditems?.Select(i => new OrderItem
-            {
-                Orderitemid = i.Ordereditemid,
-                Itemid = i.Itemid,
-                Itemname = i.Item.Itemname,
-                Rate = i.Item.Rate,
-                Quantity = (short)i.Quantity,
-                ReadyQuantity = i.ReadyQuantity != null ? i.ReadyQuantity : 0,
-                Isdefaulttax = i.Item.Isdefaulttax,
-                Taxpercentage = i.Item.Taxpercentage,
-                Itemwisecomment = i.Itemwisecomment,
-                Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
+            Orderid = id,
+            Tablenames = flatList.Select(f => f.Tablename).Where(t => !string.IsNullOrEmpty(t)).Distinct().ToList(),
+            Sectionname = flatList.Select(f => f.Sectionname).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList(),
+            Items = flatList
+                .GroupBy(f => f.Orderitemid)
+                .Select(g =>
                 {
-                    Modifierid = m.Modifiers.Modifierid,
-                    Modifiername = m.Modifiers.Modifiername,
-                    Quantity = (short)i.Quantity,
-                    Rate = m.Modifiers.Rate
+                    var first = g.First();
+                    return new OrderItem
+                    {
+                        Orderitemid = first.Orderitemid,
+                        Itemid = first.Itemid,
+                        Itemname = first.Itemname,
+                        Rate = first.Rate,
+                        Quantity = first.Quantity,
+                        ReadyQuantity = first.Readyquantity,
+                        Isdefaulttax = first.Isdefaulttax,
+                        Taxpercentage = first.Taxpercentage,
+                        Itemwisecomment = first.Itemwisecomment,
+                        Modifiers = g
+                            .Where(m => m.Modifierid != null)
+                            .GroupBy(m => m.Modifierid)
+                            .Select(mg => new OrderModifier
+                            {
+                                Modifierid = mg.Key.Value,
+                                Modifiername = mg.First().Modifiername,
+                                Quantity = first.Quantity, // as per your existing logic
+                                Rate = mg.First().Modifierrate ?? 0
+                            }).ToList()
+                    };
+                }).ToList(),
+            Taxes = flatList
+                .Where(f => f.Taxid.HasValue)
+                .GroupBy(f => f.Taxid)
+                .Select(g => new TaxTable
+                {
+                    Taxid = g.Key.Value,
+                    Taxname = g.First().Taxname,
+                    Taxvalue = g.First().Taxvalue,
+                    taxtype = g.First().Taxtype ?? taxtype.Percentage // adjust default as needed
+                }).ToList(),
+            OrderTax = flatList
+                .Where(f => f.Taxid.HasValue)
+                .GroupBy(f => f.Taxid)
+                .Select(g => new OrderTax
+                {
+                    Orderid = id,
+                    Taxid = g.Key.Value,
+                    Taxvalue = decimal.TryParse(g.First().Taxvalue, out var val) ? val : 0
                 }).ToList()
-            }).ToList();
+        };
 
-            var taxlist = await _taxRepository.GetAllTaxEnabled();
-            List<TaxTable> taxes = taxlist.Select(t => new TaxTable
-            {
-                Taxid = t.Taxid,
-                Taxname = t.Taxname,
-                taxtype = (Enums.taxtype)t.Taxtype,
-                Taxvalue = t.Taxvalue
-            }).ToList();
-
-            var ordertaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(order.Orderid);
-            List<OrderTax> orderTaxes = ordertaxes.Select(t => new OrderTax
-            {
-                Orderid = t.Orderid,
-                Taxid = t.Taxid,
-                Taxvalue = t.Taxvalue
-            }).ToList();
-
-
-            Bill model = new Bill
-            {
-                Orderid = order.Orderid,
-                Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
-                Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
-                Items = items,
-                Taxes = taxes,
-                OrderTax = orderTaxes
-            };
-
-            return model;
-        }
-
-        return new Bill();
+        return bill;
     }
 
     private void ToList()
@@ -447,7 +510,7 @@ public class OrderAppMenuService : IOrderAppMenuService
     public async Task<bool> checkOrderStatus(int id)
     {
         var order = await _orderRepository.OrderDetailsByIdAsync(id);
-         Console.WriteLine("hellllllllllllllllllllllo" + order.status);
+        Console.WriteLine("hellllllllllllllllllllllo" + order.status);
         if (order != null)
         {
             if (order.status == 0 || order.status == 1)
