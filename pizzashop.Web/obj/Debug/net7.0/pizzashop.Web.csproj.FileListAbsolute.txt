@@ -118,8 +118,8 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\appsettings.Development.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\appsettings.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.staticwebassets.runtime.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.exe
-D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.deps.json
-D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.runtimeconfig.json
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Debug\net7.0\pizzashop.Web.deps.json
+D:\PIZZASHOP_N_TIER\pizzashop.Web\bin\Debug\net7.0\pizzashop.Web.runtimeconfig.json
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\pizzashop.Web.pdb
 D:\PIZZASHOP_N_TIER\pizzashop.web\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
@@ -224,9 +224,9 @@ D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\staticwebassets.development.j
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\scopedcss\bundle\pizzashop.Web.styles.css
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\scopedcss\projectbundle\pizzashop.Web.bundle.scp.css
-D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.csproj.CopyComplete
+D:\PIZZASHOP_N_TIER\pizzashop.Web\obj\Debug\net7.0\pizzashop.Web.csproj.CopyComplete
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\refint\pizzashop.Web.dll
 D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.pdb
-D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
-D:\PIZZASHOP_N_TIER\pizzashop.web\obj\Debug\net7.0\ref\pizzashop.Web.dll
+D:\PIZZASHOP_N_TIER\pizzashop.Web\obj\Debug\net7.0\pizzashop.Web.genruntimeconfig.cache
+D:\PIZZASHOP_N_TIER\pizzashop.Web\obj\Debug\net7.0\ref\pizzashop.Web.dll

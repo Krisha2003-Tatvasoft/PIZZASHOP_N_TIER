@@ -79,7 +79,7 @@ public class OrdersController : Controller
     [CustomAuthorize("", "" , new string[] {"Admin" , "Account Manager"})]
     public async Task<IActionResult> orderInvoice(int id)
     {
-       var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID
+        var orderDetails = await _orderService.OrderDetails(id); // Fetch order details by ID
     
         return PartialView("_OrderInvoice", orderDetails);
     }

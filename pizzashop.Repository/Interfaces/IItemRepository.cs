@@ -30,5 +30,6 @@ public interface IItemRepository
     Task<List<Item>> GetMenuItemSP(string search, int categoryId);
 
     Task<List<IMGMviewmodel>> ModifiersByIdSP(int itemId);
-    
+
+    Task<bool?> ToggleFavourite_SP(int id);
 }

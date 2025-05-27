@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Data;
 using Dapper;
 using Microsoft.AspNetCore.Http;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.JsonPatch.Internal;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Npgsql;
+using NpgsqlTypes;
 using pizzashop.Entity.Models;
 using pizzashop.Entity.ViewModels;
 using pizzashop.Repository.Interfaces;
@@ -340,19 +342,247 @@ public class OrderRepository : IOrderRepository
         return result.ToList();
     }
 
-
     public async Task<List<OrderDetailsFlat>> GetOrderDetailsSp(int orderId)
     {
         await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
         await connection.OpenAsync();
 
         var result = await connection.QueryAsync<OrderDetailsFlat>(
-              "SELECT * FROM get_order_detail(@p_orderid);",
-           new { p_orderid = orderId }
+              "SELECT * FROM get_order_details_flat(@order_id);",
+           new { order_id = orderId }
         );
 
         return result.ToList();
     }
+
+    public async Task<List<TaxTable>> GetAllTaxEnabledSp()
+    {
+
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var result = await connection.QueryAsync<TaxTable>(
+              "SELECT * FROM get_enabled_taxes();"
+        );
+
+        return result.ToList();
+    }
+
+
+    public async Task<(bool Success, string Message)> SaveOrder_SP(int orderId, List<OrderItem> items, List<OrderTax> taxes)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        using var command = new NpgsqlCommand("save_order_incremental", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+
+        command.Parameters.AddWithValue("in_orderid", orderId);
+        command.Parameters.AddWithValue("in_items", NpgsqlDbType.Jsonb, JsonConvert.SerializeObject(items));
+        command.Parameters.AddWithValue("in_taxes", NpgsqlDbType.Jsonb, JsonConvert.SerializeObject(taxes));
+
+        var successParam = new NpgsqlParameter("out_success", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        var messageParam = new NpgsqlParameter("out_message", DbType.String)
+        {
+            Size = 500,
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+        command.Parameters.Add(messageParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        bool success = (bool)successParam.Value;
+        string message = messageParam.Value?.ToString();
+
+        return (success, message);
+    }
+
+    public async Task<(bool Success, string Message)> CancelOrder_SP(int orderId)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        using var command = new NpgsqlCommand("cancel_order", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("in_orderid", orderId);
+
+        var successParam = new NpgsqlParameter("out_success", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        var messageParam = new NpgsqlParameter("out_message", DbType.String)
+        {
+            Size = 500,
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+        command.Parameters.Add(messageParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        bool success = (bool)successParam.Value;
+        string message = messageParam.Value?.ToString();
+
+        return (success, message);
+    }
+
+
+    public async Task<(bool Success, string Message)> CompleteOrder_SP(int orderId)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        using var command = new NpgsqlCommand("complete_order", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("in_orderid", orderId);
+
+        var successParam = new NpgsqlParameter("out_success", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        var messageParam = new NpgsqlParameter("out_message", DbType.String)
+        {
+            Size = 500,
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+        command.Parameters.Add(messageParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        bool success = (bool)successParam.Value;
+        string message = messageParam.Value?.ToString();
+
+        return (success, message);
+    }
+
+    public async Task<(bool Success, string Message)> AddReview_SP(Review model)
+    {
+        await using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        using var command = new NpgsqlCommand("add_review", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("in_orderid", model.Orderid);
+        command.Parameters.AddWithValue("in_foodrating", model.Foodrating);
+        command.Parameters.AddWithValue("in_servicerating", model.Servicerating);
+        command.Parameters.AddWithValue("in_ambiencerating", model.Ambiencerating);
+        command.Parameters.AddWithValue("in_comments", (object?)model.Comments ?? DBNull.Value);
+
+        var successParam = new NpgsqlParameter("out_success", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        var messageParam = new NpgsqlParameter("out_message", DbType.String)
+        {
+            Size = 500,
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+        command.Parameters.Add(messageParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        bool success = (bool)successParam.Value;
+        string message = messageParam.Value?.ToString();
+
+        return (success, message);
+    }
+
+    public async Task<CustomerDetail?> GetCustomerDetail_SP(int orderId)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        string sql = "SELECT * FROM get_customer_detail_by_orderid(@in_orderid);";
+
+        var result = await connection.QueryFirstOrDefaultAsync<CustomerDetail>(
+            sql,
+            new { in_orderid = orderId }
+        );
+
+        return result;
+    }
+
+    public async Task<(bool success, string message)> EditCustomerDetail_SP(CustomerDetail model)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var command = new NpgsqlCommand("edit_customer_detail", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("in_orderid", model.Orderid);
+        command.Parameters.AddWithValue("in_customername", model.Customername ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("in_phoneno", model.Phoneno ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("in_email", model.Email ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("in_oldemail", model.oldemail ?? (object)DBNull.Value);
+        command.Parameters.AddWithValue("in_noofperson", model.Noofperson ?? 0);
+
+        var successParam = new NpgsqlParameter("out_success", DbType.Boolean) { Direction = ParameterDirection.Output };
+        var messageParam = new NpgsqlParameter("out_message", DbType.String) { Size = 500, Direction = ParameterDirection.Output };
+
+        command.Parameters.Add(successParam);
+        command.Parameters.Add(messageParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        return ((bool)successParam.Value, messageParam.Value?.ToString());
+    }
+
+    public async Task<Order> GetOrderBYId_SQL(int ordrid)
+    {
+        return await _context.Orders.FromSqlRaw("SELECT * FROM Orders where orderid = {0}", ordrid).FirstOrDefaultAsync();
+    }
+
+    public async Task<bool> AddOrderComment_SP(int orderId, string comment)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
+
+        var command = new NpgsqlCommand("sp_add_order_comment", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+
+        command.Parameters.AddWithValue("p_orderid", orderId);
+        command.Parameters.AddWithValue("p_comment", comment);
+
+        var successParam = new NpgsqlParameter("p_success", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+
+        command.Parameters.Add(successParam);
+
+
+        await command.ExecuteNonQueryAsync();
+
+        bool success = successParam.Value != DBNull.Value && (bool)successParam.Value;
+        return success;
+    }
+
+
 
 
 }

@@ -383,29 +383,28 @@ public class ItemService : IItemService
 
   public async Task<bool> ToggleFavourite(int id)
   {
-    if (id == null)
-    {
-      return false;
-    }
-    else
-    {
-      Item item = await _itemRepository.ItemByIdAsync(id);
-      if (item.Isfavourite == true)
-      {
-        item.Isfavourite = false;
+    // if (id == null)
+    // {
+    //   return false;
+    // }
+    // else
+    // {
+    //   Item item = await _itemRepository.ItemByIdAsync(id);
+    //   if (item.Isfavourite == true)
+    //   {
+    //     item.Isfavourite = false;
+    //     await _itemRepository.UpdateItem(item);
+    //     return false;
+    //   }
+    //   else
+    //   {
+    //     item.Isfavourite = true;
+    //     await _itemRepository.UpdateItem(item);
+    //     return true;
+    //   }
 
-
-        await _itemRepository.UpdateItem(item);
-        return false;
-      }
-      else
-      {
-        item.Isfavourite = true;
-        await _itemRepository.UpdateItem(item);
-        return true;
-      }
-
-    }
+    // }
+    return (bool)await _itemRepository.ToggleFavourite_SP(id);
   }
 
   public async Task<List<int>> GetAllItemIds(int id)

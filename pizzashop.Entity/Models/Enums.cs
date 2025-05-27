@@ -23,7 +23,7 @@ public class Enums
 
     public enum taxtype
     {
-        Percentage =0,
+        Percentage = 0,
 
         FlatAmount =1
     }

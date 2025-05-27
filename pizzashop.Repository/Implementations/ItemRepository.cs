@@ -170,8 +170,31 @@ public class ItemRepository : IItemRepository
         return grouped;
     }
 
+    public async Task<bool?> ToggleFavourite_SP(int id)
+    {
+        using var connection = new NpgsqlConnection(_context.Database.GetConnectionString());
+        await connection.OpenAsync();
 
+        var command = new NpgsqlCommand("sp_toggle_favourite", connection)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
 
+        command.Parameters.AddWithValue("p_id", id);
+
+        var isFavouriteParam = new NpgsqlParameter("p_isfavourite", DbType.Boolean)
+        {
+            Direction = ParameterDirection.Output
+        };
+        command.Parameters.Add(isFavouriteParam);
+
+        await command.ExecuteNonQueryAsync();
+
+        if (isFavouriteParam.Value == DBNull.Value)
+            return null; // item not found
+
+        return (bool)isFavouriteParam.Value;
+    }
 
 
 

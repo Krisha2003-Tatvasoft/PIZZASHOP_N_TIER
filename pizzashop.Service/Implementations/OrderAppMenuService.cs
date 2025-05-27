@@ -134,24 +134,23 @@ public class OrderAppMenuService : IOrderAppMenuService
         // }
 
         // return new Bill();
-
-        var flatList = await _orderRepository.GetOrderDetailsSp(id);
-
-        if (!flatList.Any()) return null;
-
-        var bill = new Bill
+        if (id != 0)
         {
-            Orderid = id,
-            Tablenames = flatList.Select(f => f.Tablename).Where(t => !string.IsNullOrEmpty(t)).Distinct().ToList(),
-            Sectionname = flatList.Select(f => f.Sectionname).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList(),
-            Items = flatList
-                .GroupBy(f => f.Orderitemid)
+            List<OrderDetailsFlat> flatList = await _orderRepository.GetOrderDetailsSp(id);
+            if (!flatList.Any())
+                return null;
+
+            List<TaxTable> taxList = await _orderRepository.GetAllTaxEnabledSp();
+
+            List<OrderItem> items = flatList
+                .Where(f => f.Ordereditemid > 0)
+                .GroupBy(f => f.Ordereditemid)
                 .Select(g =>
                 {
-                    var first = g.First();
+                    OrderDetailsFlat first = g.First();
                     return new OrderItem
                     {
-                        Orderitemid = first.Orderitemid,
+                        Orderitemid = first.Ordereditemid,
                         Itemid = first.Itemid,
                         Itemname = first.Itemname,
                         Rate = first.Rate,
@@ -161,39 +160,43 @@ public class OrderAppMenuService : IOrderAppMenuService
                         Taxpercentage = first.Taxpercentage,
                         Itemwisecomment = first.Itemwisecomment,
                         Modifiers = g
-                            .Where(m => m.Modifierid != null)
-                            .GroupBy(m => m.Modifierid)
-                            .Select(mg => new OrderModifier
-                            {
-                                Modifierid = mg.Key.Value,
-                                Modifiername = mg.First().Modifiername,
-                                Quantity = first.Quantity, // as per your existing logic
-                                Rate = mg.First().Modifierrate ?? 0
-                            }).ToList()
+                      .Where(x => x.Modifierid != null)
+                      .GroupBy(m => m.Modifierid)
+                      .Select(mg =>
+                    {
+                        OrderDetailsFlat mod = mg.First();
+                        return new OrderModifier
+                        {
+                            Modifierid = mod.Modifierid!.Value,
+                            Modifiername = mod.Modifiername!,
+                            Quantity = first.Quantity,
+                            Rate = mod.Modifierrate!.Value
+                        };
+                    }).ToList()
                     };
-                }).ToList(),
-            Taxes = flatList
-                .Where(f => f.Taxid.HasValue)
-                .GroupBy(f => f.Taxid)
-                .Select(g => new TaxTable
-                {
-                    Taxid = g.Key.Value,
-                    Taxname = g.First().Taxname,
-                    Taxvalue = g.First().Taxvalue,
-                    taxtype = g.First().Taxtype ?? taxtype.Percentage // adjust default as needed
-                }).ToList(),
-            OrderTax = flatList
-                .Where(f => f.Taxid.HasValue)
-                .GroupBy(f => f.Taxid)
-                .Select(g => new OrderTax
-                {
-                    Orderid = id,
-                    Taxid = g.Key.Value,
-                    Taxvalue = decimal.TryParse(g.First().Taxvalue, out var val) ? val : 0
-                }).ToList()
-        };
+                }).ToList();
 
-        return bill;
+            Bill bill = new Bill
+            {
+                Orderid = flatList.First().Orderid,
+                Tablenames = flatList.Select(f => f.Tablename).Where(t => !string.IsNullOrEmpty(t)).Distinct().ToList(),
+                Sectionname = flatList.Select(f => f.Sectionname).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList(),
+                Items = items,
+                Taxes = taxList,
+                OrderTax = flatList.Where(f => f.Taxid.HasValue).Select(f => new OrderTax
+                {
+                    Orderid = f.Orderid,
+                    Taxid = f.Taxid.Value,
+                    Taxvalue = f.Taxvalue
+                }).Distinct().ToList()
+            };
+
+            return bill;
+        }
+        else
+        {
+             return new Bill();
+        }
     }
 
     private void ToList()
@@ -204,313 +207,318 @@ public class OrderAppMenuService : IOrderAppMenuService
 
     public async Task<(bool success, string message)> SaveOrder(Bill model)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(model.Orderid);
-        if (order != null)
-        {
-            var subtotal = model.Items.Sum(x => x.Rate * x.Quantity + x.Modifiers.Sum(m => m.Rate * x.Quantity));
-            var tax = model.OrderTax.Sum(x => x.Taxvalue);
-            order.status = 0;
-            order.Subamount = subtotal;
-            order.Totaltax = tax;
-            order.Totalamount = (decimal)(subtotal + tax);
-            await _orderRepository.UpdateOrder(order);
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(model.Orderid);
+        // if (order != null)
+        // {
+        //     decimal subtotal = model.Items.Sum(x => x.Rate * x.Quantity + x.Modifiers.Sum(m => m.Rate * x.Quantity));
+        //     decimal? tax = model.OrderTax.Sum(x => x.Taxvalue);
+        //     order.status = 0;
+        //     order.Subamount = subtotal;
+        //     order.Totaltax = tax;
+        //     order.Totalamount = (decimal)(subtotal + tax);
+        //     await _orderRepository.UpdateOrder(order);
 
-            var existingOrderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(model.Orderid);
-            var existingItemIds = existingOrderItems.Select(x => x.Ordereditemid).ToList();
+        //     List<Ordereditem> existingOrderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(model.Orderid);
+        //     List<int> existingItemIds = existingOrderItems.Select(x => x.Ordereditemid).ToList();
 
-            var incomingItemIds = model.Items.Where(x => x.Orderitemid != 0).Select(x => x.Orderitemid).ToList();
+        //     List<int> incomingItemIds = model.Items.Where(x => x.Orderitemid != 0).Select(x => x.Orderitemid).ToList();
 
-            var itemsToDelete = existingOrderItems.Where(x => !incomingItemIds.Contains(x.Ordereditemid)).ToList();
-            foreach (var itemToDelete in itemsToDelete)
-            {
-                // Delete the modifiers for the item
-                await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(itemToDelete.Ordereditemid);
+        //     List<Ordereditem> itemsToDelete = existingOrderItems.Where(x => !incomingItemIds.Contains(x.Ordereditemid)).ToList();
+        //     foreach (Ordereditem? itemToDelete in itemsToDelete)
+        //     {
+        //         // Delete the modifiers for the item
+        //         await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(itemToDelete.Ordereditemid);
 
-                // Delete the order item itself
-                await _orderItemRepository.DeleteOrderItemAsync(itemToDelete.Ordereditemid);
-            }
-
-
-            // Loop through the items in the incoming order
-            foreach (var item in model.Items)
-            {
-
-                if (item.Orderitemid == 0)
-                {
-                    var newOrderItem = new Ordereditem
-                    {
-                        Orderid = model.Orderid,
-                        Itemid = item.Itemid,
-                        Quantity = item.Quantity,
-                        ReadyQuantity = 0,
-                        Itemwisecomment = item.Itemwisecomment
-                    };
-                    var addedOrderItem = await _orderItemRepository.AddOrderItemAsync(newOrderItem);
-
-                    // Add new modifiers for this new item
-                    foreach (var modifier in item.Modifiers)
-                    {
-                        var orderItemModifier = new Ordereditemmodifer
-                        {
-                            Ordereditemid = addedOrderItem.Ordereditemid,
-                            modifierid = modifier.Modifierid
-                        };
-                        await _orderItemModifierRepository.AddOrderItemModifierAsync(orderItemModifier);
-                    }
-                }
-                else
-                {
-                    var existingItem = existingOrderItems.FirstOrDefault(x => x.Ordereditemid == item.Orderitemid);
-                    if (existingItem != null)
-                    {
-                        existingItem.Quantity = item.Quantity;
-                        existingItem.Itemwisecomment = item.Itemwisecomment;
-                        await _orderItemRepository.UpdateOrderItemAsync(existingItem);
-                    }
-                }
-            }
+        //         // Delete the order item itself
+        //         await _orderItemRepository.DeleteOrderItemAsync(itemToDelete.Ordereditemid);
+        //     }
 
 
-            // tax mapping....
-            var existingTaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(model.Orderid);
+        //     // Loop through the items in the incoming order
+        //     foreach (OrderItem? item in model.Items)
+        //     {
 
-            // Update or Add
-            foreach (var newTax in model.OrderTax)
-            {
-                var existingTax = existingTaxes.FirstOrDefault(x => x.Taxid == newTax.Taxid);
-                if (existingTax != null)
-                {
-                    // Update existing tax amount
-                    existingTax.Taxvalue = newTax.Taxvalue;
-                    await _orderTaxRepository.UpdateAsync(existingTax);
-                }
-                else
-                {
-                    // New tax, add it
-                    var taxToAdd = new Ordertaxmapping
-                    {
-                        Orderid = model.Orderid,
-                        Taxid = newTax.Taxid,
-                        Taxvalue = newTax.Taxvalue
-                    };
-                    await _orderTaxRepository.AddAsync(taxToAdd);
-                }
-            }
+        //         if (item.Orderitemid == 0)
+        //         {
+        //             Ordereditem newOrderItem = new Ordereditem
+        //             {
+        //                 Orderid = model.Orderid,
+        //                 Itemid = item.Itemid,
+        //                 Quantity = item.Quantity,
+        //                 ReadyQuantity = 0,
+        //                 Itemwisecomment = item.Itemwisecomment
+        //             };
+        //             Ordereditem addedOrderItem = await _orderItemRepository.AddOrderItemAsync(newOrderItem);
 
-            // Delete taxes that are no longer selected
-            foreach (var existingTax in existingTaxes)
-            {
-                if (!model.OrderTax.Any(t => t.Taxid == existingTax.Taxid))
-                {
-                    await _orderTaxRepository.DeleteAsync(existingTax);
-                }
-            }
+        //             // Add new modifiers for this new item
+        //             foreach (OrderModifier? modifier in item.Modifiers)
+        //             {
+        //                 Ordereditemmodifer orderItemModifier = new Ordereditemmodifer
+        //                 {
+        //                     Ordereditemid = addedOrderItem.Ordereditemid,
+        //                     modifierid = modifier.Modifierid
+        //                 };
+        //                 await _orderItemModifierRepository.AddOrderItemModifierAsync(orderItemModifier);
+        //             }
+        //         }
+        //         else
+        //         {
+        //             Ordereditem? existingItem = existingOrderItems.FirstOrDefault(x => x.Ordereditemid == item.Orderitemid);
+        //             if (existingItem != null)
+        //             {
+        //                 existingItem.Quantity = item.Quantity;
+        //                 existingItem.Itemwisecomment = item.Itemwisecomment;
+        //                 await _orderItemRepository.UpdateOrderItemAsync(existingItem);
+        //             }
+        //         }
+        //     }
 
-            return (true, "Order Saved Sucessfully.");
-        }
-        else
-        {
-            return (false, "No Order.");
-        }
+
+        //     // tax mapping....
+        //     List<Ordertaxmapping> existingTaxes = await _orderTaxRepository.GetTaxesByOrderIdAsync(model.Orderid);
+
+        //     // Update or Add
+        //     foreach (OrderTax? newTax in model.OrderTax)
+        //     {
+        //         Ordertaxmapping? existingTax = existingTaxes.FirstOrDefault(x => x.Taxid == newTax.Taxid);
+        //         if (existingTax != null)
+        //         {
+        //             // Update existing tax amount
+        //             existingTax.Taxvalue = newTax.Taxvalue;
+        //             await _orderTaxRepository.UpdateAsync(existingTax);
+        //         }
+        //         else
+        //         {
+        //             // New tax, add it
+        //             Ordertaxmapping taxToAdd = new Ordertaxmapping
+        //             {
+        //                 Orderid = model.Orderid,
+        //                 Taxid = newTax.Taxid,
+        //                 Taxvalue = newTax.Taxvalue
+        //             };
+        //             await _orderTaxRepository.AddAsync(taxToAdd);
+        //         }
+        //     }
+
+        //     // Delete taxes that are no longer selected
+        //     foreach (Ordertaxmapping existingTax in existingTaxes)
+        //     {
+        //         if (!model.OrderTax.Any(t => t.Taxid == existingTax.Taxid))
+        //         {
+        //             await _orderTaxRepository.DeleteAsync(existingTax);
+        //         }
+        //     }
+
+        //     return (true, "Order Saved Sucessfully.");
+        // }
+        // else
+        // {
+        //     return (false, "No Order.");
+        // }
+
+        return await _orderRepository.SaveOrder_SP(model.Orderid, model.Items, model.OrderTax); 
     }
 
     public async Task<string?> GetOrderComment(int id)
     {
-        Order order = await _orderRepository.OrderDetailsByIdAsync(id);
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(id);
+        Order order = await _orderRepository.GetOrderBYId_SQL(id);
         return order?.Orderwisecomment;
     }
 
     public async Task<bool> AddOrderComment(string comment, int orderid)
     {
-        Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
-        if (order == null)
-        {
-            return false;
-        }
-        else
-        {
-            order.Orderwisecomment = comment;
-            await _orderRepository.UpdateOrder(order);
-            return true;
-        }
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        // if (order == null)
+        // {
+        //     return false;
+        // }
+        // else
+        // {
+        //     order.Orderwisecomment = comment;
+        //     await _orderRepository.UpdateOrder(order);
+        //     return true;
+        // }
+
+        return await _orderRepository.AddOrderComment_SP(orderid, comment);
 
     }
 
 
     public async Task<(bool success, string message)> CancelOrder(int orderid)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
-        if (order == null)
-        {
-            return (false, "No Order.");
-        }
-        else
-        {
-            bool hasReadyItems = order.Ordereditems.Any(item => item.ReadyQuantity > 0);
-            if (hasReadyItems)
-            {
-                return (false, "Cannot cancel order because some items are already prepared.");
-            }
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        // if (order == null)
+        // {
+        //     return (false, "No Order.");
+        // }
+        // else
+        // {
+        //     bool hasReadyItems = order.Ordereditems.Any(item => item.ReadyQuantity > 0);
+        //     if (hasReadyItems)
+        //     {
+        //         return (false, "Cannot cancel order because some items are already prepared.");
+        //     }
 
-            order.status = 4;
-            await _orderRepository.UpdateOrder(order);
+        //     order.status = 4;
+        //     await _orderRepository.UpdateOrder(order);
 
-            var tables = order.Ordertables.ToList();
-            foreach (var table in tables)
-            {
-                var tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
-                tableByid.tablestatus = 0;
-                await _tableRepository.UpdateTable(tableByid);
-            }
+        //     List<Ordertable> tables = order.Ordertables.ToList();
+        //     foreach (Ordertable? table in tables)
+        //     {
+        //         Entity.Models.Table tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
+        //         tableByid.tablestatus = 0;
+        //         await _tableRepository.UpdateTable(tableByid);
+        //     }
 
-            // var orderItems = await _orderItemRepository.GetOrderItemsByOrderIdAsync(orderid);
-            // foreach (var orderitem in orderItems)
-            // {
-            //     await _orderItemModifierRepository.DeleteModifiersByOrderItemIdAsync(orderitem.Ordereditemid);
-            //     await _orderItemRepository.DeleteOrderItemAsync(orderitem.Ordereditemid);
-            // }
+        //     return (true, "Order Cancelled sucessfully.");
 
-            return (true, "Order Cancelled sucessfully.");
+        // }
 
-        }
+        return await _orderRepository.CancelOrder_SP(orderid);
 
     }
 
 
     public async Task<(bool success, string message)> CompleteOrder(int orderid)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
-        if (order == null)
-        {
-            return (false, "No Order.");
-        }
-        else
-        {
-            bool hasInProgressItems = order.Ordereditems.Any(item => item.ReadyQuantity < item.Quantity);
-            if (hasInProgressItems)
-            {
-                return (false, "Some items are still being prepared. Cannot complete the order!");
-            }
-            order.status = 3;
-            await _orderRepository.UpdateOrder(order);
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        // if (order == null)
+        // {
+        //     return (false, "No Order.");
+        // }
+        // else
+        // {
+        //     bool hasInProgressItems = order.Ordereditems.Any(item => item.ReadyQuantity < item.Quantity);
+        //     if (hasInProgressItems)
+        //     {
+        //         return (false, "Some items are still being prepared. Cannot complete the order!");
+        //     }
+        //     order.status = 3;
+        //     await _orderRepository.UpdateOrder(order);
 
-            var tables = order.Ordertables.ToList();
-            foreach (var table in tables)
-            {
-                var tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
-                tableByid.tablestatus = 0;
-                await _tableRepository.UpdateTable(tableByid);
-            }
-            return (true, "Order Completed Sucessfully.");
+        //     List<Ordertable> tables = order.Ordertables.ToList();
+        //     foreach (Ordertable? table in tables)
+        //     {
+        //         Entity.Models.Table tableByid = await _tableRepository.TableByIdAsync(table.Tableid);
+        //         tableByid.tablestatus = 0;
+        //         await _tableRepository.UpdateTable(tableByid);
+        //     }
+        //     return (true, "Order Completed Sucessfully.");
 
-        }
+        // }
+
+        return await _orderRepository.CompleteOrder_SP(orderid);
     }
 
 
     public async Task<CustomerDetail?> CustomerDetail(int orderid)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(orderid);
-        if (order != null)
-        {
-            var Customer = new CustomerDetail
-            {
-                customerId = order.Customerid,
-                Email = order.Customer?.Email,
-                Customername = order.Customer?.Customername,
-                Phoneno = order.Customer?.Phoneno,
-                Noofperson = order.Noofperson,
-                Orderid = order.Orderid,
-                oldemail = order.Customer?.Email
-            };
-            return Customer;
-        }
-        return null;
+        // Order order = await _orderRepository.OrderDetailsByIdAsync(orderid);
+        // if (order != null)
+        // {
+        //     CustomerDetail Customer = new CustomerDetail
+        //     {
+        //         customerId = order.Customerid,
+        //         Email = order.Customer?.Email,
+        //         Customername = order.Customer?.Customername,
+        //         Phoneno = order.Customer?.Phoneno,
+        //         Noofperson = order.Noofperson,
+        //         Orderid = order.Orderid,
+        //         oldemail = order.Customer?.Email
+        //     };
+        //     return Customer;
+        // }
+        // return null;
+        return await _orderRepository.GetCustomerDetail_SP(orderid);
     }
 
     public async Task<(bool sucess, string message)> EditCustomerdetail(CustomerDetail model)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
-        if (order != null)
-        {
-            var customer = await _customerRepository.GetCustomerByEmail(model.Email);
-            if (customer != null && customer.Customerid != model.customerId)
-            {
-                return (false, "Email already In Used.");
-            }
-            else
-            {
-                var totalCapacity = 0;
-                var tables = order.Ordertables.ToList();
-                foreach (var table in tables)
-                {
-                    var tableid = await _tableRepository.TableByIdAsync(table.Tableid);
-                    totalCapacity += (int)tableid.Capacity;
-                }
-                if (totalCapacity < model.Noofperson)
-                {
-                    return (false, "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
-                }
-                else
-                {
-                    var oldcustomer = await _customerRepository.GetCustomerByEmail(model.oldemail);
+        // Order order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
+        // if (order != null)
+        // {
+        //     Customer customer = await _customerRepository.GetCustomerByEmail(model.Email);
+        //     if (customer != null && customer.Customerid != model.customerId)
+        //     {
+        //         return (false, "Email already In Used.");
+        //     }
+        //     else
+        //     {
+        //         int totalCapacity = 0;
+        //         List<Ordertable> tables = order.Ordertables.ToList();
+        //         foreach (Ordertable? table in tables)
+        //         {
+        //             Entity.Models.Table tableid = await _tableRepository.TableByIdAsync(table.Tableid);
+        //             totalCapacity += (int)tableid.Capacity;
+        //         }
+        //         if (totalCapacity < model.Noofperson)
+        //         {
+        //             return (false, "No. of Person " + model.Noofperson + " Is more Then the Table Capacity " + totalCapacity + ".");
+        //         }
+        //         else
+        //         {
+        //             Customer oldcustomer = await _customerRepository.GetCustomerByEmail(model.oldemail);
 
-                    if (oldcustomer != null)
-                    {
-                        oldcustomer.Customername = model.Customername;
-                        oldcustomer.Phoneno = model.Phoneno;
-                        oldcustomer.Email = model.Email;
-                        Console.WriteLine("emailllllllllllllll" + oldcustomer.Email);
-                        await _customerRepository.UpdateCustomer(oldcustomer);
-                    }
+        //             if (oldcustomer != null)
+        //             {
+        //                 oldcustomer.Customername = model.Customername;
+        //                 oldcustomer.Phoneno = model.Phoneno;
+        //                 oldcustomer.Email = model.Email;
+        //                 await _customerRepository.UpdateCustomer(oldcustomer);
+        //             }
 
-                    order.Noofperson = (short)model.Noofperson;
-                    await _orderRepository.UpdateOrder(order);
+        //             order.Noofperson = (short)model.Noofperson;
+        //             await _orderRepository.UpdateOrder(order);
 
-                    return (true, "Customer Details Updated Sucessfully.");
-                }
+        //             return (true, "Customer Details Updated Sucessfully.");
+        //         }
 
-            }
-        }
-        else
-        {
-            return (false, "no order");
-        }
+        //     }
+        // }
+        // else
+        // {
+        //     return (false, "no order");
+        // }
+
+        return await _orderRepository.EditCustomerDetail_SP(model);
     }
 
     public async Task<(bool sucess, string message)> ReviewPost(Review model)
     {
-        if (model != null)
-        {
-            Customerreview customerreview = new Customerreview
-            {
-                Orderid = model.Orderid,
-                Foodrating = model.Foodrating,
-                Servicerating = model.Servicerating,
-                Ambiencerating = model.Ambiencerating,
-                Avgrating = (float?)((model.Foodrating + model.Servicerating + model.Ambiencerating) / 3),
-                Comments = model.Comments,
-                Createdat = DateTime.Now
-            };
-            await _customerReviewRepository.AddNewReview(customerreview);
-            var order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
-            if (order != null)
-            {
-                order.Rating = (decimal?)customerreview.Avgrating;
-                await _orderRepository.UpdateOrder(order);
-            }
-            return (true, "Review Added Sucessfully.");
-        }
-        else
-        {
-            return (false, "No Review");
-        }
+        // if (model != null)
+        // {
+        //     Customerreview customerreview = new Customerreview
+        //     {
+        //         Orderid = model.Orderid,
+        //         Foodrating = model.Foodrating,
+        //         Servicerating = model.Servicerating,
+        //         Ambiencerating = model.Ambiencerating,
+        //         Avgrating = (float?)((model.Foodrating + model.Servicerating + model.Ambiencerating) / 3),
+        //         Comments = model.Comments,
+        //         Createdat = DateTime.Now
+        //     };
+        //     await _customerReviewRepository.AddNewReview(customerreview);
+        //     Order order = await _orderRepository.OrderDetailsByIdAsync((int)model.Orderid);
+        //     if (order != null)
+        //     {
+        //         order.Rating = (decimal?)customerreview.Avgrating;
+        //         await _orderRepository.UpdateOrder(order);
+        //     }
+        //     return (true, "Review Added Sucessfully.");
+        // }
+        // else
+        // {
+        //     return (false, "No Review");
+        // }
+
+        return await _orderRepository.AddReview_SP(model);
     }
 
 
     public async Task<bool> checkOrderStatus(int id)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(id);
-        Console.WriteLine("hellllllllllllllllllllllo" + order.status);
+        Order order = await _orderRepository.OrderDetailsByIdAsync(id);
         if (order != null)
         {
             if (order.status == 0 || order.status == 1)

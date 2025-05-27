@@ -5,7 +5,7 @@ namespace pizzashop.Entity.ViewModels;
 public class OrderDetailsFlat
 {
     public int Orderid { get; set; }
-    public int Orderitemid { get; set; }
+    public int Ordereditemid { get; set; }
     public int Itemid { get; set; }
     public string Itemname { get; set; }
     public decimal Rate { get; set; }
@@ -20,7 +20,5 @@ public class OrderDetailsFlat
     public string? Tablename { get; set; }
     public string? Sectionname { get; set; }
     public int? Taxid { get; set; }
-    public string? Taxname { get; set; }
-    public string? Taxvalue { get; set; }
-    public taxtype? Taxtype { get; set; }
+    public decimal? Taxvalue { get; set; }
 }
