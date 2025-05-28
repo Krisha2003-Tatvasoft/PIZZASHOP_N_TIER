@@ -92,11 +92,6 @@ public class ItemService : IItemService
     {
       return false;
     }
-    // if (viewmodel.ModifierGroups == null || !viewmodel.ModifierGroups.Any())
-    // {
-    //   Console.WriteLine("ModifierGroups is either null or empty, skipping mapping.");
-    //   return false;
-    // }
 
     Item item = new Item
     {
@@ -190,7 +185,9 @@ public class ItemService : IItemService
   public async Task<bool> EditItemPost(int loginid, AddItem viewmodel)
   {
     Item item = await _itemRepository.ItemByIdAsync(viewmodel.Itemid);
-    string uniqueFileName = null;
+
+    string uniqueFileName = viewmodel.Itemimg != null ? Path.GetFileName(new Uri(viewmodel.Itemimg).LocalPath) : null;
+
     if (viewmodel.ItemPicture != null)
     {
       if (!string.IsNullOrEmpty(item.Itemimg))
@@ -199,12 +196,11 @@ public class ItemService : IItemService
       }
       uniqueFileName = await _fileService.UploadFileAsync(viewmodel.ItemPicture, "uploads");
     }
-
+    
     if (await _itemRepository.ItemNameExistAtEditAsync(viewmodel.Itemname, viewmodel.Itemid))
     {
       return false;
     }
-
 
     item.Itemname = viewmodel.Itemname;
     item.Categoryid = viewmodel.Categoryid;
@@ -229,7 +225,7 @@ public class ItemService : IItemService
 
     var newGroupIds = viewmodel.ModifierGroups.Select(m => m.Modifiergroupid).ToList();
 
-    // ✅ Fix: Remove only groups that are explicitly missing in the new list
+    // Fix: Remove only groups that are explicitly missing in the new list
     var groupsToRemove = existingMappings
         .Where(m => !newGroupIds.Contains(m.Modifiergroupid))
         .ToList();
@@ -239,7 +235,7 @@ public class ItemService : IItemService
       await _itemmodifiergroupmapRepository.DeleteMapping(group);
     }
 
-    // ✅ Fix: Add only new groups that are not in the existing list
+    // Fix: Add only new groups that are not in the existing list
     var groupsToAdd = viewmodel.ModifierGroups
         .Where(m => !existingGroupIds.Contains(m.Modifiergroupid))
         .ToList();

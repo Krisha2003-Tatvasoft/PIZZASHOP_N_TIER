@@ -324,9 +324,9 @@
 
       const itemHtml = `
             <div class="rounded border mb-2 cart-item-card" 
-               data-orderitemid=${item.orderitemid}
-               data-itemindex=${index}
-               data-itemcomment=${item.Itemwisecomment} >
+               data-orderitemid="${item.orderitemid}"
+               data-itemindex="${index}"
+               data-itemcomment= "${item.Itemwisecomment}">
                 <div class="d-flex">
                     <div class="accordion d-flex flex-column justify-content-start gap-2 p-2 w-50">
                        ${Array.isArray(item.Modifiers) && item.Modifiers.length > 0 ? `
@@ -339,7 +339,7 @@
       <strong class="ps-1">${item.Itemname}</strong>
     </button>
     <div id="collapse-${index}" class="accordion-collapse collapse"
-         data-orderitemid=${item.orderitemid} data-itemindex=${index}>
+         data-orderitemid="${item.orderitemid}" data-itemindex="${index}">
       <div class="ps-3">
         <ul class="mb-0">${modifierList}</ul>
       </div>
@@ -1060,7 +1060,7 @@
         var itemindexvalue = $(this).data("itemindex");
 
         var itemcomment = $(this).data("itemcomment");
-        console.log(orderitemid, itemindexvalue, itemcomment)
+        console.log( itemcomment);
 
 
         $("#ItemWiseComment").modal("show");

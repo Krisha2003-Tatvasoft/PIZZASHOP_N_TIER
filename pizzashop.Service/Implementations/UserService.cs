@@ -156,7 +156,7 @@ public class UserService : IUserService
   public async Task<bool> PostUpdate(AddNewUser model)
   {
     Userslogin user = await _userRepository.GetUserByIdAsync(model.Userid);
-    string uniqueFileName = null;
+    string uniqueFileName = model.Profileimg != null ? Path.GetFileName(new Uri(model.Profileimg).LocalPath) : null;
     if (model.ProfilePicture != null)
     {
       if (!string.IsNullOrEmpty(user.User?.Profileimg))

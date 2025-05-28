@@ -252,9 +252,12 @@
 
         @* load tablelist *@
 
+        var currentTablePage = 1;
+
             function loadTablesBySec(sectionId, page) {
 
                 globalSectionId = sectionId;
+                currentTablePage = page;
 
                 $(".sec-list").removeClass("menu-active");
                 $('.sec-list[data-id="' + globalSectionId + '"]').addClass("menu-active");
@@ -474,7 +477,7 @@
                         success: function (response) {
                             if (response.success) {
                                 $("#editTable").modal("hide");
-                                loadTablesBySec(sectionId, 1);
+                                loadTablesBySec(sectionId, currentTablePage);
                                 toastr.success("Table Updated Succesfully.");
                             }
                             else {

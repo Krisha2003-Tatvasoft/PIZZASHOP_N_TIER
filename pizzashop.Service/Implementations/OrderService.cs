@@ -74,53 +74,126 @@ public class OrderService : IOrderService
 
     public async Task<OrderDetails> OrderDetails(int id)
     {
-        var order = await _orderRepository.OrderDetailsByIdAsync(id);
+        // var order = await _orderRepository.OrderDetailsByIdAsync(id);
 
-        List<OrderItem> items = order.Ordereditems.Select(i => new OrderItem
+        // List<OrderItem> items = order.Ordereditems.Select(i => new OrderItem
+        // {
+        //     Itemid = i.Itemid,
+        //     Itemname = i.Item.Itemname,
+        //     Rate = i.Item.Rate,
+        //     Quantity = (short)i.Quantity,
+        //     TotalAmount = i.Item.Rate * i.Quantity,
+        //     Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
+        //     {
+        //         Modifierid = m.Modifiers.Modifierid,
+        //         Modifiername = m.Modifiers.Modifiername,
+        //         Quantity = (short)i.Quantity,
+        //         Rate = m.Modifiers.Rate,
+        //         TotalAmount = m.Modifiers.Rate * i.Quantity
+        //     }).ToList()
+        // }).ToList();
+
+
+
+        // List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
+        // {
+        //     Taxid = t.Taxid,
+        //     Taxname = t.Tax.Taxname,
+        //     Taxvalue = t.Taxvalue?.ToString() ?? string.Empty
+        // }).ToList();
+
+        // OrderDetails model = new OrderDetails
+        // {
+        //     Orderid = order.Orderid,
+        //     PlacedOn = order.Createdat,
+        //     Customername = order.Customer.Customername,
+        //     Phoneno = order.Customer.Phoneno,
+        //     Noofperson = order.Noofperson,
+        //     orderstatus = (Entity.Models.Enums.orderstatus)order.status,
+        //     Email = order.Customer.Email,
+        //     Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
+        //     Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
+        //     Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
+        //     Items = items,
+        //     Taxes = taxes,
+        //     Totalamount = order.Totalamount,
+        //     Subamount = order.Subamount,
+        //     paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
+        // };
+        // return model;
+
+            List<OrderDetailsFlat> flatList = await _orderRepository.GetOrderDetailsSp(id);
+
+            if (!flatList.Any())
+                return null;
+
+            List<OrderItem> items = flatList
+                    .Where(f => f.Ordereditemid > 0)
+                    .GroupBy(f => f.Ordereditemid)
+                    .Select(g =>
+                    {
+                        OrderDetailsFlat first = g.First();
+                        return new OrderItem
+                        {
+                            Itemid = first.Itemid,
+                            Itemname = first.Itemname,
+                            Rate = first.Rate,
+                            Quantity = first.Quantity,
+                            TotalAmount = first.Rate * first.Quantity,
+                            Modifiers = g
+                          .Where(x => x.Modifierid != null)
+                          .GroupBy(m => m.Modifierid)
+                          .Select(mg =>
+                        {
+                            OrderDetailsFlat mod = mg.First();
+                            return new OrderModifier
+                            {
+                                Modifierid = mod.Modifierid!.Value,
+                                Modifiername = mod.Modifiername!,
+                                Quantity = first.Quantity,
+                                Rate = mod.Modifierrate!.Value,
+                                TotalAmount = mod.Modifierrate!.Value * first.Quantity
+                            };
+                        }).ToList()
+                        };
+                    }).ToList();
+
+        var taxes = flatList
+        .Where(f => f.Taxid.HasValue)
+        .GroupBy(f => f.Taxid.Value)
+        .Select(g =>
         {
-            Itemid = i.Itemid,
-            Itemname = i.Item.Itemname,
-            Rate = i.Item.Rate,
-            Quantity = (short)i.Quantity,
-            TotalAmount = i.Item.Rate * i.Quantity,
-            Modifiers = i.Ordereditemmodifers.Select(m => new OrderModifier
+            var first = g.First();
+            return new TaxTable
             {
-                Modifierid = m.Modifiers.Modifierid,
-                Modifiername = m.Modifiers.Modifiername,
-                Quantity = (short)i.Quantity,
-                Rate = m.Modifiers.Rate,
-                TotalAmount = m.Modifiers.Rate * i.Quantity
-            }).ToList()
-        }).ToList();
+                Taxid = first.Taxid.Value,
+                Taxvalue = first.Taxvalue?.ToString() ?? string.Empty,
+                Taxname = first.taxname ?? string.Empty
+            };
+        })
+        .ToList();     
+
+            OrderDetails model = new OrderDetails
+            {
+                Orderid = flatList.First().Orderid,
+                PlacedOn = flatList.First().Createdat,
+                Customername = flatList.First().Customername,
+                Phoneno = flatList.First().Phoneno,
+                Noofperson = flatList.First().Noofperson,
+                orderstatus = (Entity.Models.Enums.orderstatus)flatList.First().orderstatus,
+                Email = flatList.First().Email,
+                Invoicenumber = flatList.First().Invoicenumber,
+                Tablenames = flatList.Select(f => f.Tablename).Where(t => !string.IsNullOrEmpty(t)).Distinct().ToList(),
+                Sectionname = flatList.Select(f => f.Sectionname).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList(),
+                Items = items,
+                Taxes = taxes,
+                Totalamount = (decimal)flatList.First().Totalamount,
+                Subamount = flatList.First().Subamount,
+                paymentmode = (Entity.Models.Enums.paymentmode)flatList.First().paymentmode
+            };
+            return model;
 
 
-
-        List<TaxTable> taxes = order.Ordertaxmappings.Select(t => new TaxTable
-        {
-            Taxid = t.Taxid,
-            Taxname = t.Tax.Taxname,
-            Taxvalue = t.Tax.Taxvalue
-        }).ToList();
-
-        OrderDetails model = new OrderDetails
-        {
-            Orderid = order.Orderid,
-            PlacedOn = order.Createdat,
-            Customername = order.Customer.Customername,
-            Phoneno = order.Customer.Phoneno,
-            Noofperson = order.Noofperson,
-            orderstatus = (Entity.Models.Enums.orderstatus)order.status,
-            Email = order.Customer.Email,
-            Invoicenumber = order.Invoices.FirstOrDefault()?.Invoicenumber,
-            Tablenames = order.Ordertables.Select(t => t.Table.Tablename).ToList(),
-            Sectionname = order.Ordertables.Select(t => t.Table.Section.Sectionname).Distinct().ToList(),
-            Items = items,
-            Taxes = taxes,
-            Totalamount = order.Totalamount,
-            Subamount = order.Subamount,
-            paymentmode = (Entity.Models.Enums.paymentmode)order.Paymentmode
-        };
-        return model;
     }
 
 

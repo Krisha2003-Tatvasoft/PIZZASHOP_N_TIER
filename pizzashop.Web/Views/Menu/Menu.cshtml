@@ -828,9 +828,12 @@
             loadItemTable(categoryId, 1);
         });
 
+        var currentItemPage = 1;
+
         function loadItemTable(categoryId, page) {
 
             globalCat = categoryId;
+            currentItemPage = page
 
             // Set active class centrally
             $(".cat-list").removeClass("menu-active");
@@ -1115,7 +1118,7 @@
                         success: function (response) {
                             if (response.success) {
                                 $("#updateItem").modal("hide");
-                                loadItemTable(categoryId, 1);
+                                loadItemTable(categoryId, currentItemPage);
                                 toastr.success("Item Updated Succesfully.");
                             }
                             else {
@@ -1415,7 +1418,7 @@
                                 success: function (response) {
                                     if (response.success) {
                                         $("#updateNewModifier").modal("hide");
-                                        loadModifierTable(selectedMG[0], 1);
+                                        loadModifierTable(selectedMG[0], currentModifierPage);
                                         toastr.success("Modifier Updated Succesfully.");
                                     }
                                     else {

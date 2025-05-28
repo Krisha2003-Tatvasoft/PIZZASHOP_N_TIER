@@ -56,10 +56,13 @@
         let searchQuery = "@ViewBag.SearchQuery" || "";
 
         loadUserTable(1);
+        var currentTaxPage = 1;
 
         function loadUserTable(page) {
             let pageSize = $("#pageSizeTax").val();
             let search = $("#searchTax").val();
+
+            currentTaxPage = page;
 
             $.ajax({
                 url: "/TaxesAndFees/TaxesAndFees",
@@ -189,7 +192,7 @@
                             success: function (response) {
                                 if (response.success) {
                                     $("#editTax").modal("hide");
-                                    loadUserTable(1);
+                                    loadUserTable(currentTaxPage);
                                      toastr.success("Tax Updated Succesfully.");
                                 }
                                 else {

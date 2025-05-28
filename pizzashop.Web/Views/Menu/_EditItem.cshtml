@@ -531,7 +531,7 @@
         const fileNameSpan = document.getElementById('file-name');
         const imagePreview = document.getElementById('imagePreview');
         const deleteFile = document.getElementById('deleteFile');
-         const editFile = document.getElementById('editFile');
+        const editFile = document.getElementById('editFile');
         const existingImagePath = document.getElementById('existingImagePath'); // Add this line
 
         fileInput.value = ""; // Clear file input
@@ -540,7 +540,7 @@
         imagePreview.src = "";
         imagePreview.style.display = "none"; // Hide image
         deleteFile.style.display = "none"; // Hide delete icon
-          editFile.style.display = "none"; // Hide edit icon
+        editFile.style.display = "none"; // Hide edit icon
 
         // Clear the hidden input for existing image path
         if (existingImagePath) { // Check if the element exists
@@ -549,7 +549,6 @@
     }
 
     function loadExistingImage(imageUrl) {
-        console.log("load existing image");
         const imagePreview = document.getElementById('imagePreview');
         const uploadIcon = document.getElementById('upload-icon');
         const fileNameSpan = document.getElementById('file-name');
@@ -570,6 +569,7 @@
     // Load the existing image from Model.UserProfile
      function existing() {
         const existingImage = "@Model.Itemimg"; // Get image from Model
+        console.log("Loading existing image...",existingImage);
         if (existingImage && existingImage !== "null" && existingImage.trim() !== "") {
             loadExistingImage(existingImage);
         }
